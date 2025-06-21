@@ -1,4 +1,4 @@
-package com.example.tracky.runrecords;
+package com.example.tracky.runrecord;
 
 import org.springframework.stereotype.Repository;
 
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class RunRecordsRepository {
+public class RunRecordRepository {
 
     private final EntityManager em;
 

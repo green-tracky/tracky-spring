@@ -1,0 +1,35 @@
+package com.example.tracky.runrecord.runsegment.runcoordinate;
+
+import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.example.tracky.runrecord.runsegment.RunSegment;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@Getter
+@Table(name = "run_coordinate_tb")
+@Entity
+public class RunCoordinate {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private Double lat; // 위도
+    private Double lon; // 경도
+
+    @CreationTimestamp
+    private Timestamp createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RunSegment runSegment; // 부모 러닝 구간
+}

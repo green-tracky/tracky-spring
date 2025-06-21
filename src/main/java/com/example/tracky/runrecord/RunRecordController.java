@@ -1,4 +1,4 @@
-package com.example.tracky.runrecords;
+package com.example.tracky.runrecord;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class RunRecordsController {
+public class RunRecordController {
 
-    private final RunRecordsService runRecordsService;
+    private final RunRecordService runRecordsService;
 
 }
