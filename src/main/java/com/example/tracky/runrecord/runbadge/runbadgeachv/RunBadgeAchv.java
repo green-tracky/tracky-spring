@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,4 +35,13 @@ public class RunBadgeAchv {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunBadge runBadge; // 부모 러닝 뱃지
+
+    @Builder
+    public RunBadgeAchv(Integer id, Timestamp createdAt, RunRecord runRecord, RunBadge runBadge) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.runRecord = runRecord;
+        this.runBadge = runBadge;
+    }
+
 }

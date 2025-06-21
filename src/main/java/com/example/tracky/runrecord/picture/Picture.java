@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,14 @@ public class Picture {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
+
+    @Builder
+    public Picture(Integer id, String fileUrl, Integer duration, RunCoordinate runCoordinate, RunRecord runRecord) {
+        this.id = id;
+        this.fileUrl = fileUrl;
+        this.duration = duration;
+        this.runCoordinate = runCoordinate;
+        this.runRecord = runRecord;
+    }
+
 }

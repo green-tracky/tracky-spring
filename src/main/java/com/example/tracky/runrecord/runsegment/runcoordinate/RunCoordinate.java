@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +33,13 @@ public class RunCoordinate {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunSegment runSegment; // 부모 러닝 구간
+
+    @Builder
+    public RunCoordinate(Integer id, Double lat, Double lon, RunSegment runSegment) {
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.runSegment = runSegment;
+    }
+
 }
