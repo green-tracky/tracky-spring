@@ -30,4 +30,15 @@ public class RunRecordRepository {
             return Optional.ofNullable(null);
         }
     }
+
+    /**
+     * RunRecord 엔티티 퍼시스트 컨텍스트에 저장
+     * 
+     * @param runRecord
+     * @return RunRecord
+     */
+    public RunRecord save(RunRecord runRecord) {
+        em.persist(runRecord);
+        return runRecord;
+    }
 }

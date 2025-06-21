@@ -39,6 +39,8 @@ public class RunRecord {
     @CreationTimestamp
     private Timestamp createdAt;
 
+    // 나중에 user 를 ManyToOne 하도록 추가해야함
+
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RunSegment> runSegments = new ArrayList(); // 자식 구간들
 
