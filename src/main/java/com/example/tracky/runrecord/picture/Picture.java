@@ -3,7 +3,6 @@ package com.example.tracky.runrecord.picture;
 import java.sql.Timestamp;
 
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,12 +37,15 @@ public class Picture {
     private RunRecord runRecord; // 부모 러닝 기록
 
     @Builder
-    public Picture(Integer id, String fileUrl, Integer duration, RunCoordinate runCoordinate, RunRecord runRecord) {
+    public Picture(Integer id, String fileUrl, Integer duration, Double lat, Double lon, Timestamp createdAt,
+            RunRecord runRecord) {
         this.id = id;
         this.fileUrl = fileUrl;
         this.duration = duration;
+        this.lat = lat;
+        this.lon = lon;
+        this.createdAt = createdAt;
         this.runRecord = runRecord;
-        // this.runCoordinate = runCoordinate;
     }
 
 }
