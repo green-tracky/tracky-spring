@@ -28,7 +28,7 @@ public class RunRecordService {
      * @param reqDTO
      */
     @Transactional
-    public void save(Integer userId, RunRecordRequest.DTO reqDTO) {
+    public RunRecordResponse.DTO save(Integer userId, RunRecordRequest.DTO reqDTO) {
         // 엔티티 변환
         RunRecord runRecord = reqDTO.toEntity(userId);
 
@@ -36,7 +36,7 @@ public class RunRecordService {
         RunRecord runRecordPS = runRecordsRepository.save(runRecord);
 
         // 응답 DTO 로 변환
-
+        return new RunRecordResponse.DTO(runRecordPS);
     }
 
 }
