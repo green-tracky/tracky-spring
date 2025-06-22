@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,11 @@ public class RunRecordService {
         RunRecord runRecord = runRecordsRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
+    }
+
+    public MainPageDTO getRunRecords() {
+        RunRecordResponse.MainPageDTO mainPageList = RunRecordRepository.findAll();
+        return mainPageList;
     }
 
 }

@@ -1,8 +1,11 @@
 package com.example.tracky.runrecord;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
+
+import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -40,5 +43,11 @@ public class RunRecordRepository {
     public RunRecord save(RunRecord runRecord) {
         em.persist(runRecord);
         return runRecord;
+    }
+
+    public List<RunRecord> findAll() {
+        Query query = em.createQuery("select r from RunRecord r ", RunRecord.class);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
     }
 }
