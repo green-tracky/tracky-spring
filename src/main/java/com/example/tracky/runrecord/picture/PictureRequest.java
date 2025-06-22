@@ -20,6 +20,7 @@ public class PictureRequest {
     @Data
     public static class DTO {
         private String imgBase64;
+        private Integer duration;
         private Double lat;
         private Double lon;
         private Timestamp createdAt;
@@ -27,6 +28,7 @@ public class PictureRequest {
         public Picture toEntity(RunRecord runRecord) {
             return Picture.builder()
                     .fileUrl(imgBase64) // 차후 나중에 url 로 변환 해야함
+                    .duration(duration)
                     .runRecord(runRecord)
                     .build();
         }
