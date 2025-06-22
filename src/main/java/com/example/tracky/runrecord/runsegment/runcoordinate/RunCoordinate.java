@@ -31,10 +31,11 @@ public class RunCoordinate {
     private RunSegment runSegment; // 부모 러닝 구간
 
     @Builder
-    public RunCoordinate(Integer id, Double lat, Double lon, RunSegment runSegment) {
+    public RunCoordinate(Integer id, Double lat, Double lon, Timestamp createdAt, RunSegment runSegment) {
         this.id = id;
         this.lat = lat;
         this.lon = lon;
+        this.createdAt = createdAt;
         this.runSegment = runSegment;
     }
 
