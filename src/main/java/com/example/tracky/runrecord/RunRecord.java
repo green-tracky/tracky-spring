@@ -46,18 +46,17 @@ public class RunRecord {
     // 나중에 user 를 ManyToOne 하도록 추가해야함
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RunSegment> runSegments = new ArrayList(); // 자식 구간들
+    private List<RunSegment> runSegments = new ArrayList<>(); // 자식 구간들
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RunBadgeAchv> runBadgeAchvs = new ArrayList(); // 자식 뱃지들
+    private List<RunBadgeAchv> runBadgeAchvs = new ArrayList<>(); // 자식 뱃지들
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Picture> pictures = new ArrayList(); // 자식 뱃지들
+    private List<Picture> pictures = new ArrayList<>(); // 자식 뱃지들
 
     @Builder
     public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds,
-            Integer totalcalories, Double avg_pace, Double best_pace, String memo, Integer intensity, String place,
-            List<RunSegment> runSegments, List<RunBadgeAchv> runBadgeAchvs, List<Picture> pictures) {
+            Integer totalcalories, Double avg_pace, Double best_pace, String memo, Integer intensity, String place) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
@@ -68,9 +67,6 @@ public class RunRecord {
         this.memo = memo;
         this.intensity = intensity;
         this.place = place;
-        this.runSegments = runSegments;
-        this.runBadgeAchvs = runBadgeAchvs;
-        this.pictures = pictures;
     }
 
 }

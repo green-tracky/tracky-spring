@@ -43,7 +43,7 @@ public class RunSegment {
 
     @Builder
     public RunSegment(Integer id, Integer distanceMeters, Integer durationSeconds, Timestamp startDate,
-            Timestamp endDate, Double pace, Integer calories, RunRecord runRecord, List<RunCoordinate> runCoordinates) {
+            Timestamp endDate, Double pace, Integer calories, RunRecord runRecord) {
         this.id = id;
         this.distanceMeters = distanceMeters;
         this.durationSeconds = durationSeconds;
@@ -52,7 +52,6 @@ public class RunSegment {
         this.pace = pace;
         this.calories = calories;
         this.runRecord = runRecord;
-        this.runCoordinates = runCoordinates;
     }
 
 }
