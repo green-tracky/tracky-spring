@@ -11,7 +11,13 @@ public class RunRecordRequest {
     public static class DTO {
         private String title;
         private String memo;
+        private Integer totalDistanceMeters;
+        private Integer totalDurationSeconds;
+        private Integer totalCalories;
+        private Double avgPace;
+        private Double bestPace;
         private List<Segment> segments;
+        private List<Picture> pictures;
 
         @Data
         class Segment {
@@ -19,6 +25,8 @@ public class RunRecordRequest {
             private Timestamp endDate;
             private Integer durationSeconds;
             private Integer distanceMeters;
+            private Integer calories;
+            private Double pace;
             private List<Coordinate> coordinates;
 
             @Data
@@ -27,6 +35,14 @@ public class RunRecordRequest {
                 private Double lon;
                 private Timestamp createdAt;
             }
+        }
+
+        @Data
+        class Picture {
+            private String imgBase64;
+            private Double lat;
+            private Double lon;
+            private Timestamp createdAt;
         }
     }
 }
