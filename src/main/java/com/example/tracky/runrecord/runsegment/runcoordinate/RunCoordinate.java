@@ -2,8 +2,6 @@ package com.example.tracky.runrecord.runsegment.runcoordinate;
 
 import java.sql.Timestamp;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.example.tracky.runrecord.runsegment.RunSegment;
 
 import jakarta.persistence.Entity;
@@ -27,9 +25,7 @@ public class RunCoordinate {
     private Integer id;
     private Double lat; // 위도
     private Double lon; // 경도
-
-    @CreationTimestamp
-    private Timestamp createdAt;
+    private Timestamp createdAt; // 프론트에서 좌표 생성시간을 받아야 한다
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunSegment runSegment; // 부모 러닝 구간
