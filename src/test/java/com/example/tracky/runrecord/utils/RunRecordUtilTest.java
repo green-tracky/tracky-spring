@@ -1,5 +1,5 @@
 package com.example.tracky.runrecord.utils;
 
 public class RunRecordUtilTest {
-    // 원래 페이스, 칼로리 계산인데 필요 없어짐
+    // 페이스 & 칼로리 테스트 코드 있었는데 필요없어서 삭제
 }
