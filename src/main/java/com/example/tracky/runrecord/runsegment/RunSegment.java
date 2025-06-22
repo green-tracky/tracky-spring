@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 
@@ -32,15 +30,8 @@ public class RunSegment {
     private Integer id;
     private Integer distanceMeters; // 구간 이동거리. 미터 단위
     private Integer durationSeconds; // 구간 소요시간. 초 단위
-
-    @CreationTimestamp
-    private Timestamp startDate; // 구간 시작 시간
-
-    @CreationTimestamp
-    private Timestamp endDate; // 구간 종료 시간
-
-    @CreationTimestamp
-    private Timestamp createdAt;
+    private Timestamp startDate; // 구간 시작 시간. 프론트에서 받아야 한다
+    private Timestamp endDate; // 구간 종료 시간. 프론트에서 받아야 한다
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
