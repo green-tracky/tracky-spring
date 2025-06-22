@@ -33,8 +33,12 @@ public class RunRecord {
     private String title; // 제목
     private Double totalDistanceMeters; // 총 거리. 미터 단위
     private Integer totalDurationSeconds; // 총 시간. 초 단위
-    private Integer calories; // 총 칼로리 소모량
+    private Integer totalcalories; // 총 칼로리 소모량
+    private Double avg_pace; // 평균 페이스
+    private Double best_pace; // 최고 페이스
     private String memo; // 메모
+    private Integer intensity; // 러닝 강도 (1~10)
+    private String place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용
 
     @CreationTimestamp
     private Timestamp createdAt;
@@ -52,14 +56,18 @@ public class RunRecord {
 
     @Builder
     public RunRecord(Integer id, String title, Double totalDistanceMeters, Integer totalDurationSeconds,
-            Integer calories, String memo, List<RunSegment> runSegments, List<RunBadgeAchv> runBadgeAchvs,
-            List<Picture> pictures) {
+            Integer totalcalories, Double avg_pace, Double best_pace, String memo, Integer intensity, String place,
+            List<RunSegment> runSegments, List<RunBadgeAchv> runBadgeAchvs, List<Picture> pictures) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
         this.totalDurationSeconds = totalDurationSeconds;
-        this.calories = calories;
+        this.totalcalories = totalcalories;
+        this.avg_pace = avg_pace;
+        this.best_pace = best_pace;
         this.memo = memo;
+        this.intensity = intensity;
+        this.place = place;
         this.runSegments = runSegments;
         this.runBadgeAchvs = runBadgeAchvs;
         this.pictures = pictures;

@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord.utils;
 
+@Deprecated
 public class RunRecordUtil {
     /**
      * 미터(m) 단위의 거리와 초(s) 단위의 시간을 입력받아
@@ -18,6 +19,7 @@ public class RunRecordUtil {
 
         // 1. 1km를 가는 데 걸리는 시간을 초 단위로 계산합니다. (핵심 변환)
         // 정수 나눗셈으로 인한 오차를 방지하기 위해 double로 형변환 후 계산합니다.
+        // (totalSeconds / totalMeters) * 1000 계산식
         double paceInSecondsPerKm = ((double) durationSeconds / distanceMeters) * 1000.0;
 
         // 2. 계산된 초를 '분'과 '초'로 분리합니다.
