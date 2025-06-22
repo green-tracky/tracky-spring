@@ -20,4 +20,9 @@ public class RunRecordService {
 
     }
 
+    public void save(Integer userId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    }
+
 }
