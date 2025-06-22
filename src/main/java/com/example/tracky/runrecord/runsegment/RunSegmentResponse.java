@@ -26,6 +26,7 @@ public class RunSegmentResponse {
      */
     @Data
     public static class DTO {
+        private Integer id;
         private Timestamp startDate; // "2025-06-22 06:30:00"
         private Timestamp endDate;
         private Integer durationSeconds;
@@ -35,6 +36,7 @@ public class RunSegmentResponse {
         private List<RunCoordinateResponse.DTO> coordinates;
 
         public DTO(RunSegment runSegment) {
+            this.id = runSegment.getId();
             this.startDate = runSegment.getStartDate();
             this.endDate = runSegment.getEndDate();
             this.durationSeconds = runSegment.getDurationSeconds();

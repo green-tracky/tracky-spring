@@ -30,6 +30,7 @@ public class RunRecordResponse {
      */
     @Data
     public static class DTO {
+        private Integer id;
         private String title;
         private String memo;
         private Integer totalDistanceMeters;
@@ -41,6 +42,7 @@ public class RunRecordResponse {
         private List<PictureResponse.DTO> pictures;
 
         public DTO(RunRecord runRecord) {
+            this.id = runRecord.getId();
             this.title = runRecord.getTitle();
             this.memo = runRecord.getMemo();
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();

@@ -15,11 +15,13 @@ public class RunCoordinateResponse {
      */
     @Data
     public static class DTO {
+        private Integer id;
         private Double lat;
         private Double lon;
         private Timestamp createdAt;
 
         public DTO(RunCoordinate runCoordinate) {
+            this.id = runCoordinate.getId();
             this.lat = runCoordinate.getLat();
             this.lon = runCoordinate.getLon();
             this.createdAt = runCoordinate.getCreatedAt();
