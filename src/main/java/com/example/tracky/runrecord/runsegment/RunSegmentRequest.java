@@ -47,6 +47,7 @@ public class RunSegmentRequest {
                     .runRecord(runRecord)
                     .build();
 
+            // 좌표 변환
             List<RunCoordinate> runCoordinates = coordinates.stream()
                     .map(c -> c.toEntity(runSegment))
                     .toList();

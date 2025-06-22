@@ -49,15 +49,18 @@ public class RunRecordRequest {
                     .totalDistanceMeters(totalDistanceMeters)
                     .totalDurationSeconds(totalDurationSeconds)
                     .totalcalories(totalCalories)
-                    .avg_pace(avgPace)
-                    .best_pace(bestPace)
+                    .avgPace(avgPace)
+                    .bestPace(bestPace)
                     .build();
 
+            // 러닝 구간 변환
             List<RunSegment> runSegments = segments.stream()
                     .map(s -> s.toEntity(runRecord))
                     .toList();
             runRecord.getRunSegments().addAll(runSegments);
 
+            // 사진 변환
+            // 없으면 변환 x
             if (pictures != null) {
                 List<Picture> pictureEntities = pictures.stream()
                         .map(p -> p.toEntity(runRecord))
