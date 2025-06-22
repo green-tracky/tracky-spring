@@ -2,8 +2,6 @@ package com.example.tracky.runrecord.picture;
 
 import java.sql.Timestamp;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 
@@ -28,12 +26,13 @@ public class Picture {
     private Integer id;
     private String fileUrl; // 이미지 실제 주소
     private Integer duration; // 러닝 시작후 사진이 저장된 시점까지의 시간
-
-    @CreationTimestamp
+    private Double lat; // 위도
+    private Double lon; // 경도
     private Timestamp createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private RunCoordinate runCoordinate; // 이 좌표는 테이블에 있는 좌표를 사용할지. 사진에 있는 좌표를 사용할지 애매함
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // private RunCoordinate runCoordinate; // 이 좌표는 테이블에 있는 좌표를 사용할지. 사진에 있는 좌표를
+    // 사용할지 애매함 일단 뺌
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
@@ -43,8 +42,8 @@ public class Picture {
         this.id = id;
         this.fileUrl = fileUrl;
         this.duration = duration;
-        this.runCoordinate = runCoordinate;
         this.runRecord = runRecord;
+        // this.runCoordinate = runCoordinate;
     }
 
 }
