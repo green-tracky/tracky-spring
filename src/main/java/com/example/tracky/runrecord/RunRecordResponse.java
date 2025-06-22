@@ -2,7 +2,7 @@ package com.example.tracky.runrecord;
 
 import java.util.List;
 
-import com.example.tracky.runrecord.picture.PictureRequest;
+import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 
 import lombok.Data;
@@ -38,7 +38,7 @@ public class RunRecordResponse {
         private Double avgPace;
         private Double bestPace;
         private List<RunSegmentResponse.DTO> segments;
-        private List<PictureRequest.DTO> pictures;
+        private List<PictureResponse.DTO> pictures;
 
         public DTO(RunRecord runRecord) {
             this.title = runRecord.getTitle();
@@ -51,7 +51,9 @@ public class RunRecordResponse {
             this.segments = runRecord.getRunSegments().stream()
                     .map(s -> new RunSegmentResponse.DTO(s))
                     .toList();
-
+            this.pictures = runRecord.getPictures().stream()
+                    .map(p -> new PictureResponse.DTO(p))
+                    .toList();
         }
 
     }
