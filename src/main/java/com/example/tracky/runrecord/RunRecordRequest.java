@@ -7,7 +7,7 @@ public class RunRecordRequest {
         private String memo;
 
         class Segment {
-
+            private 
         }
     }
 }
