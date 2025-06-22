@@ -1,5 +1,7 @@
 package com.example.tracky.runrecord;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.tracky._core.error.ErrorCodeEnum;
@@ -22,8 +24,8 @@ public class RunRecordService {
     }
 
     public MainPageDTO getRunRecords() {
-        RunRecordResponse.MainPageDTO mainPageList = RunRecordRepository.findAll();
-        return mainPageList;
+        // List<RunRecord> mainPageList = RunRecordRepository.findAll();
+        return null;
     }
 
 }

@@ -8,15 +8,15 @@ import com.example.tracky.runrecord.runbadge.RunBadge;
 public class RunRecordResponse {
 
     public static class MainPageDTO {
-        private Double totalDistanceMeters; // 총 거리. 미터 단위
-        private Double avg_pace; // 평균 페이스
+        private Integer totalDistanceMeters; // 총 거리. 미터 단위
+        private Double avgPace; // 평균 페이스
         private Integer totalDurationSeconds; // 총 시간. 초 단위
         private List<RunRecord> runRecords; // 러닝 리스트
         private List<RunBadge> runBadges; // 뱃지 리스트
 
         public MainPageDTO(RunRecord runRecord, List<RunRecord> runRecords, List<RunBadge> runBadges) {
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
-            this.avg_pace = runRecord.getAvg_pace();
+            this.avgPace = runRecord.getAvgPace();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
             this.runRecords = runRecords;
             this.runBadges = runBadges;
