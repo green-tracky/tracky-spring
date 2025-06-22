@@ -2,8 +2,6 @@ package com.example.tracky.runrecord.picture;
 
 import java.sql.Timestamp;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 
@@ -30,8 +28,6 @@ public class Picture {
     private Integer duration; // 러닝 시작후 사진이 저장된 시점까지의 시간
     private Double lat; // 위도
     private Double lon; // 경도
-
-    @CreationTimestamp
     private Timestamp createdAt;
 
     // @ManyToOne(fetch = FetchType.LAZY)
