@@ -2,7 +2,6 @@ package com.example.tracky.runrecord;
 
 import java.util.List;
 
-import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.runrecord.picture.PictureRequest;
 import com.example.tracky.runrecord.runsegment.RunSegment;
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
@@ -59,14 +58,7 @@ public class RunRecordRequest {
                     .toList();
             runRecord.getRunSegments().addAll(runSegments);
 
-            // 사진 변환
-            // 없으면 변환 x
-            if (pictures != null) {
-                List<Picture> pictureEntities = pictures.stream()
-                        .map(p -> p.toEntity(runRecord))
-                        .toList();
-                runRecord.getPictures().addAll(pictureEntities);
-            }
+            // 사진은 변환 x
 
             return runRecord;
         }

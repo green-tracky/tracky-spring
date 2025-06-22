@@ -29,6 +29,8 @@ public class RunRecordService {
      */
     @Transactional
     public RunRecordResponse.DTO save(Integer userId, RunRecordRequest.DTO reqDTO) {
+        // 사용자 조회
+
         // 엔티티 변환
         RunRecord runRecord = reqDTO.toEntity(userId);
 
