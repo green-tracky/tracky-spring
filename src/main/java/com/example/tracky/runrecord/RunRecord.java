@@ -31,7 +31,7 @@ public class RunRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title; // 제목
-    private Double totalDistanceMeters; // 총 거리. 미터 단위
+    private Integer totalDistanceMeters; // 총 거리. 미터 단위
     private Integer totalDurationSeconds; // 총 시간. 초 단위
     private Integer totalcalories; // 총 칼로리 소모량
     private Double avg_pace; // 평균 페이스
@@ -55,7 +55,7 @@ public class RunRecord {
     private List<Picture> pictures = new ArrayList(); // 자식 뱃지들
 
     @Builder
-    public RunRecord(Integer id, String title, Double totalDistanceMeters, Integer totalDurationSeconds,
+    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds,
             Integer totalcalories, Double avg_pace, Double best_pace, String memo, Integer intensity, String place,
             List<RunSegment> runSegments, List<RunBadgeAchv> runBadgeAchvs, List<Picture> pictures) {
         this.id = id;

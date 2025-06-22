@@ -1,7 +1,11 @@
 package com.example.tracky.runrecord;
 
-import java.sql.Timestamp;
 import java.util.List;
+
+import com.example.tracky.runrecord.picture.Picture;
+import com.example.tracky.runrecord.picture.PictureRequest;
+import com.example.tracky.runrecord.runsegment.RunSegment;
+import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
 
 import lombok.Data;
 
@@ -16,33 +20,33 @@ public class RunRecordRequest {
         private Integer totalCalories;
         private Double avgPace;
         private Double bestPace;
-        private List<Segment> segments;
-        private List<Picture> pictures;
+        private List<RunSegmentRequest.DTO> segments;
+        private List<PictureRequest.DTO> pictures;
 
-        @Data
-        class Segment {
-            private Timestamp startDate; // "2025-06-22 06:30:00" 형식으로 받아야함
-            private Timestamp endDate;
-            private Integer durationSeconds;
-            private Integer distanceMeters;
-            private Integer calories;
-            private Double pace;
-            private List<Coordinate> coordinates;
+        public RunRecord toEntity(Integer userId) {
+            RunRecord runRecord = RunRecord.builder()
+                    .title(title)
+                    .memo(memo)
+                    .totalDistanceMeters(totalDistanceMeters)
+                    .totalDurationSeconds(totalDurationSeconds)
+                    .totalcalories(totalCalories)
+                    .avg_pace(avgPace)
+                    .best_pace(bestPace)
+                    .build();
 
-            @Data
-            class Coordinate {
-                private Double lat;
-                private Double lon;
-                private Timestamp createdAt;
+            List<RunSegment> runSegments = segments.stream()
+                    .map(s -> s.toEntity(runRecord))
+                    .toList();
+            runRecord.getRunSegments().addAll(runSegments);
+
+            if (pictures != null) {
+                List<Picture> pictureEntities = pictures.stream()
+                        .map(p -> p.toEntity(runRecord))
+                        .toList();
+                runRecord.getPictures().addAll(pictureEntities);
             }
-        }
 
-        @Data
-        class Picture {
-            private String imgBase64;
-            private Double lat;
-            private Double lon;
-            private Timestamp createdAt;
+            return runRecord;
         }
     }
 }
