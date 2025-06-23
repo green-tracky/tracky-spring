@@ -20,10 +20,10 @@ public class RunRecordController {
 
     @GetMapping("/activitis")
     public ResponseEntity<?> getActivitis() {
-        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getRunRecords();
-        System.err.println("Controller : "+respDTO);
+        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitis();
         return Resp.ok(respDTO);
     }
+
     @PostMapping("/runs")
     public ResponseEntity<?> save(@RequestBody RunRecordRequest.DTO reqDTO) {
         // 유저 아이디를 임시로 1 로 함

@@ -1,6 +1,5 @@
 package com.example.tracky.runrecord.utils;
 
-@Deprecated
 public class RunRecordUtil {
     /**
      * 미터(m) 단위의 거리와 초(s) 단위의 시간을 입력받아

@@ -10,7 +10,6 @@ import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.runrecord.RunRecordResponse.DTO;
 import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
-import com.example.tracky.runrecord.runbadge.RunBadge;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -28,14 +27,13 @@ public class RunRecordService {
 
     }
 
-    public MainPageDTO getRunRecords() {
-        List<RunRecord> runRecords = runRecordsRepository.findAll();
-        System.out.println("runRecords : "+ runRecords);
-        List<RunBadge> runBadges = runRecordsRepository.findAllBadge();
-        System.out.println("runBadges : "+ runBadges);
+    public MainPageDTO getActivitis() {
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin(); // 나중에 유저 아이디로 조회 해야함
+        // List<RunBadge> runBadges = runRecordsRepository.findAllBadge(); // 나중에 획득한
+        // 뱃지만 가져와야함
 
         Integer totalDistanceMeters = 0;
-        Integer totalDurationSeconds= 0; // 총 시간. 초 단위
+        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
 
         // DTO 리스트 수동 생성
         List<DTO> dtoList = new ArrayList<>();
@@ -47,18 +45,14 @@ public class RunRecordService {
 
         String avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
-         RunRecord totalRunRecord = RunRecord.builder()
-         .totalDistanceMeters(totalDistanceMeters)
-         .totalDurationSeconds(totalDurationSeconds)
-         .build();
+        RunRecord totalRunRecord = RunRecord.builder()
+                .totalDistanceMeters(totalDistanceMeters)
+                .totalDurationSeconds(totalDurationSeconds)
+                .build();
 
-
-         System.out.println(totalDistanceMeters);
-         System.out.println(totalDurationSeconds);
-         System.out.println(avgPace);
-
-        return new RunRecordResponse.MainPageDTO(totalRunRecord,avgPace, dtoList, runBadges);
+        return new RunRecordResponse.MainPageDTO(totalRunRecord, avgPace, dtoList);
     }
+
     /**
      * 러닝 저장
      * 

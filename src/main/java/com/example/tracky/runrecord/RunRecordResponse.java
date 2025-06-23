@@ -1,13 +1,5 @@
 package com.example.tracky.runrecord;
 
-import java.sql.Timestamp;
-import java.util.List;
-
-import com.example.tracky.runrecord.runbadge.RunBadge;
-import com.example.tracky.runrecord.runsegment.RunSegment;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
-import com.example.tracky.runrecord.utils.RunRecordUtil;
-
 import java.util.List;
 
 import com.example.tracky.runrecord.picture.PictureResponse;
@@ -16,26 +8,37 @@ import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import lombok.Data;
 
 public class RunRecordResponse {
-
+    /**
+     * private Integer totalDistanceMeters;
+     * <p>
+     * private Integer totalDurationSeconds;
+     * <p>
+     * private Integer countRecode;
+     * <p>
+     * private String avgPace;
+     * <p>
+     * private List<DTO> runRecords;
+     */
     @Data
     public static class MainPageDTO {
         private Integer totalDistanceMeters; // 총 거리. 미터 단위
         private Integer totalDurationSeconds; // 총 시간. 초 단위
         private Integer countRecode;
         private String avgPace;
-        private List<DTO> runRecords;
-        private List<RunBadge> runBadges;
+        private String badge; // TODO : 나중에 획득한 뱃지 들어넣기
+        private String level; // TODO : 나중에 레벨 입력
+        private List<DTO> recentRunRecord; // TODO : 최근활동에 맞는 영어이름으로 변경
 
-        public MainPageDTO(RunRecord runRecord, String avgPace, List<DTO> runRecords, List<RunBadge> runBadges) {
+        public MainPageDTO(RunRecord runRecord, String avgPace, List<DTO> recentRunRecord) {
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-            this.countRecode = runRecords.size();
+            this.countRecode = recentRunRecord.size();
             this.avgPace = avgPace;
-            this.runRecords = runRecords;
-            this.runBadges = runBadges;
+            this.badge = badge; // TODO : 나중에 생성자 추가
+            this.level = level; // TODO : 나중에 생성자 추가
+            this.recentRunRecord = recentRunRecord;
         }
-        
-        }
+    }
 
     /**
      * private String title;
