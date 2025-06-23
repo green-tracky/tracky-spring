@@ -43,7 +43,7 @@ public class RunRecordRepositoryTest {
         sDTO.setEndDate(Timestamp.valueOf("2025-06-22 06:37:10"));
         sDTO.setCoordinates(List.of(cDTO));
 
-        RunRecordRequest.DTO reqDTO = new RunRecordRequest.DTO();
+        RunRecordRequest.SaveDTO reqDTO = new RunRecordRequest.SaveDTO();
         reqDTO.setTitle("test 제목");
         reqDTO.setSegments(List.of(sDTO));
 

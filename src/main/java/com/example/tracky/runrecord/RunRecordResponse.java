@@ -23,7 +23,7 @@ public class RunRecordResponse {
      * private List<PictureResponse.DTO> pictures;
      */
     @Data
-    public static class DTO {
+    public static class SaveDTO {
         private Integer id;
         private String title;
         private String memo;
@@ -35,7 +35,7 @@ public class RunRecordResponse {
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
 
-        public DTO(RunRecord runRecord) {
+        public SaveDTO(RunRecord runRecord) {
             this.id = runRecord.getId();
             this.title = runRecord.getTitle();
             this.memo = runRecord.getMemo();

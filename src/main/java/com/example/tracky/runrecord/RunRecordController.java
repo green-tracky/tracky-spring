@@ -18,11 +18,11 @@ public class RunRecordController {
     private final RunRecordService runRecordsService;
 
     @PostMapping("/runs")
-    public ResponseEntity<?> save(@RequestBody RunRecordRequest.DTO reqDTO) {
+    public ResponseEntity<?> save(@RequestBody RunRecordRequest.SaveDTO reqDTO) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
-        RunRecordResponse.DTO respDTO = runRecordsService.save(userId, reqDTO);
+        RunRecordResponse.SaveDTO respDTO = runRecordsService.save(userId, reqDTO);
 
         return Resp.ok(respDTO);
     }

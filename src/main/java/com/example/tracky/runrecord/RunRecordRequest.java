@@ -24,7 +24,7 @@ public class RunRecordRequest {
 	 * private List<PictureRequest.DTO> pictures;
 	 */
 	@Data
-	public static class DTO {
+	public static class SaveDTO {
 		private String title;
 		private String memo;
 		private Integer calories;

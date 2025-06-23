@@ -30,7 +30,7 @@ public class RunRecordControllerTest extends MyRestDoc {
     public void save_test() throws Exception {
         // given
         // 러닝 생성
-        RunRecordRequest.DTO reqDTO = new RunRecordRequest.DTO();
+        RunRecordRequest.SaveDTO reqDTO = new RunRecordRequest.SaveDTO();
         reqDTO.setTitle("부산 해운대 아침 달리기");
         reqDTO.setMemo("날씨가 좋아서 상쾌했다. 다음엔 더 멀리 가봐야지.");
         reqDTO.setCalories(200);
