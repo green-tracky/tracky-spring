@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.tracky.runrecord.picture.Picture;
@@ -33,12 +34,12 @@ public class RunRecord {
     private String title; // 제목
     private Integer totalDistanceMeters; // 총 거리. 미터 단위
     private Integer totalDurationSeconds; // 총 시간. 초 단위
-    private Integer totalcalories; // 총 칼로리 소모량
-    private Double avgPace; // 평균 페이스
-    private Double bestPace; // 최고 페이스
+    private Integer calories; // 총 칼로리 소모량
     private String memo; // 메모
-    private Integer intensity; // 러닝 강도 (1~10)
-    private String place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용
+
+    @ColumnDefault("0")
+    private Integer intensity; // 러닝 강도 (1~10). 기본값 0
+    private String place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
     private Timestamp createdAt;
@@ -56,14 +57,12 @@ public class RunRecord {
 
     @Builder
     public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds,
-            Integer totalcalories, Double avgPace, Double bestPace, String memo, Integer intensity, String place) {
+            Integer calories, String memo, Integer intensity, String place) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
         this.totalDurationSeconds = totalDurationSeconds;
-        this.totalcalories = totalcalories;
-        this.avgPace = avgPace;
-        this.bestPace = bestPace;
+        this.calories = calories;
         this.memo = memo;
         this.intensity = intensity;
         this.place = place;

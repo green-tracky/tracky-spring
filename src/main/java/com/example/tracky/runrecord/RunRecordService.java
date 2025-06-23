@@ -3,6 +3,7 @@ package com.example.tracky.runrecord;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
@@ -56,6 +57,23 @@ public class RunRecordService {
          System.out.println(avgPace);
 
         return new RunRecordResponse.MainPageDTO(totalRunRecord, runRecords, runBadges);
+    }
+    /**
+     * 러닝 저장
+     * 
+     * @param userId
+     * @param reqDTO
+     */
+    @Transactional
+    public RunRecordResponse.DTO save(Integer userId, RunRecordRequest.DTO reqDTO) {
+        // 엔티티 변환
+        RunRecord runRecord = reqDTO.toEntity(userId);
+
+        // 엔티티 저장
+        RunRecord runRecordPS = runRecordsRepository.save(runRecord);
+
+        // 응답 DTO 로 변환
+        return new RunRecordResponse.DTO(runRecordPS);
     }
 
 }
