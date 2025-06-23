@@ -11,4 +11,8 @@ public class RunBadgeRepository {
 
     private final EntityManager em;
 
+    public RunBadge findById(Long id) {
+        return em.find(RunBadge.class, id);
+    }
+
 }

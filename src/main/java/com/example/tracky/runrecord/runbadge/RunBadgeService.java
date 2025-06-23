@@ -10,4 +10,6 @@ public class RunBadgeService {
 
     private final RunBadgeRepository runRecordsRepository;
 
+    public void 뱃지조회(Long id) {
+
 }
