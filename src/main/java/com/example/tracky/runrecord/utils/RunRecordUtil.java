@@ -1,6 +1,9 @@
 package com.example.tracky.runrecord.utils;
 
-@Deprecated
+import java.util.List;
+
+import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+
 public class RunRecordUtil {
     /**
      * 미터(m) 단위의 거리와 초(s) 단위의 시간을 입력받아
@@ -66,6 +69,31 @@ public class RunRecordUtil {
         return (int) Math.round(caloriesAsDouble);
     }
 
-    public static int calculateTotalDistanceMeters() {
+    /**
+     * 구간의 누적 거리 합
+     * <p>
+     * 미터 단위
+     * 
+     * @param segments
+     * @return
+     */
+    public static int calculateTotalDistanceMeters(List<RunSegmentRequest.DTO> segments) {
+        return segments.stream()
+                .mapToInt(s -> s.getDistanceMeters())
+                .sum();
+    }
+
+    /**
+     * 구간의 누적 러닝 시간
+     * <p>
+     * 초단위
+     * 
+     * @param runSegments
+     * @return
+     */
+    public static int calculateTotalDurationSeconds(List<RunSegmentRequest.DTO> runSegments) {
+        return runSegments.stream()
+                .mapToInt(s -> s.getDurationSeconds())
+                .sum();
     }
 }

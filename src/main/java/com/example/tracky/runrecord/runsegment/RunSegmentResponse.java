@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateResponse;
+import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 import lombok.Data;
 
@@ -31,7 +32,7 @@ public class RunSegmentResponse {
         private Timestamp endDate;
         private Integer durationSeconds;
         private Integer distanceMeters;
-        private Double pace;
+        private String pace; // 추후 정해지면 넣자자
         private List<RunCoordinateResponse.DTO> coordinates;
 
         public DTO(RunSegment runSegment) {
@@ -40,7 +41,7 @@ public class RunSegmentResponse {
             this.endDate = runSegment.getEndDate();
             this.durationSeconds = runSegment.getDurationSeconds();
             this.distanceMeters = runSegment.getDistanceMeters();
-            this.pace = 0.0; // 나중에 페이스 계산해서 돌려줘야함
+            this.pace = RunRecordUtil.calculatePace(runSegment.getDistanceMeters(), runSegment.getDurationSeconds());
             this.coordinates = runSegment.getRunCoordinates().stream()
                     .map(c -> new RunCoordinateResponse.DTO(c))
                     .toList();
