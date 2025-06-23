@@ -22,7 +22,7 @@ public class RunRecordUtil {
 
         // 1. 1km를 가는 데 걸리는 시간을 초 단위로 계산합니다. (핵심 변환)
         // (totalSeconds / totalMeters) * 1000 계산식
-        int paceInSecondsPerKm = (durationSeconds / distanceMeters) * 1000;
+        int paceInSecondsPerKm = (int) (((double) durationSeconds / distanceMeters) * 1000);
 
         return paceInSecondsPerKm;
     }

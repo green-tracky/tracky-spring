@@ -30,8 +30,8 @@ public class RunRecordResponse {
         private Integer calories;
         private Integer totalDistanceMeters;
         private Integer totalDurationSeconds;
-        private String avgPace; // 추후 정해지면 넣자자
-        private String bestPace; // 추후 정해지면 넣자자
+        private Integer avgPace; // 추후 정해지면 넣자자
+        private Integer bestPace; // 추후 정해지면 넣자자
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
 
@@ -48,6 +48,14 @@ public class RunRecordResponse {
             this.pictures = runRecord.getPictures().stream()
                     .map(p -> new PictureResponse.DTO(p))
                     .toList();
+            this.avgPace = (int) this.segments.stream()
+                    .mapToInt(s -> s.getPace())
+                    .average()
+                    .orElse(0);
+            this.bestPace = this.segments.stream()
+                    .mapToInt(s -> s.getPace())
+                    .min()
+                    .orElse(0);
         }
 
     }
