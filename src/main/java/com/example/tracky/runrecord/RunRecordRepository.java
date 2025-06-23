@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
+import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO.runBadges;
+import com.example.tracky.runrecord.runbadge.RunBadge;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -45,9 +47,18 @@ public class RunRecordRepository {
         return runRecord;
     }
 
+    /* 
+     * RunRecord 엔티티 전체 조회
+     */
     public List<RunRecord> findAll() {
         Query query = em.createQuery("select r from RunRecord r ", RunRecord.class);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
+
+    public List<RunBadge> findAllBadge() {
+        Query query = em.createQuery("select b from RunBadge b ", RunBadge.class);
+        List<RunBadge> runBadges = query.getResultList();
+        return runBadges;
+        }
 }
