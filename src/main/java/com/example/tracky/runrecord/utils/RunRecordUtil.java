@@ -65,4 +65,7 @@ public class RunRecordUtil {
         // 그 결과를 int로 형변환하여 반환합니다.
         return (int) Math.round(caloriesAsDouble);
     }
+
+    public static int calculateTotalDistanceMeters() {
+    }
 }
