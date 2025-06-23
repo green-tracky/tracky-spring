@@ -12,15 +12,6 @@ import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
 @SpringBootTest
 class TrackyApplicationTests {
 
-	@Autowired
-	private RunBadgeRepository runBadgeRepository;
 
-	@Test
-	void findAll_test() {
-		List<RunBadge> runBadges = runBadgeRepository.findAll();
-		for (RunBadge runBadge : runBadges) {
-			System.out.println(runBadge.getName());
-		}
-	}
 
 }
