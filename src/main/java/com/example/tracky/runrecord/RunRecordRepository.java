@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
-import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO.runBadges;
 import com.example.tracky.runrecord.runbadge.RunBadge;
 
 import jakarta.persistence.EntityManager;

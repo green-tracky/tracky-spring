@@ -34,21 +34,26 @@ public class RunRecordService {
         Integer totalDurationSeconds= 0; // 총 시간. 초 단위
         double totalavgPace = 0.0;
 
+        
+
          for (RunRecord runRecord : runRecords) {
             totalDistanceMeters += runRecord.getTotalDistanceMeters();
             totalDurationSeconds += runRecord.getTotalDurationSeconds();
             totalavgPace += runRecord.getAvgPace();
          }
 
+         double avgPace = runRecords.size() > 0 ? totalavgPace / runRecords.size() : 0.0;
+
+
          RunRecord totalRunRecord = RunRecord.builder()
          .totalDistanceMeters(totalDistanceMeters)
          .totalDurationSeconds(totalDurationSeconds)
-         .avgPace(totalavgPace)
+         .avgPace(avgPace)
          .build();
 
          System.out.println(totalDistanceMeters);
          System.out.println(totalDurationSeconds);
-         System.out.println(totalavgPace);
+         System.out.println(avgPace);
 
         return new RunRecordResponse.MainPageDTO(totalRunRecord, runRecords, runBadges);
     }
