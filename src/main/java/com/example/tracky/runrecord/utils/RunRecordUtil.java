@@ -1,5 +1,9 @@
 package com.example.tracky.runrecord.utils;
 
+import java.util.List;
+
+import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+
 public class RunRecordUtil {
     /**
      * 미터(m) 단위의 거리와 초(s) 단위의 시간을 입력받아
@@ -8,25 +12,19 @@ public class RunRecordUtil {
      *
      * @param distanceMeters  달린 거리 (미터 단위)
      * @param durationSeconds 달린 시간 (초 단위)
-     * @return 포맷팅된 페이스 문자열 (예: "6분 0초/km")
+     * @return 초 단위 페이스 수치
      */
-    public static String calculatePace(int distanceMeters, int durationSeconds) {
+    public static int calculatePace(int distanceMeters, int durationSeconds) {
         // 거리가 0 이하일 경우 계산이 불가능하므로 예외 처리
         if (distanceMeters <= 0) {
-            return "0분 0초/km";
+            return 0;
         }
 
         // 1. 1km를 가는 데 걸리는 시간을 초 단위로 계산합니다. (핵심 변환)
-        // 정수 나눗셈으로 인한 오차를 방지하기 위해 double로 형변환 후 계산합니다.
         // (totalSeconds / totalMeters) * 1000 계산식
-        double paceInSecondsPerKm = ((double) durationSeconds / distanceMeters) * 1000.0;
+        int paceInSecondsPerKm = (durationSeconds / distanceMeters) * 1000;
 
-        // 2. 계산된 초를 '분'과 '초'로 분리합니다.
-        int minutes = (int) paceInSecondsPerKm / 60;
-        int seconds = (int) paceInSecondsPerKm % 60;
-
-        // 3. 최종 문자열로 포맷팅하여 반환합니다.
-        return String.format("%d분 %d초/km", minutes, seconds);
+        return paceInSecondsPerKm;
     }
 
     /**
@@ -63,5 +61,33 @@ public class RunRecordUtil {
         // 5. Math.round()를 사용해 소수점 첫째 자리에서 반올림합니다.
         // 그 결과를 int로 형변환하여 반환합니다.
         return (int) Math.round(caloriesAsDouble);
+    }
+
+    /**
+     * 구간의 누적 거리 합
+     * <p>
+     * 미터 단위
+     * 
+     * @param segments
+     * @return
+     */
+    public static int calculateTotalDistanceMeters(List<RunSegmentRequest.DTO> segments) {
+        return segments.stream()
+                .mapToInt(s -> s.getDistanceMeters())
+                .sum();
+    }
+
+    /**
+     * 구간의 누적 러닝 시간
+     * <p>
+     * 초단위
+     * 
+     * @param runSegments
+     * @return
+     */
+    public static int calculateTotalDurationSeconds(List<RunSegmentRequest.DTO> runSegments) {
+        return runSegments.stream()
+                .mapToInt(s -> s.getDurationSeconds())
+                .sum();
     }
 }

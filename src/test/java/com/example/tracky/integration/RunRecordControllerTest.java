@@ -29,17 +29,13 @@ public class RunRecordControllerTest extends MyRestDoc {
     @Test
     public void save_test() throws Exception {
         // given
-        // 요청 DTO 생성
-        RunRecordRequest.DTO reqDTO = new RunRecordRequest.DTO();
+        // 러닝 생성
+        RunRecordRequest.SaveDTO reqDTO = new RunRecordRequest.SaveDTO();
         reqDTO.setTitle("부산 해운대 아침 달리기");
         reqDTO.setMemo("날씨가 좋아서 상쾌했다. 다음엔 더 멀리 가봐야지.");
-        reqDTO.setTotalDistanceMeters(5000);
-        reqDTO.setTotalDurationSeconds(1825);
-        reqDTO.setTotalCalories(350);
-        reqDTO.setAvgPace(6.08);
-        reqDTO.setBestPace(5.5);
+        reqDTO.setCalories(200);
 
-        // 세그먼트 생성
+        // 구간 생성
         List<RunSegmentRequest.DTO> segments = new ArrayList<>();
 
         RunSegmentRequest.DTO segment1 = new RunSegmentRequest.DTO();
@@ -47,8 +43,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         segment1.setEndDate(Timestamp.valueOf("2025-06-22 06:37:10"));
         segment1.setDurationSeconds(430);
         segment1.setDistanceMeters(1000);
-        segment1.setCalories(70);
-        segment1.setPace(7.16);
 
         List<RunCoordinateRequest.DTO> coordinates1 = new ArrayList<>();
         RunCoordinateRequest.DTO coord1 = new RunCoordinateRequest.DTO();
@@ -78,8 +72,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         segment2.setEndDate(Timestamp.valueOf("2025-06-22 06:43:05"));
         segment2.setDurationSeconds(354);
         segment2.setDistanceMeters(1000);
-        segment2.setCalories(75);
-        segment2.setPace(5.9);
 
         List<RunCoordinateRequest.DTO> coordinates2 = new java.util.ArrayList<>();
         RunCoordinateRequest.DTO coord4 = new RunCoordinateRequest.DTO();
