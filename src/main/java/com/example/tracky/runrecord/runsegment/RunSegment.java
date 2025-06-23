@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 
@@ -30,16 +28,10 @@ public class RunSegment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Double pace; // 구간 평균 페이스
-
-    @CreationTimestamp
-    private Timestamp startDate; // 구간 시작 시간
-
-    @CreationTimestamp
-    private Timestamp endDate; // 구간 종료 시간
-
-    @CreationTimestamp
-    private Timestamp createdAt;
+    private Integer distanceMeters; // 구간 이동거리. 미터 단위
+    private Integer durationSeconds; // 구간 소요시간. 초 단위
+    private Timestamp startDate; // 구간 시작 시간. 프론트에서 받아야 한다
+    private Timestamp endDate; // 구간 종료 시간. 프론트에서 받아야 한다
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
@@ -48,9 +40,11 @@ public class RunSegment {
     private List<RunCoordinate> runCoordinates = new ArrayList<>(); // 자식 좌표들
 
     @Builder
-    public RunSegment(Integer id, Double pace, Timestamp startDate, Timestamp endDate, RunRecord runRecord) {
+    public RunSegment(Integer id, Integer distanceMeters, Integer durationSeconds, Timestamp startDate,
+            Timestamp endDate, RunRecord runRecord) {
         this.id = id;
-        this.pace = pace;
+        this.distanceMeters = distanceMeters;
+        this.durationSeconds = durationSeconds;
         this.startDate = startDate;
         this.endDate = endDate;
         this.runRecord = runRecord;
