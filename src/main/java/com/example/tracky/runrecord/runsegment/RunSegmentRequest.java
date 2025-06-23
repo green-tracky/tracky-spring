@@ -20,10 +20,6 @@ public class RunSegmentRequest {
      * <p>
      * private Integer distanceMeters;
      * <p>
-     * private Integer calories;
-     * <p>
-     * private Double pace;
-     * <p>
      * private List<RunCoordinateRequest.DTO> coordinates;
      */
     @Data
@@ -32,8 +28,6 @@ public class RunSegmentRequest {
         private Timestamp endDate;
         private Integer durationSeconds;
         private Integer distanceMeters;
-        private Integer calories;
-        private Double pace;
         private List<RunCoordinateRequest.DTO> coordinates;
 
         public RunSegment toEntity(RunRecord runRecord) {
@@ -42,8 +36,6 @@ public class RunSegmentRequest {
                     .endDate(endDate)
                     .durationSeconds(durationSeconds)
                     .distanceMeters(distanceMeters)
-                    .calories(calories)
-                    .pace(pace)
                     .runRecord(runRecord)
                     .build();
 

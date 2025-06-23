@@ -16,15 +16,7 @@ public class RunRecordRequest {
      * <p>
      * private String memo;
      * <p>
-     * private Integer totalDistanceMeters;
-     * <p>
-     * private Integer totalDurationSeconds;
-     * <p>
-     * private Integer totalCalories;
-     * <p>
-     * private Double avgPace;
-     * <p>
-     * private Double bestPace;
+     * private Integer calories;
      * <p>
      * private List<RunSegmentRequest.DTO> segments;
      * <p>
@@ -34,11 +26,7 @@ public class RunRecordRequest {
     public static class DTO {
         private String title;
         private String memo;
-        private Integer totalDistanceMeters;
-        private Integer totalDurationSeconds;
-        private Integer totalCalories;
-        private Double avgPace;
-        private Double bestPace;
+        private Integer calories;
         private List<RunSegmentRequest.DTO> segments;
         private List<PictureRequest.DTO> pictures;
 
@@ -46,11 +34,9 @@ public class RunRecordRequest {
             RunRecord runRecord = RunRecord.builder()
                     .title(title)
                     .memo(memo)
-                    .totalDistanceMeters(totalDistanceMeters)
-                    .totalDurationSeconds(totalDurationSeconds)
-                    .totalcalories(totalCalories)
-                    .avgPace(avgPace)
-                    .bestPace(bestPace)
+                    // .totalDistanceMeters(totalDistanceMeters) 구간별 거리 합계 로직 추가
+                    // .totalDurationSeconds(totalDurationSeconds) 구간별 시간 합계 로직 추가
+                    .calories(calories)
                     .build();
 
             // 러닝 구간 변환
