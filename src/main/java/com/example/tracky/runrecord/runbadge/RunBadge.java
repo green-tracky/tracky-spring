@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-@Table(name = "run_badge_tb")
+@Table(name = "badge")
 @Entity
 public class RunBadge {
     @Id
