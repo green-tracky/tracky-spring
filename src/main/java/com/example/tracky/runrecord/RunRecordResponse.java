@@ -35,9 +35,7 @@ public class RunRecordResponse {
         private String memo;
         private Integer totalDistanceMeters;
         private Integer totalDurationSeconds;
-        private Integer totalCalories;
-        private Double avgPace;
-        private Double bestPace;
+        private Integer calories;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
 
@@ -47,9 +45,7 @@ public class RunRecordResponse {
             this.memo = runRecord.getMemo();
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-            this.totalCalories = runRecord.getTotalcalories();
-            this.avgPace = runRecord.getAvgPace();
-            this.bestPace = runRecord.getBestPace();
+            this.calories = runRecord.getCalories();
             this.segments = runRecord.getRunSegments().stream()
                     .map(s -> new RunSegmentResponse.DTO(s))
                     .toList();

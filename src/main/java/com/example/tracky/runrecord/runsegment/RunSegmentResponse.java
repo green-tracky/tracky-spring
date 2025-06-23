@@ -31,7 +31,6 @@ public class RunSegmentResponse {
         private Timestamp endDate;
         private Integer durationSeconds;
         private Integer distanceMeters;
-        private Integer calories;
         private Double pace;
         private List<RunCoordinateResponse.DTO> coordinates;
 
@@ -41,8 +40,7 @@ public class RunSegmentResponse {
             this.endDate = runSegment.getEndDate();
             this.durationSeconds = runSegment.getDurationSeconds();
             this.distanceMeters = runSegment.getDistanceMeters();
-            this.calories = runSegment.getCalories();
-            this.pace = runSegment.getPace();
+            this.pace = 0.0; // 나중에 페이스 계산해서 돌려줘야함
             this.coordinates = runSegment.getRunCoordinates().stream()
                     .map(c -> new RunCoordinateResponse.DTO(c))
                     .toList();
