@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -7,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.runrecord.RunRecordResponse.DTO;
 import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
 import com.example.tracky.runrecord.runbadge.RunBadge;
+import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,30 +36,28 @@ public class RunRecordService {
 
         Integer totalDistanceMeters = 0;
         Integer totalDurationSeconds= 0; // 총 시간. 초 단위
-        double totalavgPace = 0.0;
 
-        
+        // DTO 리스트 수동 생성
+        List<DTO> dtoList = new ArrayList<>();
+        for (RunRecord record : runRecords) {
+            totalDistanceMeters += record.getTotalDistanceMeters();
+            totalDurationSeconds += record.getTotalDurationSeconds();
+            dtoList.add(new DTO(record));
+        }
 
-         for (RunRecord runRecord : runRecords) {
-            totalDistanceMeters += runRecord.getTotalDistanceMeters();
-            totalDurationSeconds += runRecord.getTotalDurationSeconds();
-            totalavgPace += runRecord.getAvgPace();
-         }
-
-         double avgPace = runRecords.size() > 0 ? totalavgPace / runRecords.size() : 0.0;
-
+        String avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
          RunRecord totalRunRecord = RunRecord.builder()
          .totalDistanceMeters(totalDistanceMeters)
          .totalDurationSeconds(totalDurationSeconds)
-         .avgPace(avgPace)
          .build();
+
 
          System.out.println(totalDistanceMeters);
          System.out.println(totalDurationSeconds);
          System.out.println(avgPace);
 
-        return new RunRecordResponse.MainPageDTO(totalRunRecord, runRecords, runBadges);
+        return new RunRecordResponse.MainPageDTO(totalRunRecord,avgPace, dtoList, runBadges);
     }
     /**
      * 러닝 저장

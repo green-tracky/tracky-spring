@@ -18,8 +18,8 @@ public class RunRecordController {
 
     private final RunRecordService runRecordsService;
 
-    @GetMapping("/runs")
-    public ResponseEntity<?> getRunRecords() {
+    @GetMapping("/activitis")
+    public ResponseEntity<?> getActivitis() {
         RunRecordResponse.MainPageDTO respDTO = runRecordsService.getRunRecords();
         System.err.println("Controller : "+respDTO);
         return Resp.ok(respDTO);
