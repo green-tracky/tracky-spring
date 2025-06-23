@@ -43,7 +43,7 @@ public class RunRecordService {
             dtoList.add(new DTO(record));
         }
 
-        String avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
         RunRecord totalRunRecord = RunRecord.builder()
                 .totalDistanceMeters(totalDistanceMeters)
