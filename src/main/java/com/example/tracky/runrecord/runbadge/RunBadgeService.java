@@ -30,8 +30,4 @@ public class RunBadgeService {
                 .collect(Collectors.toList());
     }
 
-
-
-    
-
 }

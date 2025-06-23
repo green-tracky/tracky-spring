@@ -12,7 +12,6 @@ public class RunBadgeResponse {
         private String name;
         private String description;
         private String imageUrl;
-
     }
 
 }

@@ -18,5 +18,4 @@ public class RunBadgeRepository {
                 .getResultList();
     }
 
-
 }
