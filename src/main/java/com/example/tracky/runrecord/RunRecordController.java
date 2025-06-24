@@ -1,14 +1,9 @@
 package com.example.tracky.runrecord;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.tracky._core.utils.Resp;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +20,11 @@ public class RunRecordController {
         RunRecordResponse.SaveDTO respDTO = runRecordsService.save(userId, reqDTO);
 
         return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/runs/{id}")
+    public ResponseEntity<?> getRun(@PathVariable Integer id) {
+        return Resp.ok(null);
     }
 
 }
