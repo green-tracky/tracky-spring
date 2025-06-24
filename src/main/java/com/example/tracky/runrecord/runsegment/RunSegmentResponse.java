@@ -32,7 +32,7 @@ public class RunSegmentResponse {
         private Timestamp endDate;
         private Integer durationSeconds;
         private Integer distanceMeters;
-        private String pace; // 추후 정해지면 넣자자
+        private Integer pace; // 초단위
         private List<RunCoordinateResponse.DTO> coordinates;
 
         public DTO(RunSegment runSegment) {
