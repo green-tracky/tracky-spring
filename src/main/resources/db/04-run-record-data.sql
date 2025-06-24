@@ -9,7 +9,7 @@
 INSERT INTO run_record_tb (id, title, total_distance_meters, total_duration_seconds, calories, memo, intensity, place,
                            created_at)
 VALUES (1, '부산 서면역 15번 출구 100m 러닝', 100, 50, 10, '서면역 15번 출구에서 NC백화점 방향으로 100m 직선 러닝', 3, '도로', '2025-06-24 09:00:50');
-
+ 
 -- 2. 러닝 구간 (자식) - 여기서는 전체 러닝을 하나의 구간으로 처리
 INSERT INTO run_segment_tb (id, distance_meters, duration_seconds, start_date, end_date, run_record_id)
 VALUES (1, 100, 50, '2025-06-24 09:00:00', '2025-06-24 09:00:50', 1);
