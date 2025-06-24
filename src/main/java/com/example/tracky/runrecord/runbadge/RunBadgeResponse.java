@@ -1,10 +1,9 @@
 package com.example.tracky.runrecord.runbadge;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 public class RunBadgeResponse {
-    
+
     @Data
     public static class DTO {
         private Integer id;
@@ -18,7 +17,7 @@ public class RunBadgeResponse {
             this.description = runBadge.getDescription();
             this.imageUrl = runBadge.getImageUrl();
         }
-        
+
     }
 
 }
