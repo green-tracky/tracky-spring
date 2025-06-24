@@ -1,7 +1,10 @@
 package com.example.tracky.runrecord.utils;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import com.example.tracky.runrecord.runsegment.RunSegment;
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
 
 public class RunRecordUtil {
@@ -68,11 +71,11 @@ public class RunRecordUtil {
      * <p>
      * 미터 단위
      * 
-     * @param segments
+     * @param segmentDTOs
      * @return
      */
-    public static int calculateTotalDistanceMeters(List<RunSegmentRequest.DTO> segments) {
-        return segments.stream()
+    public static int calculateTotalDistanceMeters(List<RunSegmentRequest.DTO> segmentDTOs) {
+        return segmentDTOs.stream()
                 .mapToInt(s -> s.getDistanceMeters())
                 .sum();
     }
@@ -82,26 +85,26 @@ public class RunRecordUtil {
      * <p>
      * 초단위
      * 
-     * @param runSegments
+     * @param segmentDTOs
      * @return
      */
-    public static int calculateTotalDurationSeconds(List<RunSegmentRequest.DTO> runSegments) {
-        return runSegments.stream()
+    public static int calculateTotalDurationSeconds(List<RunSegmentRequest.DTO> segmentDTOs) {
+        return segmentDTOs.stream()
                 .mapToInt(s -> s.getDurationSeconds())
                 .sum();
     }
 
     /**
-     * 구간의 누적 러닝 시간
+     * 구간 총 경과 시간
      * <p>
      * 초단위
      * 
      * @param runSegments
      * @return
      */
-    public static int calculateElapsedTimeInSeconds(List<RunSegmentRequest.DTO> runSegments) {
-        return runSegments.stream()
-                .mapToInt(s -> s.getDurationSeconds())
-                .sum();
+    public static int calculateElapsedTimeInSeconds(List<RunSegment> runSegments) {
+        LocalDateTime startDate = runSegments.get(0).getStartDate().toLocalDateTime();
+        LocalDateTime endDate = runSegments.get(runSegments.size() - 1).getEndDate().toLocalDateTime();
+        return (int) ChronoUnit.SECONDS.between(startDate, endDate);
     }
 }
