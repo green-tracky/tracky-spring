@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tracky._core.utils.Resp;
@@ -21,6 +22,30 @@ public class RunRecordController {
     @GetMapping("/activitis")
     public ResponseEntity<?> getActivitis() {
         RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitis();
+        return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/activitis/week")
+    public ResponseEntity<?> getActivitisWeek() {
+        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisWeek();
+        return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/activitis/month")
+    public ResponseEntity<?> getActivitisMonth(@RequestParam("month") int month, @RequestParam("year") int year) {
+        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisMonth(month, year);
+        return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/activitis/year")
+    public ResponseEntity<?> getActivitisYear() {
+        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisYear();
+        return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/activitis/all")
+    public ResponseEntity<?> getActivitisAll() {
+        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisAll();
         return Resp.ok(respDTO);
     }
 

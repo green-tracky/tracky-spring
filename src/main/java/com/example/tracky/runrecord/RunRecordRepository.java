@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +52,16 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdJoin() {
         // TODO : join fetch 추가해서 모든 연관 엔티티 다 가져오기
         Query query = em.createQuery("select r from RunRecord r ", RunRecord.class);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    public List<RunRecord> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
+        Query query = em.createQuery(
+                "SELECT r FROM RunRecord r WHERE r.createdAt BETWEEN :start AND :end",
+                RunRecord.class);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }

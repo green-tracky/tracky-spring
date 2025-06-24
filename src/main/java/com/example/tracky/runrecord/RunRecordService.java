@@ -1,5 +1,8 @@
 package com.example.tracky.runrecord;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +13,7 @@ import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
 import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO.RecentRunsDTO;
-import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO.StatsDTO;
+import com.example.tracky.runrecord.RunRecordResponse.StatsDTO;
 import com.example.tracky.runrecord.runbadge.RunBadge;
 import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
@@ -33,7 +36,8 @@ public class RunRecordService {
     }
 
     public MainPageDTO getActivitis() {
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin(); // 나중에 유저 아이디로 조회 해야함
+        // 이 날짜 기준으로 조회
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
         List<RunBadge> runBadges = runBadgeRepository.findAllBadge(); // 나중에 획득한
         // 뱃지만 가져와야함
 
@@ -75,6 +79,37 @@ public class RunRecordService {
 
         // MainDTO
         return new RunRecordResponse.MainPageDTO(statsList, runBadgeList, recentRunList);
+    }
+
+    public MainPageDTO getActivitisWeek() {
+        // runRecordsRepository.findAllByCreatedAtBetween();
+        return null;
+    }
+
+    public MainPageDTO getActivitisMonth(Integer month, Integer year) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+
+        // LocalDate → LocalDateTime 타입변환
+        LocalDateTime startTime = start.atStartOfDay();
+        LocalDateTime endTime = end.atTime(LocalTime.MAX);
+
+        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(startTime, endTime);
+        System.out.println(runRecordList.toString());
+
+        // return new RunRecordResponse.StatsDTO(runRecordList);
+        return null;
+    }
+
+    public MainPageDTO getActivitisYear() {
+        // runRecordsRepository.findAllByCreatedAtBetween();
+
+        return null;
+    }
+
+    public MainPageDTO getActivitisAll() {
+        runRecordsRepository.findAllByUserIdJoin();
+        return null;
     }
 
     /**

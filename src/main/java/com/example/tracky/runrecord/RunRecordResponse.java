@@ -1,6 +1,7 @@
 package com.example.tracky.runrecord;
 
 import java.security.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.example.tracky.runrecord.picture.PictureResponse;
@@ -8,8 +9,10 @@ import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 
 import lombok.Data;
+import lombok.ToString;
 
 public class RunRecordResponse {
+
     /**
      * private Integer totalDistanceMeters;
      * <p>
@@ -34,23 +37,6 @@ public class RunRecordResponse {
         }
 
         @Data
-        static class StatsDTO {
-            private Integer totalDistanceMeters; // 총 거리. 미터 단위 [StatsDTO]
-            private Integer totalDurationSeconds; // 총 시간. 초 단위
-            private Integer countRecode;
-            private Integer avgPace;
-
-            public StatsDTO(RunRecord runRecord, Integer countRecode,
-                    Integer avgPace) {
-                this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
-                this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-                this.countRecode = countRecode;
-                this.avgPace = avgPace;
-            }
-
-        }
-
-        @Data
         static class RecentRunsDTO {
             private String title;
             private Integer totalDistanceMeters;
@@ -69,6 +55,24 @@ public class RunRecordResponse {
             }
 
         }
+    }
+
+    @ToString
+    @Data
+    public static class StatsDTO {
+        private Integer totalDistanceMeters; // 총 거리. 미터 단위 [StatsDTO]
+        private Integer totalDurationSeconds; // 총 시간. 초 단위
+        private Integer countRecode;
+        private Integer avgPace;
+
+        public StatsDTO(RunRecord runRecord, Integer countRecode,
+                Integer avgPace) {
+            this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
+            this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
+            this.countRecode = countRecode;
+            this.avgPace = avgPace;
+        }
+
     }
 
     /**
