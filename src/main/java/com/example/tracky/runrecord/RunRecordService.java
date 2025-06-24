@@ -8,8 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky.runrecord.RunRecordResponse.DTO;
 import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
+import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO.RecentRunsDTO;
+import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO.StatsDTO;
 import com.example.tracky.runrecord.runbadge.RunBadge;
 import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
@@ -36,32 +37,44 @@ public class RunRecordService {
         List<RunBadge> runBadges = runBadgeRepository.findAllBadge(); // 나중에 획득한
         // 뱃지만 가져와야함
 
-        Integer totalDistanceMeters = 0;
+        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
         Integer totalDurationSeconds = 0; // 총 시간. 초 단위
 
-        // runRecordsList 리스트 수동 생성
-        List<DTO> runRecordList = new ArrayList<>();
-        for (RunRecord record : runRecords) {
-            totalDistanceMeters += record.getTotalDistanceMeters();
-            totalDurationSeconds += record.getTotalDurationSeconds();
-            runRecordList.add(new DTO(record));
-        }
+        Integer recentDistanceMeters = 0; // 러닝별 거리. 미터 단위
+        Integer recentDurationSeconds = 0; // 러닝별 시간. 초 단위
 
-        // runBadgeList 리스트 수동 생성
+        // runBadgeList 생성
         List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
-        System.out.println("runBadgeList : " + runBadgeList);
         for (RunBadge badge : runBadges) {
             runBadgeList.add(new RunBadgeResponse.DTO(badge));
         }
 
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+        // recentRunList 생성
+        List<RecentRunsDTO> recentRunList = new ArrayList<>();
+        for (RunRecord record : runRecords) {
+            totalDistanceMeters += record.getTotalDistanceMeters();
+            recentDistanceMeters = record.getTotalDistanceMeters();
+            totalDurationSeconds += record.getTotalDurationSeconds();
+            recentDurationSeconds = record.getTotalDurationSeconds();
 
-        RunRecord totalRunRecord = RunRecord.builder()
+            Integer recentAvgPace = RunRecordUtil.calculatePace(recentDistanceMeters, recentDurationSeconds);
+
+            recentRunList.add(new MainPageDTO.RecentRunsDTO(record, runBadgeList, recentAvgPace));
+        }
+
+        // runStatsList 생성성
+        RunRecord runRecord = RunRecord.builder()
                 .totalDistanceMeters(totalDistanceMeters)
                 .totalDurationSeconds(totalDurationSeconds)
                 .build();
 
-        return new RunRecordResponse.MainPageDTO(totalRunRecord, avgPace, runBadgeList, runRecordList);
+        int count = runRecords.size();
+        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+        List<StatsDTO> statsList = List.of(new StatsDTO(runRecord, count, statsAvgPace));
+
+        // MainDTO
+        return new RunRecordResponse.MainPageDTO(statsList, runBadgeList, recentRunList);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import java.security.Timestamp;
 import java.util.List;
 
 import com.example.tracky.runrecord.picture.PictureResponse;
@@ -22,26 +23,67 @@ public class RunRecordResponse {
      */
     @Data
     public static class MainPageDTO {
-        private Integer totalDistanceMeters; // 총 거리. 미터 단위
-        private Integer totalDurationSeconds; // 총 시간. 초 단위
-        private Integer countRecode;
-        private Integer avgPace;
-        private List<DTO> recentRuns; // TODO : 최근활동에 맞는 영어이름으로 변경
-        private List<RunBadgeResponse.DTO> badges; // TODO : 나중에 획득한 뱃지 들어넣기
-        // private String level; // TODO : 나중에 레벨 입력
+        private List<StatsDTO> runstats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
 
-        public MainPageDTO(RunRecord runRecord, Integer avgPace, List<RunBadgeResponse.DTO> badges, /* String level */
-                List<DTO> recentRuns) {
-            this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
-            this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-            this.countRecode = recentRuns.size();
-            this.avgPace = avgPace;
+        public MainPageDTO(List<StatsDTO> runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
             this.badges = badges;
-            // this.level = level;
             this.recentRuns = recentRuns;
         }
 
+        @Data
+        static class StatsDTO {
+            private Integer totalDistanceMeters; // 총 거리. 미터 단위 [StatsDTO]
+            private Integer totalDurationSeconds; // 총 시간. 초 단위
+            private Integer countRecode;
+            private Integer avgPace;
+
+            public StatsDTO(RunRecord runRecord, Integer countRecode,
+                    Integer avgPace) {
+                this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
+                this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
+                this.countRecode = countRecode;
+                this.avgPace = avgPace;
+            }
+
+        }
+
+        @Data
+        static class RecentRunsDTO {
+            private String title;
+            private Integer totalDistanceMeters;
+            private Integer totalDurationSeconds;
+            private Integer avgPace;
+            private String createdAt;
+            private List<RunBadgeResponse.DTO> badges; // TODO : 나중에 획득한 뱃지 들어넣기
+
+            public RecentRunsDTO(RunRecord runRecord, List<RunBadgeResponse.DTO> badges, Integer avgPace) {
+                this.title = runRecord.getTitle();
+                this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
+                this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
+                this.avgPace = avgPace;
+                this.createdAt = runRecord.getCreatedAt().toString();
+                this.badges = badges;
+            }
+
+        }
     }
+
+    /**
+     * private Integer id;
+     * <p>
+     * private String title;
+     * <p>
+     * private String memo;
+     * <p>
+     * private Integer calories;
+     * <p>
+     * private List<RunSegmentResponse.DTO> segments;
+     * <p>
+     * private List<PictureResponse.DTO> pictures;
+     */
 
     /**
      * private Integer id;
@@ -90,47 +132,6 @@ public class RunRecordResponse {
                     .mapToInt(s -> s.getPace())
                     .min()
                     .orElse(0);
-        }
-
-    }
-
-    /**
-     * private Integer id;
-     * <p>
-     * private String title;
-     * <p>
-     * private String memo;
-     * <p>
-     * private Integer calories;
-     * <p>
-     * private List<RunSegmentResponse.DTO> segments;
-     * <p>
-     * private List<PictureResponse.DTO> pictures;
-     */
-    @Data
-    public static class DTO {
-        private Integer id;
-        private String title;
-        private Integer calories;
-        private Integer totalDistanceMeters;
-        private Integer totalDurationSeconds;
-        private String avgPace; // 추후 정해지면 넣자자
-        private String bestPace; // 추후 정해지면 넣자자
-        private List<RunSegmentResponse.DTO> segments;
-        private List<PictureResponse.DTO> pictures;
-
-        public DTO(RunRecord runRecord) {
-            this.id = runRecord.getId();
-            this.title = runRecord.getTitle();
-            this.calories = runRecord.getCalories();
-            this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
-            this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-            this.segments = runRecord.getRunSegments().stream()
-                    .map(s -> new RunSegmentResponse.DTO(s))
-                    .toList();
-            this.pictures = runRecord.getPictures().stream()
-                    .map(p -> new PictureResponse.DTO(p))
-                    .toList();
         }
 
     }

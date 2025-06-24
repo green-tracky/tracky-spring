@@ -14,7 +14,7 @@ public class RunBadgeRepository {
     private final EntityManager em;
 
     public List<RunBadge> findAllBadge() {
-        return em.createQuery("select b from Badge b", RunBadge.class)
+        return em.createQuery("select b from RunBadge b", RunBadge.class)
                 .getResultList();
     }
 
