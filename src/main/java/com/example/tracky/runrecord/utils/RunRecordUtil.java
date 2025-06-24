@@ -90,4 +90,18 @@ public class RunRecordUtil {
                 .mapToInt(s -> s.getDurationSeconds())
                 .sum();
     }
+
+    /**
+     * 구간의 누적 러닝 시간
+     * <p>
+     * 초단위
+     * 
+     * @param runSegments
+     * @return
+     */
+    public static int calculateElapsedTimeInSeconds(List<RunSegmentRequest.DTO> runSegments) {
+        return runSegments.stream()
+                .mapToInt(s -> s.getDurationSeconds())
+                .sum();
+    }
 }
