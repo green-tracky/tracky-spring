@@ -30,8 +30,13 @@ public class RunRecordResponse {
         private Integer calories;
         private Integer totalDistanceMeters;
         private Integer totalDurationSeconds;
+<<<<<<< HEAD
         private Integer avgPace;
         private Integer bestPace;
+=======
+        private Integer avgPace; // 추후 정해지면 넣자자
+        private Integer bestPace; // 추후 정해지면 넣자자
+>>>>>>> dev
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
 
