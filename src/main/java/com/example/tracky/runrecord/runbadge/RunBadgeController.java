@@ -20,8 +20,8 @@ public class RunBadgeController {
     private final RunBadgeService runBadgeService;
 
     @GetMapping("/run-badges")
-    public ResponseEntity<?> getBadges() {
-        List<RunBadgeResponse.DTO> respDTO = runBadgeService.getAllBadges();
+    public ResponseEntity<?> getRunBadges() {
+        List<RunBadgeResponse.DTO> respDTO = runBadgeService.getRunBadges();
         return Resp.ok(respDTO);
     }
 

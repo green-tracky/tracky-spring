@@ -17,7 +17,7 @@ public class RunBadgeService {
     private final RunBadgeRepository runBadgeRepository;
 
     @Transactional
-    public List<RunBadgeResponse.DTO> getAllBadges() {
+    public List<RunBadgeResponse.DTO> getRunBadges() {
         List<RunBadge> runBadges = runBadgeRepository.findAll();
 
         return runBadges.stream()
