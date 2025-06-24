@@ -1,13 +1,12 @@
 package com.example.tracky.runrecord;
 
-import java.sql.Timestamp;
-import java.util.List;
-
+import com.example.tracky._core.utils.DateTimeUtils;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
-
 import lombok.Data;
+
+import java.util.List;
 
 public class RunRecordResponse {
 
@@ -46,7 +45,7 @@ public class RunRecordResponse {
         private Integer bestPace; // 최고 페이스. 숫자가 낮아야 함
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
-        private Timestamp createdAt;
+        private String createdAt;
 
         public SaveDTO(RunRecord runRecord) {
             this.id = runRecord.getId();
@@ -55,7 +54,7 @@ public class RunRecordResponse {
             this.calories = runRecord.getCalories();
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-            this.createdAt = runRecord.getCreatedAt();
+            this.createdAt = DateTimeUtils.toDateTimeString(runRecord.getCreatedAt());
             this.segments = runRecord.getRunSegments().stream()
                     .map(s -> new RunSegmentResponse.DTO(s))
                     .toList();
@@ -87,7 +86,7 @@ public class RunRecordResponse {
         private Integer bestPace;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
-        private Timestamp createdAt;
+        private String createdAt;
 
         public DetailDTO(RunRecord runRecord) {
             this.id = runRecord.getId();
@@ -97,7 +96,7 @@ public class RunRecordResponse {
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
             this.elapsedTimeInSeconds = RunRecordUtil.calculateElapsedTimeInSeconds(runRecord.getRunSegments());
-            this.createdAt = runRecord.getCreatedAt();
+            this.createdAt = DateTimeUtils.toDateTimeString(runRecord.getCreatedAt());
             this.segments = runRecord.getRunSegments().stream()
                     .map(s -> new RunSegmentResponse.DTO(s))
                     .toList();
@@ -113,21 +112,6 @@ public class RunRecordResponse {
                     .min()
                     .orElse(0);
         }
-
-        // public class StartDate {
-        // private String startDate; // 예: "오늘", "어제", "2025년 06월 23일"
-        // private String startTime; // 예: "14:55"
-
-        // public StartDate(Timestamp timestamp) {
-        // // 1. Timestamp를 현재 시스템의 시간대(timezone)를 고려한 ZonedDateTime으로 변환합니다.
-        // // 한국에서 실행 중이라면 'Asia/Seoul' 시간대가 적용됩니다.
-
-        // // 2. 날짜와 시간을 각각 원하는 형식으로 포맷팅합니다.
-        // this.startDate = formatDateRelatively(zonedDateTime, zoneId);
-        // this.startTime = formatTime(zonedDateTime);
-        // }
-
-        // }
 
     }
 

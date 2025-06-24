@@ -1,12 +1,11 @@
 package com.example.tracky.runrecord.runsegment;
 
-import java.sql.Timestamp;
-import java.util.List;
-
+import com.example.tracky._core.utils.DateTimeUtils;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
-
 import lombok.Data;
+
+import java.util.List;
 
 public class RunSegmentResponse {
 
@@ -28,8 +27,8 @@ public class RunSegmentResponse {
     @Data
     public static class DTO {
         private Integer id;
-        private Timestamp startDate; // "2025-06-22 06:30:00"
-        private Timestamp endDate;
+        private String startDate; // "2025-06-22 06:30:00"
+        private String endDate;
         private Integer durationSeconds;
         private Integer distanceMeters;
         private Integer pace; // 초단위
@@ -37,8 +36,8 @@ public class RunSegmentResponse {
 
         public DTO(RunSegment runSegment) {
             this.id = runSegment.getId();
-            this.startDate = runSegment.getStartDate();
-            this.endDate = runSegment.getEndDate();
+            this.startDate = DateTimeUtils.toDateTimeString(runSegment.getStartDate());
+            this.endDate = DateTimeUtils.toDateTimeString(runSegment.getEndDate());
             this.durationSeconds = runSegment.getDurationSeconds();
             this.distanceMeters = runSegment.getDistanceMeters();
             this.pace = RunRecordUtil.calculatePace(runSegment.getDistanceMeters(), runSegment.getDurationSeconds());
