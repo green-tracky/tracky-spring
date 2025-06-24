@@ -41,4 +41,27 @@ public class RunRecordRepository {
         em.persist(runRecord);
         return runRecord;
     }
+
+    /**
+     * join fetch
+     * <p>
+     * - runSegments
+     * <p>
+     * - pictures
+     * 
+     * @param id -> runRecordId
+     * @return
+     */
+    public Optional<RunRecord> findByIdJoin(Integer id) {
+        Query query = em.createQuery(
+                "select r from RunRecord r left join fetch r.runSegments left join fetch r.pictures where r.id = :id",
+                RunRecord.class);
+        query.setParameter("id", id);
+
+        try {
+            return Optional.of((RunRecord) query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
+    }
 }
