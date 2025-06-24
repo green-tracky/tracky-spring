@@ -68,11 +68,11 @@ public class RunRecordUtil {
      * <p>
      * 미터 단위
      * 
-     * @param segments
+     * @param segmentDTOs
      * @return
      */
-    public static int calculateTotalDistanceMeters(List<RunSegmentRequest.DTO> segments) {
-        return segments.stream()
+    public static int calculateTotalDistanceMeters(List<RunSegmentRequest.DTO> segmentDTOs) {
+        return segmentDTOs.stream()
                 .mapToInt(s -> s.getDistanceMeters())
                 .sum();
     }
@@ -82,12 +82,13 @@ public class RunRecordUtil {
      * <p>
      * 초단위
      * 
-     * @param runSegments
+     * @param segmentDTOs
      * @return
      */
-    public static int calculateTotalDurationSeconds(List<RunSegmentRequest.DTO> runSegments) {
-        return runSegments.stream()
+    public static int calculateTotalDurationSeconds(List<RunSegmentRequest.DTO> segmentDTOs) {
+        return segmentDTOs.stream()
                 .mapToInt(s -> s.getDurationSeconds())
                 .sum();
     }
+
 }
