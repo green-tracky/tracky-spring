@@ -2,6 +2,7 @@ package com.example.tracky.runrecord;
 
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
+import com.example.tracky.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,16 @@ public class RunRecordRepositoryTest {
     private RunRecordRepository runRecordRepository;
 
     @Test
-    void findById_test() {
+    void findByIdJoin_test() {
         // given
         Integer id = 1;
 
         // when
-        RunRecord runRecord = runRecordRepository.findById(id)
+        RunRecord runRecord = runRecordRepository.findByIdJoin(id)
                 .orElseThrow();
 
         // eye
-        log.debug("✅ 러닝 기록 아이디: " + runRecord.toString());
+        log.debug("✅ 러닝 기록 아이디: " + runRecord.getId());
     }
 
     @Test
@@ -50,7 +51,9 @@ public class RunRecordRepositoryTest {
         reqDTO.setTitle("test 제목");
         reqDTO.setSegments(List.of(sDTO));
 
-        RunRecord runRecord = reqDTO.toEntity(1);
+        User user = User.builder().id(1).build();
+
+        RunRecord runRecord = reqDTO.toEntity(user);
 
         // when
         RunRecord runRecordPS = runRecordRepository.save(runRecord);
