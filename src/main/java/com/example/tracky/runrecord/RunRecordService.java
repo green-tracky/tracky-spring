@@ -50,6 +50,10 @@ public class RunRecordService {
         // 엔티티 저장
         RunRecord runRecordPS = runRecordsRepository.save(runRecord);
 
+        // 1. 저장된 러닝에 대해 badge 조건에 맞으면 badgeachv 테이블에 row를 추가한다
+
+        // 2. 러닝을 저장할때 마다 총 누적 거리를 조회해서 러닝레벨조건을 달성하면 유저는 다음 러닝 레벨을 소유한다 -> 나중에
+
         // 응답 DTO 로 변환
         return new RunRecordResponse.SaveDTO(runRecordPS);
     }
