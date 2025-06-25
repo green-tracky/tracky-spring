@@ -5,9 +5,11 @@ import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RunRecordService {
@@ -26,7 +28,7 @@ public class RunRecordService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크
-        if (runRecordPS.getUser().getId().equals(user.getId())) {
+        if (!runRecordPS.getUser().getId().equals(user.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
 
@@ -66,7 +68,7 @@ public class RunRecordService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크 -> 나중에 권한체크 로직 빼야함
-        if (runRecordPS.getUser().getId().equals(user.getId())) {
+        if (!runRecordPS.getUser().getId().equals(user.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
 
