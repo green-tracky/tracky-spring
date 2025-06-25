@@ -23,11 +23,11 @@ public class Challenge {
     private String startDate; // 챌린지 시작 날짜
     private String endDate; // 챌린지 종료 날짜
     private Double targetDistance; // 목표 달리기 거리 (km)
-    private String status; // 진행중 / 만료
+    private Status status; // 진행중 / 만료
     private String createdAt; // 챌린지 생성 시각
 
     @Builder
-    public Challenge(Integer id, String name, String sub, String description, String startDate, String endDate, Double targetDistance, String status, String createdAt) {
+    public Challenge(Integer id, String name, String sub, String description, String startDate, String endDate, Double targetDistance, Status status, String createdAt) {
         this.id = id;
         this.name = name;
         this.sub = sub;

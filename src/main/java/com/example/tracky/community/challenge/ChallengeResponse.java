@@ -14,7 +14,7 @@ public class ChallengeResponse {
         private String startDate; // 챌린지 시작 날짜
         private String endDate; // 챌린지 종료 날짜
         private Double targetDistance; // 목표 달리기 거리 (km)
-        private String status; // 진행중 / 만료
+        private Status status; // 진행중 / 만료
         private String createdAt;
 
         public DTO(Challenge challenge) {
