@@ -46,6 +46,7 @@ public class RunRecordResponse {
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
         private String createdAt;
+        private Integer userId;
 
         public SaveDTO(RunRecord runRecord) {
             this.id = runRecord.getId();
@@ -69,6 +70,7 @@ public class RunRecordResponse {
                     .mapToInt(s -> s.getPace())
                     .min()
                     .orElse(0);
+            this.userId = runRecord.getUser().getId();
         }
 
     }
@@ -87,6 +89,7 @@ public class RunRecordResponse {
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
         private String createdAt;
+        private Integer userId;
 
         public DetailDTO(RunRecord runRecord) {
             this.id = runRecord.getId();
@@ -111,6 +114,7 @@ public class RunRecordResponse {
                     .mapToInt(s -> s.getPace())
                     .min()
                     .orElse(0);
+            this.userId = runRecord.getUser().getId();
         }
 
     }

@@ -11,6 +11,7 @@ public class DateTimeUtils {
 
     /**
      * Timestamp를 서버의 기본 시간대를 기준으로 'yyyy-MM-dd HH:mm:ss' 형식의 문자열로 변환합니다.
+     * <p>
      * [주의] 이 메서드는 실행 환경의 기본 시간대에 따라 결과가 달라질 수 있습니다.
      *
      * @param timestamp 변환할 Timestamp 객체

@@ -17,4 +17,3 @@ INSERT INTO user_tb (username, email, profile_url, height, weight, gender, user_
                      flutter_token_id, created_at)
 VALUES ('love', 'love@example.com', 'http://example.com/profiles/love.jpg', 160.0, 55.0, '여', '일반', 'kakao',
         '#123ABC', 'token_love_789', NOW());
-
