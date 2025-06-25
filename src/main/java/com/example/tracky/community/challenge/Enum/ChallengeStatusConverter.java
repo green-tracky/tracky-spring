@@ -9,12 +9,12 @@ public class ChallengeStatusConverter implements AttributeConverter<ChallengeSta
     @Override
     public String convertToDatabaseColumn(ChallengeStatus attribute) {
         if (attribute == null) return null;
-        return attribute.getLabel(); // "진행중", "종료"
+        return attribute.getValue(); // "진행중", "종료"
     }
 
     @Override
     public ChallengeStatus convertToEntityAttribute(String dbData) {
         if (dbData == null) return null;
-        return ChallengeStatus.fromLabel(dbData);
+        return ChallengeStatus.fromValue(dbData);
     }
 }

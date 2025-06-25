@@ -25,7 +25,7 @@ public enum ChallengeStatus {
      * @return 일치하는 ChallengeStatus enum 값
      * @throws IllegalArgumentException 일치하는 label이 없을 경우
      */
-    public static ChallengeStatus fromLabel(String value) {
+    public static ChallengeStatus fromValue(String value) {
         return Arrays.stream(ChallengeStatus.values())
                 .filter(status -> status.value.equals(value))
                 .findFirst()
