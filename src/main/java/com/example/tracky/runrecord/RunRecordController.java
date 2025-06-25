@@ -23,8 +23,9 @@ public class RunRecordController {
     }
 
     @GetMapping("/runs/{id}")
-    public ResponseEntity<?> getRun(@PathVariable Integer id) {
-        return Resp.ok(null);
+    public ResponseEntity<?> getRunRecord(@PathVariable Integer id) {
+        RunRecordResponse.DetailDTO respDTO = runRecordsService.getRunRecord(id);
+        return Resp.ok(respDTO);
     }
 
 }

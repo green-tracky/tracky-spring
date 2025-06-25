@@ -1,12 +1,11 @@
 package com.example.tracky.runrecord;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Repository;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,7 +15,7 @@ public class RunRecordRepository {
 
     /**
      * RunRecord 엔티티 단일 반환
-     * 
+     *
      * @param id -> runRecordId
      * @return
      */
@@ -33,7 +32,7 @@ public class RunRecordRepository {
 
     /**
      * RunRecord 엔티티 퍼시스트 컨텍스트에 저장
-     * 
+     *
      * @param runRecord
      * @return RunRecord
      */
@@ -48,7 +47,7 @@ public class RunRecordRepository {
      * - runSegments
      * <p>
      * - pictures
-     * 
+     *
      * @param id -> runRecordId
      * @return
      */
