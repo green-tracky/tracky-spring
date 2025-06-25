@@ -1,14 +1,12 @@
 package com.example.tracky.community.challenge;
 
 import com.example.tracky.community.challenge.Enum.ChallengeStatusEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.tracky.community.challenge.Enum.StatusConverter;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -26,7 +24,11 @@ public class Challenge {
     private String startDate; // 챌린지 시작 날짜
     private String endDate; // 챌린지 종료 날짜
     private Double targetDistance; // 목표 달리기 거리 (km)
+
+    @Convert(converter = StatusConverter.class)
     private ChallengeStatusEnum challengeStatusEnum; // 진행중 / 만료
+
+    @CreationTimestamp
     private Timestamp createdAt; // 챌린지 생성 시각
 
     @Builder
