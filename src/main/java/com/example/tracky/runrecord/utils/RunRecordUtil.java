@@ -1,7 +1,10 @@
 package com.example.tracky.runrecord.utils;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import com.example.tracky.runrecord.runsegment.RunSegment;
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
 
 public class RunRecordUtil {
@@ -91,4 +94,17 @@ public class RunRecordUtil {
                 .sum();
     }
 
+    /**
+     * 구간 총 경과 시간
+     * <p>
+     * 초단위
+     * 
+     * @param runSegments
+     * @return
+     */
+    public static int calculateElapsedTimeInSeconds(List<RunSegment> runSegments) {
+        LocalDateTime startDate = runSegments.get(0).getStartDate().toLocalDateTime();
+        LocalDateTime endDate = runSegments.get(runSegments.size() - 1).getEndDate().toLocalDateTime();
+        return (int) ChronoUnit.SECONDS.between(startDate, endDate);
+    }
 }
