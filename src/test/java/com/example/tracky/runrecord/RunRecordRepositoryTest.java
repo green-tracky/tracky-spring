@@ -21,16 +21,16 @@ public class RunRecordRepositoryTest {
     private RunRecordRepository runRecordRepository;
 
     @Test
-    void findById_test() {
+    void findByIdJoin_test() {
         // given
         Integer id = 1;
 
         // when
-        RunRecord runRecord = runRecordRepository.findById(id)
+        RunRecord runRecord = runRecordRepository.findByIdJoin(id)
                 .orElseThrow();
 
         // eye
-        log.debug("✅ 러닝 기록 아이디: " + runRecord.toString());
+        log.debug("✅ 러닝 기록 아이디: " + runRecord.getId());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.example.tracky.user;
 
+import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.user.Enum.Gender;
 import com.example.tracky.user.Enum.GenderConverter;
 import com.example.tracky.user.Enum.UserType;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -39,6 +42,9 @@ public class User {
 
     @CreationTimestamp
     private Timestamp createdAt;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RunRecord> runRecords = new ArrayList<>(); // 자식 러닝들
 
     @Builder
     public User(Integer id, String username, String email, String profileUrl, Double height, Double weight, Gender gender, UserType userType, String provider, String userTag, String flutterTokenId) {

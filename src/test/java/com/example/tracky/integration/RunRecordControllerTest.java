@@ -130,5 +130,19 @@ public class RunRecordControllerTest extends MyRestDoc {
 
     @Test
     public void getRunRecord_test() throws Exception {
+        // given
+        Integer id = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/runs/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+        
+        // then
     }
 }

@@ -1,24 +1,16 @@
 package com.example.tracky.runrecord.runsegment;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -36,12 +28,13 @@ public class RunSegment {
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
 
+    @BatchSize(size = 100) // IN 절에 최대 100개의 ID를 담아 조회
     @OneToMany(mappedBy = "runSegment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RunCoordinate> runCoordinates = new ArrayList<>(); // 자식 좌표들
 
     @Builder
     public RunSegment(Integer id, Integer distanceMeters, Integer durationSeconds, Timestamp startDate,
-            Timestamp endDate, RunRecord runRecord) {
+                      Timestamp endDate, RunRecord runRecord) {
         this.id = id;
         this.distanceMeters = distanceMeters;
         this.durationSeconds = durationSeconds;

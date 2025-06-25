@@ -14,7 +14,7 @@ public class RunRecordRepository {
     private final EntityManager em;
 
     /**
-     * RunRecord 엔티티 단일 반환
+     * 테스트용 findById
      *
      * @param id -> runRecordId
      * @return
@@ -46,15 +46,15 @@ public class RunRecordRepository {
      * <p>
      * - runSegments
      * <p>
-     * - pictures
+     * 좌표를 가져오지 않는 이유: 좌표가 너무 많으면 카테시안 곱 문제가 발생하여 너무 많은 row를 만들게 된다. 따라서 구간까지만 조회하고 배치로 좌표값을 가져오자
+     * <p>
+     * distinct 를 사용하는 이유: 메모리에서 러닝 객체를 더 만들지 마라
      *
      * @param id -> runRecordId
      * @return
      */
     public Optional<RunRecord> findByIdJoin(Integer id) {
-        Query query = em.createQuery(
-                "select r from RunRecord r left join fetch r.runSegments left join fetch r.pictures where r.id = :id",
-                RunRecord.class);
+        Query query = em.createQuery("select distinct r from RunRecord r join fetch r.runSegments where r.id = :id", RunRecord.class);
         query.setParameter("id", id);
 
         try {
