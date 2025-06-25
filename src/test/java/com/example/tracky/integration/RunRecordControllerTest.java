@@ -1,9 +1,11 @@
 package com.example.tracky.integration;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.example.tracky.MyRestDoc;
+import com.example.tracky.runrecord.RunRecordRequest;
+import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,15 +14,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.tracky.MyRestDoc;
-import com.example.tracky.runrecord.RunRecordRequest;
-import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 // 컨트롤러 통합 테스트
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // MOCK -> 가짜 환경을 만들어 필요한 의존관계를 다 메모리에 올려서 테스트
+@Slf4j
 public class RunRecordControllerTest extends MyRestDoc {
 
     @Autowired
@@ -106,7 +107,7 @@ public class RunRecordControllerTest extends MyRestDoc {
 
         String requestBody = om.writeValueAsString(reqDTO);
 
-        // System.out.println(requestBody);
+        log.debug("✅요청 바디: " + requestBody);
 
         // when
         ResultActions actions = mvc.perform(
@@ -117,7 +118,7 @@ public class RunRecordControllerTest extends MyRestDoc {
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
-        System.out.println(responseBody);
+        log.debug("✅응답 바디: " + responseBody);
 
         // then -> 결과를 코드로 검증 // json의 최상위 객체를 $ 표기한다
         // actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(400));

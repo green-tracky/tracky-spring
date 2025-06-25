@@ -1,0 +1,34 @@
+package com.example.tracky.user.Enum;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+
+/**
+ * Type Enum을 데이터베이스의 String 값("일반", "관리자")으로 변환하는 컨버터.
+ *
+ * @Converter(autoApply = true)로 설정하면,
+ * 모든 Type 타입 필드에 자동으로 이 컨버터가 적용됩니다.
+ */
+@Converter
+public class UserTypeConverter implements AttributeConverter<UserType, String> {
+
+    // Enum -> DB (String)
+    // 애플리케이션의 Type.GENERAL을 DB의 "일반"으로 변환
+    @Override
+    public String convertToDatabaseColumn(UserType userType) {
+        if (userType == null) {
+            return null;
+        }
+        return userType.getValue();
+    }
+
+    // DB (String) -> Enum
+    // DB의 "일반"을 애플리케이션의 Type.GENERAL로 변환
+    @Override
+    public UserType convertToEntityAttribute(String value) {
+        if (value == null) {
+            return null;
+        }
+        return UserType.fromDbValue(value);
+    }
+}
