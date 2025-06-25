@@ -60,6 +60,11 @@ public enum ErrorCodeEnum {
     MODIFY_OTHER_USER_INFO_FORBIDDEN(403, "다른 사용자의 정보를 수정할 수 없습니다"),
 
     /**
+     * 403 Forbidden - 접근 권한이 없습니다.
+     */
+    ACCESS_DENIED(403, "접근 권한이 없습니다."),
+
+    /**
      * 404 Not Found - 해당 사용자를 찾을 수 없습니다.
      */
     USER_NOT_FOUND(404, "해당 사용자를 찾을 수 없습니다"),
