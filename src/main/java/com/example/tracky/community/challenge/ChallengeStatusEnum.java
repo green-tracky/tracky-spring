@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Status {
+public enum ChallengeStatusEnum {
     INPROGRESS("진행중"),
     COMPLETED("종료");
 
