@@ -30,8 +30,8 @@ public class RunRecordController {
 
     @GetMapping("/runs/{id}")
     public ResponseEntity<?> getRunRecord(@PathVariable Integer id) {
-        log.debug("러닝 아이디" + id);
         RunRecordResponse.DetailDTO respDTO = runRecordsService.getRunRecord(id);
+
         return Resp.ok(respDTO);
     }
 
