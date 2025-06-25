@@ -1,7 +1,7 @@
 package com.example.tracky.community.challenge;
 
-import com.example.tracky.community.challenge.Enum.ChallengeStatusEnum;
-import com.example.tracky.community.challenge.Enum.StatusConverter;
+import com.example.tracky.community.challenge.Enum.ChallengeStatus;
+import com.example.tracky.community.challenge.Enum.ChallengeStatusConverter;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,14 +25,14 @@ public class Challenge {
     private String endDate; // 챌린지 종료 날짜
     private Double targetDistance; // 목표 달리기 거리 (km)
 
-    @Convert(converter = StatusConverter.class)
-    private ChallengeStatusEnum challengeStatusEnum; // 진행중 / 만료
+    @Convert(converter = ChallengeStatusConverter.class)
+    private ChallengeStatus challengeStatus; // 진행중 / 만료
 
     @CreationTimestamp
     private Timestamp createdAt; // 챌린지 생성 시각
 
     @Builder
-    public Challenge(Integer id, String name, String sub, String description, String startDate, String endDate, Double targetDistance, ChallengeStatusEnum challengeStatusEnum) {
+    public Challenge(Integer id, String name, String sub, String description, String startDate, String endDate, Double targetDistance, ChallengeStatus challengeStatus) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -40,6 +40,6 @@ public class Challenge {
         this.startDate = startDate;
         this.endDate = endDate;
         this.targetDistance = targetDistance;
-        this.challengeStatusEnum = challengeStatusEnum;
+        this.challengeStatus = challengeStatus;
     }
 }

@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ChallengeStatusEnum {
+public enum ChallengeStatus {
     INPROGRESS("진행중"),
     COMPLETED("종료");
 
     private final String label;
 
-    public static ChallengeStatusEnum fromLabel(String label) {
-        for (ChallengeStatusEnum status : values()) {
+    public static ChallengeStatus fromLabel(String label) {
+        for (ChallengeStatus status : values()) {
             if (status.label.equals(label)) {
                 return status;
             }
