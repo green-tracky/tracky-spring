@@ -1,5 +1,6 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky.community.challenge.Enum.ChallengeStatusEnum;
 import lombok.Data;
 
 public class ChallengeResponse {

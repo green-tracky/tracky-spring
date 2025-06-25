@@ -1,5 +1,6 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky.community.challenge.Enum.ChallengeStatusEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +9,8 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @NoArgsConstructor
 @Getter
@@ -24,10 +27,10 @@ public class Challenge {
     private String endDate; // 챌린지 종료 날짜
     private Double targetDistance; // 목표 달리기 거리 (km)
     private ChallengeStatusEnum challengeStatusEnum; // 진행중 / 만료
-    private String createdAt; // 챌린지 생성 시각
+    private Timestamp createdAt; // 챌린지 생성 시각
 
     @Builder
-    public Challenge(Integer id, String name, String sub, String description, String startDate, String endDate, Double targetDistance, ChallengeStatusEnum challengeStatusEnum, String createdAt) {
+    public Challenge(Integer id, String name, String sub, String description, String startDate, String endDate, Double targetDistance, ChallengeStatusEnum challengeStatusEnum) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -36,6 +39,5 @@ public class Challenge {
         this.endDate = endDate;
         this.targetDistance = targetDistance;
         this.challengeStatusEnum = challengeStatusEnum;
-        this.createdAt = createdAt;
     }
 }
