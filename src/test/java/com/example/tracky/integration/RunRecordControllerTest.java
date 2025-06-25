@@ -127,4 +127,8 @@ public class RunRecordControllerTest extends MyRestDoc {
         // actions.andExpect(MockMvcResultMatchers.jsonPath("$.body").value(Matchers.nullValue()));
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
+
+    @Test
+    public void getRunRecord_test() throws Exception {
+    }
 }

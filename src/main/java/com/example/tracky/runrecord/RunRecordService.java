@@ -1,12 +1,11 @@
 package com.example.tracky.runrecord;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
-
+import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,14 +22,14 @@ public class RunRecordService {
 
     /**
      * 러닝 저장
-     * 
-     * @param userId
+     *
+     * @param user
      * @param reqDTO
      */
     @Transactional
-    public RunRecordResponse.SaveDTO save(Integer userId, RunRecordRequest.SaveDTO reqDTO) {
+    public RunRecordResponse.SaveDTO save(User user, RunRecordRequest.SaveDTO reqDTO) {
         // 엔티티 변환
-        RunRecord runRecord = reqDTO.toEntity(userId);
+        RunRecord runRecord = reqDTO.toEntity(user);
 
         // 엔티티 저장
         RunRecord runRecordPS = runRecordsRepository.save(runRecord);
