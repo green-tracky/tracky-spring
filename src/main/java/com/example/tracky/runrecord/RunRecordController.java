@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.tracky._core.utils.Resp;
 
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,26 +29,27 @@ public class RunRecordController {
     }
 
     @GetMapping("/activitis/week")
-    public ResponseEntity<?> getActivitisWeek() {
-        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisWeek();
+    public ResponseEntity<?> getActivitisWeek(@RequestParam(value = "baseDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+        if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
+        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisWeek(baseDate);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activitis/month")
     public ResponseEntity<?> getActivitisMonth(@RequestParam("month") int month, @RequestParam("year") int year) {
-        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisMonth(month, year);
+        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisMonth(month, year);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activitis/year")
-    public ResponseEntity<?> getActivitisYear() {
-        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisYear();
+    public ResponseEntity<?> getActivitisYear(@RequestParam("year") int year) {
+        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisYear(year);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activitis/all")
     public ResponseEntity<?> getActivitisAll() {
-        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitisAll();
+        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisAll();
         return Resp.ok(respDTO);
     }
 
