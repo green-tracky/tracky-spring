@@ -89,14 +89,14 @@ public class RunRecordRepositoryTest {
         Optional<RunCoordinate> runCoordinate = runCoordinateRepository.findById(runCoordinateId);
 
         if (runRecordPS2.isPresent()) {
-            log.debug("러닝 확인:" + runRecordPS2.get().getId());
+            log.debug("✅러닝 확인:" + runRecordPS2.get().getId());
         } else {
-            log.debug("러닝 잘 삭제됨");
+            log.debug("✅러닝 잘 삭제됨");
         }
         if (runCoordinate.isPresent()) {
-            log.debug("좌표 확인:" + runCoordinate.get().getId());
+            log.debug("✅좌표 확인:" + runCoordinate.get().getId());
         } else {
-            log.debug("좌표 잘 삭제됨");
+            log.debug("✅좌표 잘 삭제됨");
         }
 
     }
