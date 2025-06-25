@@ -1,5 +1,7 @@
 package com.example.tracky.community.challenge.Enum;
 
+import com.example.tracky._core.error.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi400;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -29,6 +31,6 @@ public enum ChallengeStatus {
         return Arrays.stream(ChallengeStatus.values())
                 .filter(status -> status.value.equals(value))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown value: " + value));
+                .orElseThrow(() -> new ExceptionApi400(ErrorCodeEnum.INVALID_CHALLENGE_STATUS));
     }
 }

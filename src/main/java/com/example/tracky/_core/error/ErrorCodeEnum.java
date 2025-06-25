@@ -20,6 +20,11 @@ public enum ErrorCodeEnum {
     INVALID_GENDER(400, "유효하지 않은 성별 값입니다"),
 
     /**
+     * 400 Bad Request - 유효하지 않은 성별 값입니다.
+     */
+    INVALID_CHALLENGE_STATUS(400, "유효하지 않은 챌린지 상태 값입니다"),
+
+    /**
      * 400 Bad Request - 이미 종료된 챌린지입니다.
      */
     CHALLENGE_ALREADY_ENDED(400, "이미 종료된 챌린지 입니다"),
