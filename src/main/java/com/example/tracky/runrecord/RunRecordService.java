@@ -21,7 +21,10 @@ import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 
+import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +43,7 @@ public class RunRecordService {
     public MainPageDTO getActivitis() {
         // 이 날짜 기준으로 조회
         List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
-        List<RunBadge> runBadges = runBadgeRepository.findAllBadge(); // 나중에 획득한 뱃지만 가져와야함
+        List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
 
         Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
         Integer totalDurationSeconds = 0; // 총 시간. 초 단위
@@ -213,13 +216,13 @@ public class RunRecordService {
     /**
      * 러닝 저장
      *
-     * @param userId
+     * @param user
      * @param reqDTO
      */
     @Transactional
-    public RunRecordResponse.SaveDTO save(Integer userId, RunRecordRequest.SaveDTO reqDTO) {
+    public RunRecordResponse.SaveDTO save(User user, RunRecordRequest.SaveDTO reqDTO) {
         // 엔티티 변환
-        RunRecord runRecord = reqDTO.toEntity(userId);
+        RunRecord runRecord = reqDTO.toEntity(user);
 
         // 엔티티 저장
         RunRecord runRecordPS = runRecordsRepository.save(runRecord);

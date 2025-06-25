@@ -1,13 +1,10 @@
 package com.example.tracky.runrecord;
 
-import java.security.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
 
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
-
 import lombok.Data;
 import lombok.ToString;
 
@@ -112,6 +109,7 @@ public class RunRecordResponse {
         private Integer totalDurationSeconds;
         private Integer avgPace;
         private Integer bestPace;
+        private Integer userId;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
 
@@ -136,6 +134,7 @@ public class RunRecordResponse {
                     .mapToInt(s -> s.getPace())
                     .min()
                     .orElse(0);
+            this.userId = runRecord.getUser().getId();
         }
 
     }

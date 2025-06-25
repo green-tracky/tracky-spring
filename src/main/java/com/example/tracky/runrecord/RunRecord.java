@@ -1,27 +1,19 @@
 package com.example.tracky.runrecord;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runsegment.RunSegment;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.example.tracky.user.User;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -44,7 +36,8 @@ public class RunRecord {
     @CreationTimestamp
     private Timestamp createdAt;
 
-    // 나중에 user 를 ManyToOne 하도록 추가해야함
+    @ManyToOne(fetch = FetchType.LAZY) // 추가함
+    private User user;
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RunSegment> runSegments = new ArrayList<>(); // 자식 구간들
@@ -57,7 +50,7 @@ public class RunRecord {
 
     @Builder
     public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds,
-            Integer calories, String memo, Integer intensity, String place) {
+                     Integer calories, String memo, Integer intensity, String place, User user) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
@@ -66,6 +59,7 @@ public class RunRecord {
         this.memo = memo;
         this.intensity = intensity;
         this.place = place;
+        this.user = user;
     }
 
 }

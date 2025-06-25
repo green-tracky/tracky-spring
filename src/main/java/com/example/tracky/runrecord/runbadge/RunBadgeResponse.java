@@ -6,13 +6,18 @@ public class RunBadgeResponse {
 
     @Data
     public static class DTO {
-        private String name; // 뱃지 이름
-        private String imageUrl; // 뱃지 이미지
+        private Integer id;
+        private String name;
+        private String description;
+        private String imageUrl;
 
         public DTO(RunBadge runBadge) {
+            this.id = runBadge.getId();
             this.name = runBadge.getName();
+            this.description = runBadge.getDescription();
             this.imageUrl = runBadge.getImageUrl();
         }
+
     }
 
 }
