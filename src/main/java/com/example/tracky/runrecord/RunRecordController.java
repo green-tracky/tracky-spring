@@ -30,9 +30,28 @@ public class RunRecordController {
 
     @GetMapping("/runs/{id}")
     public ResponseEntity<?> getRunRecord(@PathVariable Integer id) {
-        RunRecordResponse.DetailDTO respDTO = runRecordsService.getRunRecord(id);
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
+        RunRecordResponse.DetailDTO respDTO = runRecordsService.getRunRecord(user, id);
 
         return Resp.ok(respDTO);
+    }
+
+    @DeleteMapping("/runs/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
+        runRecordsService.delete(user, id);
+
+        return Resp.ok(null);
     }
 
 }

@@ -15,6 +15,7 @@ public class RunRecordRepository {
 
     /**
      * 테스트용 findById
+     * 삭제용 findById
      *
      * @param id -> runRecordId
      * @return
@@ -62,5 +63,14 @@ public class RunRecordRepository {
         } catch (Exception e) {
             return Optional.ofNullable(null);
         }
+    }
+
+    /**
+     * 러닝 기록 삭제
+     *
+     * @param runRecord
+     */
+    public void delete(RunRecord runRecord) {
+        em.remove(runRecord);
     }
 }
