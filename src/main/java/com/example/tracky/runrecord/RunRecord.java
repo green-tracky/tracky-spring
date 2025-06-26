@@ -62,4 +62,24 @@ public class RunRecord {
         this.user = user;
     }
 
+    /**
+     * 변경 내용
+     * <pre>
+     * - title
+     * - memo
+     * - intensity
+     * - place
+     * </pre>
+     *
+     * @param reqDTO
+     */
+    public void update(RunRecordRequest.UpdateDTO reqDTO) {
+        this.title = reqDTO.getTitle();
+        this.memo = reqDTO.getMemo();
+        this.intensity = reqDTO.getIntensity();
+        this.place = reqDTO.getPlace();
+    }
+
+    // 사진 변경 로직 나중에 추가
+
 }
