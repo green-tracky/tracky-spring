@@ -1,12 +1,10 @@
 package com.example.tracky.community.challenge;
 
-import java.util.List;
-
-import com.example.tracky.runrecord.runbadge.RunBadge;
-import org.springframework.stereotype.Repository;
-
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor

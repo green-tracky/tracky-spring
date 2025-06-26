@@ -21,9 +21,9 @@ public class Challenge {
     private String name; // 챌린지 이름
     private String sub; // 챌린지 짧은 설명
     private String description; // 챌린지 설명
-    private String startDate; // 챌린지 시작 날짜
-    private String endDate; // 챌린지 종료 날짜
-    private Double targetDistance; // 목표 달리기 거리 (km)
+    private Timestamp startDate; // 챌린지 시작 날짜
+    private Timestamp endDate; // 챌린지 종료 날짜
+    private Integer targetDistance; // 목표 달리기 거리 (m)
 
     @Convert(converter = ChallengeStatusConverter.class)
     private ChallengeStatus challengeStatus; // 진행중 / 만료
@@ -32,7 +32,7 @@ public class Challenge {
     private Timestamp createdAt; // 챌린지 생성 시각
 
     @Builder
-    public Challenge(Integer id, String name, String sub, String description, String startDate, String endDate, Double targetDistance, ChallengeStatus challengeStatus) {
+    public Challenge(Integer id, String name, String sub, String description, Timestamp startDate, Timestamp endDate, Integer targetDistance, ChallengeStatus challengeStatus) {
         this.id = id;
         this.name = name;
         this.sub = sub;

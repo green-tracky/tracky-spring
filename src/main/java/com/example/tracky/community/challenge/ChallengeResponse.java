@@ -22,11 +22,6 @@ public class ChallengeResponse {
             this.name = challenge.getName();
             this.sub = challenge.getSub();
             this.description = challenge.getDescription();
-            this.startDate = challenge.getStartDate();
-            this.endDate = challenge.getEndDate();
-            this.targetDistance = challenge.getTargetDistance();
-            this.challengeStatus = challenge.getChallengeStatus();
-            this.createdAt = challenge.getCreatedAt();
         }
     }
 
