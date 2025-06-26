@@ -1,15 +1,16 @@
 package com.example.tracky.community.challenge;
 
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
-import com.example.tracky.runrecord.runbadge.RunBadge;
-import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
+import java.util.List;
 
-@SpringBootTest
+@Slf4j
+@Import({ChallengeRepository.class, ChallengeRepository.class})
+@DataJpaTest
 public class ChallengeRepositoryTest {
 
     @Autowired
@@ -19,7 +20,7 @@ public class ChallengeRepositoryTest {
     void findAll_test() {
         List<Challenge> challenges = challengeRepository.findAll();
         for (Challenge challenge : challenges) {
-            System.out.println(challenge.getName());
+            log.debug("✅ 챌린지 이름: " + challenge.getName());
         }
     }
 
