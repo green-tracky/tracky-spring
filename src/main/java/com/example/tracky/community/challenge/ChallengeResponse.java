@@ -1,5 +1,6 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky._core.utils.DateTimeUtils;
 import com.example.tracky.community.challenge.Enum.ChallengeStatus;
 import lombok.Data;
 
@@ -13,7 +14,7 @@ public class ChallengeResponse {
         private String description; // 챌린지 설명
         private String startDate; // 챌린지 시작 날짜
         private String endDate; // 챌린지 종료 날짜
-        private Double targetDistance; // 목표 달리기 거리 (km)
+        private Integer targetDistance; // 목표 달리기 거리 (km)
         private ChallengeStatus challengeStatus; // 진행중 / 만료
         private String createdAt;
 
@@ -22,6 +23,11 @@ public class ChallengeResponse {
             this.name = challenge.getName();
             this.sub = challenge.getSub();
             this.description = challenge.getDescription();
+            this.startDate = DateTimeUtils.toDateTimeString(challenge.getStartDate());
+            this.endDate = DateTimeUtils.toDateTimeString(challenge.getEndDate());
+            this.targetDistance = challenge.getTargetDistance();
+            this.challengeStatus = challenge.getChallengeStatus();
+            this.createdAt = DateTimeUtils.toDateTimeString(challenge.getCreatedAt());
         }
     }
 
