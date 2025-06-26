@@ -12,17 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tracky._core.utils.Resp;
-
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
 public class RunRecordController {
-
     private final RunRecordService runRecordsService;
 
     @GetMapping("/activitis")
@@ -54,6 +49,12 @@ public class RunRecordController {
     public ResponseEntity<?> getActivitisAll() {
         RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisAll();
         return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/activitis/options")
+    public ResponseEntity<?> getDateOptions() {
+        RunRecordResponse.DateOptionsDTO dto = runRecordsService.getDateOptions();
+        return Resp.ok(dto);
     }
 
     @PostMapping("/runs")

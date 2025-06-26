@@ -5,8 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +22,6 @@ import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -99,13 +96,6 @@ public class RunRecordService {
         Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
         Integer totalDurationSeconds = 0; // 총 시간. 초 단위
 
-        // recentRunList 생성
-        List<RecentRunsDTO> recentRunList = new ArrayList<>();
-        for (RunRecord record : runRecordList) {
-            totalDistanceMeters += record.getTotalDistanceMeters();
-            totalDurationSeconds += record.getTotalDurationSeconds();
-        }
-
         // runStatsList 생성성
         RunRecord runRecord = RunRecord.builder()
                 .totalDistanceMeters(totalDistanceMeters)
@@ -132,13 +122,6 @@ public class RunRecordService {
         Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
         Integer totalDurationSeconds = 0; // 총 시간. 초 단위
 
-        // recentRunList 생성
-        List<RecentRunsDTO> recentRunList = new ArrayList<>();
-        for (RunRecord record : runRecordList) {
-            totalDistanceMeters += record.getTotalDistanceMeters();
-            totalDurationSeconds += record.getTotalDurationSeconds();
-        }
-
         // runStatsList 생성성
         RunRecord runRecord = RunRecord.builder()
                 .totalDistanceMeters(totalDistanceMeters)
@@ -164,13 +147,6 @@ public class RunRecordService {
         // Utill 로 빼야하나? RunCount 와 avgPace 구하는 것
         Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
         Integer totalDurationSeconds = 0; // 총 시간. 초 단위
-
-        // recentRunList 생성
-        List<RecentRunsDTO> recentRunList = new ArrayList<>();
-        for (RunRecord record : runRecordList) {
-            totalDistanceMeters += record.getTotalDistanceMeters();
-            totalDurationSeconds += record.getTotalDurationSeconds();
-        }
 
         // runStatsList 생성성
         RunRecord runRecord = RunRecord.builder()
@@ -231,4 +207,60 @@ public class RunRecordService {
         return new RunRecordResponse.SaveDTO(runRecordPS);
     }
 
+    public RunRecordResponse.DateOptionsDTO getDateOptions() {
+        List<RunRecord> all = runRecordsRepository.findAllByUserIdJoin();
+
+        Set<Integer> yearData = new HashSet<>();
+        Map<Integer, Set<Integer>> monthData = new HashMap<>();
+        Map<String, Set<String>> weekData = new HashMap<>();
+
+        for (RunRecord record : all) {
+            LocalDate date = record.getCreatedAt().toLocalDateTime().toLocalDate();
+
+            int year = date.getYear();
+            int month = date.getMonthValue();
+
+            // 연도
+            yearData.add(year);
+
+            // 월
+            monthData.putIfAbsent(year, new HashSet<>());
+            monthData.get(year).add(month);
+
+            // 주
+            LocalDate startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
+            String weekLabel = startOfWeek.getMonthValue() + "." + startOfWeek.getDayOfMonth()
+                    + "~" + endOfWeek.getMonthValue() + "." + endOfWeek.getDayOfMonth();
+            String key = year + "-" + String.format("%02d", month);
+
+            weekData.putIfAbsent(key, new HashSet<>());
+            weekData.get(key).add(weekLabel);
+        }
+
+        // DTO 생성
+        RunRecordResponse.DateOptionsDTO dto = new RunRecordResponse.DateOptionsDTO();
+        dto.setYears(new ArrayList<>(yearData));
+
+        Map<Integer, List<Integer>> sortedMonthMap = new HashMap<>();
+        for (Integer y : monthData.keySet()) {
+            sortedMonthMap.put(y, monthData.get(y).stream().sorted().toList());
+        }
+        dto.setMounts(sortedMonthMap);
+
+        LocalDate today = LocalDate.now();
+        String currentMonthKey = today.getYear() + "-" + String.format("%02d", today.getMonthValue());
+
+        Map<String, List<String>> filteredWeeksMap = new HashMap<>();
+        if (weekData.containsKey(currentMonthKey)) {
+            Set<String> weeks = weekData.get(currentMonthKey);
+            List<String> sortedWeeks = new ArrayList<>(weeks);
+            Collections.sort(sortedWeeks);
+            filteredWeeksMap.put(currentMonthKey, sortedWeeks);
+        }
+        // 기존 방식과 동일
+        dto.setWeeks(filteredWeeksMap);
+
+        return dto;
+    }
 }

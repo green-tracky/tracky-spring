@@ -1,6 +1,9 @@
 package com.example.tracky.runrecord;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
@@ -63,13 +66,19 @@ public class RunRecordResponse {
         private Integer avgPace;
 
         public StatsDTO(RunRecord runRecord, Integer countRecode,
-                Integer avgPace) {
+                        Integer avgPace) {
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
             this.countRecode = countRecode;
             this.avgPace = avgPace;
         }
+    }
 
+    @Data
+    public static class DateOptionsDTO {
+        private List<Integer> years = new ArrayList<>();
+        private Map<Integer, List<Integer>> mounts = new HashMap<>();
+        private Map<String, List<String>> weeks = new HashMap<>();
     }
 
     /**
