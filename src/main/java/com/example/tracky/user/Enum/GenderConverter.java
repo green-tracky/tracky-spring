@@ -9,7 +9,7 @@ import jakarta.persistence.Converter;
  * @Converter(autoApply = true)로 설정하면,
  * 모든 Gender 타입 필드에 자동으로 이 컨버터가 적용됩니다.
  */
-@Converter
+@Converter(autoApply = true)
 public class GenderConverter implements AttributeConverter<Gender, String> {
 
     // Enum -> DB (String)

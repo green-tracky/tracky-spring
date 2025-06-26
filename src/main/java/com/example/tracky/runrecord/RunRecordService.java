@@ -3,18 +3,23 @@ package com.example.tracky.runrecord;
 import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvService;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RunRecordService {
 
-    private final RunRecordRepository runRecordsRepository;
+    private final RunRecordRepository runRecordRepository;
+    private final RunBadgeAchvService runBadgeAchvService;
 
     /**
      * 러닝 상세 조회
@@ -24,7 +29,7 @@ public class RunRecordService {
      */
     public RunRecordResponse.DetailDTO getRunRecord(User user, Integer id) {
         // 러닝 기록 조회
-        RunRecord runRecordPS = runRecordsRepository.findByIdJoin(id)
+        RunRecord runRecordPS = runRecordRepository.findByIdJoin(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크
@@ -44,14 +49,19 @@ public class RunRecordService {
      */
     @Transactional
     public RunRecordResponse.SaveDTO save(User user, RunRecordRequest.SaveDTO reqDTO) {
-        // 엔티티 변환
+        // 1. DTO를 엔티티로 변환합니다.
         RunRecord runRecord = reqDTO.toEntity(user);
 
-        // 엔티티 저장
-        RunRecord runRecordPS = runRecordsRepository.save(runRecord);
+        // 2. 달리기 기록 엔티티를 데이터베이스에 저장합니다.
+        RunRecord runRecordPS = runRecordRepository.save(runRecord);
 
-        // 응답 DTO 로 변환
-        return new RunRecordResponse.SaveDTO(runRecordPS);
+        // 3. 뱃지 서비스를 호출하여, 저장된 기록에 대해 획득 가능한 모든 뱃지를 확인하고 부여합니다.
+        // 이 과정에서 새로 획득한 뱃지 목록을 반환받습니다.
+        List<RunBadgeAchv> newlyAwardedBadges = runBadgeAchvService.checkAndAwardBadges(runRecordPS);
+
+        // 4. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
+        return new RunRecordResponse.SaveDTO(runRecordPS, newlyAwardedBadges);
+
     }
 
     /**
@@ -64,7 +74,7 @@ public class RunRecordService {
     @Transactional
     public void delete(User user, Integer id) {
         // 러닝 기록 조회
-        RunRecord runRecordPS = runRecordsRepository.findById(id)
+        RunRecord runRecordPS = runRecordRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크 -> 나중에 권한체크 로직 빼야함
@@ -73,13 +83,13 @@ public class RunRecordService {
         }
 
         // 삭제
-        runRecordsRepository.delete(runRecordPS);
+        runRecordRepository.delete(runRecordPS);
     }
 
     @Transactional
     public RunRecordResponse.UpdateDTO update(User user, Integer id, RunRecordRequest.UpdateDTO reqDTO) {
         // 러닝 기록 조회
-        RunRecord runRecordPS = runRecordsRepository.findById(id)
+        RunRecord runRecordPS = runRecordRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크 -> 나중에 권한체크 로직 빼야함

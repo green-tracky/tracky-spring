@@ -2,6 +2,8 @@ package com.example.tracky.runrecord;
 
 import com.example.tracky._core.utils.DateTimeUtils;
 import com.example.tracky.runrecord.picture.PictureResponse;
+import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
@@ -24,8 +26,9 @@ public class RunRecordResponse {
         private List<PictureResponse.DTO> pictures;
         private String createdAt;
         private Integer userId;
+        private List<RunBadgeAchvResponse.DTO> badges;
 
-        public SaveDTO(RunRecord runRecord) {
+        public SaveDTO(RunRecord runRecord, List<RunBadgeAchv> awardedBadges) {
             this.id = runRecord.getId();
             this.title = runRecord.getTitle();
             this.memo = runRecord.getMemo();
@@ -48,6 +51,11 @@ public class RunRecordResponse {
                     .min()
                     .orElse(0);
             this.userId = runRecord.getUser().getId();
+
+            // 전달받은 뱃지 획득 엔티티 목록을 DTO 목록으로 변환
+            this.badges = awardedBadges.stream()
+                    .map(ba -> new RunBadgeAchvResponse.DTO(ba))
+                    .toList();
         }
 
     }
