@@ -12,21 +12,9 @@ import java.util.List;
 
 public class RunRecordRequest {
 
-    /**
-     * private String title;
-     * <p>
-     * private String memo;
-     * <p>
-     * private Integer calories;
-     * <p>
-     * private List<RunSegmentRequest.DTO> segments;
-     * <p>
-     * private List<PictureRequest.DTO> pictures;
-     */
     @Data
     public static class SaveDTO {
         private String title;
-        private String memo;
         private Integer calories;
         private List<RunSegmentRequest.DTO> segments;
         private List<PictureRequest.DTO> pictures;
@@ -34,7 +22,6 @@ public class RunRecordRequest {
         public RunRecord toEntity(User user) {
             RunRecord runRecord = RunRecord.builder()
                     .title(title)
-                    .memo(memo)
                     .calories(calories)
                     .user(user)
                     .totalDistanceMeters(
@@ -60,5 +47,14 @@ public class RunRecordRequest {
 
             return runRecord;
         }
+    }
+    
+    @Data
+    public static class UpdateDTO {
+        private String title;
+        private String memo;
+        private Integer intensity; // 러닝 강도
+        private String place; // 러닝 장소
+        private List<PictureRequest.DTO> pictures; // 수정된 이미지 목록
     }
 }

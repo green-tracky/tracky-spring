@@ -75,4 +75,22 @@ public class RunRecordService {
         // 삭제
         runRecordsRepository.delete(runRecordPS);
     }
+
+    @Transactional
+    public RunRecordResponse.UpdateDTO update(User user, Integer id, RunRecordRequest.UpdateDTO reqDTO) {
+        // 러닝 기록 조회
+        RunRecord runRecordPS = runRecordsRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
+
+        // 권한 체크 -> 나중에 권한체크 로직 빼야함
+        if (!runRecordPS.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        // 러닝 내용 수정
+        runRecordPS.update(reqDTO);
+
+        // 응답 DTO 로 반환
+        return new RunRecordResponse.UpdateDTO(runRecordPS);
+    }
 }
