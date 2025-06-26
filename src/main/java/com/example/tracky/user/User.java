@@ -2,9 +2,7 @@ package com.example.tracky.user;
 
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.user.Enum.Gender;
-import com.example.tracky.user.Enum.GenderConverter;
 import com.example.tracky.user.Enum.UserType;
-import com.example.tracky.user.Enum.UserTypeConverter;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,13 +26,8 @@ public class User {
     private String profileUrl; // 프로필 이미지 주소
     private Double height; // 177.5(cm)
     private Double weight; // 75.5(kg)
-
-    @Convert(converter = GenderConverter.class)
     private Gender gender; // (남 | 여)
-
-    @Convert(converter = UserTypeConverter.class)
     private UserType userType; // (일반 | 관리자)
-
     private String provider; // oauth 제공자 (kakao, google)
     private String userTag; // #UUID 6자리
     private String flutterTokenId; // 기기 식별 아이디 // 알림서비스용

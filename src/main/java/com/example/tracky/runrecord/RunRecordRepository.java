@@ -5,6 +5,7 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.YearMonth;
 import java.util.Optional;
 
 @Repository
@@ -72,5 +73,38 @@ public class RunRecordRepository {
      */
     public void delete(RunRecord runRecord) {
         em.remove(runRecord);
+    }
+
+    /**
+     * 사용자의 총 누적 러닝 거리를 조회하는 메서드
+     *
+     * @param userId
+     * @return
+     */
+    public Integer findTotalDistanceByUserId(Integer userId) {
+        Query query = em.createQuery("select sum(r.totalDistanceMeters) from RunRecord r where r.user.id = :userId", Long.class);
+        query.setParameter("userId", userId);
+        Long totalDistance = (Long) query.getSingleResult();
+        return totalDistance.intValue();
+    }
+
+    /**
+     * <pre>
+     * 사용자의 특정 월의 러닝 횟수를 조회하는 메서드
+     * '첫 시작' 뱃지 조건(매달 첫 러닝) 검사에 사용
+     * </pre>
+     *
+     * @param userId
+     * @param yearMonth YearMonth.now() 값을 넣으면 됨
+     * @return
+     */
+    public Integer countByUserIdAndYearMonth(Integer userId, YearMonth yearMonth) {
+        // JPQL의 FUNCTION 키워드를 사용하여 데이터베이스의 네이티브 날짜 함수(YEAR, MONTH)를 호출
+        Query query = em.createQuery("select count(r) from RunRecord r where r.user.id = :userId and function('YEAR', r.createdAt) = :year and function('MONTH', r.createdAt) = :month", Long.class);
+        query.setParameter("userId", userId);
+        query.setParameter("year", yearMonth.getYear());
+        query.setParameter("month", yearMonth.getMonth());
+        Long totalCount = (Long) query.getSingleResult();
+        return totalCount.intValue();
     }
 }
