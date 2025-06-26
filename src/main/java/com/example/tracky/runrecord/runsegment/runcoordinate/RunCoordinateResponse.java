@@ -1,7 +1,6 @@
 package com.example.tracky.runrecord.runsegment.runcoordinate;
 
-import java.sql.Timestamp;
-
+import com.example.tracky._core.utils.DateTimeUtils;
 import lombok.Data;
 
 public class RunCoordinateResponse {
@@ -18,13 +17,13 @@ public class RunCoordinateResponse {
         private Integer id;
         private Double lat;
         private Double lon;
-        private Timestamp createdAt;
+        private String createdAt;
 
         public DTO(RunCoordinate runCoordinate) {
             this.id = runCoordinate.getId();
             this.lat = runCoordinate.getLat();
             this.lon = runCoordinate.getLon();
-            this.createdAt = runCoordinate.getCreatedAt();
+            this.createdAt = DateTimeUtils.toDateTimeString(runCoordinate.getCreatedAt());
         }
 
     }
