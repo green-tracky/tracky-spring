@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.tracky.runrecord.DTO.RecentRunsDTO;
+import com.example.tracky.runrecord.DTO.StatsDTO;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
@@ -13,66 +15,58 @@ import lombok.ToString;
 
 public class RunRecordResponse {
 
-    /**
-     * private Integer totalDistanceMeters;
-     * <p>
-     * private Integer totalDurationSeconds;
-     * <p>
-     * private Integer countRecode;
-     * <p>
-     * private String avgPace;
-     * <p>
-     * private List<DTO> runRecords;
-     */
     @Data
-    public static class MainPageDTO {
-        private List<StatsDTO> runstats;
+    public static class WeekDTO {
+        private StatsDTO runstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public MainPageDTO(List<StatsDTO> runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public WeekDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
-
-        @Data
-        static class RecentRunsDTO {
-            private String title;
-            private Integer totalDistanceMeters;
-            private Integer totalDurationSeconds;
-            private Integer avgPace;
-            private String createdAt;
-            private List<RunBadgeResponse.DTO> badges; // TODO : 나중에 획득한 뱃지 들어넣기
-
-            public RecentRunsDTO(RunRecord runRecord, List<RunBadgeResponse.DTO> badges, Integer avgPace) {
-                this.title = runRecord.getTitle();
-                this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
-                this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-                this.avgPace = avgPace;
-                this.createdAt = runRecord.getCreatedAt().toString();
-                this.badges = badges;
-            }
-
-        }
     }
 
-    @ToString
     @Data
-    public static class StatsDTO {
-        private Integer totalDistanceMeters; // 총 거리. 미터 단위 [StatsDTO]
-        private Integer totalDurationSeconds; // 총 시간. 초 단위
-        private Integer countRecode;
-        private Integer avgPace;
+    public static class MonthDTO {
+        private StatsDTO runstats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
 
-        public StatsDTO(RunRecord runRecord, Integer countRecode,
-                        Integer avgPace) {
-            this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
-            this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-            this.countRecode = countRecode;
-            this.avgPace = avgPace;
+        public MonthDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
+            this.badges = badges;
+            this.recentRuns = recentRuns;
         }
     }
+
+    @Data
+    public static class YearDTO {
+        private StatsDTO runstats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
+
+        public YearDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
+            this.badges = badges;
+            this.recentRuns = recentRuns;
+        }
+    }
+
+    @Data
+    public static class AllDTO {
+        private StatsDTO runstats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
+
+        public AllDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
+            this.badges = badges;
+            this.recentRuns = recentRuns;
+        }
+    }
+
 
     @Data
     public static class DateOptionsDTO {

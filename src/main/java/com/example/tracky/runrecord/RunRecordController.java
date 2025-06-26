@@ -1,6 +1,7 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky._core.utils.Resp;
+import com.example.tracky.runrecord.DTO.StatsDTO;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,32 +23,32 @@ public class RunRecordController {
 
     @GetMapping("/activitis")
     public ResponseEntity<?> getActivitis() {
-        RunRecordResponse.MainPageDTO respDTO = runRecordsService.getActivitis();
+        RunRecordResponse.AllDTO respDTO = runRecordsService.getActivitisAll();
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activitis/week")
     public ResponseEntity<?> getActivitisWeek(@RequestParam(value = "base-date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
-        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisWeek(baseDate);
+        RunRecordResponse.WeekDTO respDTO = runRecordsService.getActivitisWeek(baseDate);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activitis/month")
     public ResponseEntity<?> getActivitisMonth(@RequestParam("month") int month, @RequestParam("year") int year) {
-        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisMonth(month, year);
+        RunRecordResponse.MonthDTO respDTO = runRecordsService.getActivitisMonth(month, year);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activitis/year")
     public ResponseEntity<?> getActivitisYear(@RequestParam("year") int year) {
-        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisYear(year);
+        RunRecordResponse.YearDTO respDTO = runRecordsService.getActivitisYear(year);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activitis/all")
     public ResponseEntity<?> getActivitisAll() {
-        RunRecordResponse.StatsDTO respDTO = runRecordsService.getActivitisAll();
+        RunRecordResponse.AllDTO respDTO = runRecordsService.getActivitisAll();
         return Resp.ok(respDTO);
     }
 

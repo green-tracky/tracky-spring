@@ -7,14 +7,13 @@ import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+import com.example.tracky.runrecord.DTO.RecentRunsDTO;
+import com.example.tracky.runrecord.DTO.StatsDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tracky._core.error.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO;
-import com.example.tracky.runrecord.RunRecordResponse.MainPageDTO.RecentRunsDTO;
-import com.example.tracky.runrecord.RunRecordResponse.StatsDTO;
 import com.example.tracky.runrecord.runbadge.RunBadge;
 import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
@@ -22,6 +21,8 @@ import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
+
+import static org.springframework.data.projection.EntityProjection.ProjectionType.DTO;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class RunRecordService {
 
     }
 
-    public MainPageDTO getActivitis() {
+    public RunRecordResponse.AllDTO getActivitisAll() {
         // 이 날짜 기준으로 조회
         List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
         List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
@@ -64,7 +65,7 @@ public class RunRecordService {
 
             Integer recentAvgPace = RunRecordUtil.calculatePace(recentDistanceMeters, recentDurationSeconds);
 
-            recentRunList.add(new MainPageDTO.RecentRunsDTO(record, runBadgeList, recentAvgPace));
+            recentRunList.add(new RecentRunsDTO(record, runBadgeList, recentAvgPace));
         }
 
         // runStatsList 생성성
@@ -73,108 +74,44 @@ public class RunRecordService {
                 .totalDurationSeconds(totalDurationSeconds)
                 .build();
 
-        int count = runRecords.size();
+        int count = recentRunList.size();
         Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
-        List<StatsDTO> statsList = List.of(new StatsDTO(runRecord, count, statsAvgPace));
+        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
 
         // MainDTO
-        return new RunRecordResponse.MainPageDTO(statsList, runBadgeList, recentRunList);
+        return new RunRecordResponse.AllDTO(stats, runBadgeList, recentRunList);
     }
 
-    public StatsDTO getActivitisWeek(LocalDate baseDate) {
+    public RunRecordResponse.WeekDTO getActivitisWeek(LocalDate baseDate) {
         LocalDate start = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = start.plusDays(6);
 
         // LocalDate → LocalDateTime 타입변환
         LocalDateTime startTime = start.atStartOfDay();
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
-
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(startTime, endTime);
-
-        // Utill 로 빼야하나? RunCount 와 avgPace 구하는 것
         Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
         Integer totalDurationSeconds = 0; // 총 시간. 초 단위
 
-        // runStatsList 생성성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
+        // runBadgeList 생성
+        List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
 
-        int count = runRecordList.size();
-        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-
-        return new RunRecordResponse.StatsDTO(runRecord, count, statsAvgPace);
-    }
-
-    public StatsDTO getActivitisMonth(Integer month, Integer year) {
-        LocalDate start = LocalDate.of(year, month, 1);
-        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
-
-        // LocalDate → LocalDateTime 타입변환
-        LocalDateTime startTime = start.atStartOfDay();
-        LocalDateTime endTime = end.atTime(LocalTime.MAX);
-
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(startTime, endTime);
-
-        // Utill 로 빼야하나? RunCount 와 avgPace 구하는 것
-        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
-        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
-
-        // runStatsList 생성성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-
-        int count = runRecordList.size();
-        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-
-        return new RunRecordResponse.StatsDTO(runRecord, count, statsAvgPace);
-    }
-
-    public StatsDTO getActivitisYear(Integer year) {
-        LocalDate start = LocalDate.of(year, 1, 1);
-        LocalDate end = LocalDate.of(year, 12, 31);
-
-        // LocalDate → LocalDateTime 타입변환
-        LocalDateTime startTime = start.atStartOfDay();
-        LocalDateTime endTime = end.atTime(LocalTime.MAX);
-
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(startTime, endTime);
-
-        // Utill 로 빼야하나? RunCount 와 avgPace 구하는 것
-        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
-        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
-
-        // runStatsList 생성성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-
-        int count = runRecordList.size();
-        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-
-        return new RunRecordResponse.StatsDTO(runRecord, count, statsAvgPace);
-    }
-
-    public StatsDTO getActivitisAll() {
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByUserIdJoin();
-        System.out.println(runRecordList.toString());
-
-        // Utill 로 빼야하나? RunCount 와 avgPace 구하는 것
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
-
-        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
-        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
+        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
+        for (RunBadge badge : runBadges) {
+            runBadgeList.add(new RunBadgeResponse.DTO(badge));
+        }
 
         // recentRunList 생성
+        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(startTime, endTime);
+
         List<RecentRunsDTO> recentRunList = new ArrayList<>();
-        for (RunRecord record : runRecords) {
+        for (RunRecord record : runRecordList) {
             totalDistanceMeters += record.getTotalDistanceMeters();
             totalDurationSeconds += record.getTotalDurationSeconds();
+
+            Integer recentAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+            recentRunList.add(new RecentRunsDTO(record, runBadgeList, recentAvgPace));
         }
 
         // runStatsList 생성성
@@ -183,10 +120,102 @@ public class RunRecordService {
                 .totalDurationSeconds(totalDurationSeconds)
                 .build();
 
-        int count = runRecords.size();
+        int count = runRecordList.size();
         Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
-        return new RunRecordResponse.StatsDTO(runRecord, count, statsAvgPace);
+        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+
+        return new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList);
+    }
+
+    public RunRecordResponse.MonthDTO getActivitisMonth(Integer month, Integer year) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+
+        // LocalDate → LocalDateTime 타입변환
+        LocalDateTime startTime = start.atStartOfDay();
+        LocalDateTime endTime = end.atTime(LocalTime.MAX);
+        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
+        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
+
+        // runBadgeList 생성
+        List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
+
+        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
+        for (RunBadge badge : runBadges) {
+            runBadgeList.add(new RunBadgeResponse.DTO(badge));
+        }
+
+        // recentRunList 생성
+        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(startTime, endTime);
+
+        List<RecentRunsDTO> recentRunList = new ArrayList<>();
+        for (RunRecord record : runRecordList) {
+            totalDistanceMeters += record.getTotalDistanceMeters();
+            totalDurationSeconds += record.getTotalDurationSeconds();
+
+            Integer recentAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+            recentRunList.add(new RecentRunsDTO(record, runBadgeList, recentAvgPace));
+        }
+
+        // runStatsList 생성성
+        RunRecord runRecord = RunRecord.builder()
+                .totalDistanceMeters(totalDistanceMeters)
+                .totalDurationSeconds(totalDurationSeconds)
+                .build();
+
+        int count = runRecordList.size();
+        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+
+        return new RunRecordResponse.MonthDTO(stats, runBadgeList, recentRunList);
+    }
+
+    public RunRecordResponse.YearDTO getActivitisYear(Integer year) {
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
+
+        // LocalDate → LocalDateTime 타입변환
+        LocalDateTime startTime = start.atStartOfDay();
+        LocalDateTime endTime = end.atTime(LocalTime.MAX);
+        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
+        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
+
+        // runBadgeList 생성
+        List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
+
+        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
+        for (RunBadge badge : runBadges) {
+            runBadgeList.add(new RunBadgeResponse.DTO(badge));
+        }
+
+        // recentRunList 생성
+        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(startTime, endTime);
+
+        List<RecentRunsDTO> recentRunList = new ArrayList<>();
+        for (RunRecord record : runRecordList) {
+            totalDistanceMeters += record.getTotalDistanceMeters();
+            totalDurationSeconds += record.getTotalDurationSeconds();
+
+            Integer recentAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+            recentRunList.add(new RecentRunsDTO(record, runBadgeList, recentAvgPace));
+        }
+
+        // runStatsList 생성성
+        RunRecord runRecord = RunRecord.builder()
+                .totalDistanceMeters(totalDistanceMeters)
+                .totalDurationSeconds(totalDurationSeconds)
+                .build();
+
+        int count = runRecordList.size();
+        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+
+        return new RunRecordResponse.YearDTO(stats, runBadgeList, recentRunList);
     }
 
     /**
