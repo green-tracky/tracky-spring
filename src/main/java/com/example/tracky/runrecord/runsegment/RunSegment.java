@@ -24,6 +24,7 @@ public class RunSegment {
     private Integer durationSeconds; // 구간 소요시간. 초 단위
     private Timestamp startDate; // 구간 시작 시간. 프론트에서 받아야 한다
     private Timestamp endDate; // 구간 종료 시간. 프론트에서 받아야 한다
+    private Integer pace; // 페이스. 초 단위. km 단위
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
@@ -33,14 +34,13 @@ public class RunSegment {
     private List<RunCoordinate> runCoordinates = new ArrayList<>(); // 자식 좌표들
 
     @Builder
-    public RunSegment(Integer id, Integer distanceMeters, Integer durationSeconds, Timestamp startDate,
-                      Timestamp endDate, RunRecord runRecord) {
+    public RunSegment(Integer id, Integer distanceMeters, Integer durationSeconds, Timestamp startDate, Timestamp endDate, Integer pace, RunRecord runRecord) {
         this.id = id;
         this.distanceMeters = distanceMeters;
         this.durationSeconds = durationSeconds;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.pace = pace;
         this.runRecord = runRecord;
     }
-
 }

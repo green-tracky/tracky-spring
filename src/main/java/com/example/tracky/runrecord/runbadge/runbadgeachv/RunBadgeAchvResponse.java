@@ -8,15 +8,15 @@ public class RunBadgeAchvResponse {
 
     @Data
     public static class DTO {
-        private Integer runBadgeId;
-        private String name;
-        private String description;
-        private String imageUrl;
-        private String achievedAt;
+        private Integer id; // badgeId
+        private String name; // 뱃지 이름
+        private String description; // 뱃지 설명
+        private String imageUrl; // 뱃지 이미지
+        private String achievedAt; // 뱃지 획득날짜
 
         public DTO(RunBadgeAchv runBadgeAchv) {
             RunBadge badge = runBadgeAchv.getRunBadge();
-            this.runBadgeId = badge.getId();
+            this.id = badge.getId();
             this.name = badge.getName();
             this.description = badge.getDescription();
             this.imageUrl = badge.getImageUrl();

@@ -20,7 +20,7 @@ public class RunRecordResponse {
         private Integer calories;
         private Integer totalDistanceMeters; // 러닝 총 이동거리
         private Integer totalDurationSeconds; // 러닝 총 시간
-        private Integer avgPace; // 평균 페이스
+        private Double avgPace; // 평균 페이스
         private Integer bestPace; // 최고 페이스. 숫자가 낮아야 함
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
@@ -42,14 +42,8 @@ public class RunRecordResponse {
             this.pictures = runRecord.getPictures().stream()
                     .map(p -> new PictureResponse.DTO(p))
                     .toList();
-            this.avgPace = (int) this.segments.stream()
-                    .mapToInt(s -> s.getPace())
-                    .average()
-                    .orElse(0);
-            this.bestPace = this.segments.stream()
-                    .mapToInt(s -> s.getPace())
-                    .min()
-                    .orElse(0);
+            this.avgPace = runRecord.getAvgPace();
+            this.bestPace = runRecord.getBestPace();
             this.userId = runRecord.getUser().getId();
 
             // 전달받은 뱃지 획득 엔티티 목록을 DTO 목록으로 변환
@@ -69,7 +63,7 @@ public class RunRecordResponse {
         private Integer totalDistanceMeters; // 러닝 총 이동거리
         private Integer totalDurationSeconds; // 러닝 총 시간
         private Integer elapsedTimeInSeconds; // 러닝 총 경과시간
-        private Integer avgPace;
+        private Double avgPace;
         private Integer bestPace;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
@@ -93,14 +87,8 @@ public class RunRecordResponse {
             this.pictures = runRecord.getPictures().stream()
                     .map(p -> new PictureResponse.DTO(p))
                     .toList();
-            this.avgPace = (int) this.segments.stream()
-                    .mapToInt(s -> s.getPace())
-                    .average()
-                    .orElse(0);
-            this.bestPace = this.segments.stream()
-                    .mapToInt(s -> s.getPace())
-                    .min()
-                    .orElse(0);
+            this.avgPace = runRecord.getAvgPace();
+            this.bestPace = runRecord.getBestPace();
             this.userId = runRecord.getUser().getId();
             this.intensity = runRecord.getIntensity();
             this.place = runRecord.getPlace();
@@ -117,7 +105,7 @@ public class RunRecordResponse {
         private Integer totalDistanceMeters; // 러닝 총 이동거리
         private Integer totalDurationSeconds; // 러닝 총 시간
         private Integer elapsedTimeInSeconds; // 러닝 총 경과시간
-        private Integer avgPace;
+        private Double avgPace;
         private Integer bestPace;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
@@ -141,14 +129,8 @@ public class RunRecordResponse {
             this.pictures = runRecord.getPictures().stream()
                     .map(p -> new PictureResponse.DTO(p))
                     .toList();
-            this.avgPace = (int) this.segments.stream()
-                    .mapToInt(s -> s.getPace())
-                    .average()
-                    .orElse(0);
-            this.bestPace = this.segments.stream()
-                    .mapToInt(s -> s.getPace())
-                    .min()
-                    .orElse(0);
+            this.avgPace = runRecord.getAvgPace();
+            this.bestPace = runRecord.getBestPace();
             this.userId = runRecord.getUser().getId();
             this.intensity = runRecord.getIntensity();
             this.place = runRecord.getPlace();

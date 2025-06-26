@@ -24,10 +24,10 @@ public class RunRecordRequest {
                     .title(title)
                     .calories(calories)
                     .user(user)
-                    .totalDistanceMeters(
-                            RunRecordUtil.calculateTotalDistanceMeters(segments))
-                    .totalDurationSeconds(
-                            RunRecordUtil.calculateTotalDurationSeconds(segments))
+                    .totalDistanceMeters(RunRecordUtil.calculateTotalDistanceMeters(segments))
+                    .totalDurationSeconds(RunRecordUtil.calculateTotalDurationSeconds(segments))
+                    .avgPace(RunRecordUtil.calculateAvgPace(segments))
+                    .bestPace(RunRecordUtil.calculateBestPace(segments))
                     .build();
 
             // 러닝 구간 변환
@@ -48,7 +48,7 @@ public class RunRecordRequest {
             return runRecord;
         }
     }
-    
+
     @Data
     public static class UpdateDTO {
         private String title;

@@ -1,13 +1,13 @@
 package com.example.tracky.runrecord.runsegment;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
-
+import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 public class RunSegmentRequest {
 
@@ -37,6 +37,7 @@ public class RunSegmentRequest {
                     .durationSeconds(durationSeconds)
                     .distanceMeters(distanceMeters)
                     .runRecord(runRecord)
+                    .pace(RunRecordUtil.calculatePace(distanceMeters, durationSeconds))
                     .build();
 
             // 좌표 변환

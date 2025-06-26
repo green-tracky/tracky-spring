@@ -40,16 +40,16 @@ public class RunBadgeAchvService {
      */
     @Transactional
     public List<RunBadgeAchv> checkAndAwardBadges(RunRecord runRecord) {
-        List<RunBadgeAchv> awarded = new ArrayList<>();
+        List<RunBadgeAchv> awardedBadges = new ArrayList<>();
 
         // 1. '단일 기록'만으로 판단 가능한 뱃지들을 먼저 확인합니다.
-        awarded.addAll(checkAndAwardSingleRunBadges(runRecord));
+        awardedBadges.addAll(checkAndAwardSingleRunBadges(runRecord));
 
         // 2. '누적 기록'으로 판단 가능한 뱃지들을 확인합니다.
         // 이 뱃지들은 "이번 달리기로 인해" 달성되었으므로, 해당 달리기 기록(runRecord)에 연결됩니다.
-        awarded.addAll(checkAndAwardCumulativeBadges(runRecord));
+        awardedBadges.addAll(checkAndAwardCumulativeBadges(runRecord));
 
-        return awarded;
+        return awardedBadges;
     }
 
     /**
