@@ -1,7 +1,6 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky._core.utils.Resp;
-import com.example.tracky.runrecord.DTO.StatsDTO;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

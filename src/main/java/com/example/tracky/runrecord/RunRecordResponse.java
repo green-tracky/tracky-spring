@@ -5,51 +5,79 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.tracky.runrecord.DTO.AllStatsDTO;
+import com.example.tracky.runrecord.DTO.TotalStatsDTO;
 import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.StatsDTO;
+import com.example.tracky.runrecord.DTO.AvgStatsDTO;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import lombok.Data;
-import lombok.ToString;
 
 public class RunRecordResponse {
 
+    /**
+     * 주간 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
     @Data
     public static class WeekDTO {
-        private StatsDTO runstats;
+        private AvgStatsDTO runstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public WeekDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public WeekDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
     }
 
+    /**
+     * 월간 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
     @Data
     public static class MonthDTO {
-        private StatsDTO runstats;
+        private AvgStatsDTO runstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public MonthDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public MonthDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
     }
 
+    /**
+     * 연간 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private TotalStatsDTO allStats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
     @Data
     public static class YearDTO {
-        private StatsDTO runstats;
-        private AllStatsDTO allStats;
+        private AvgStatsDTO runstats;
+        private TotalStatsDTO allStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public YearDTO(StatsDTO runstats, AllStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public YearDTO(AvgStatsDTO runstats, TotalStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
             this.allStats = allStats;
             this.badges = badges;
@@ -57,14 +85,25 @@ public class RunRecordResponse {
         }
     }
 
+    /**
+     * 전체 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private TotalStatsDTO allStats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
     @Data
     public static class AllDTO {
-        private StatsDTO runstats;
-        private AllStatsDTO allStats;
+        private AvgStatsDTO runstats;
+        private TotalStatsDTO allStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public AllDTO(StatsDTO runstats, AllStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public AllDTO(AvgStatsDTO runstats, TotalStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
             this.allStats = allStats;
             this.badges = badges;
@@ -72,6 +111,17 @@ public class RunRecordResponse {
         }
     }
 
+    /**
+     * 날짜 필터 옵션 제공 DTO
+     * <p>
+     * - 연, 월, 주 단위 선택을 위한 드롭다운 리스트 제공
+     * <p>
+     * private List<Integer> years = new ArrayList<>();
+     * <p>
+     * private Map<Integer, List<Integer>> mounts = new HashMap<>();
+     * <p>
+     * private Map<String, List<String>> weeks = new HashMap<>();
+     */
     @Data
     public static class DateOptionsDTO {
         private List<Integer> years = new ArrayList<>();

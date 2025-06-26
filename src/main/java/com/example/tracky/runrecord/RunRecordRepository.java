@@ -18,7 +18,7 @@ public class RunRecordRepository {
 
     /**
      * RunRecord 엔티티 단일 반환
-     * 
+     *
      * @param id -> runRecordId
      * @return
      */
@@ -35,7 +35,7 @@ public class RunRecordRepository {
 
     /**
      * RunRecord 엔티티 퍼시스트 컨텍스트에 저장
-     * 
+     *
      * @param runRecord
      * @return RunRecord
      */
@@ -46,7 +46,7 @@ public class RunRecordRepository {
 
     /**
      * RunRecord 엔티티 전체 조회
-     * 
+     *
      * @return
      */
     public List<RunRecord> findAllByUserIdJoin() {
@@ -56,6 +56,15 @@ public class RunRecordRepository {
         return runRecords;
     }
 
+    /**
+     * 특정 기간 동안 생성된 RunRecord 엔티티를 조회
+     * <p></p>
+     * - createdAt 기준으로 시작일~종료일 사이의 기록만 필터링
+     *
+     * @param start 시작일시
+     * @param end   종료일시
+     * @return 기간 내 러닝 기록 리스트
+     */
     public List<RunRecord> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
         Query query = em.createQuery(
                 "SELECT r FROM RunRecord r WHERE r.createdAt BETWEEN :start AND :end",

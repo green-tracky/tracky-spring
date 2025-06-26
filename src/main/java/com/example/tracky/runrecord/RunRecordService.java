@@ -8,9 +8,9 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
-import com.example.tracky.runrecord.DTO.AllStatsDTO;
+import com.example.tracky.runrecord.DTO.TotalStatsDTO;
 import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.StatsDTO;
+import com.example.tracky.runrecord.DTO.AvgStatsDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +23,6 @@ import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
-
-import static org.springframework.data.projection.EntityProjection.ProjectionType.DTO;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +38,15 @@ public class RunRecordService {
 
     }
 
+    /**
+     * 주간 러닝 활동 통계를 조회
+     * <p>
+     * - 기준일을 포함한 주(월~일) 단위로 거리, 시간, 획득 배지, 최근 기록 리스트 반환
+     * <p>
+     *
+     * @param baseDate 기준 날짜
+     * @return WeekDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
+     */
     public RunRecordResponse.WeekDTO getActivitisWeek(LocalDate baseDate) {
         LocalDate start = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = start.plusDays(6);
@@ -80,11 +87,21 @@ public class RunRecordService {
         int count = runRecordList.size();
         Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
-        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+        AvgStatsDTO stats = new AvgStatsDTO(runRecord, count, statsAvgPace);
 
         return new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList);
     }
 
+    /**
+     * 월간 러닝 활동 통계를 조회
+     * <p>
+     * - 특정 연/월 내 기록된 러닝 정보를 기반으로 누적 통계, 배지, 최근 기록 리스트 반환
+     * <p>
+     *
+     * @param month 조회할 월 (1~12)
+     * @param year  조회할 연도
+     * @return MonthDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
+     */
     public RunRecordResponse.MonthDTO getActivitisMonth(Integer month, Integer year) {
         LocalDate start = LocalDate.of(year, month, 1);
         LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
@@ -125,11 +142,20 @@ public class RunRecordService {
         int count = runRecordList.size();
         Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
-        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+        AvgStatsDTO stats = new AvgStatsDTO(runRecord, count, statsAvgPace);
 
         return new RunRecordResponse.MonthDTO(stats, runBadgeList, recentRunList);
     }
 
+    /**
+     * 연간 러닝 활동 통계를 조회
+     * <p>
+     * - 전체 거리/시간 기반 누적 통계 + 주간 평균 활동(평균 러닝 수, 거리 등) 반환
+     * <p>
+     *
+     * @param year 조회할 연도
+     * @return YearDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 최근 기록 목록 포함
+     */
     public RunRecordResponse.YearDTO getActivitisYear(Integer year) {
         LocalDate start = LocalDate.of(year, 1, 1);
         LocalDate end = LocalDate.of(year, 12, 31);
@@ -170,7 +196,7 @@ public class RunRecordService {
         int count = runRecordList.size();
         Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
-        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+        AvgStatsDTO stats = new AvgStatsDTO(runRecord, count, statsAvgPace);
 
         // 둘을 포함하는 주 수 계산 (inclusive)
         long totalWeeksInYear = ChronoUnit.WEEKS.between(
@@ -185,11 +211,19 @@ public class RunRecordService {
         Integer avgDurationSeconds = count > 0 ? totalDurationSeconds / count : 0;
         statsAvgPace = RunRecordUtil.calculatePace(avgDistanceMeters, avgDurationSeconds);
 
-        AllStatsDTO allStats = new AllStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
+        TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
         return new RunRecordResponse.YearDTO(stats, allStats, runBadgeList, recentRunList);
     }
 
+    /**
+     * 전체 러닝 활동 통계를 조회
+     * <p>
+     * - 모든 기록을 바탕으로 누적 통계 + 주당 평균 활동 정보 반환
+     * <p>
+     *
+     * @return AllDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 전체 기록 목록 포함
+     */
     public RunRecordResponse.AllDTO getActivitisAll() {
         // 이 날짜 기준으로 조회
         List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
@@ -229,7 +263,7 @@ public class RunRecordService {
         int count = recentRunList.size();
         Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
 
-        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+        AvgStatsDTO stats = new AvgStatsDTO(runRecord, count, statsAvgPace);
 
         // 기록 중 가장 빠른 날짜
         LocalDate start = runRecords.stream()
@@ -256,12 +290,11 @@ public class RunRecordService {
         Integer avgDistanceMeters = count > 0 ? totalDistanceMeters / count : 0;
         Integer avgDurationSeconds = count > 0 ? totalDurationSeconds / count : 0;
 
-        AllStatsDTO allStats = new AllStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
+        TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
         // MainDTO
         return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList);
     }
-
 
     /**
      * 러닝 저장
@@ -281,6 +314,13 @@ public class RunRecordService {
         return new RunRecordResponse.SaveDTO(runRecordPS);
     }
 
+    /**
+     * 사용자의 러닝 기록 날짜 옵션(년도, 월, 주)을 조회
+     * <p></p>
+     * - 연/월/주 필터링 드롭다운 등을 위한 기준 데이터 제공
+     *
+     * @return DateOptionsDTO - 연도 리스트, 월 리스트, 주간 라벨(Map<String, List<String>>) 포함
+     */
     public RunRecordResponse.DateOptionsDTO getDateOptions() {
         List<RunRecord> all = runRecordsRepository.findAllByUserIdJoin();
 
