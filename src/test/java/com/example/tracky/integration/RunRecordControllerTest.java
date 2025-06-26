@@ -33,7 +33,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         // 러닝 생성
         RunRecordRequest.SaveDTO reqDTO = new RunRecordRequest.SaveDTO();
         reqDTO.setTitle("부산 해운대 아침 달리기");
-        reqDTO.setMemo("날씨가 좋아서 상쾌했다. 다음엔 더 멀리 가봐야지.");
         reqDTO.setCalories(200);
 
         // 구간 생성
@@ -155,6 +154,34 @@ public class RunRecordControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .delete("/s/api/runs/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+    }
+
+    @Test
+    public void update_test() throws Exception {
+        // given
+        Integer id = 1;
+        RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
+        reqDTO.setTitle("수정 확인");
+        reqDTO.setMemo("수정 확인");
+        reqDTO.setPlace("수정 확인");
+        reqDTO.setIntensity(1);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/runs/{id}", id)
+                        .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON));
 
         // eye
