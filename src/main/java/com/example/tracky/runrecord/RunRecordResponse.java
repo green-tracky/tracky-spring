@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.tracky.runrecord.DTO.AllStatsDTO;
 import com.example.tracky.runrecord.DTO.RecentRunsDTO;
 import com.example.tracky.runrecord.DTO.StatsDTO;
 import com.example.tracky.runrecord.picture.PictureResponse;
@@ -44,11 +45,13 @@ public class RunRecordResponse {
     @Data
     public static class YearDTO {
         private StatsDTO runstats;
+        private AllStatsDTO allStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public YearDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public YearDTO(StatsDTO runstats, AllStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
+            this.allStats = allStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
@@ -57,16 +60,17 @@ public class RunRecordResponse {
     @Data
     public static class AllDTO {
         private StatsDTO runstats;
+        private AllStatsDTO allStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public AllDTO(StatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public AllDTO(StatsDTO runstats, AllStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
+            this.allStats = allStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
     }
-
 
     @Data
     public static class DateOptionsDTO {
@@ -74,20 +78,6 @@ public class RunRecordResponse {
         private Map<Integer, List<Integer>> mounts = new HashMap<>();
         private Map<String, List<String>> weeks = new HashMap<>();
     }
-
-    /**
-     * private Integer id;
-     * <p>
-     * private String title;
-     * <p>
-     * private String memo;
-     * <p>
-     * private Integer calories;
-     * <p>
-     * private List<RunSegmentResponse.DTO> segments;
-     * <p>
-     * private List<PictureResponse.DTO> pictures;
-     */
 
     /**
      * private Integer id;

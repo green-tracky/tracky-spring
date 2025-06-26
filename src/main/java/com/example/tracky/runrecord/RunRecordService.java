@@ -4,9 +4,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+import com.example.tracky.runrecord.DTO.AllStatsDTO;
 import com.example.tracky.runrecord.DTO.RecentRunsDTO;
 import com.example.tracky.runrecord.DTO.StatsDTO;
 import org.springframework.stereotype.Service;
@@ -36,51 +38,6 @@ public class RunRecordService {
         RunRecord runRecord = runRecordsRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
-    }
-
-    public RunRecordResponse.AllDTO getActivitisAll() {
-        // 이 날짜 기준으로 조회
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
-        List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
-
-        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
-        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
-
-        Integer recentDistanceMeters = 0; // 러닝별 거리. 미터 단위
-        Integer recentDurationSeconds = 0; // 러닝별 시간. 초 단위
-
-        // runBadgeList 생성
-        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
-        for (RunBadge badge : runBadges) {
-            runBadgeList.add(new RunBadgeResponse.DTO(badge));
-        }
-
-        // recentRunList 생성
-        List<RecentRunsDTO> recentRunList = new ArrayList<>();
-        for (RunRecord record : runRecords) {
-            totalDistanceMeters += record.getTotalDistanceMeters();
-            recentDistanceMeters = record.getTotalDistanceMeters();
-            totalDurationSeconds += record.getTotalDurationSeconds();
-            recentDurationSeconds = record.getTotalDurationSeconds();
-
-            Integer recentAvgPace = RunRecordUtil.calculatePace(recentDistanceMeters, recentDurationSeconds);
-
-            recentRunList.add(new RecentRunsDTO(record, runBadgeList, recentAvgPace));
-        }
-
-        // runStatsList 생성성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-
-        int count = recentRunList.size();
-        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-
-        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
-
-        // MainDTO
-        return new RunRecordResponse.AllDTO(stats, runBadgeList, recentRunList);
     }
 
     public RunRecordResponse.WeekDTO getActivitisWeek(LocalDate baseDate) {
@@ -215,8 +172,96 @@ public class RunRecordService {
 
         StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
 
-        return new RunRecordResponse.YearDTO(stats, runBadgeList, recentRunList);
+        // 둘을 포함하는 주 수 계산 (inclusive)
+        long totalWeeksInYear = ChronoUnit.WEEKS.between(
+                start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
+                end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+        ) + 1; // 양 끝 포함을 위해 +1
+
+        double avgCountData = count > 0 ? (double) count / totalWeeksInYear : 0;
+        double avgCount = Math.floor(avgCountData * 10) / 10.0;
+
+        Integer avgDistanceMeters = count > 0 ? totalDistanceMeters / count : 0;
+        Integer avgDurationSeconds = count > 0 ? totalDurationSeconds / count : 0;
+        statsAvgPace = RunRecordUtil.calculatePace(avgDistanceMeters, avgDurationSeconds);
+
+        AllStatsDTO allStats = new AllStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
+
+        return new RunRecordResponse.YearDTO(stats, allStats, runBadgeList, recentRunList);
     }
+
+    public RunRecordResponse.AllDTO getActivitisAll() {
+        // 이 날짜 기준으로 조회
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
+        List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
+
+        Integer totalDistanceMeters = 0; // 총 거리. 미터 단위
+        Integer totalDurationSeconds = 0; // 총 시간. 초 단위
+
+        Integer recentDistanceMeters = 0; // 러닝별 거리. 미터 단위
+        Integer recentDurationSeconds = 0; // 러닝별 시간. 초 단위
+
+        // runBadgeList 생성
+        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
+        for (RunBadge badge : runBadges) {
+            runBadgeList.add(new RunBadgeResponse.DTO(badge));
+        }
+
+        // recentRunList 생성
+        List<RecentRunsDTO> recentRunList = new ArrayList<>();
+        for (RunRecord record : runRecords) {
+            totalDistanceMeters += record.getTotalDistanceMeters();
+            recentDistanceMeters = record.getTotalDistanceMeters();
+            totalDurationSeconds += record.getTotalDurationSeconds();
+            recentDurationSeconds = record.getTotalDurationSeconds();
+
+            Integer recentAvgPace = RunRecordUtil.calculatePace(recentDistanceMeters, recentDurationSeconds);
+
+            recentRunList.add(new RecentRunsDTO(record, runBadgeList, recentAvgPace));
+        }
+
+        // runStatsList 생성성
+        RunRecord runRecord = RunRecord.builder()
+                .totalDistanceMeters(totalDistanceMeters)
+                .totalDurationSeconds(totalDurationSeconds)
+                .build();
+
+        int count = recentRunList.size();
+        Integer statsAvgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+        StatsDTO stats = new StatsDTO(runRecord, count, statsAvgPace);
+
+        // 기록 중 가장 빠른 날짜
+        LocalDate start = runRecords.stream()
+                .map(r -> r.getCreatedAt().toLocalDateTime().toLocalDate())
+                .min(LocalDate::compareTo)
+                .orElse(LocalDate.now());
+
+        // 기록 중 가장 늦은 날짜
+        LocalDate end = runRecords.stream()
+                .map(r -> r.getCreatedAt().toLocalDateTime().toLocalDate())
+                .max(LocalDate::compareTo)
+                .orElse(LocalDate.now());
+
+        // 주의 시작은 월요일, 끝은 일요일로 정렬
+        LocalDate adjustedStart = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate adjustedEnd = end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        // 주 단위 계산 (양 끝 포함)
+        long weeks = ChronoUnit.WEEKS.between(adjustedStart, adjustedEnd) + 1;
+
+        double avgCountData = count > 0 ? (double) count / weeks : 0;
+        double avgCount = Math.floor(avgCountData * 10) / 10.0;
+
+        Integer avgDistanceMeters = count > 0 ? totalDistanceMeters / count : 0;
+        Integer avgDurationSeconds = count > 0 ? totalDurationSeconds / count : 0;
+
+        AllStatsDTO allStats = new AllStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
+
+        // MainDTO
+        return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList);
+    }
+
 
     /**
      * 러닝 저장
