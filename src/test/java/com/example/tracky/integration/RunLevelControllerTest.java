@@ -21,7 +21,7 @@ class RunLevelControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("런레벨 조회 성공")
-    void get_runLevel_success() throws Exception {
+    void get_run_levels() throws Exception {
         // given
 
         // when
