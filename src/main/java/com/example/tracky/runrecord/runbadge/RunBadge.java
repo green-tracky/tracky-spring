@@ -17,7 +17,7 @@ public class RunBadge {
     private String name; // 뱃지 이름
     private String description; // 뱃지 조건 설명
     private String imageUrl; // 뱃지 이미지
-    private RunBadgeType type; // 뱃지 타입 필드 추가. 기록경신형(유저에게 하나만 지급) | 마일스톤형(반복획득가능) -> 더미 수정해야함
+    private RunBadgeType type; // 뱃지 타입 필드 추가. RunBadgeType 타입 확인 바람
 
     @Builder
     public RunBadge(Integer id, String name, String description, String imageUrl, RunBadgeType type) {

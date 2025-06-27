@@ -11,106 +11,123 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * 뱃지 획득과 관련된 세부적인 생성, 삭제, 비교 로직을 처리하는 핸들러 클래스입니다.
- * 이 클래스는 Spring 컴포넌트로 등록되어 의존성 주입을 통해 Repository를 사용합니다.
+ * <pre>
+ * 뱃지 획득(RunBadgeAchv)과 관련된 세부적인 생성, 삭제, 비교 로직을 처리하는 컴포넌트입니다.
+ * 주로 사용자의 달리기 기록에 기반하여 뱃지 획득 조건을 평가하고, 뱃지를 부여하거나 갱신하는 역할을 수행합니다.
+ * </pre>
  */
 @Component
 @RequiredArgsConstructor
 public class RunBadgeAchvHandler {
 
+    // 뱃지 획득 내역 데이터베이스 접근을 위한 Repository 주입
     private final RunBadgeAchvRepository runBadgeAchvRepository;
 
     /**
-     * '기록' 타입 뱃지를 처리합니다. (예: 개인 최고 기록)
-     * 기존 기록이 있으면 비교 후 갱신(삭제 후 생성)하고, 없으면 새로 생성합니다.
+     * <pre>
+     * 최고 기록 뱃지(예: 1K, 5K 최고 기록)와 같이 기존 기록을 갱신하는 뱃지 유형에 대한 획득 로직을 처리합니다.
+     * 새로운 달리기 기록이 기존 뱃지 기록보다 우수한 경우, 기존 뱃지 기록을 삭제하고 새로운 기록으로 뱃지를 갱신합니다.
+     * </pre>
      *
-     * @param newRunRecord 새로 추가된 달리기 기록
-     * @param user         현재 사용자
-     * @param badge        처리할 뱃지 정보
-     * @return 새로 생성된 RunBadgeAchv 엔티티가 담긴 Optional, 변경이 없으면 비어있는 Optional
+     * @param newRunRecord 현재 달성된 새로운 달리기 기록
+     * @param user         뱃지를 획득하려는 사용자
+     * @param badge        평가할 뱃지 (예: "1K 최고 기록" 뱃지 객체)
+     * @return 뱃지를 획득했거나 갱신했다면 새로 생성된 RunBadgeAchv를 담은 Optional, 그렇지 않다면 빈 Optional
      */
     public Optional<RunBadgeAchv> handleRecordBadge(RunRecord newRunRecord, User user, RunBadge badge) {
-        // 이 유저가 해당 '기록' 뱃지를 이미 보유하고 있는지 조회합니다.
-        Optional<RunBadgeAchv> existingAchvOpt = runBadgeAchvRepository.findByRunBadgeAndRunRecord_User(badge, user);
+        // 1. 해당 사용자가 이미 이 뱃지를 가지고 있는지 확인
+        Optional<RunBadgeAchv> existingRunBadgeAchvOP = runBadgeAchvRepository.findByRunBadgeAndUser(badge, user);
 
-        if (existingAchvOpt.isPresent()) {
-            // 이미 뱃지를 보유한 기록이 있다면, 기록 갱신 여부를 판단합니다.
-            RunBadgeAchv existingAchv = existingAchvOpt.get();
-            if (isNewRecordBetter(newRunRecord, existingAchv.getRunRecord(), badge)) {
-                // 새로운 기록이 더 좋으므로, 기존 뱃지 획득 내역은 삭제합니다.
-                runBadgeAchvRepository.delete(existingAchv);
-                // 새로운 기록에 뱃지를 부여하고, 생성된 엔티티를 반환합니다.
-                return Optional.of(awardBadgeToRecord(newRunRecord, badge));
+        // 2. 이미 뱃지를 가지고 있는 경우
+        if (existingRunBadgeAchvOP.isPresent()) {
+            RunBadgeAchv existingRunBadgeAchv = existingRunBadgeAchvOP.get();
+            // 2-1. 새로운 기록이 기존 기록보다 더 좋은지 평가
+            if (isNewRecordBetter(newRunRecord, existingRunBadgeAchv.getRunRecord(), badge)) {
+                // 2-2. 새로운 기록이 더 좋다면, 기존 뱃지 기록 삭제
+                runBadgeAchvRepository.delete(existingRunBadgeAchv);
+                // 2-3. 새로운 기록으로 뱃지 재부여 및 반환
+                return Optional.of(saveRunBadgeAchv(newRunRecord, user, badge));
             }
+            // 2-4. 새로운 기록이 기존보다 좋지 않다면, 아무것도 하지 않음 (빈 Optional 반환)
         } else {
-            // 이 '기록' 뱃지를 처음 획득하는 경우, 바로 부여하고 생성된 엔티티를 반환합니다.
-            return Optional.of(awardBadgeToRecord(newRunRecord, badge));
+            // 3. 뱃지를 아직 가지고 있지 않은 경우, 즉시 뱃지 부여
+            return Optional.of(saveRunBadgeAchv(newRunRecord, user, badge));
         }
-        // 기록이 갱신되지 않은 경우, 아무것도 반환하지 않습니다.
-        return Optional.empty();
+        return Optional.empty(); // 뱃지 획득 또는 갱신이 발생하지 않음
     }
 
     /**
-     * '업적' 타입 뱃지를 처리합니다.
-     * 사용자가 해당 뱃지를 보유하고 있지 않을 때만 새로 부여합니다.
+     * <pre>
+     * 월간 업적 뱃지(예: 월간 100km 달성)와 같이 단일 기록이 아닌 누적 또는 특정 이벤트를 통해 획득하는 뱃지 유형을 처리합니다.
+     * 이 메서드는 단순히 뱃지를 부여하는 역할을 합니다. (획득 조건 검증은 외부 로직에서 수행되었다고 가정)
+     * </pre>
      *
-     * @param newRunRecord 뱃지 획득의 계기가 된 달리기 기록
-     * @param user         현재 사용자
-     * @param badge        처리할 뱃지 정보
-     * @return 새로 생성된 RunBadgeAchv 엔티티가 담긴 Optional, 이미 보유했다면 비어있는 Optional
+     * @param runRecord 현재 달성된 달리기 기록 (주로 뱃지 획득의 트리거가 된 기록)
+     * @param user      뱃지를 획득하려는 사용자
+     * @param badge     획득할 뱃지
+     * @return 새로 생성된 RunBadgeAchv를 담은 Optional 객체
      */
-    public Optional<RunBadgeAchv> handleAchievementBadge(RunRecord newRunRecord, User user, RunBadge badge) {
-        // 이 유저가 이 '업적' 뱃지를 이미 획득했는지 확인합니다.
-        if (!runBadgeAchvRepository.existsByRunBadgeAndRunRecord_User(badge, user)) {
-            // 획득한 적이 없다면, 현재 기록에 뱃지를 부여하고 생성된 엔티티를 반환합니다.
-            return Optional.of(awardBadgeToRecord(newRunRecord, badge));
-        }
-        // 이미 획득한 뱃지이므로, 아무것도 반환하지 않습니다.
-        return Optional.empty();
+    public Optional<RunBadgeAchv> handleMonthlyAchievement(RunRecord runRecord, User user, RunBadge badge) {
+        // 월간 업적 뱃지는 보통 누적 거리나 횟수 달성 시 부여되므로, 여기서는 별도의 비교 로직 없이 바로 부여한다.
+        // (중복 획득 방지는 RunBadgeAchvRepository의 existsByUserAndBadgeAndYearMonth 같은 메서드에서 처리될 수 있다.)
+        return Optional.of(saveRunBadgeAchv(runRecord, user, badge));
     }
 
     /**
-     * 새로운 기록이 기존 기록보다 더 나은지 판단하는 내부 헬퍼 메서드입니다.
+     * <pre>
+     * 새로운 달리기 기록이 기존 뱃지에 연결된 기록보다 더 우수한지 판단합니다.
+     * 뱃지 이름에 따라 비교 로직이 달라집니다 (예: 속도는 낮을수록 좋고, 거리는 길수록 좋음).
+     * TODO 조건문 처리가 문자열로 하드코딩 되어있는데 어떻게 하드코딩이 아닌 방법으로 처리할지 잘 모르겠다
+     * </pre>
      *
-     * @param newRecord 새로 추가된 달리기 기록
-     * @param oldRecord 기존에 뱃지를 보유하고 있던 달리기 기록
-     * @param badge     비교 대상 뱃지
-     * @return 새로운 기록이 더 좋으면 true
+     * @param newRecord 새로 달성된 RunRecord
+     * @param oldRecord 기존 뱃지가 가지고 있던 RunRecord
+     * @param badge     비교 기준이 되는 RunBadge (뱃지 이름에 따라 로직 분기)
+     * @return newRecord가 oldRecord보다 우수하면 true, 그렇지 않으면 false
      */
     private boolean isNewRecordBetter(RunRecord newRecord, RunRecord oldRecord, RunBadge badge) {
+        // 뱃지 이름에 따라 우수성 판단 기준이 달라진다.
         switch (badge.getName()) {
             case "1K 최고 기록":
-                // 1km 평균 페이스(초/km)를 계산하여 비교합니다. 페이스는 낮을수록 좋습니다.
-                // 0으로 나누는 오류를 방지하기 위해 거리가 0보다 큰지 확인합니다.
-                if (newRecord.getTotalDistanceMeters() > 0 && oldRecord.getTotalDistanceMeters() > 0) {
-                    double newPace = (double) newRecord.getTotalDurationSeconds() / (newRecord.getTotalDistanceMeters() / 1000.0);
-                    double oldPace = (double) oldRecord.getTotalDurationSeconds() / (oldRecord.getTotalDistanceMeters() / 1000.0);
-                    return newPace < oldPace;
+                // [핵심 로직] '1K 최고 기록' 비교
+                // RunRecord 엔티티에 저장된 avgPace 값을 직접 비교합니다.
+                // 페이스는 숫자가 낮을수록 더 빠른 기록입니다.
+                // newRecord.getAvgPace()가 null이 아님을 보장해야 합니다.
+                if (newRecord.getAvgPace() != null && oldRecord.getAvgPace() != null) {
+                    return newRecord.getAvgPace() < oldRecord.getAvgPace();
                 }
                 return false;
-
             case "5K 최고 기록":
-                // 5km 이상 달린 기록들 중에서 총 시간이 가장 짧은 것을 최고 기록으로 판단합니다.
-                return newRecord.getTotalDurationSeconds() < oldRecord.getTotalDurationSeconds();
-
+                // [핵심 로직] '5K 최고 기록' 비교
+                // RunRecord 엔티티에 저장된 avgPace 값을 직접 비교합니다.
+                // 페이스는 숫자가 낮을수록 더 빠른 기록입니다.
+                // newRecord.getAvgPace()가 null이 아님을 보장해야 합니다.
+                if (newRecord.getAvgPace() != null && oldRecord.getAvgPace() != null) {
+                    return newRecord.getAvgPace() < oldRecord.getAvgPace();
+                }
+                return false;
             default:
+                // 정의되지 않은 뱃지 이름은 비교 로직 없음
                 return false;
         }
     }
 
     /**
-     * RunBadgeAchv 엔티티를 생성하고 저장 후, 저장된 엔티티를 반환하는 공통 메서드입니다.
+     * 새로운 뱃지 획득 내역(RunBadgeAchv)을 생성하고 데이터베이스에 저장합니다.
      *
-     * @param runRecord 뱃지가 연결될 달리기 기록
-     * @param badge     획득할 뱃지
-     * @return 데이터베이스에 저장된 RunBadgeAchv 엔티티
+     * @param runRecord 뱃지 획득과 관련된 달리기 기록
+     * @param user      뱃지를 획득한 사용자
+     * @param badge     획득된 뱃지
+     * @return 저장된 RunBadgeAchv 엔티티
      */
-    private RunBadgeAchv awardBadgeToRecord(RunRecord runRecord, RunBadge badge) {
-        RunBadgeAchv newAchievement = RunBadgeAchv.builder()
-                .runRecord(runRecord)
-                .runBadge(badge)
+    private RunBadgeAchv saveRunBadgeAchv(RunRecord runRecord, User user, RunBadge badge) {
+        RunBadgeAchv newRunBadgeAhv = RunBadgeAchv.builder()
+                .runRecord(runRecord) // 뱃지를 획득하게 된 달리기 기록 연결
+                .user(user)           // 뱃지를 획득한 사용자 연결
+                .runBadge(badge)      // 획득된 뱃지 연결
                 .build();
-        runBadgeAchvRepository.save(newAchievement);
-        return newAchievement;
+
+        RunBadgeAchv savedRunBadgeAhv = runBadgeAchvRepository.save(newRunBadgeAhv); // DB에 뱃지 획득 내역 저장
+        return savedRunBadgeAhv;
     }
 }

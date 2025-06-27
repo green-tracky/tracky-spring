@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -98,13 +99,29 @@ public class RunRecordRepository {
      * @param yearMonth YearMonth.now() 값을 넣으면 됨
      * @return
      */
-    public Integer countByUserIdAndYearMonth(Integer userId, YearMonth yearMonth) {
+    public Integer countByUserAndYearMonth(User user, YearMonth yearMonth) {
         // JPQL의 FUNCTION 키워드를 사용하여 데이터베이스의 네이티브 날짜 함수(YEAR, MONTH)를 호출
-        Query query = em.createQuery("select count(r) from RunRecord r where r.user.id = :userId and function('YEAR', r.createdAt) = :year and function('MONTH', r.createdAt) = :month", Long.class);
-        query.setParameter("userId", userId);
+        Query query = em.createQuery("select count(r) from RunRecord r where r.user = :user and function('YEAR', r.createdAt) = :year and function('MONTH', r.createdAt) = :month", Long.class);
+        query.setParameter("user", user);
         query.setParameter("year", yearMonth.getYear());
         query.setParameter("month", yearMonth.getMonth());
         Long totalCount = (Long) query.getSingleResult();
         return totalCount.intValue();
+    }
+
+    /**
+     * 특정 사용자(userId)가 특정 연월(yearMonth)에 달린 총 거리를 미터(m) 단위로 조회합니다.
+     *
+     * @param userId    조회할 사용자의 ID
+     * @param yearMonth 조회할 연월 (예: YearMonth.of(2025, 6))
+     * @return 해당 사용자의 해당 월 총 달리기 거리 (미터 단위). 기록이 없으면 0을 반환합니다.
+     */
+    public Integer findTotalDistanceByUserAndYearMonth(User user, YearMonth yearMonth) {
+        Query query = em.createQuery("select sum (r.totalDistanceMeters) from RunRecord r where r.user = :user and function('YEAR', r.createdAt) = :year and function('MONTH', r.createdAt) = :month", Long.class);
+        query.setParameter("user", user);
+        query.setParameter("year", yearMonth.getYear());
+        query.setParameter("month", yearMonth.getMonthValue());
+        Long totalDistance = (Long) query.getSingleResult();
+        return totalDistance.intValue();
     }
 }

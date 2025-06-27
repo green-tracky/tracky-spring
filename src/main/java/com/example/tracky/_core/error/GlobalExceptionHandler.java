@@ -1,17 +1,12 @@
 package com.example.tracky._core.error;
 
+import com.example.tracky._core.error.ex.*;
+import com.example.tracky._core.utils.Resp;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.example.tracky._core.error.ex.ExceptionApi400;
-import com.example.tracky._core.error.ex.ExceptionApi401;
-import com.example.tracky._core.error.ex.ExceptionApi403;
-import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky._core.utils.Resp;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
@@ -40,6 +35,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> exApi404(ExceptionApi404 e) {
         log.warn(e.getMessage());
         return Resp.fail(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(ExceptionApi500.class)
+    public ResponseEntity<?> exApi500(ExceptionApi404 e) {
+        log.warn(e.getMessage());
+        return Resp.fail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

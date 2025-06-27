@@ -5,7 +5,7 @@ import com.example.tracky.runrecord.runbadge.RunBadge;
 import lombok.Data;
 
 public class RunBadgeAchvResponse {
-
+    // TODO : 뱃지 목록 화면에 사용할 DTO를 여기다 만들까 저기다 만들까?
     @Data
     public static class DTO {
         private Integer id; // badgeId

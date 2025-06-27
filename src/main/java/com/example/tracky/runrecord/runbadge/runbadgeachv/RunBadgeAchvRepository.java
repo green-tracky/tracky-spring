@@ -1,93 +1,83 @@
 package com.example.tracky.runrecord.runbadge.runbadgeachv;
 
-import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadge.RunBadge;
 import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.time.YearMonth;
 import java.util.Optional;
 
+/**
+ * RunBadgeAchv(뱃지 획득 내역) 엔티티에 대한 DB 접근을 담당합니다.
+ * 뱃지 획득 내역의 저장, 삭제, 조회 기능을 제공합니다.
+ */
 @Repository
 @RequiredArgsConstructor
 public class RunBadgeAchvRepository {
 
+    // JPA의 영속성 컨텍스트를 관리하고 데이터베이스 작업을 수행하는 EntityManager
     private final EntityManager em;
 
     /**
-     * 뱃지 획득 내역(RunBadgeAchv)을 저장합니다.
+     * 뱃지 획득 내역(RunBadgeAchv)을 데이터베이스에 저장합니다.
      *
-     * @param runBadgeAchv 저장할 엔티티
+     * @param runBadgeAchv 저장할 뱃지 획득 내역 엔티티
      */
-    public void save(RunBadgeAchv runBadgeAchv) {
+    public RunBadgeAchv save(RunBadgeAchv runBadgeAchv) {
         em.persist(runBadgeAchv);
+        return runBadgeAchv;
     }
 
     /**
-     * 뱃지 획득 내역(RunBadgeAchv)을 삭제합니다.
+     * 뱃지 획득 내역(RunBadgeAchv)을 데이터베이스에서 삭제합니다.
+     * 영속성 컨텍스트에 없는 엔티티(detached)의 경우, merge 후 삭제하여 안정성을 높입니다.
      *
-     * @param runBadgeAchv 삭제할 엔티티
+     * @param runBadgeAchv 삭제할 뱃지 획득 내역 엔티티
      */
     public void delete(RunBadgeAchv runBadgeAchv) {
-        // 영속성 컨텍스트에 포함되어 있지 않은 엔티티일 수 있으므로, merge 후 remove 하는 것이 안전합니다.
-        if (!em.contains(runBadgeAchv)) {
-            runBadgeAchv = em.merge(runBadgeAchv);
-        }
         em.remove(runBadgeAchv);
     }
 
     /**
-     * 특정 달리기 기록과 뱃지의 조합으로 획득 내역이 존재하는지 확인합니다.
-     *
-     * @param runRecord 검사할 달리기 기록
-     * @param runBadge  검사할 뱃지
-     * @return 존재하면 true
-     */
-    public boolean existsByRunRecordAndRunBadge(RunRecord runRecord, RunBadge runBadge) {
-        // COUNT 쿼리를 사용하면 전체 엔티티를 가져오지 않아 효율적입니다.
-        Long count = em.createQuery(
-                        "SELECT COUNT(rba) FROM RunBadgeAchv rba WHERE rba.runRecord = :runRecord AND rba.runBadge = :runBadge", Long.class)
-                .setParameter("runRecord", runRecord)
-                .setParameter("runBadge", runBadge)
-                .getSingleResult();
-        return count > 0;
-    }
-
-    /**
-     * 특정 사용자가 특정 뱃지를 보유하고 있는지 확인합니다. (업적 뱃지 중복 방지용)
+     * 특정 사용자가 특정 뱃지를 보유하고 있는지 조회합니다.
+     * '최고 기록'이나 '최초 달성' 뱃지처럼 한 번만 획득해야 하는 뱃지의 중복 부여를 방지하는 데 사용됩니다.
      *
      * @param runBadge 검사할 뱃지
      * @param user     검사할 사용자
-     * @return 보유하고 있으면 true
+     * @return 조회된 뱃지 획득 내역을 담은 Optional 객체.
      */
-    public boolean existsByRunBadgeAndRunRecord_User(RunBadge runBadge, User user) {
-        // RunBadgeAchv에서 RunRecord를 거쳐 User까지 경로를 따라 조건을 설정합니다.
-        Long count = em.createQuery(
-                        "SELECT COUNT(rba) FROM RunBadgeAchv rba WHERE rba.runBadge = :runBadge AND rba.runRecord.user = :user", Long.class)
-                .setParameter("runBadge", runBadge)
-                .setParameter("user", user)
-                .getSingleResult();
-        return count > 0;
+    public Optional<RunBadgeAchv> findByRunBadgeAndUser(RunBadge runBadge, User user) {
+        Query query = em.createQuery(
+                "SELECT rba FROM RunBadgeAchv rba WHERE rba.runBadge = :runBadge AND rba.user = :user", RunBadgeAchv.class);
+        query.setParameter("runBadge", runBadge);
+        query.setParameter("user", user);
+
+        try {
+            return Optional.of((RunBadgeAchv) query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
     }
 
     /**
-     * 특정 사용자가 보유한 특정 '기록' 뱃지의 획득 정보를 조회합니다. (기록 뱃지 이전/갱신용)
+     * 특정 사용자가 특정 연월에 특정 뱃지를 획득했는지 확인합니다.
+     * '이달의 챌린지'처럼 월별로 획득 여부를 판단해야 하는 뱃지의 중복 부여를 방지하는 데 사용됩니다.
      *
-     * @param runBadge 조회할 뱃지
-     * @param user     조회할 사용자
-     * @return 획득 정보가 담긴 Optional 객체
+     * @param user      검사할 사용자
+     * @param runBadge  검사할 뱃지
+     * @param yearMonth 검사할 연월
+     * @return 해당 연월에 획득 내역이 존재하면 true, 아니면 false
      */
-    public Optional<RunBadgeAchv> findByRunBadgeAndRunRecord_User(RunBadge runBadge, User user) {
-        List<RunBadgeAchv> results = em.createQuery(
-                        "SELECT rba FROM RunBadgeAchv rba WHERE rba.runBadge = :runBadge AND rba.runRecord.user = :user", RunBadgeAchv.class)
-                .setParameter("runBadge", runBadge)
+    public boolean existsByUserAndBadgeAndYearMonth(User user, RunBadge runBadge, YearMonth yearMonth) {
+        Long count = em.createQuery("select count (rba) from RunBadgeAchv rba where rba.user = :user and rba.runBadge = :runBadge and function('YEAR', rba.achievedAt) = :year and function('MONTH', rba.achievedAt) = :month", Long.class)
                 .setParameter("user", user)
-                .setMaxResults(1) // 결과는 하나만 필요하므로 성능 최적화
-                .getResultList();
-
-        // getSingleResult()는 결과가 없으면 예외를 던지므로, getResultList()로 받은 후 Optional로 감싸는 것이 안전합니다.
-        return results.stream().findFirst();
+                .setParameter("runBadge", runBadge)
+                .setParameter("year", yearMonth.getYear())
+                .setParameter("month", yearMonth.getMonthValue())
+                .getSingleResult();
+        return count > 0;
     }
 }

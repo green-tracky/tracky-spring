@@ -27,7 +27,7 @@ public class RunBadgeAchv {
     private RunRecord runRecord; // 부모 러닝 기록
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user; // 부모 러닝 기록
+    private User user; // 뱃지 획득 유저
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunBadge runBadge; // 부모 러닝 뱃지

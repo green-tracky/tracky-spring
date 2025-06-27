@@ -135,8 +135,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/runs/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .get("/s/api/runs/{id}", id));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -153,8 +152,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/runs/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .delete("/s/api/runs/{id}", id));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
