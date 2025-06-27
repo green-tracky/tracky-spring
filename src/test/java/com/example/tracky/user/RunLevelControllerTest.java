@@ -21,7 +21,7 @@ class RunLevelControllerTest extends MyRestDoc {
     private ObjectMapper om;
 
     @Test
-    @DisplayName("챌린지 목록 조회 성공")
+    @DisplayName("런레벨 조회 성공")
     void get_runLevel_success() throws Exception {
         // given
 
