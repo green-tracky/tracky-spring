@@ -1,4 +1,4 @@
-package com.example.tracky.user;
+package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +27,7 @@ class RunLevelControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/run-level")
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .get("/s/api/run-level"));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();

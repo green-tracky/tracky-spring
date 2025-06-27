@@ -1,7 +1,5 @@
-package com.example.tracky.user;
+package com.example.tracky.user.runlevel;
 
-import com.example.tracky.user.runlevel.RunLevel;
-import com.example.tracky.user.runlevel.RunLevelRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
