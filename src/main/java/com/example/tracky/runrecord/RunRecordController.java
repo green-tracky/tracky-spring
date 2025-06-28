@@ -61,7 +61,7 @@ public class RunRecordController {
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
-
+        
         RunRecordResponse.UpdateDTO respDTO = runRecordService.update(user, id, reqDTO);
 
         return Resp.ok(respDTO);

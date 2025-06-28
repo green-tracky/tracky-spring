@@ -110,4 +110,5 @@ public class RunRecordService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
     }
+    
 }
