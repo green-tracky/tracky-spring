@@ -135,8 +135,8 @@ public class RunRecordUtil {
      * @return
      */
     public static int calculateElapsedTimeInSeconds(List<RunSegment> runSegments) {
-        LocalDateTime startDate = runSegments.get(0).getStartDate().toLocalDateTime();
-        LocalDateTime endDate = runSegments.get(runSegments.size() - 1).getEndDate().toLocalDateTime();
+        LocalDateTime startDate = runSegments.get(0).getStartDate();
+        LocalDateTime endDate = runSegments.get(runSegments.size() - 1).getEndDate();
         return (int) ChronoUnit.SECONDS.between(startDate, endDate);
     }
 }

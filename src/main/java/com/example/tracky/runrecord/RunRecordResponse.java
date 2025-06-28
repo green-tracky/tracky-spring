@@ -1,6 +1,5 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.utils.DateTimeUtils;
 import com.example.tracky.runrecord.Enum.RunPlaceEnum;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
@@ -9,6 +8,7 @@ import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RunRecordResponse {
@@ -25,7 +25,7 @@ public class RunRecordResponse {
         private Integer bestPace; // 최고 페이스. 숫자가 낮아야 함
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
-        private String createdAt;
+        private LocalDateTime createdAt;
         private Integer userId;
         private List<RunBadgeAchvResponse.DTO> badges;
 
@@ -36,7 +36,7 @@ public class RunRecordResponse {
             this.calories = runRecord.getCalories();
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-            this.createdAt = DateTimeUtils.toDateTimeString(runRecord.getCreatedAt());
+            this.createdAt = runRecord.getCreatedAt();
             this.segments = runRecord.getRunSegments().stream()
                     .map(s -> new RunSegmentResponse.DTO(s))
                     .toList();
@@ -68,7 +68,7 @@ public class RunRecordResponse {
         private Integer bestPace;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
-        private String createdAt;
+        private LocalDateTime createdAt;
         private Integer userId;
         private Integer intensity; // 러닝 강도
         private RunPlaceEnum place; // 러닝 장소
@@ -81,7 +81,7 @@ public class RunRecordResponse {
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
             this.elapsedTimeInSeconds = RunRecordUtil.calculateElapsedTimeInSeconds(runRecord.getRunSegments());
-            this.createdAt = DateTimeUtils.toDateTimeString(runRecord.getCreatedAt());
+            this.createdAt = runRecord.getCreatedAt();
             this.segments = runRecord.getRunSegments().stream()
                     .map(s -> new RunSegmentResponse.DTO(s))
                     .toList();
@@ -110,7 +110,7 @@ public class RunRecordResponse {
         private Integer bestPace;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
-        private String createdAt;
+        private LocalDateTime createdAt;
         private Integer userId;
         private Integer intensity; // 러닝 강도
         private RunPlaceEnum place; // 러닝 장소
@@ -123,7 +123,7 @@ public class RunRecordResponse {
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
             this.elapsedTimeInSeconds = RunRecordUtil.calculateElapsedTimeInSeconds(runRecord.getRunSegments());
-            this.createdAt = DateTimeUtils.toDateTimeString(runRecord.getCreatedAt());
+            this.createdAt = runRecord.getCreatedAt();
             this.segments = runRecord.getRunSegments().stream()
                     .map(s -> new RunSegmentResponse.DTO(s))
                     .toList();

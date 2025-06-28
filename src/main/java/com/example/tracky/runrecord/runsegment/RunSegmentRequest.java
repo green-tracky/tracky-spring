@@ -6,26 +6,15 @@ import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateReques
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RunSegmentRequest {
 
-    /**
-     * private Timestamp startDate; // "2025-06-22 06:30:00" 형식으로 받아야함
-     * <p>
-     * private Timestamp endDate;
-     * <p>
-     * private Integer durationSeconds;
-     * <p>
-     * private Integer distanceMeters;
-     * <p>
-     * private List<RunCoordinateRequest.DTO> coordinates;
-     */
     @Data
     public static class DTO {
-        private Timestamp startDate; // "2025-06-22 06:30:00" 형식으로 받아야함
-        private Timestamp endDate;
+        private LocalDateTime startDate; // "2025-06-22 06:30:00" 형식으로 받아야함
+        private LocalDateTime endDate;
         private Integer durationSeconds;
         private Integer distanceMeters;
         private List<RunCoordinateRequest.DTO> coordinates;

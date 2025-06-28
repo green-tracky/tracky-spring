@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * 날짜 및 시간 관련 유틸리티 클래스
  */
+@Deprecated
 public class DateTimeUtils {
 
     /**
