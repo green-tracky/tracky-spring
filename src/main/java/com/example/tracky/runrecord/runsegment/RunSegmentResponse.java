@@ -2,7 +2,6 @@ package com.example.tracky.runrecord.runsegment;
 
 import com.example.tracky._core.utils.DateTimeUtils;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateResponse;
-import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class RunSegmentResponse {
             this.endDate = DateTimeUtils.toDateTimeString(runSegment.getEndDate());
             this.durationSeconds = runSegment.getDurationSeconds();
             this.distanceMeters = runSegment.getDistanceMeters();
-            this.pace = RunRecordUtil.calculatePace(runSegment.getDistanceMeters(), runSegment.getDurationSeconds());
+            this.pace = runSegment.getPace();
             this.coordinates = runSegment.getRunCoordinates().stream()
                     .map(c -> new RunCoordinateResponse.DTO(c))
                     .toList();
