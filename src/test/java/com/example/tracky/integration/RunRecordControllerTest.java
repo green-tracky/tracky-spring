@@ -1,6 +1,7 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
+import com.example.tracky.runrecord.Enum.RunPlaceEnum;
 import com.example.tracky.runrecord.RunRecordRequest;
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
@@ -135,8 +136,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/runs/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .get("/s/api/runs/{id}", id));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -153,8 +153,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/runs/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .delete("/s/api/runs/{id}", id));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -170,7 +169,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
         reqDTO.setTitle("수정 확인");
         reqDTO.setMemo("수정 확인");
-        reqDTO.setPlace("수정 확인");
+        reqDTO.setPlace(RunPlaceEnum.TRACK);
         reqDTO.setIntensity(1);
 
         String requestBody = om.writeValueAsString(reqDTO);
@@ -190,4 +189,5 @@ public class RunRecordControllerTest extends MyRestDoc {
 
         // then
     }
+    
 }

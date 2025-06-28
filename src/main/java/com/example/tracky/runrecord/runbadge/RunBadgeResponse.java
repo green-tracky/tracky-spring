@@ -3,7 +3,6 @@ package com.example.tracky.runrecord.runbadge;
 import lombok.Data;
 
 public class RunBadgeResponse {
-
     @Data
     public static class DTO {
         private Integer id;
