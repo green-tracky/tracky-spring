@@ -1,5 +1,7 @@
 package com.example.tracky.runrecord.runbadge;
 
+import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvRepository;
+import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +12,11 @@ import java.util.List;
 public class RunBadgeService {
 
     private final RunBadgeRepository runBadgeRepository;
+    private final RunBadgeAchvRepository runBadgeAchvRepository;
 
-    public List<RunBadgeResponse.DTO> getRunBadges() {
-
-        // 1. 뱃지들 조회
-        List<RunBadge> runBadges = runBadgeRepository.findAll();
-
-        // 2. 응답 DTO로 변환
-        return runBadges.stream()
-                .map(badge -> new RunBadgeResponse.DTO(badge))
-                .toList();
+    public RunBadgeResponse.ListDTO getRunBadges(User user) {
+        // 조회
+        List<RunBadge> runBadgesPS = runBadgeRepository.findAll();
     }
 
 }
