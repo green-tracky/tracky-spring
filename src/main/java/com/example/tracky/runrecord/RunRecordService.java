@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.error.ErrorCodeEnum;
+import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
@@ -33,9 +33,7 @@ public class RunRecordService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크
-        if (!runRecordPS.getUser().getId().equals(user.getId())) {
-            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
-        }
+        checkRunRecordAccess(user, runRecordPS);
 
         // 러닝 응답 DTO 로 변환
         return new RunRecordResponse.DetailDTO(runRecordPS);
@@ -77,10 +75,8 @@ public class RunRecordService {
         RunRecord runRecordPS = runRecordRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
-        // 권한 체크 -> 나중에 권한체크 로직 빼야함
-        if (!runRecordPS.getUser().getId().equals(user.getId())) {
-            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
-        }
+        // 권한 체크
+        checkRunRecordAccess(user, runRecordPS);
 
         // 삭제
         runRecordRepository.delete(runRecordPS);
@@ -92,15 +88,26 @@ public class RunRecordService {
         RunRecord runRecordPS = runRecordRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
-        // 권한 체크 -> 나중에 권한체크 로직 빼야함
-        if (!runRecordPS.getUser().getId().equals(user.getId())) {
-            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
-        }
+        // 권한 체크
+        checkRunRecordAccess(user, runRecordPS);
 
         // 러닝 내용 수정
         runRecordPS.update(reqDTO);
 
         // 응답 DTO 로 반환
         return new RunRecordResponse.UpdateDTO(runRecordPS);
+    }
+
+    /**
+     * 특정 러닝 기록에 대한 사용자의 접근 권한을 확인합니다.
+     * 권한이 없을 경우 ExceptionApi403 예외를 발생시킵니다.
+     *
+     * @param user      현재 로그인한 사용자
+     * @param runRecord 검사할 러닝 기록 엔티티
+     */
+    private void checkRunRecordAccess(User user, RunRecord runRecord) {
+        if (!runRecord.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
     }
 }

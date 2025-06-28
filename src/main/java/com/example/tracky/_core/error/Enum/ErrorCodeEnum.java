@@ -1,4 +1,4 @@
-package com.example.tracky._core.error;
+package com.example.tracky._core.error.Enum;
 
 /**
  * API 전반에서 사용하는 공통 에러 코드와 메시지를 정의한 Enum 클래스입니다.
@@ -12,7 +12,12 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 성별 값입니다.
      */
-    INVALID_USER_TYPE(400, "유효하지 않은 타입 값입니다"),
+    INVALID_RUN_PLACE_TYPE(400, "유효하지 않은 장소 값입니다"),
+
+    /**
+     * 400 Bad Request - 유효하지 않은 성별 값입니다.
+     */
+    INVALID_USER_TYPE(400, "유효하지 않은 유저 타입 값입니다"),
 
     /**
      * 400 Bad Request - 유효하지 않은 성별 값입니다.

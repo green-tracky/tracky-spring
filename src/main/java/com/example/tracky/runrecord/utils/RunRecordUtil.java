@@ -102,11 +102,13 @@ public class RunRecordUtil {
      * @param segmentDTOs
      * @return
      */
-    public static Double calculateAvgPace(List<RunSegmentRequest.DTO> segmentDTOs) {
-        return segmentDTOs.stream()
+    public static int calculateAvgPace(List<RunSegmentRequest.DTO> segmentDTOs) {
+        double averagePace = segmentDTOs.stream()
                 .mapToInt(s -> calculatePace(s.getDistanceMeters(), s.getDurationSeconds()))
                 .average()
-                .orElse(0); // 빈 리스트일 경우 기본값 0
+                .orElse(0.0); // 기본값 0.0
+
+        return (int) Math.round(averagePace);
     }
 
     /**
@@ -117,7 +119,7 @@ public class RunRecordUtil {
      * @param segmentDTOs
      * @return
      */
-    public static Integer calculateBestPace(List<RunSegmentRequest.DTO> segmentDTOs) {
+    public static int calculateBestPace(List<RunSegmentRequest.DTO> segmentDTOs) {
         return segmentDTOs.stream()
                 .mapToInt(s -> calculatePace(s.getDistanceMeters(), s.getDurationSeconds()))
                 .min()

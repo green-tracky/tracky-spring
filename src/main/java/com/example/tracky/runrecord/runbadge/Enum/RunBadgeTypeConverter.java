@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord.runbadge.Enum;
 
-import com.example.tracky._core.error.ErrorCodeEnum;
+import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi500;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

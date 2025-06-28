@@ -1,5 +1,6 @@
 package com.example.tracky._core.error;
 
+import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.*;
 import com.example.tracky._core.utils.Resp;
 import lombok.extern.slf4j.Slf4j;

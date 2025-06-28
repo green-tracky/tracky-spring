@@ -1,6 +1,7 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky._core.utils.DateTimeUtils;
+import com.example.tracky.runrecord.Enum.RunPlaceEnum;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvResponse;
@@ -20,7 +21,7 @@ public class RunRecordResponse {
         private Integer calories;
         private Integer totalDistanceMeters; // 러닝 총 이동거리
         private Integer totalDurationSeconds; // 러닝 총 시간
-        private Double avgPace; // 평균 페이스
+        private Integer avgPace; // 평균 페이스
         private Integer bestPace; // 최고 페이스. 숫자가 낮아야 함
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
@@ -63,14 +64,14 @@ public class RunRecordResponse {
         private Integer totalDistanceMeters; // 러닝 총 이동거리
         private Integer totalDurationSeconds; // 러닝 총 시간
         private Integer elapsedTimeInSeconds; // 러닝 총 경과시간
-        private Double avgPace;
+        private Integer avgPace;
         private Integer bestPace;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
         private String createdAt;
         private Integer userId;
         private Integer intensity; // 러닝 강도
-        private String place; // 러닝 장소
+        private RunPlaceEnum place; // 러닝 장소
 
         public DetailDTO(RunRecord runRecord) {
             this.id = runRecord.getId();
@@ -105,14 +106,14 @@ public class RunRecordResponse {
         private Integer totalDistanceMeters; // 러닝 총 이동거리
         private Integer totalDurationSeconds; // 러닝 총 시간
         private Integer elapsedTimeInSeconds; // 러닝 총 경과시간
-        private Double avgPace;
+        private Integer avgPace;
         private Integer bestPace;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
         private String createdAt;
         private Integer userId;
         private Integer intensity; // 러닝 강도
-        private String place; // 러닝 장소
+        private RunPlaceEnum place; // 러닝 장소
 
         public UpdateDTO(RunRecord runRecord) {
             this.id = runRecord.getId();

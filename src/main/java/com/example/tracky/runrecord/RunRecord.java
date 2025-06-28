@@ -1,10 +1,12 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky.runrecord.Enum.RunPlaceEnum;
 import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runsegment.RunSegment;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,12 +30,13 @@ public class RunRecord {
     private Integer totalDurationSeconds; // 총 시간. 초 단위
     private Integer calories; // 총 칼로리 소모량
     private String memo; // 메모
-    private Double avgPace; // 평균 페이스. 초단위. km 단위
+    private Integer avgPace; // 평균 페이스. 초단위. km 단위
     private Integer bestPace; // 최고 페이스. 초단위. km 단위
 
     @ColumnDefault("0")
+    @Max(value = 10, message = "러닝 강도는 10을 초과할 수 없습니다.")
     private Integer intensity; // 러닝 강도 (1~10). 기본값 0
-    private String place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
+    private RunPlaceEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
     private Timestamp createdAt;
@@ -51,7 +54,7 @@ public class RunRecord {
     private List<Picture> pictures = new ArrayList<>(); // 자식 뱃지들
 
     @Builder
-    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Double avgPace, Integer bestPace, Integer intensity, String place, User user) {
+    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceEnum place, User user) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;

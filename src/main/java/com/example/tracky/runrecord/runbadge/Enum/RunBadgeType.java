@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord.runbadge.Enum;
 
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
  * 이 Enum을 사용하면 서비스 로직에서 타입에 따라 분기 처리를 명확하고 안전하게 할 수 있습니다.
  * 각 Enum 상수는 데이터베이스에 저장될 한글 값을 필드로 가집니다.
  */
-@Getter
 @RequiredArgsConstructor
 public enum RunBadgeType {
 
@@ -37,4 +36,14 @@ public enum RunBadgeType {
      * 예: RECORD -> "최고 기록"
      */
     private final String value;
+
+    /**
+     * Jackson이 이 Enum을 JSON으로 변환할 때 이 메서드의 반환값을 사용하도록 지정합니다.
+     *
+     * @return 데이터베이스에 저장될 한글 문자열 값 (예: "최고기록")
+     */
+    @JsonValue
+    public String getValue() {
+        return value;
+    }
 }

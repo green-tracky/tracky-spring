@@ -1,14 +1,14 @@
 package com.example.tracky._core.error.ex;
 
-import com.example.tracky._core.error.ErrorCodeEnum;
+import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 
 public class ExceptionApi400 extends RuntimeException {
     /**
      * 400 Bad Request (잘못된 요청)
      *
-     * @param errorCode
+     * @param errorCodeEnum
      */
-    public ExceptionApi400(ErrorCodeEnum errorCode) {
-        super(errorCode.getMessage());
+    public ExceptionApi400(ErrorCodeEnum errorCodeEnum) {
+        super(errorCodeEnum.getMessage());
     }
 }

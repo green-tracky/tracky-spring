@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky.runrecord.Enum.RunPlaceEnum;
 import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.runrecord.picture.PictureRequest;
 import com.example.tracky.runrecord.runsegment.RunSegment;
@@ -54,7 +55,7 @@ public class RunRecordRequest {
         private String title;
         private String memo;
         private Integer intensity; // 러닝 강도
-        private String place; // 러닝 장소
+        private RunPlaceEnum place; // 러닝 장소
         private List<PictureRequest.DTO> pictures; // 수정된 이미지 목록
     }
 }

@@ -60,7 +60,7 @@ public class RunBadgeAchvService {
                     if (checkRecordBadgeCondition(runRecordPS, runBadge)) {
                         // 조건 만족 시 핸들러 호출
                         runBadgeAchvHandler.handleRecordBadge(runRecordPS, user, runBadge)
-                                .ifPresent(savedRunBadgeAchvs::add);
+                                .ifPresent(runBadgeAchv -> savedRunBadgeAchvs.add(runBadgeAchv));
                     }
                     break;
 
@@ -68,7 +68,7 @@ public class RunBadgeAchvService {
                     // 월간 업적 뱃지 조건 검사
                     if (checkMonthlyAchievementCondition(runRecordPS, runBadge, monthlyRunCount, monthlyTotalDistance, currentMonth, user)) {
                         runBadgeAchvHandler.handleMonthlyAchievement(runRecordPS, user, runBadge)
-                                .ifPresent(savedRunBadgeAchvs::add);
+                                .ifPresent(runBadgeAchv -> savedRunBadgeAchvs.add(runBadgeAchv));
                     }
                     break;
 
