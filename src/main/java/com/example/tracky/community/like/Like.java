@@ -37,6 +37,5 @@ public class Like {
     public Like(Post post, User user) {
         this.post = post;
         this.user = user;
-        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 }
