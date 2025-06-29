@@ -24,7 +24,7 @@ public class RunLevelService {
     /**
      * 사용자의 누적 거리를 기반으로 레벨을 업데이트할 필요가 있는지 확인하고 처리합니다.
      *
-     * @param user 현재 사용자 엔티티
+     * @param user 현재 사용자
      */
     @Transactional
     public void updateUserLevelIfNeeded(User user) {
@@ -45,7 +45,7 @@ public class RunLevelService {
         // - newLevel이 null이 아니어야 하고 (적어도 '옐로우' 레벨은 찾아야 함)
         // - 새로 찾은 레벨이 사용자의 현재 레벨과 달라야 합니다.
         if (newRunLevel != null && !newRunLevel.equals(user.getRunLevel())) {
-            // 사용자 엔티티의 레벨을 새로운 레벨로 변경합니다.
+            // 사용자 레벨을 새로운 레벨로 변경합니다.
             user.updateRunLevel(newRunLevel);
             log.info("레벨업! 사용자 ID: {}, 새로운 레벨: {}", user.getId(), newRunLevel.getName());
         }

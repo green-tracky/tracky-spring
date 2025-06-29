@@ -74,7 +74,6 @@ public class RunLevelResponse {
                     .map(level -> {
                         // 현재 순회중인 레벨의 ID가 사용자의 현재 레벨 ID와 같은지 확인합니다.
                         boolean isCurrent = level.getId().equals(currentRunLevel.getId());
-                        // RunLevel 엔티티와 isCurrent 플래그를 사용하여 DTO를 생성합니다.
                         return new RunLevelDTO(level, isCurrent);
                     })
                     .toList();
@@ -92,9 +91,9 @@ public class RunLevelResponse {
             private Boolean isCurrent; // 현재 레벨 표시
 
             /**
-             * RunLevel 엔티티와, 이 레벨이 현재 사용자의 레벨인지 여부를 받아 DTO를 생성합니다.
+             * runLevel과, 이 레벨이 현재 사용자의 레벨인지 여부를 받아 DTO를 생성합니다.
              *
-             * @param runLevel  원본 RunLevel 엔티티
+             * @param runLevel
              * @param isCurrent 이 레벨이 현재 사용자의 레벨이면 true
              */
             public RunLevelDTO(RunLevel runLevel, boolean isCurrent) {
