@@ -104,4 +104,5 @@ public class RunBadgeAchvRepository {
         query.setParameter("userId", userId);
         return query.getResultList();
     }
+
 }

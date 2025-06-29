@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RunBadgeResponse {
-
     @Data
     public static class ListDTO {
         private List<DTO> recents; // 최근 획득 목록
