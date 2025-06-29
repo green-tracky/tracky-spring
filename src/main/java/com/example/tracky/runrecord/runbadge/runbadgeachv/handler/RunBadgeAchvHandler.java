@@ -36,7 +36,7 @@ public class RunBadgeAchvHandler {
      */
     public Optional<RunBadgeAchv> handleRecordBadge(RunRecord newRunRecord, User user, RunBadge runBadge) {
         // 1. 해당 사용자가 이미 이 뱃지를 가지고 있는지 확인
-        Optional<RunBadgeAchv> existingRunBadgeAchvOP = runBadgeAchvRepository.findByRunBadgeAndUser(runBadge, user);
+        Optional<RunBadgeAchv> existingRunBadgeAchvOP = runBadgeAchvRepository.findByRunBadgeIdAndUserId(runBadge.getId(), user.getId());
 
         // 2. 이미 뱃지를 가지고 있는 경우
         if (existingRunBadgeAchvOP.isPresent()) {
