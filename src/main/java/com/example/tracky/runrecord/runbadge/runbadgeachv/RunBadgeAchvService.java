@@ -44,7 +44,7 @@ public class RunBadgeAchvService {
     public List<RunBadgeAchv> checkAndAwardRunBadges(RunRecord runRecordPS) {
         List<RunBadgeAchv> savedRunBadgeAchvs = new ArrayList<>(); // 새로 획득한 뱃지를 담을 리스트
         User user = runRecordPS.getUser();
-        YearMonth currentMonth = YearMonth.from(runRecordPS.getCreatedAt().toLocalDateTime()); // 러닝 등록 하는 월
+        YearMonth currentMonth = YearMonth.from(runRecordPS.getCreatedAt()); // 러닝 등록 하는 월
 
         // 1. DB에서 모든 뱃지 정보와 사용자의 월간 기록을 미리 조회하여 성능 최적화?
         List<RunBadge> allRunBadgesPS = runBadgeRepository.findAll();

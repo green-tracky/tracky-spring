@@ -6,6 +6,7 @@ import com.example.tracky.runrecord.runbadge.Enum.RunBadgeType;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class RunBadgeResponse {
         private String description; // 뱃지 설명
         private String imageUrl; // 뱃지 이미지
         private RunBadgeType type; // 뱃지 타입
-        private String achievedAt; // 뱃지 획득날짜 (획득 못했으면 null)
+        private LocalDateTime achievedAt; // 뱃지 획득날짜 (획득 못했으면 null)
         private Integer runRecordDistance; // 러닝 기록의 거리 (획득 못했으면 null)
         private Integer runRecordSeconds; // 러닝 기록의 시간 (획득 못했으면 null)
         private Integer runRecordPace; // 러닝 기록의 페이스 (획득 못했으면 null)
@@ -77,7 +78,7 @@ public class RunBadgeResponse {
             this.description = runBadge.getDescription();
             this.imageUrl = runBadge.getImageUrl();
             this.type = runBadge.getType();
-            this.achievedAt = DateTimeUtils.toDateTimeString(runBadgeAchv.getAchievedAt());
+            this.achievedAt = runBadgeAchv.getAchievedAt();
             this.runRecordDistance = runRecord.getTotalDistanceMeters();
             this.runRecordSeconds = runRecord.getTotalDurationSeconds();
             this.runRecordPace = runRecord.getAvgPace();

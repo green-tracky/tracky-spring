@@ -15,7 +15,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +29,13 @@ public class RunRecordControllerTest extends MyRestDoc {
     @Autowired
     private ObjectMapper om; // json <-> java Object 변환 해주는 객체. IoC에 objectMapper가 이미 떠있음
 
+    // ⭐️ [수정 1] 날짜/시간 포맷을 미리 정의해두면 재사용하기 편리합니다.
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Test
     public void save_test() throws Exception {
         // given
+        
         // 러닝 생성
         RunRecordRequest.SaveDTO reqDTO = new RunRecordRequest.SaveDTO();
         reqDTO.setTitle("부산 해운대 아침 달리기");
@@ -40,8 +45,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         List<RunSegmentRequest.DTO> segments = new ArrayList<>();
 
         RunSegmentRequest.DTO segment1 = new RunSegmentRequest.DTO();
-        segment1.setStartDate(Timestamp.valueOf("2025-06-22 06:30:00"));
-        segment1.setEndDate(Timestamp.valueOf("2025-06-22 06:37:10"));
+        // ⭐️ [수정 2] 문자열을 LocalDateTime으로 변환하여 설정
+        segment1.setStartDate(LocalDateTime.parse("2025-06-22 06:30:00", formatter));
+        segment1.setEndDate(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
         segment1.setDurationSeconds(430);
         segment1.setDistanceMeters(1000);
 
@@ -49,28 +55,28 @@ public class RunRecordControllerTest extends MyRestDoc {
         RunCoordinateRequest.DTO coord1 = new RunCoordinateRequest.DTO();
         coord1.setLat(35.1587);
         coord1.setLon(129.1604);
-        coord1.setCreatedAt(Timestamp.valueOf("2025-06-22 06:30:00"));
+        // ⭐️ [수정 3] Timestamp.valueOf 대신 LocalDateTime.parse 사용
+        coord1.setCreatedAt(LocalDateTime.parse("2025-06-22 06:30:00", formatter));
         coordinates1.add(coord1);
 
         RunCoordinateRequest.DTO coord2 = new RunCoordinateRequest.DTO();
         coord2.setLat(35.1595);
         coord2.setLon(129.1612);
-        coord2.setCreatedAt(Timestamp.valueOf("2025-06-22 06:33:45"));
+        coord2.setCreatedAt(LocalDateTime.parse("2025-06-22 06:33:45", formatter));
         coordinates1.add(coord2);
 
         RunCoordinateRequest.DTO coord3 = new RunCoordinateRequest.DTO();
         coord3.setLat(35.1602);
         coord3.setLon(129.1620);
-        coord3.setCreatedAt(Timestamp.valueOf("2025-06-22 06:37:10"));
+        coord3.setCreatedAt(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
         coordinates1.add(coord3);
 
         segment1.setCoordinates(coordinates1);
-
         segments.add(segment1);
 
         RunSegmentRequest.DTO segment2 = new RunSegmentRequest.DTO();
-        segment2.setStartDate(Timestamp.valueOf("2025-06-22 06:37:11"));
-        segment2.setEndDate(Timestamp.valueOf("2025-06-22 06:43:05"));
+        segment2.setStartDate(LocalDateTime.parse("2025-06-22 06:37:11", formatter));
+        segment2.setEndDate(LocalDateTime.parse("2025-06-22 06:43:05", formatter));
         segment2.setDurationSeconds(354);
         segment2.setDistanceMeters(1000);
 
@@ -78,17 +84,16 @@ public class RunRecordControllerTest extends MyRestDoc {
         RunCoordinateRequest.DTO coord4 = new RunCoordinateRequest.DTO();
         coord4.setLat(35.1610);
         coord4.setLon(129.1628);
-        coord4.setCreatedAt(Timestamp.valueOf("2025-06-22 06:40:00"));
+        coord4.setCreatedAt(LocalDateTime.parse("2025-06-22 06:40:00", formatter));
         coordinates2.add(coord4);
 
         RunCoordinateRequest.DTO coord5 = new RunCoordinateRequest.DTO();
         coord5.setLat(35.1618);
         coord5.setLon(129.1635);
-        coord5.setCreatedAt(Timestamp.valueOf("2025-06-22 06:43:05"));
+        coord5.setCreatedAt(LocalDateTime.parse("2025-06-22 06:43:05", formatter));
         coordinates2.add(coord5);
 
         segment2.setCoordinates(coordinates2);
-
         segments.add(segment2);
 
         reqDTO.setSegments(segments);
@@ -189,5 +194,5 @@ public class RunRecordControllerTest extends MyRestDoc {
 
         // then
     }
-    
+
 }
