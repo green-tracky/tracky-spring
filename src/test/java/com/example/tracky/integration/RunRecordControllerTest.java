@@ -35,7 +35,7 @@ public class RunRecordControllerTest extends MyRestDoc {
     @Test
     public void save_test() throws Exception {
         // given
-        
+
         // 러닝 생성
         RunRecordRequest.SaveDTO reqDTO = new RunRecordRequest.SaveDTO();
         reqDTO.setTitle("부산 해운대 아침 달리기");
@@ -134,7 +134,7 @@ public class RunRecordControllerTest extends MyRestDoc {
     }
 
     @Test
-    public void getRunRecord_test() throws Exception {
+    public void get_run_record_test() throws Exception {
         // given
         Integer id = 1;
 

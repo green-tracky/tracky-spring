@@ -21,11 +21,11 @@ public class RunLevel {
     private Integer maxDistance; // 해당 레벨의 조건 범위 끝 (m)
     private String description; // 레벨 설명 (예: "0~49.99킬로미터" 등)
     private String imageUrl; // 레벨에 대응하는 이미지 URL
-    private Integer sortOrder; // 레벨 정렬용 값
+    private Integer sortOrder; // 레벨 정렬용 값 (0~)
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-    
+
     @Builder
     public RunLevel(Integer id, String name, Integer minDistance, Integer maxDistance, String description, String imageUrl, Integer sortOrder) {
         this.id = id;

@@ -20,7 +20,7 @@ public class RunBadgeControllerTest extends MyRestDoc {
     private ObjectMapper om; // json <-> java Object 변환 해주는 객체. IoC에 objectMapper가 이미 떠있음
 
     @Test
-    public void getRunBadges_test() throws Exception {
+    public void get_run_badges_test() throws Exception {
         // given
 
         // when

@@ -3,7 +3,6 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,20 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // MOCK -> 가짜 환경을 만들어 필요한 의존관계를 다 메모리에 올려서 테스트
 @Slf4j
-class RunLevelControllerTest extends MyRestDoc {
+public class RunLevelControllerTest extends MyRestDoc {
 
     @Autowired
-    private ObjectMapper om;
+    private ObjectMapper om; // json <-> java Object 변환 해주는 객체. IoC에 objectMapper가 이미 떠있음
 
     @Test
-    @DisplayName("런레벨 조회 성공")
-    void get_run_levels() throws Exception {
+    public void get_run_levels_test() throws Exception {
         // given
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/run-level"));
+                        .get("/s/api/run-levels"));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -35,4 +33,5 @@ class RunLevelControllerTest extends MyRestDoc {
 
         // then
     }
+
 }

@@ -25,6 +25,17 @@ public class RunLevelRepository {
      * @return sortOrder 기준으로 내림차순 정렬된 RunLevel 리스트
      */
     public List<RunLevel> findAllByOrderBySortOrderDesc() {
+        Query query = em.createQuery("select rl from RunLevel rl order by rl.sortOrder desc", RunLevel.class);
+        return query.getResultList();
+    }
+
+    /**
+     * 모든 레벨 정보를 'sortOrder' 기준으로 오름차순 정렬하여 조회합니다.
+     * 레벨 목록 순서대로 낮은 것부터 조회. 조회용
+     *
+     * @return sortOrder 기준으로 오름차순 정렬된 RunLevel 리스트
+     */
+    public List<RunLevel> findAllByOrderBySortOrderAsc() {
         Query query = em.createQuery("select rl from RunLevel rl order by rl.sortOrder", RunLevel.class);
         return query.getResultList();
     }
