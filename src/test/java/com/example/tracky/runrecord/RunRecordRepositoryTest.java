@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,9 @@ public class RunRecordRepositoryTest {
 
     @Autowired
     private RunCoordinateRepository runCoordinateRepository;
+
+    // ⭐️ [수정 1] 날짜/시간 포맷을 미리 정의해두면 재사용하기 편리합니다.
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Test
     void findByIdJoin_test() {
@@ -45,10 +49,10 @@ public class RunRecordRepositoryTest {
         RunCoordinateRequest.DTO cDTO = new RunCoordinateRequest.DTO();
         cDTO.setLat(10.0);
         cDTO.setLon(15.0);
-        cDTO.setCreatedAt(Timestamp.valueOf("2025-06-22 06:37:10"));
+        cDTO.setCreatedAt(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
 
         RunSegmentRequest.DTO sDTO = new RunSegmentRequest.DTO();
-        sDTO.setEndDate(Timestamp.valueOf("2025-06-22 06:37:10"));
+        sDTO.setEndDate(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
         sDTO.setCoordinates(List.of(cDTO));
         sDTO.setDistanceMeters(400);
         sDTO.setDurationSeconds(300);

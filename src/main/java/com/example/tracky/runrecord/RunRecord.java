@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class RunRecord {
     private RunPlaceEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY) // 추가함
     private User user;

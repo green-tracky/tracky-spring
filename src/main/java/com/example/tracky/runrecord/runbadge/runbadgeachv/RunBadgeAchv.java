@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -21,7 +21,7 @@ public class RunBadgeAchv {
     private Integer id;
 
     @CreationTimestamp
-    private Timestamp achievedAt;
+    private LocalDateTime achievedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
