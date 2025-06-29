@@ -48,8 +48,8 @@ public class RunBadgeAchvService {
 
         // 1. DB에서 모든 뱃지 정보와 사용자의 월간 기록을 미리 조회하여 성능 최적화?
         List<RunBadge> allRunBadgesPS = runBadgeRepository.findAll();
-        Integer monthlyTotalDistance = runRecordRepository.findTotalDistanceByUserAndYearMonth(user, currentMonth);
-        Integer monthlyRunCount = runRecordRepository.countByUserAndYearMonth(user, currentMonth);
+        Integer monthlyTotalDistance = runRecordRepository.findTotalDistanceByUserIdAndYearMonth(user.getId(), currentMonth);
+        Integer monthlyRunCount = runRecordRepository.countByUserIdAndYearMonth(user.getId(), currentMonth);
 
         // 2. 모든 뱃지를 순회하며 획득 조건 검사
         for (RunBadge runBadge : allRunBadgesPS) {
@@ -114,7 +114,7 @@ public class RunBadgeAchvService {
     private boolean checkMonthlyAchievementCondition(RunRecord runRecordPS, RunBadge runBadge,
                                                      int monthlyRunCount, int monthlyTotalDistance,
                                                      YearMonth currentMonth, User user) {
-        boolean isExists = runBadgeAchvRepository.existsByUserAndBadgeAndYearMonth(user, runBadge, currentMonth);
+        boolean isExists = runBadgeAchvRepository.existsByUserIdAndRunBadgeIdAndYearMonth(user.getId(), runBadge.getId(), currentMonth);
 
         switch (runBadge.getName()) {
             case "첫 시작":
@@ -135,5 +135,7 @@ public class RunBadgeAchvService {
             default:
                 return false;
         }
+        
     }
+
 }
