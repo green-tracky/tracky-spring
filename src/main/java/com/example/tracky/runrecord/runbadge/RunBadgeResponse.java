@@ -1,6 +1,5 @@
 package com.example.tracky.runrecord.runbadge;
 
-import com.example.tracky._core.utils.DateTimeUtils;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadge.Enum.RunBadgeType;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
@@ -43,9 +42,9 @@ public class RunBadgeResponse {
             return runBadges.stream()
                     .filter(badge -> badge.getType() == type)
                     .map(badge -> {
-                        RunBadgeAchv achieved = achievedMap.get(badge.getId());
-                        if (achieved != null) {
-                            return new DTO(achieved);
+                        RunBadgeAchv isAchieved = achievedMap.get(badge.getId());
+                        if (isAchieved != null) {
+                            return new DTO(isAchieved);
                         } else {
                             return new DTO(badge);
                         }
@@ -66,7 +65,7 @@ public class RunBadgeResponse {
         private Integer runRecordDistance; // 러닝 기록의 거리 (획득 못했으면 null)
         private Integer runRecordSeconds; // 러닝 기록의 시간 (획득 못했으면 null)
         private Integer runRecordPace; // 러닝 기록의 페이스 (획득 못했으면 null)
-        private Boolean achieved; // 획득 유무
+        private Boolean isAchieved; // 획득 유무
 
         // 획득한 뱃지용
         public DTO(RunBadgeAchv runBadgeAchv) {
@@ -82,7 +81,7 @@ public class RunBadgeResponse {
             this.runRecordDistance = runRecord.getTotalDistanceMeters();
             this.runRecordSeconds = runRecord.getTotalDurationSeconds();
             this.runRecordPace = runRecord.getAvgPace();
-            this.achieved = true; // 획득했으므로 true
+            this.isAchieved = true; // 획득했으므로 true
         }
 
         // 획득하지 못한 뱃지용
@@ -96,7 +95,7 @@ public class RunBadgeResponse {
             this.runRecordDistance = null; // 획득 정보 없음
             this.runRecordSeconds = null; // 획득 정보 없음
             this.runRecordPace = null; // 획득 정보 없음
-            this.achieved = false; // 획득 못했으므로 false
+            this.isAchieved = false; // 획득 못했으므로 false
         }
 
     }

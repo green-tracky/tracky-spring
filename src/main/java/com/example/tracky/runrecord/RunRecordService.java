@@ -6,6 +6,7 @@ import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvService;
 import com.example.tracky.user.User;
+import com.example.tracky.user.runlevel.RunLevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class RunRecordService {
 
     private final RunRecordRepository runRecordRepository;
     private final RunBadgeAchvService runBadgeAchvService;
+    private final RunLevelService runLevelService;
 
     /**
      * 러닝 상세 조회
@@ -28,14 +30,14 @@ public class RunRecordService {
      * @return
      */
     public RunRecordResponse.DetailDTO getRunRecord(User user, Integer id) {
-        // 러닝 기록 조회
+        // 1. 러닝 기록 조회
         RunRecord runRecordPS = runRecordRepository.findByIdJoin(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
-        // 권한 체크
+        // 2. 권한 체크
         checkRunRecordAccess(user, runRecordPS);
 
-        // 러닝 응답 DTO 로 변환
+        // 3. 러닝 응답 DTO 로 변환
         return new RunRecordResponse.DetailDTO(runRecordPS);
     }
 
@@ -57,7 +59,10 @@ public class RunRecordService {
         // 이 과정에서 새로 획득한 뱃지 목록을 반환받습니다.
         List<RunBadgeAchv> awardedBadges = runBadgeAchvService.checkAndAwardRunBadges(runRecordPS);
 
-        // 4. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
+        // 4. 레벨업 서비스를 호출하여 사용자의 레벨을 업데이트합니다.
+        runLevelService.updateUserLevelIfNeeded(user);
+
+        // 5. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
         return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadges);
 
     }
@@ -84,17 +89,17 @@ public class RunRecordService {
 
     @Transactional
     public RunRecordResponse.UpdateDTO update(User user, Integer id, RunRecordRequest.UpdateDTO reqDTO) {
-        // 러닝 기록 조회
+        // 1. 러닝 기록 조회
         RunRecord runRecordPS = runRecordRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
-        // 권한 체크
+        // 2. 권한 체크
         checkRunRecordAccess(user, runRecordPS);
 
-        // 러닝 내용 수정
+        // 3. 러닝 내용 수정
         runRecordPS.update(reqDTO);
 
-        // 응답 DTO 로 반환
+        // 4. 응답 DTO 로 반환
         return new RunRecordResponse.UpdateDTO(runRecordPS);
     }
 
@@ -110,5 +115,5 @@ public class RunRecordService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
     }
-    
+
 }
