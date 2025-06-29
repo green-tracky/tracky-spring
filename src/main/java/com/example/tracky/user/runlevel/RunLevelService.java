@@ -36,7 +36,7 @@ public class RunLevelService {
 
         // 3. 사용자의 새로운 레벨을 결정합니다.
         // (레벨의 개수가 100개가 넘어가면 for 문이 더 좋다)
-        RunLevel newLevel = runLevels.stream()
+        RunLevel newRunLevel = runLevels.stream()
                 .filter(level -> totalDistance >= level.getMinDistance())
                 .findFirst()
                 .orElse(null);
@@ -44,10 +44,10 @@ public class RunLevelService {
         // 4. 레벨 변경이 필요한지 확인하고 업데이트를 수행합니다.
         // - newLevel이 null이 아니어야 하고 (적어도 '옐로우' 레벨은 찾아야 함)
         // - 새로 찾은 레벨이 사용자의 현재 레벨과 달라야 합니다.
-        if (newLevel != null && !newLevel.equals(user.getRunLevel())) {
+        if (newRunLevel != null && !newRunLevel.equals(user.getRunLevel())) {
             // 사용자 엔티티의 레벨을 새로운 레벨로 변경합니다.
-            user.updateRunLevel(newLevel);
-            log.info("레벨업! 사용자 ID: {}, 새로운 레벨: {}", user.getId(), newLevel.getName());
+            user.updateRunLevel(newRunLevel);
+            log.info("레벨업! 사용자 ID: {}, 새로운 레벨: {}", user.getId(), newRunLevel.getName());
         }
     }
 

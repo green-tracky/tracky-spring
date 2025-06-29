@@ -63,10 +63,10 @@ public class User {
      * 사용자의 러닝 레벨을 업데이트하는 편의 메서드입니다.
      * 이 메서드를 통해 객체의 상태 변경 책임을 User 엔티티 스스로가 갖게 됩니다.
      *
-     * @param newLevel 새로 도달한 레벨
+     * @param newRunLevel 새로 도달한 레벨
      */
-    public void updateRunLevel(RunLevel newLevel) {
-        this.runLevel = newLevel;
+    public void updateRunLevel(RunLevel newRunLevel) {
+        this.runLevel = newRunLevel;
     }
 
 }

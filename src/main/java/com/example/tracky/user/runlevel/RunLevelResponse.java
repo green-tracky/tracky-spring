@@ -41,11 +41,11 @@ public class RunLevelResponse {
          * 최종 응답 DTO를 생성하는 생성자입니다. 모든 계산 로직이 여기에 집중됩니다.
          * </pre>
          *
-         * @param currentLevel  사용자의 현재 레벨 정보 (DB에 저장된 상태 기준)
-         * @param runLevels     시스템의 모든 레벨 정보 리스트 (정렬된 상태)
-         * @param totalDistance 사용자의 총 누적 거리
+         * @param currentRunLevel 사용자의 현재 레벨 정보 (DB에 저장된 상태 기준)
+         * @param runLevels       시스템의 모든 레벨 정보 리스트 (정렬된 상태)
+         * @param totalDistance   사용자의 총 누적 거리
          */
-        public ListDTO(RunLevel currentLevel, List<RunLevel> runLevels, Integer totalDistance) {
+        public ListDTO(RunLevel currentRunLevel, List<RunLevel> runLevels, Integer totalDistance) {
             // 1. 누적거리 저장
             this.totalDistance = totalDistance;
 
@@ -53,7 +53,7 @@ public class RunLevelResponse {
             // 먼저 사용자의 현재 레벨이 전체 리스트에서 몇 번째인지 찾습니다.
             // (레벨의 개수가 100개가 넘어가면 for 문이 더 좋다)
             int currentIndex = IntStream.range(0, runLevels.size())
-                    .filter(i -> runLevels.get(i).getId().equals(currentLevel.getId()))
+                    .filter(i -> runLevels.get(i).getId().equals(currentRunLevel.getId()))
                     .findFirst()
                     .orElse(-1);
 
@@ -73,7 +73,7 @@ public class RunLevelResponse {
             this.runLevels = runLevels.stream()
                     .map(level -> {
                         // 현재 순회중인 레벨의 ID가 사용자의 현재 레벨 ID와 같은지 확인합니다.
-                        boolean isCurrent = level.getId().equals(currentLevel.getId());
+                        boolean isCurrent = level.getId().equals(currentRunLevel.getId());
                         // RunLevel 엔티티와 isCurrent 플래그를 사용하여 DTO를 생성합니다.
                         return new RunLevelDTO(level, isCurrent);
                     })
@@ -89,7 +89,7 @@ public class RunLevelResponse {
             private String description; // 레벨 설명 (예: "0~49.99킬로미터" 등)
             private String imageUrl; // 레벨에 대응하는 이미지 URL
             private Integer sortOrder; // 레벨 정렬용 값
-            private Boolean isCurrent;
+            private Boolean isCurrent; // 현재 레벨 표시
 
             /**
              * RunLevel 엔티티와, 이 레벨이 현재 사용자의 레벨인지 여부를 받아 DTO를 생성합니다.
