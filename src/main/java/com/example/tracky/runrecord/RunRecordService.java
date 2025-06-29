@@ -57,7 +57,10 @@ public class RunRecordService {
         // 이 과정에서 새로 획득한 뱃지 목록을 반환받습니다.
         List<RunBadgeAchv> awardedBadges = runBadgeAchvService.checkAndAwardRunBadges(runRecordPS);
 
-        // 4. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
+        // 4. 러닝이 추가될 때 현재의 유저의 총 누적거리를 조회해서 레벨 조건에 맞으면 유저레벨을 변경한다
+
+
+        // 5. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
         return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadges);
 
     }
@@ -110,5 +113,5 @@ public class RunRecordService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
     }
-    
+
 }

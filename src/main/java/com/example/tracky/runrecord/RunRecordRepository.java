@@ -85,7 +85,7 @@ public class RunRecordRepository {
         Query query = em.createQuery("select sum(r.totalDistanceMeters) from RunRecord r where r.user.id = :userId", Long.class);
         query.setParameter("userId", userId);
         Long totalDistance = (Long) query.getSingleResult();
-        return totalDistance.intValue();
+        return totalDistance == null ? 0 : totalDistance.intValue();
     }
 
     /**
@@ -105,7 +105,7 @@ public class RunRecordRepository {
         query.setParameter("year", yearMonth.getYear());
         query.setParameter("month", yearMonth.getMonth());
         Long totalCount = (Long) query.getSingleResult();
-        return totalCount.intValue();
+        return totalCount == null ? 0 : totalCount.intValue();
     }
 
     /**
@@ -121,6 +121,6 @@ public class RunRecordRepository {
         query.setParameter("year", yearMonth.getYear());
         query.setParameter("month", yearMonth.getMonthValue());
         Long totalDistance = (Long) query.getSingleResult();
-        return totalDistance.intValue();
+        return totalDistance == null ? 0 : totalDistance.intValue();
     }
 }
