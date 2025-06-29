@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord.runbadge;
 
+import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,9 @@ public class RunBadgeService {
     public RunBadgeResponse.ListDTO getRunBadges(User user) {
         // 조회
         List<RunBadge> runBadgesPS = runBadgeRepository.findAll();
+        List<RunBadgeAchv> runBadgeAchvsPS = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+
+        return new RunBadgeResponse.ListDTO(runBadgesPS, runBadgeAchvsPS);
     }
 
 }

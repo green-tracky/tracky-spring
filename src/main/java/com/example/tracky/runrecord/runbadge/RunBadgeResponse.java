@@ -37,10 +37,10 @@ public class RunBadgeResponse {
             this.monthly = buildCategorizedList(runBadges, achievedMap, RunBadgeType.MONTHLY_ACHIEVEMENT);
         }
 
-        private List<DTO> buildCategorizedList(List<RunBadge> allBadges,
+        private List<DTO> buildCategorizedList(List<RunBadge> runBadges,
                                                Map<Integer, RunBadgeAchv> achievedMap,
                                                RunBadgeType type) {
-            return allBadges.stream()
+            return runBadges.stream()
                     .filter(badge -> badge.getType() == type)
                     .map(badge -> {
                         RunBadgeAchv achieved = achievedMap.get(badge.getId());

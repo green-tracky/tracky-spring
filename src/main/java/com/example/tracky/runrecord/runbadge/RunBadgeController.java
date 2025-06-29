@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord.runbadge;
 
+import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,8 @@ public class RunBadgeController {
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        runBadgeService.getRunBadges(user);
-//        return Resp.ok(respDTO);
-        return null;
+        RunBadgeResponse.ListDTO respDTO = runBadgeService.getRunBadges(user);
+        return Resp.ok(respDTO);
     }
 
 }
