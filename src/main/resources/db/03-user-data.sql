@@ -2,18 +2,18 @@
 
 -- 1. 사용자 'ssar' (일반 사용자, 남)
 INSERT INTO user_tb (username, email, profile_url, height, weight, gender, user_type, provider, user_tag,
-                     flutter_token_id, created_at)
+                     flutter_token_id, created_at, run_level_id)
 VALUES ('ssar', 'ssar@example.com', 'http://example.com/profiles/ssar.jpg', 175.0, 70.0, '남', '일반', 'kakao',
-        '#A1B2C3', 'token_ssar_123', NOW());
+        '#A1B2C3', 'token_ssar_123', NOW(), 1);
 
 -- 2. 사용자 'cos' (관리자, 여)
 INSERT INTO user_tb (username, email, profile_url, height, weight, gender, user_type, provider, user_tag,
-                     flutter_token_id, created_at)
+                     flutter_token_id, created_at, run_level_id)
 VALUES ('cos', 'cos@example.com', 'http://example.com/profiles/cos.jpg', 168.0, 60.0, '여', '관리자', 'google',
-        '#D4E5F6', 'token_cos_456', NOW());
+        '#D4E5F6', 'token_cos_456', NOW(), 1);
 
 -- 3. 사용자 'love' (일반 사용자, 여)
 INSERT INTO user_tb (username, email, profile_url, height, weight, gender, user_type, provider, user_tag,
-                     flutter_token_id, created_at)
+                     flutter_token_id, created_at, run_level_id)
 VALUES ('love', 'love@example.com', 'http://example.com/profiles/love.jpg', 160.0, 55.0, '여', '일반', 'kakao',
-        '#123ABC', 'token_love_789', NOW());
+        '#123ABC', 'token_love_789', NOW(), 1);
