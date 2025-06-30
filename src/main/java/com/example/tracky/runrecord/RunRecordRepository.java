@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.tracky.runrecord.DTO.RecentRunsDTO;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -135,11 +136,26 @@ public class RunRecordRepository {
      *
      * @return
      */
-    public List<RunRecord> findAllByUserIdJoin() {
+    public List<RunRecord> findAllByUserIdJoin(Integer userId) {
         // TODO : join fetch 추가해서 모든 연관 엔티티 다 가져오기
-        Query query = em.createQuery("select r from RunRecord r ", RunRecord.class);
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId", RunRecord.class);
+        query.setParameter("userId", userId);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
+    }
+
+    /**
+     * 최근 기록 3개 불러오기
+     *
+     * @return
+     */
+    public List<RunRecord> findTop3ByUserIdOrderByCreatedAt(Integer userId) {
+        // TODO : join fetch 추가해서 모든 연관 엔티티 다 가져오기
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt asc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setMaxResults(3);
+        List<RunRecord> recentRuns = query.getResultList();
+        return recentRuns;
     }
 
     /**
@@ -151,10 +167,11 @@ public class RunRecordRepository {
      * @param end   종료일시
      * @return 기간 내 러닝 기록 리스트
      */
-    public List<RunRecord> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
+    public List<RunRecord> findAllByCreatedAtBetween(Integer userId, LocalDateTime start, LocalDateTime end) {
         Query query = em.createQuery(
-                "SELECT r FROM RunRecord r WHERE r.createdAt BETWEEN :start AND :end",
+                "SELECT r FROM RunRecord r WHERE r.user.id = :userId AND r.createdAt BETWEEN :start AND :end",
                 RunRecord.class);
+        query.setParameter("userId", userId);
         query.setParameter("start", start);
         query.setParameter("end", end);
         List<RunRecord> runRecords = query.getResultList();

@@ -15,11 +15,11 @@ public class RecentRunsDTO {
     private String createdAt;
     private List<RunBadgeResponse.DTO> badges; // TODO : 나중에 획득한 뱃지 들어넣기
 
-    public RecentRunsDTO(RunRecord runRecord, List<RunBadgeResponse.DTO> badges, Integer avgPace) {
+    public RecentRunsDTO(RunRecord runRecord, List<RunBadgeResponse.DTO> badges) {
         this.title = runRecord.getTitle();
         this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
         this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
-        this.avgPace = avgPace;
+        this.avgPace = runRecord.getAvgPace();
         this.createdAt = runRecord.getCreatedAt().toString();
         this.badges = badges;
     }

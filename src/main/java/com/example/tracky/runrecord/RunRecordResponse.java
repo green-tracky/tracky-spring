@@ -34,13 +34,13 @@ public class RunRecordResponse {
      */
     @Data
     public static class WeekDTO {
-        private AvgStatsDTO runstats;
+        private AvgStatsDTO avgStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
         private Map<String, List<String>> weeks = new HashMap<>();
 
-        public WeekDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
-            this.runstats = runstats;
+        public WeekDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.avgStats = avgStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
@@ -57,14 +57,14 @@ public class RunRecordResponse {
      */
     @Data
     public static class MonthDTO {
-        private AvgStatsDTO runstats;
+        private AvgStatsDTO avgStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
         private List<Integer> years = new ArrayList<>();
         private Map<Integer, List<Integer>> mounts = new HashMap<>();
 
-        public MonthDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
-            this.runstats = runstats;
+        public MonthDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.avgStats = avgStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
@@ -83,15 +83,15 @@ public class RunRecordResponse {
      */
     @Data
     public static class YearDTO {
-        private AvgStatsDTO runstats;
-        private TotalStatsDTO allStats;
+        private AvgStatsDTO avgStats;
+        private TotalStatsDTO totalstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
         private List<Integer> years = new ArrayList<>();
 
-        public YearDTO(AvgStatsDTO runstats, TotalStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
-            this.runstats = runstats;
-            this.allStats = allStats;
+        public YearDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.avgStats = avgStats;
+            this.totalstats = totalstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
@@ -110,14 +110,14 @@ public class RunRecordResponse {
      */
     @Data
     public static class AllDTO {
-        private AvgStatsDTO runstats;
-        private TotalStatsDTO allStats;
+        private AvgStatsDTO avgStats;
+        private TotalStatsDTO totalstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
 
-        public AllDTO(AvgStatsDTO runstats, TotalStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
-            this.runstats = runstats;
-            this.allStats = allStats;
+        public AllDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.avgStats = avgStats;
+            this.totalstats = totalstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
