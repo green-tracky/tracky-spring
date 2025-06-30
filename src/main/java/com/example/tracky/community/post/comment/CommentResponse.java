@@ -22,7 +22,6 @@ public class CommentResponse {
         private final LocalDateTime updatedAt;
         private final List<CommentResponseDTO> children;
 
-        // ✅ 생성자 추가
         public CommentResponseDTO(Integer id, Integer postId, Integer userId, String username,
                                   String content, Integer parentId,
                                   LocalDateTime createdAt, LocalDateTime updatedAt,
@@ -38,7 +37,6 @@ public class CommentResponse {
             this.children = children;
         }
 
-        // ✅ 정적 팩토리 메서드 그대로 사용
         public static CommentResponseDTO fromEntity(Comment comment) {
             return new CommentResponseDTO(
                     comment.getId(),

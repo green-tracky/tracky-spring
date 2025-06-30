@@ -35,7 +35,6 @@ public class PostResponse {
             this.updatedAt = updatedAt;
         }
 
-        // ✅ static 메서드로 변경
         public static List<DTO> toPostResponseDTOs(List<Post> posts) {
             return posts.stream().map(post -> {
                 RunRecordResponse.DetailDTO runRecordDTO = null;
