@@ -1,17 +1,17 @@
 package com.example.tracky.runrecord.utils;
 
+import com.example.tracky.runrecord.runsegment.RunSegment;
+import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
-import com.example.tracky.runrecord.runsegment.RunSegment;
-import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
 
 public class RunRecordUtil {
     /**
      * 미터(m) 단위의 거리와 초(s) 단위의 시간을 입력받아
      * <p>
-     * 사용자에게 보여줄 페이스(분/km) 문자열을 반환합니다.
+     * km 단위의 페이스를 반환함. 반환된 값은 초 단위
      *
      * @param distanceMeters  달린 거리 (미터 단위)
      * @param durationSeconds 달린 시간 (초 단위)
@@ -70,7 +70,7 @@ public class RunRecordUtil {
      * 구간의 누적 거리 합
      * <p>
      * 미터 단위
-     * 
+     *
      * @param segmentDTOs
      * @return
      */
@@ -84,7 +84,7 @@ public class RunRecordUtil {
      * 구간의 누적 러닝 시간
      * <p>
      * 초단위
-     * 
+     *
      * @param segmentDTOs
      * @return
      */
@@ -95,16 +95,48 @@ public class RunRecordUtil {
     }
 
     /**
+     * 구간의 평균 페이스
+     * <p>
+     * 초단위
+     *
+     * @param segmentDTOs
+     * @return
+     */
+    public static int calculateAvgPace(List<RunSegmentRequest.DTO> segmentDTOs) {
+        double averagePace = segmentDTOs.stream()
+                .mapToInt(s -> calculatePace(s.getDistanceMeters(), s.getDurationSeconds()))
+                .average()
+                .orElse(0.0); // 기본값 0.0
+
+        return (int) Math.round(averagePace);
+    }
+
+    /**
+     * 구간의 최고 페이스
+     * <p>
+     * 초단위
+     *
+     * @param segmentDTOs
+     * @return
+     */
+    public static int calculateBestPace(List<RunSegmentRequest.DTO> segmentDTOs) {
+        return segmentDTOs.stream()
+                .mapToInt(s -> calculatePace(s.getDistanceMeters(), s.getDurationSeconds()))
+                .min()
+                .orElse(0); // 빈 리스트일 경우 기본값 0
+    }
+
+    /**
      * 구간 총 경과 시간
      * <p>
      * 초단위
-     * 
+     *
      * @param runSegments
      * @return
      */
     public static int calculateElapsedTimeInSeconds(List<RunSegment> runSegments) {
-        LocalDateTime startDate = runSegments.get(0).getStartDate().toLocalDateTime();
-        LocalDateTime endDate = runSegments.get(runSegments.size() - 1).getEndDate().toLocalDateTime();
+        LocalDateTime startDate = runSegments.get(0).getStartDate();
+        LocalDateTime endDate = runSegments.get(runSegments.size() - 1).getEndDate();
         return (int) ChronoUnit.SECONDS.between(startDate, endDate);
     }
 }

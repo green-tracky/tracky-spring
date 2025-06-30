@@ -1,22 +1,15 @@
 package com.example.tracky.runrecord.runbadge.runbadgeachv;
 
-import java.sql.Timestamp;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadge.RunBadge;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.example.tracky.user.User;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -28,20 +21,22 @@ public class RunBadgeAchv {
     private Integer id;
 
     @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDateTime achievedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
 
     @ManyToOne(fetch = FetchType.LAZY)
+    private User user; // 뱃지 획득 유저
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private RunBadge runBadge; // 부모 러닝 뱃지
 
     @Builder
-    public RunBadgeAchv(Integer id, Timestamp createdAt, RunRecord runRecord, RunBadge runBadge) {
+    public RunBadgeAchv(Integer id, RunRecord runRecord, User user, RunBadge runBadge) {
         this.id = id;
-        this.createdAt = createdAt;
         this.runRecord = runRecord;
+        this.user = user;
         this.runBadge = runBadge;
     }
-
 }
