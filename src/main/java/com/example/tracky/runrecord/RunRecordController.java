@@ -27,25 +27,25 @@ public class RunRecordController {
     @GetMapping("/activities/week")
     public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "base-date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
-        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitisWeek(baseDate);
+        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(baseDate);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activities/month")
     public ResponseEntity<?> getActivitiesMonth(@RequestParam("month") int month, @RequestParam("year") int year) {
-        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitisMonth(month, year);
+        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(month, year);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activities/year")
     public ResponseEntity<?> getActivitiesYear(@RequestParam("year") int year) {
-        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitisYear(year);
+        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(year);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activities/all")
     public ResponseEntity<?> getActivitiesAll() {
-        RunRecordResponse.AllDTO respDTO = runRecordService.getActivitisAll();
+        RunRecordResponse.AllDTO respDTO = runRecordService.getActivitiesAll();
         return Resp.ok(respDTO);
     }
 
