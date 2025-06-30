@@ -1,6 +1,5 @@
-package com.example.tracky.community.challenge.challengeinvite;
+package com.example.tracky.community.challenge.domain;
 
-import com.example.tracky.community.challenge.Challenge;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;

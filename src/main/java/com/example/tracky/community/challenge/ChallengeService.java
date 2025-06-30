@@ -1,5 +1,6 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky.community.challenge.repository.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

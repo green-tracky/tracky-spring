@@ -1,6 +1,6 @@
-package com.example.tracky.community.challenge.publicchallenge;
+package com.example.tracky.community.challenge.domain;
 
-import com.example.tracky.community.challenge.Challenge;
+import com.example.tracky.community.challenge.enums.ChallengeTypeEnum;
 import com.example.tracky.user.User;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -19,11 +19,11 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Table(name = "public_challenge_tb")
-@DiscriminatorValue("OFFICIAL") // 부모 테이블의 challenge_type(DTYPE) 컬럼에 'OFFICIAL'로 저장됨
+@DiscriminatorValue(ChallengeTypeEnum.PUBLIC_TYPE) // 부모 테이블의 challenge_type(DTYPE) 컬럼에 'PUBLIC' 로 저장됨
 public class PublicChallenge extends Challenge {
 
-    private String rewardTitle;
-    private String rewardImageUrl;
+    private String rewardTitle; // 공개 챌린지 보상 이름
+    private String rewardImageUrl; // 공개 챌린지 보상 이미지
 
     @Builder
     public PublicChallenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator, String rewardTitle, String rewardImageUrl) {

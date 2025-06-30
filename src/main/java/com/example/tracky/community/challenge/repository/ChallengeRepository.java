@@ -1,5 +1,6 @@
-package com.example.tracky.community.challenge;
+package com.example.tracky.community.challenge.repository;
 
+import com.example.tracky.community.challenge.domain.Challenge;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

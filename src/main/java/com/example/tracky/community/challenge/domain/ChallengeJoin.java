@@ -1,6 +1,5 @@
-package com.example.tracky.community.challenge.challengejoin;
+package com.example.tracky.community.challenge.domain;
 
-import com.example.tracky.community.challenge.Challenge;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -12,7 +11,15 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
-@Table(name = "challenge_join_tb")
+@Table(
+        name = "challenge_join_tb",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_challenge_join_user_challenge",
+                        columnNames = {"user_id", "challenge_id"}
+                )
+        }
+)
 @Entity
 public class ChallengeJoin {
 
@@ -22,11 +29,11 @@ public class ChallengeJoin {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
-    private User user;
+    private User user; // 챌린지에 참가한 유저
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
-    private Challenge challenge;
+    private Challenge challenge; // 챌린지
 
     @CreationTimestamp
     private LocalDateTime joinDate;

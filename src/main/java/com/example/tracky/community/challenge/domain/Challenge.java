@@ -1,4 +1,4 @@
-package com.example.tracky.community.challenge;
+package com.example.tracky.community.challenge.domain;
 
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
@@ -39,10 +39,10 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
     @UpdateTimestamp
     private LocalDateTime updatedAt; // 챌린지 수정 시간
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) // jpa 영속성 관리 null 불가
+    @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
-
+    
     public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator) {
         this.id = id;
         this.name = name;

@@ -1,5 +1,7 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky.community.challenge.domain.Challenge;
+import com.example.tracky.community.challenge.repository.ChallengeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
