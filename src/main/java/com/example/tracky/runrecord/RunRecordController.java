@@ -26,6 +26,7 @@ public class RunRecordController {
         return Resp.ok(respDTO);
     }
 
+
     @GetMapping("/activitis/week")
     public ResponseEntity<?> getActivitisWeek(@RequestParam(value = "base-date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
