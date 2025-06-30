@@ -151,7 +151,7 @@ public class RunRecordRepository {
      */
     public List<RunRecord> findTop3ByUserIdOrderByCreatedAt(Integer userId) {
         // TODO : join fetch 추가해서 모든 연관 엔티티 다 가져오기
-        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt asc", RunRecord.class);
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt desc", RunRecord.class);
         query.setParameter("userId", userId);
         query.setMaxResults(3);
         List<RunRecord> recentRuns = query.getResultList();
