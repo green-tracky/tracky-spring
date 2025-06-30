@@ -35,8 +35,9 @@ public class Challenge {
     private LocalDateTime updatedAt; // 챌린지 수정 시간
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private User creator; // 생성자
-    
+
     @Builder
     public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator, String rewardTitle, String rewardImageUrl) {
         this.id = id;
