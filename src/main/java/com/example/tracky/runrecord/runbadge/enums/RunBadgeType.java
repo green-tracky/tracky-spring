@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.runbadge.Enum;
+package com.example.tracky.runrecord.runbadge.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;

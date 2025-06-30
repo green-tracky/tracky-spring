@@ -1,4 +1,4 @@
-package com.example.tracky.community.challenge.Enum;
+package com.example.tracky.community.challenge.enums;
 
 import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;

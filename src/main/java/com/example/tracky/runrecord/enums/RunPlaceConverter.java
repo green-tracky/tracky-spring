@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.Enum;
+package com.example.tracky.runrecord.enums;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

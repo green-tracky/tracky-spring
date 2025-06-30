@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.runbadge.Enum;
+package com.example.tracky.runrecord.runbadge.enums;
 
 import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi500;

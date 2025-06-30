@@ -1,7 +1,7 @@
 package com.example.tracky.runrecord.runbadge;
 
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.runrecord.runbadge.Enum.RunBadgeType;
+import com.example.tracky.runrecord.runbadge.enums.RunBadgeType;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import lombok.Data;
 

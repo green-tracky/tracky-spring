@@ -1,4 +1,4 @@
-package com.example.tracky.user.Enum;
+package com.example.tracky.user.enums;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

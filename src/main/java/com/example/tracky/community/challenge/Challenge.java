@@ -1,9 +1,7 @@
 package com.example.tracky.community.challenge;
 
-import com.example.tracky.community.challenge.Enum.ChallengeTypeEnum;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,11 +9,19 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+/**
+ * <pre>
+ * 모든 챌린지의 공통 속성을 정의하는 추상(abstract) 부모 엔티티입니다.
+ * JPA 상속 매핑을 통해 '공식 챌린지'와 '사설 챌린지'로 확장됩니다.
+ * </pre>
+ */
 @NoArgsConstructor
 @Getter
 @Table(name = "challenge_tb")
 @Entity
-public class Challenge {
+@Inheritance(strategy = InheritanceType.JOINED) // [핵심] JOINED 상속 전략 사용. 조회할 때는 내부적으로 JOIN 쿼리 발생
+@DiscriminatorColumn(name = "challenge_type") // 자식 타입을 구분할 컬럼(DTYPE)의 이름을 'challenge_type'으로 지정. 부모테이블에 컬럼이 자동으로 생김
+public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하지 않음
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,14 +39,11 @@ public class Challenge {
     @UpdateTimestamp
     private LocalDateTime updatedAt; // 챌린지 수정 시간
 
-    private ChallengeTypeEnum challengeType; // (공개 | 사설)
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User creator; // 생성자
 
-    @Builder
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum challengeType, User creator) {
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -49,7 +52,6 @@ public class Challenge {
         this.endDate = endDate;
         this.targetDistance = targetDistance;
         this.isInProgress = isInProgress;
-        this.challengeType = challengeType;
         this.creator = creator;
     }
 }

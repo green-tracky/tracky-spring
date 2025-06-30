@@ -1,4 +1,4 @@
-package com.example.tracky.user.Enum;
+package com.example.tracky.user.enums;
 
 import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
