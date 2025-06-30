@@ -51,7 +51,7 @@ public class RunRecord {
     private List<RunBadgeAchv> runBadgeAchvs = new ArrayList<>(); // 자식 뱃지들
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Picture> pictures = new ArrayList<>(); // 자식 뱃지들
+    private List<Picture> pictures = new ArrayList<>(); // 자식 사진들
 
     @Builder
     public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceEnum place, User user) {

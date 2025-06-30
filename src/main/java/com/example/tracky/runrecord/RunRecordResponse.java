@@ -1,9 +1,19 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky.runrecord.Enum.RunPlaceEnum;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.example.tracky.runrecord.DTO.TotalStatsDTO;
+import com.example.tracky.runrecord.DTO.RecentRunsDTO;
+import com.example.tracky.runrecord.DTO.AvgStatsDTO;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
@@ -13,6 +23,119 @@ import java.util.List;
 
 public class RunRecordResponse {
 
+    /**
+     * 주간 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
+    @Data
+    public static class WeekDTO {
+        private AvgStatsDTO runstats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
+        private Map<String, List<String>> weeks = new HashMap<>();
+
+        public WeekDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
+            this.badges = badges;
+            this.recentRuns = recentRuns;
+        }
+    }
+
+    /**
+     * 월간 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
+    @Data
+    public static class MonthDTO {
+        private AvgStatsDTO runstats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
+        private List<Integer> years = new ArrayList<>();
+        private Map<Integer, List<Integer>> mounts = new HashMap<>();
+
+        public MonthDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
+            this.badges = badges;
+            this.recentRuns = recentRuns;
+        }
+    }
+
+    /**
+     * 연간 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private TotalStatsDTO allStats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
+    @Data
+    public static class YearDTO {
+        private AvgStatsDTO runstats;
+        private TotalStatsDTO allStats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
+        private List<Integer> years = new ArrayList<>();
+
+        public YearDTO(AvgStatsDTO runstats, TotalStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
+            this.allStats = allStats;
+            this.badges = badges;
+            this.recentRuns = recentRuns;
+        }
+    }
+
+    /**
+     * 전체 러닝 기록 응답 DTO
+     * <p>
+     * private AvgStatsDTO runstats;
+     * <p>
+     * private TotalStatsDTO allStats;
+     * <p>
+     * private List<RecentRunsDTO> recentRuns;
+     * <p>
+     * private List<RunBadgeResponse.DTO> badges;
+     */
+    @Data
+    public static class AllDTO {
+        private AvgStatsDTO runstats;
+        private TotalStatsDTO allStats;
+        private List<RecentRunsDTO> recentRuns;
+        private List<RunBadgeResponse.DTO> badges;
+
+        public AllDTO(AvgStatsDTO runstats, TotalStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+            this.runstats = runstats;
+            this.allStats = allStats;
+            this.badges = badges;
+            this.recentRuns = recentRuns;
+        }
+    }
+
+    /**
+     * private Integer id;
+     * <p>
+     * private String title;
+     * <p>
+     * private String memo;
+     * <p>
+     * private Integer calories;
+     * <p>
+     * private List<RunSegmentResponse.DTO> segments;
+     * <p>
+     * private List<PictureResponse.DTO> pictures;
+     */
     @Data
     public static class SaveDTO {
         private Integer id;
@@ -66,10 +189,10 @@ public class RunRecordResponse {
         private Integer elapsedTimeInSeconds; // 러닝 총 경과시간
         private Integer avgPace;
         private Integer bestPace;
+        private Integer userId;
         private List<RunSegmentResponse.DTO> segments;
         private List<PictureResponse.DTO> pictures;
         private LocalDateTime createdAt;
-        private Integer userId;
         private Integer intensity; // 러닝 강도
         private RunPlaceEnum place; // 러닝 장소
 
@@ -93,6 +216,15 @@ public class RunRecordResponse {
             this.userId = runRecord.getUser().getId();
             this.intensity = runRecord.getIntensity();
             this.place = runRecord.getPlace();
+            this.avgPace = (int) this.segments.stream()
+                    .mapToInt(s -> s.getPace())
+                    .average()
+                    .orElse(0);
+            this.bestPace = this.segments.stream()
+                    .mapToInt(s -> s.getPace())
+                    .min()
+                    .orElse(0);
+            this.userId = runRecord.getUser().getId();
         }
 
     }
