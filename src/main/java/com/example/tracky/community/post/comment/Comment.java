@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -32,11 +33,12 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @Builder
-    public Comment(Post post, User user, String content) {
+    public Comment(Integer id, Post post, User user, String content) {
+        this.id = id;
         this.post = post;
         this.user = user;
         this.content = content;

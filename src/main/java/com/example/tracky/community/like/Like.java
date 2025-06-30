@@ -39,7 +39,8 @@ public class Like {
     private LocalDateTime createdAt;
 
     @Builder
-    public Like(Post post, User user, Comment comment) {
+    public Like(Integer id, Post post, User user, Comment comment) {
+        this.id = id;
         this.post = post;
         this.user = user;
         this.comment = comment;
