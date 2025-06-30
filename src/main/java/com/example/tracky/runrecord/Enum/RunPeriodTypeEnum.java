@@ -1,23 +1,12 @@
-package com.example.tracky.runrecord.utils;
-
-import java.time.LocalDate;
+package com.example.tracky.runrecord.Enum;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-public class RunRecordEnum {
+import java.time.LocalDate;
 
-    @Getter
-    @RequiredArgsConstructor
-    public static enum RunPlaceEnum {
-        ROAD("도로"),
-        TRACK("트랙"),
-        TRAIL("산길");
-
-        private final String name;
-    }
-
+public class RunPeriodTypeEnum {
     // 사용자가 선택한 기간 타입
     public static enum PeriodType {
         WEEK, MONTH, YEAR, ALL
