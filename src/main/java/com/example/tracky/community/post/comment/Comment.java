@@ -7,7 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -17,25 +18,22 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 200, nullable = false)
     private String content;
 
     @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    // 좋아요 수는 계산된 값으로, 실제 DB 필드는 아님
-    @Transient
-    private Long likeCount;
+    @CreationTimestamp
+    private LocalDateTime updatedAt;
 
     @Builder
     public Comment(Post post, User user, String content) {
@@ -44,7 +42,4 @@ public class Comment {
         this.content = content;
     }
 
-    public void setLikeCount(Long likeCount) {
-        this.likeCount = likeCount;
-    }
 }
