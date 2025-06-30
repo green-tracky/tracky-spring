@@ -21,9 +21,7 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // 좋아요 대상 게시글 (null 불가)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
     private Post post;
 
     // 좋아요 누른 사용자
@@ -31,8 +29,7 @@ public class Like {
     @JoinColumn(nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
     @CreationTimestamp
