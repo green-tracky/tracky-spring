@@ -1,5 +1,6 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky.community.challenge.Enum.ChallengeTypeEnum;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -25,8 +26,6 @@ public class Challenge {
     private LocalDateTime endDate; // 챌린지 종료 날짜
     private Integer targetDistance; // 목표 달리기 거리 (m)
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
-    private String rewardTitle; // 리워드 제목
-    private String rewardImageUrl; // 리워드 이미지
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 챌린지 생성 시간
@@ -34,12 +33,14 @@ public class Challenge {
     @UpdateTimestamp
     private LocalDateTime updatedAt; // 챌린지 수정 시간
 
+    private ChallengeTypeEnum challengeType; // (공개 | 사설)
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User creator; // 생성자
 
     @Builder
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator, String rewardTitle, String rewardImageUrl) {
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum challengeType, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -48,8 +49,7 @@ public class Challenge {
         this.endDate = endDate;
         this.targetDistance = targetDistance;
         this.isInProgress = isInProgress;
+        this.challengeType = challengeType;
         this.creator = creator;
-        this.rewardTitle = rewardTitle;
-        this.rewardImageUrl = rewardImageUrl;
     }
 }

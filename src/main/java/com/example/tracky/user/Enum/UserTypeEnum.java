@@ -19,8 +19,8 @@ public enum UserTypeEnum {
      * DB에서 읽어온 값(String)으로 적절한 Enum 상수(Type)를 찾습니다.
      *
      * @param value DB의 "일반" 또는 "관리자"
-     * @return Type.ADMIN 또는 Type.GENERAL
-     * @JsonCreator JSON의 특정 값(여기서는 "도로" 같은 문자열)으로 Java 객체(여기서는 RunPlaceEnum)를 만드는 방법을 Jackson(Spring의 기본 JSON 라이브러리)에게 알려줄 수 있습니다.
+     * @return UserTypeEnum.ADMIN 또는 UserTypeEnum.GENERAL
+     * @JsonCreator JSON의 특정 값(여기서는 "도로" 같은 문자열)으로 Java 객체(여기서는 UserTypeEnum)를 만드는 방법을 Jackson(Spring의 기본 JSON 라이브러리)에게 알려줄 수 있습니다.
      */
     @JsonCreator
     public static UserTypeEnum fromString(String value) {
