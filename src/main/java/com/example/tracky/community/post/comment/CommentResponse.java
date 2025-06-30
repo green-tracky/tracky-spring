@@ -1,7 +1,6 @@
 package com.example.tracky.community.post.comment;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,8 +8,7 @@ import java.util.List;
 public class CommentResponse {
 
     @Data
-    @Getter
-    public static class CommentResponseDTO {
+    public static class DTO {
 
         private final Integer id;
         private final Integer postId;
@@ -20,37 +18,20 @@ public class CommentResponse {
         private final Integer parentId;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
-        private final List<CommentResponseDTO> children;
+        private final List<DTO> children;
 
-        public CommentResponseDTO(Integer id, Integer postId, Integer userId, String username,
-                                  String content, Integer parentId,
-                                  LocalDateTime createdAt, LocalDateTime updatedAt,
-                                  List<CommentResponseDTO> children) {
-            this.id = id;
-            this.postId = postId;
-            this.userId = userId;
-            this.username = username;
-            this.content = content;
-            this.parentId = parentId;
-            this.createdAt = createdAt;
-            this.updatedAt = updatedAt;
-            this.children = children;
-        }
-
-        public static CommentResponseDTO fromEntity(Comment comment) {
-            return new CommentResponseDTO(
-                    comment.getId(),
-                    comment.getPost().getId(),
-                    comment.getUser().getId(),
-                    comment.getUser().getUsername(),
-                    comment.getContent(),
-                    comment.getParent() != null ? comment.getParent().getId() : null,
-                    comment.getCreatedAt(),
-                    comment.getUpdatedAt(),
-                    comment.getChildren().stream()
-                            .map(CommentResponseDTO::fromEntity)
-                            .toList()
-            );
+        public DTO(Comment comment) {
+            this.id = comment.getId();
+            this.postId = comment.getPost().getId();
+            this.userId = comment.getUser().getId();
+            this.username = comment.getUser().getUsername();
+            this.content = comment.getContent();
+            this.parentId = comment.getParent() != null ? comment.getParent().getId() : null;
+            this.createdAt = comment.getCreatedAt();
+            this.updatedAt = comment.getUpdatedAt();
+            this.children = comment.getChildren().stream()
+                    .map(child -> new DTO(child))
+                    .toList();
         }
     }
 }
