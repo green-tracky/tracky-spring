@@ -69,7 +69,7 @@ public class RunRecordService {
      * @param baseDate 기준 날짜
      * @return WeekDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
      */
-    public RunRecordResponse.WeekDTO getActivitisWeek(LocalDate baseDate) {
+    public RunRecordResponse.WeekDTO getActivitiesWeek(LocalDate baseDate) {
         LocalDate start = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = start.plusDays(6);
 
@@ -159,7 +159,7 @@ public class RunRecordService {
      * @param year  조회할 연도
      * @return MonthDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
      */
-    public RunRecordResponse.MonthDTO getActivitisMonth(Integer month, Integer year) {
+    public RunRecordResponse.MonthDTO getActivitiesMonth(Integer month, Integer year) {
         LocalDate start = LocalDate.of(year, month, 1);
         LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
 
@@ -240,7 +240,7 @@ public class RunRecordService {
      * @param year 조회할 연도
      * @return YearDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 최근 기록 목록 포함
      */
-    public RunRecordResponse.YearDTO getActivitisYear(Integer year) {
+    public RunRecordResponse.YearDTO getActivitiesYear(Integer year) {
         LocalDate start = LocalDate.of(year, 1, 1);
         LocalDate end = LocalDate.of(year, 12, 31);
 
@@ -325,7 +325,7 @@ public class RunRecordService {
      *
      * @return AllDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 전체 기록 목록 포함
      */
-    public RunRecordResponse.AllDTO getActivitisAll() {
+    public RunRecordResponse.AllDTO getActivitiesAll() {
         // 이 날짜 기준으로 조회
         List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdJoin();
         List<RunBadge> runBadges = runBadgeRepository.findAll(); // 나중에 획득한 뱃지만 가져와야함
