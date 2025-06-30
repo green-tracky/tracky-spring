@@ -26,26 +26,50 @@ public class RunRecordController {
 
     @GetMapping("/activities/week")
     public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "base-date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
         if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
-        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(baseDate);
+        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(baseDate, user);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activities/month")
     public ResponseEntity<?> getActivitiesMonth(@RequestParam("month") int month, @RequestParam("year") int year) {
-        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(month, year);
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
+        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(month, year, user);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activities/year")
     public ResponseEntity<?> getActivitiesYear(@RequestParam("year") int year) {
-        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(year);
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
+        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(year, user);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activities/all")
     public ResponseEntity<?> getActivitiesAll() {
-        RunRecordResponse.AllDTO respDTO = runRecordService.getActivitiesAll();
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
+        RunRecordResponse.AllDTO respDTO = runRecordService.getActivitiesAll(user);
         return Resp.ok(respDTO);
     }
 
