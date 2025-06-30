@@ -37,6 +37,7 @@ public class RunRecordResponse {
         private AvgStatsDTO runstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private Map<String, List<String>> weeks = new HashMap<>();
 
         public WeekDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
@@ -59,6 +60,8 @@ public class RunRecordResponse {
         private AvgStatsDTO runstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private List<Integer> years = new ArrayList<>();
+        private Map<Integer, List<Integer>> mounts = new HashMap<>();
 
         public MonthDTO(AvgStatsDTO runstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
@@ -84,6 +87,7 @@ public class RunRecordResponse {
         private TotalStatsDTO allStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private List<Integer> years = new ArrayList<>();
 
         public YearDTO(AvgStatsDTO runstats, TotalStatsDTO allStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
             this.runstats = runstats;
@@ -117,24 +121,6 @@ public class RunRecordResponse {
             this.badges = badges;
             this.recentRuns = recentRuns;
         }
-    }
-
-    /**
-     * 날짜 필터 옵션 제공 DTO
-     * <p>
-     * - 연, 월, 주 단위 선택을 위한 드롭다운 리스트 제공
-     * <p>
-     * private List<Integer> years = new ArrayList<>();
-     * <p>
-     * private Map<Integer, List<Integer>> mounts = new HashMap<>();
-     * <p>
-     * private Map<String, List<String>> weeks = new HashMap<>();
-     */
-    @Data
-    public static class DateOptionsDTO {
-        private List<Integer> years = new ArrayList<>();
-        private Map<Integer, List<Integer>> mounts = new HashMap<>();
-        private Map<String, List<String>> weeks = new HashMap<>();
     }
 
     /**

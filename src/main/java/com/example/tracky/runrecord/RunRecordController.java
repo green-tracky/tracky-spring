@@ -24,13 +24,6 @@ public class RunRecordController {
 
     private final RunRecordService runRecordService;
 
-    @GetMapping("/activitis")
-    public ResponseEntity<?> getActivitis() {
-        RunRecordResponse.AllDTO respDTO = runRecordService.getActivitisAll();
-        return Resp.ok(respDTO);
-    }
-
-
     @GetMapping("/activitis/week")
     public ResponseEntity<?> getActivitisWeek(@RequestParam(value = "base-date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
@@ -54,12 +47,6 @@ public class RunRecordController {
     public ResponseEntity<?> getActivitisAll() {
         RunRecordResponse.AllDTO respDTO = runRecordService.getActivitisAll();
         return Resp.ok(respDTO);
-    }
-
-    @GetMapping("/activitis/options")
-    public ResponseEntity<?> getDateOptions() {
-        RunRecordResponse.DateOptionsDTO dto = runRecordService.getDateOptions();
-        return Resp.ok(dto);
     }
 
     @PostMapping("/runs")

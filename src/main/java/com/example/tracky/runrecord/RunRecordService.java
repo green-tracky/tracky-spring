@@ -111,7 +111,42 @@ public class RunRecordService {
 
         AvgStatsDTO stats = new AvgStatsDTO(runRecord, count, statsAvgPace);
 
-        return new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList);
+        List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserIdJoin();
+
+        Map<String, Set<String>> weeksMap = new HashMap<>();
+
+        for (RunRecord record : runRecordAll) {
+            LocalDate date = record.getCreatedAt().toLocalDate();
+
+            int year = date.getYear();
+            int month = date.getMonthValue();
+
+            // 주
+            LocalDate startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
+            String weekLabel = startOfWeek.getMonthValue() + "." + startOfWeek.getDayOfMonth()
+                    + "~" + endOfWeek.getMonthValue() + "." + endOfWeek.getDayOfMonth();
+            String key = year + "-" + String.format("%02d", month);
+
+            weeksMap.computeIfAbsent(key, k -> new HashSet<>()).add(weekLabel);
+        }
+        RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList);
+
+        Map<String, List<String>> sortedWeeksMap = new HashMap<>();
+        String baseYearMonth = baseDate.getYear() + "-" + String.format("%02d", baseDate.getMonthValue());
+
+// 데이터가 있는 경우에만 포함
+        if (weeksMap.containsKey(baseYearMonth)) {
+            List<String> sortedWeeks = weeksMap.get(baseYearMonth)
+                    .stream()
+                    .sorted()
+                    .toList();
+
+            sortedWeeksMap.put(baseYearMonth, sortedWeeks);
+        }
+        weekDTO.setWeeks(sortedWeeksMap);
+
+        return weekDTO;
     }
 
     /**
@@ -166,7 +201,34 @@ public class RunRecordService {
 
         AvgStatsDTO stats = new AvgStatsDTO(runRecord, count, statsAvgPace);
 
-        return new RunRecordResponse.MonthDTO(stats, runBadgeList, recentRunList);
+        List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserIdJoin();
+
+        Set<Integer> yearSet = new HashSet<>();
+        Map<Integer, Set<Integer>> monthsMap = new HashMap<>();
+
+        for (RunRecord record : runRecordAll) {
+            LocalDate date = record.getCreatedAt().toLocalDate();
+
+            int optionsYear = date.getYear();
+            int optionsMonth = date.getMonthValue();
+
+            // 연도
+            yearSet.add(optionsYear);
+
+            // 월
+            monthsMap.computeIfAbsent(optionsYear, k -> new HashSet<>()).add(optionsMonth);
+        }
+        RunRecordResponse.MonthDTO monthDTO = new RunRecordResponse.MonthDTO(stats, runBadgeList, recentRunList);
+
+        monthDTO.setYears(yearSet.stream().sorted().toList());
+
+        Map<Integer, List<Integer>> sortedMonthMap = new HashMap<>();
+        for (Integer y : monthsMap.keySet()) {
+            sortedMonthMap.put(y, monthsMap.get(y).stream().sorted().toList());
+        }
+        monthDTO.setMounts(sortedMonthMap);
+
+        return monthDTO;
     }
 
     /**
@@ -235,7 +297,24 @@ public class RunRecordService {
 
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
-        return new RunRecordResponse.YearDTO(stats, allStats, runBadgeList, recentRunList);
+        List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserIdJoin();
+
+        Set<Integer> yearData = new HashSet<>();
+
+        for (RunRecord record : runRecordAll) {
+            LocalDateTime date = record.getCreatedAt();
+
+            int optionsyear = date.getYear();
+
+            // 연도
+            yearData.add(optionsyear);
+        }
+
+        // DTO 생성
+        RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(stats, allStats, runBadgeList, recentRunList);
+        yearDTO.setYears(new ArrayList<>(yearData));
+
+        return yearDTO;
     }
 
     /**
@@ -393,67 +472,4 @@ public class RunRecordService {
         }
     }
 
-    /**
-     * 사용자의 러닝 기록 날짜 옵션(년도, 월, 주)을 조회
-     * <p></p>
-     * - 연/월/주 필터링 드롭다운 등을 위한 기준 데이터 제공
-     *
-     * @return DateOptionsDTO - 연도 리스트, 월 리스트, 주간 라벨(Map<String, List<String>>) 포함
-     */
-    public RunRecordResponse.DateOptionsDTO getDateOptions() {
-        List<RunRecord> all = runRecordsRepository.findAllByUserIdJoin();
-
-        Set<Integer> yearData = new HashSet<>();
-        Map<Integer, Set<Integer>> monthData = new HashMap<>();
-        Map<String, Set<String>> weekData = new HashMap<>();
-
-        for (RunRecord record : all) {
-            LocalDateTime date = record.getCreatedAt();
-
-            int year = date.getYear();
-            int month = date.getMonthValue();
-
-            // 연도
-            yearData.add(year);
-
-            // 월
-            monthData.putIfAbsent(year, new HashSet<>());
-            monthData.get(year).add(month);
-
-            // 주
-            LocalDateTime startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-            LocalDateTime endOfWeek = startOfWeek.plusDays(6);
-            String weekLabel = startOfWeek.getMonthValue() + "." + startOfWeek.getDayOfMonth()
-                    + "~" + endOfWeek.getMonthValue() + "." + endOfWeek.getDayOfMonth();
-            String key = year + "-" + String.format("%02d", month);
-
-            weekData.putIfAbsent(key, new HashSet<>());
-            weekData.get(key).add(weekLabel);
-        }
-
-        // DTO 생성
-        RunRecordResponse.DateOptionsDTO dto = new RunRecordResponse.DateOptionsDTO();
-        dto.setYears(new ArrayList<>(yearData));
-
-        Map<Integer, List<Integer>> sortedMonthMap = new HashMap<>();
-        for (Integer y : monthData.keySet()) {
-            sortedMonthMap.put(y, monthData.get(y).stream().sorted().toList());
-        }
-        dto.setMounts(sortedMonthMap);
-
-        LocalDate today = LocalDate.now();
-        String currentMonthKey = today.getYear() + "-" + String.format("%02d", today.getMonthValue());
-
-        Map<String, List<String>> filteredWeeksMap = new HashMap<>();
-        if (weekData.containsKey(currentMonthKey)) {
-            Set<String> weeks = weekData.get(currentMonthKey);
-            List<String> sortedWeeks = new ArrayList<>(weeks);
-            Collections.sort(sortedWeeks);
-            filteredWeeksMap.put(currentMonthKey, sortedWeeks);
-        }
-        // 기존 방식과 동일
-        dto.setWeeks(filteredWeeksMap);
-
-        return dto;
-    }
 }
