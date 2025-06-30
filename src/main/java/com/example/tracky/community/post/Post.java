@@ -47,10 +47,11 @@ public class Post {
     private LocalDateTime createdAt;
 
     @Builder
-    public Post(User user, RunRecord runRecord, String content) {
+    public Post(User user, RunRecord runRecord, String content, String title) {
         this.user = user;
         this.runRecord = runRecord;
         this.content = content;
+        this.title = title;
     }
 
 }
