@@ -1,13 +1,13 @@
 package com.example.tracky.runrecord.runbadge;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.tracky.runrecord.runbadge.Enum.RunBadgeType;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -20,13 +20,18 @@ public class RunBadge {
     private String name; // 뱃지 이름
     private String description; // 뱃지 조건 설명
     private String imageUrl; // 뱃지 이미지
+    private RunBadgeType type; // 뱃지 타입 필드 추가. RunBadgeType 타입 확인 바람
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Builder
-    public RunBadge(Integer id, String name, String description, String imageUrl) {
+    public RunBadge(Integer id, String name, String description, String imageUrl, RunBadgeType type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.type = type;
     }
 
 }

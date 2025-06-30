@@ -9,26 +9,26 @@ import jakarta.persistence.Converter;
  * @Converter(autoApply = true)로 설정하면,
  * 모든 Type 타입 필드에 자동으로 이 컨버터가 적용됩니다.
  */
-@Converter
-public class UserTypeConverter implements AttributeConverter<UserType, String> {
+@Converter(autoApply = true)
+public class UserTypeConverter implements AttributeConverter<UserTypeEnum, String> {
 
     // Enum -> DB (String)
     // 애플리케이션의 Type.GENERAL을 DB의 "일반"으로 변환
     @Override
-    public String convertToDatabaseColumn(UserType userType) {
-        if (userType == null) {
+    public String convertToDatabaseColumn(UserTypeEnum userTypeEnum) {
+        if (userTypeEnum == null) {
             return null;
         }
-        return userType.getValue();
+        return userTypeEnum.getValue();
     }
 
     // DB (String) -> Enum
     // DB의 "일반"을 애플리케이션의 Type.GENERAL로 변환
     @Override
-    public UserType convertToEntityAttribute(String value) {
+    public UserTypeEnum convertToEntityAttribute(String value) {
         if (value == null) {
             return null;
         }
-        return UserType.fromDbValue(value);
+        return UserTypeEnum.fromString(value);
     }
 }

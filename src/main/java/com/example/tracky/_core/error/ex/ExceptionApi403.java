@@ -1,9 +1,14 @@
 package com.example.tracky._core.error.ex;
 
-import com.example.tracky._core.error.ErrorCodeEnum;
+import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 
 public class ExceptionApi403 extends RuntimeException {
-    public ExceptionApi403(ErrorCodeEnum errorCode) {
-        super(errorCode.getMessage());
+    /**
+     * 403 Forbidden (접근 금지 및 권한 없음)
+     *
+     * @param errorCodeEnum
+     */
+    public ExceptionApi403(ErrorCodeEnum errorCodeEnum) {
+        super(errorCodeEnum.getMessage());
     }
 }

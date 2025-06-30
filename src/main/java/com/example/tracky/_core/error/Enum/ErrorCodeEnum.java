@@ -1,4 +1,4 @@
-package com.example.tracky._core.error;
+package com.example.tracky._core.error.Enum;
 
 /**
  * API 전반에서 사용하는 공통 에러 코드와 메시지를 정의한 Enum 클래스입니다.
@@ -12,7 +12,12 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 성별 값입니다.
      */
-    INVALID_USER_TYPE(400, "유효하지 않은 타입 값입니다"),
+    INVALID_RUN_PLACE_TYPE(400, "유효하지 않은 장소 값입니다"),
+
+    /**
+     * 400 Bad Request - 유효하지 않은 성별 값입니다.
+     */
+    INVALID_USER_TYPE(400, "유효하지 않은 유저 타입 값입니다"),
 
     /**
      * 400 Bad Request - 유효하지 않은 성별 값입니다.
@@ -60,6 +65,11 @@ public enum ErrorCodeEnum {
     MODIFY_OTHER_USER_INFO_FORBIDDEN(403, "다른 사용자의 정보를 수정할 수 없습니다"),
 
     /**
+     * 403 Forbidden - 접근 권한이 없습니다.
+     */
+    ACCESS_DENIED(403, "접근 권한이 없습니다."),
+
+    /**
      * 404 Not Found - 해당 사용자를 찾을 수 없습니다.
      */
     USER_NOT_FOUND(404, "해당 사용자를 찾을 수 없습니다"),
@@ -92,7 +102,14 @@ public enum ErrorCodeEnum {
     /**
      * 500 Internal Server Error - 알 수 없는 오류 발생 시 기본 메시지입니다.
      */
-    INTERNAL_SERVER_ERROR(500, "알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요");
+    INTERNAL_SERVER_ERROR(500, "알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요"),
+
+    /**
+     * [신규 추가]
+     * 500 Internal Server Error - 데이터베이스에 저장된 값이 코드와 일치하지 않을 때 발생합니다.
+     * 예: DB의 뱃지 타입 '월간기록'을 Java Enum으로 변환하려 할 때, 해당 Enum 상수가 없는 경우.
+     */
+    INVALID_DATABASE_DATA(500, "서버 데이터에 문제가 발생했습니다. 관리자에게 문의해주세요.");
 
     /**
      * HTTP 상태 코드
