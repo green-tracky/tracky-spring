@@ -1,16 +1,14 @@
 package com.example.tracky.runrecord;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Repository;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -129,12 +127,12 @@ public class RunRecordRepository {
     }
 
     /**
-     * RunRecord 엔티티 전체 조회
+     * RunRecord 전체 조회
      *
      * @return
      */
     public List<RunRecord> findAllByUserId(Integer userId) {
-        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt desc", RunRecord.class);
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId", RunRecord.class);
         query.setParameter("userId", userId);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
@@ -169,6 +167,78 @@ public class RunRecordRepository {
         query.setParameter("userId", userId);
         query.setParameter("start", start);
         query.setParameter("end", end);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최신순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByCreatedAtDesc(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt desc", RunRecord.class);
+        query.setParameter("userId", userId);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 오래된 순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByCreatedAtAsc(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt asc", RunRecord.class);
+        query.setParameter("userId", userId);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최장거리 순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByDistanceDesc(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.totalDistanceMeters desc", RunRecord.class);
+        query.setParameter("userId", userId);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최단거리 순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByDistanceAsc(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.totalDistanceMeters asc", RunRecord.class);
+        query.setParameter("userId", userId);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최고 페이스 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByAvgPaceDesc(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.avgPace desc", RunRecord.class);
+        query.setParameter("userId", userId);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최저 페이스 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByAvgPaceAsc(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.avgPace asc", RunRecord.class);
+        query.setParameter("userId", userId);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }

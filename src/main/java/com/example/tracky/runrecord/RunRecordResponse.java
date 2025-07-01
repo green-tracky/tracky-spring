@@ -135,10 +135,19 @@ public class RunRecordResponse {
     }
 
     @Data
-    public static class RecentListDTO {
-        private List<RecentOneDTO> recentList;
+    public static class GroupedRecentListDTO {
+        private List<RecentOneDTO> GroupedrecentList;
 
-        public RecentListDTO(List<RecentOneDTO> recentList) {
+        public GroupedRecentListDTO(List<RecentOneDTO> GroupedrecentList) {
+            this.GroupedrecentList = GroupedrecentList;
+        }
+    }
+
+    @Data
+    public static class FlatRecentListDTO {
+        private List<RecentRunsDTO> recentList;
+
+        public FlatRecentListDTO(List<RecentRunsDTO> recentList) {
             this.recentList = recentList;
         }
     }

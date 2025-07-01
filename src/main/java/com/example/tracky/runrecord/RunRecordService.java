@@ -3,29 +3,25 @@ package com.example.tracky.runrecord;
 import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.runrecord.dto.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.RecentRunsDTO;
+import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvRepository;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvService;
+import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
 import com.example.tracky.user.runlevel.RunLevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-
-import com.example.tracky.runrecord.dto.TotalStatsDTO;
-import com.example.tracky.runrecord.dto.RecentRunsDTO;
-import com.example.tracky.runrecord.dto.AvgStatsDTO;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
-import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 @Slf4j
 @Service
@@ -357,22 +353,14 @@ public class RunRecordService {
         return new RunRecordResponse.AllDTO(avgStats, allStats, runBadgeList, recentRunList);
     }
 
-    /**
-     * 전체 러닝 활동 리스트를 조회
-     * <p>
-     * - 사용자 ID로 모든 러닝 기록을 조회한다.
-     * <p>
-     * - 조회된 기록들을 연도-월(YearMonth) 단위로 그룹핑한다.
-     * <p>
-     * - 각 연도-월별 기록을 집계하여 거리, 시간, 평균 페이스 등의 통계 정보를 생성한다.
-     * <p>
-     * - 각 그룹별 통계 및 상세 러닝 기록 리스트를 DTO에 담아 반환한다.
-     *
-     * @param user 통계를 조회할 사용자 정보
-     * @return RunRecordResponse.RecentListDTO - 연도-월별 통계 및 상세 러닝 기록 리스트 포함 DTO
-     */
-    public RunRecordResponse.RecentListDTO getActivitiesRecent(User user) {
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
+
+    public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(User user, String order, Integer year) {
+        List<RunRecord> runRecords;
+        switch (order) {
+            case "latest" -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
+            case "oldest" -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtAsc(user.getId());
+            default -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId()); // 기본: 최신순
+        }
 
         // 1. YearMonth 기준으로 그룹핑
         Map<YearMonth, List<RunRecord>> groupedByMonth = new TreeMap<>(Comparator.reverseOrder());
@@ -381,8 +369,8 @@ public class RunRecordService {
             groupedByMonth.computeIfAbsent(ym, k -> new ArrayList<>()).add(record);
         }
 
-        // 2. MonthGroupDTO 만들기
-        List<RunRecordResponse.RecentOneDTO> recentList = new ArrayList<>();
+        // 2. groupRecentList 만들기
+        List<RunRecordResponse.RecentOneDTO> groupRecentList = new ArrayList<>();
 
         for (Map.Entry<YearMonth, List<RunRecord>> entry : groupedByMonth.entrySet()) {
             YearMonth ym = entry.getKey();
@@ -411,10 +399,28 @@ public class RunRecordService {
             LocalDateTime dateTime = YearMonth.from(baseDateTime).atDay(1).atStartOfDay();
 
             // 최종 DTO에 추가
-            recentList.add(new RunRecordResponse.RecentOneDTO(dateTime, avgStats, recents));
+            groupRecentList.add(new RunRecordResponse.RecentOneDTO(dateTime, avgStats, recents));
         }
 
-        return new RunRecordResponse.RecentListDTO(recentList);
+        return new RunRecordResponse.GroupedRecentListDTO(groupRecentList);
+    }
+
+
+    public RunRecordResponse.FlatRecentListDTO getFlatActivities(User user, String order, Integer year) {
+        List<RunRecord> runRecords;
+        switch (order) {
+            case "distance-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceDesc(user.getId());
+            case "distance-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceAsc(user.getId());
+            case "pace-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceDesc(user.getId());
+            case "pace-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceAsc(user.getId());
+            default -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId()); // 기본: 최신순
+        }
+
+        List<RecentRunsDTO> recentRuns = runRecords.stream()
+                .map(r -> new RecentRunsDTO(r))
+                .toList();
+
+        return new RunRecordResponse.FlatRecentListDTO(recentRuns);
     }
 
 

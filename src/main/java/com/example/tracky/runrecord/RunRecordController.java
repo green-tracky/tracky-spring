@@ -4,15 +4,9 @@ import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
@@ -38,24 +32,34 @@ public class RunRecordController {
     }
 
     @GetMapping("/activities/month")
-    public ResponseEntity<?> getActivitiesMonth(@RequestParam("month") int month, @RequestParam("year") int year) {
+    public ResponseEntity<?> getActivitiesMonth(@RequestParam(value = "month", required = false) Integer month,
+                                                @RequestParam(value = "year", required = false) Integer year) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
+
+        // 오늘 날짜 기준으로 기본값 설정
+        LocalDate today = LocalDate.now();
+        if (month == null) month = today.getMonthValue();  // 1~12
+        if (year == null) year = today.getYear();
 
         RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(month, year, user);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/activities/year")
-    public ResponseEntity<?> getActivitiesYear(@RequestParam("year") int year) {
+    public ResponseEntity<?> getActivitiesYear(@RequestParam(value = "year", required = false) Integer year) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
+
+        // 오늘 날짜 기준으로 기본값 설정
+        LocalDate today = LocalDate.now();
+        if (year == null) year = today.getYear();
 
         RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(year, user);
         return Resp.ok(respDTO);
@@ -74,15 +78,25 @@ public class RunRecordController {
     }
 
     @GetMapping("/activities/recent")
-    public ResponseEntity<?> getActivitiesRecent() {
+    public ResponseEntity<?> getActivitiesRecent(@RequestParam(value = "order", defaultValue = "latest") String order, @RequestParam(value = "year", required = false) Integer year) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        RunRecordResponse.RecentListDTO respDTO = runRecordService.getActivitiesRecent(user);
-        return Resp.ok(respDTO);
+        // year가 null이면 현재 연도로 기본 설정
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+
+        if ("latest".equals(order) || "oldest".equals(order)) {
+            RunRecordResponse.GroupedRecentListDTO grouped = runRecordService.getGroupedActivities(user, order, year);
+            return Resp.ok(grouped);
+        } else {
+            RunRecordResponse.FlatRecentListDTO flat = runRecordService.getFlatActivities(user, order, year);
+            return Resp.ok(flat);
+        }
     }
 
     @PostMapping("/runs")
