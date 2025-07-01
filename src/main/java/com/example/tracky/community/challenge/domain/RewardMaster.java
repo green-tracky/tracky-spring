@@ -24,17 +24,17 @@ public class RewardMaster {
      */
     private RewardTypeEnum rewardType;
 
-    private String name; // 보상 이름. (금메달, 은메달, 동메달, 참가상)
-    private String imageUrl; // 보상 이미지
+    private String rewardName; // 보상 이름. (금메달, 은메달, 동메달, 참가상)
+    private String rewardImageUrl; // 보상 이미지
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Builder
-    public RewardMaster(RewardTypeEnum rewardType, String name, String imageUrl) {
+    public RewardMaster(RewardTypeEnum rewardType, String rewardName, String rewardImageUrl) {
         this.rewardType = rewardType;
-        this.name = name;
-        this.imageUrl = imageUrl;
+        this.rewardName = rewardName;
+        this.rewardImageUrl = rewardImageUrl;
     }
 
 }

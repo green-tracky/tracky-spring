@@ -74,7 +74,7 @@ public class ChallengeResponse {
         class ChallengeItemDTO {
             private Integer id;
             private String title; // 이미지 없을때 식별용
-            private String name; // 챌린지 이름
+            private String rewardName; // 챌린지 이름
             private String sub; // 챌린지 짧은 설명
             private Integer remainingTime; // 챌린지 종료까지 남은 시간. 초단위
             private Integer myDistance; // 챌린지 기간의 나의 누적 거리. m 단위
@@ -86,7 +86,7 @@ public class ChallengeResponse {
             ChallengeItemDTO(Challenge challenge, Integer achievedDistance) {
                 this.id = challenge.getId();
                 this.title = ChallengeUtil.formatTitle(challenge.getTargetDistance());
-                this.name = challenge.getName();
+                this.rewardName = challenge.getName();
                 this.sub = null;
                 this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
                 this.myDistance = achievedDistance;
@@ -99,7 +99,7 @@ public class ChallengeResponse {
             ChallengeItemDTO(PublicChallenge challenge) {
                 this.id = challenge.getId();
                 this.title = ChallengeUtil.formatTitle(challenge.getTargetDistance());
-                this.name = challenge.getName();
+                this.rewardName = challenge.getName();
                 this.sub = challenge.getSub();
                 this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
                 this.myDistance = null; // 아직 참여 안 했으므로 null
@@ -112,7 +112,7 @@ public class ChallengeResponse {
             ChallengeItemDTO(Challenge challenge, Integer achievedDistance, boolean isPast) {
                 this.id = challenge.getId();
                 this.title = ChallengeUtil.formatTitle(challenge.getTargetDistance());
-                this.name = challenge.getName();
+                this.rewardName = challenge.getName();
                 this.sub = null;
                 this.remainingTime = 0; // 종료됐으므로 0
                 this.myDistance = achievedDistance;
@@ -122,5 +122,44 @@ public class ChallengeResponse {
             }
         }
     }
-    
+
+    @Data
+    public static class DetailDTO {
+        // --- 공통 정보 ---
+        private Integer id;
+        private String title; // 이미지 없을때 식별용
+        private String rewardName; // 챌린지 이름
+        private String sub; // 챌린지 짧은 설명
+        private String description; // 챌린지 설명
+        private Integer remainingTime; // 챌린지 종료까지 남은 시간. 초단위
+        private Integer targetDistance; // 챌린지 목표거리. m 단위
+        private Boolean isInProgress; // 챌린지 진행 상태
+        private LocalDateTime startDate; // 챌린지 시작 날짜
+        private LocalDateTime endDate; // 챌린지 종료 날짜
+        private Integer participantCount; // 챌린지 참가자 수
+        private String creatorName; // 생성자 이름. 공식이면 null 넣기
+        private String challengeType; // "PUBLIC" 또는 "PRIVATE"
+        private Boolean isJoined; // 사용자의 참여 여부
+        private Integer rank; // 순위 정보
+        private Integer myDistance; // 챌린지 기간의 나의 누적 거리. m 단위
+
+        // --- 리워드 정보 ---
+        private List<RewardItemDTO> rewards;
+
+
+        @Data
+        class RewardItemDTO {
+            private String rewardName; // 리워드 이름
+            private String rewardImageUrl; // 리워드 이미지
+            private String status; // "달성", "미달성", null 등
+
+            public RewardItemDTO(String rewardName, String rewardImageUrl, String status) {
+                this.rewardName = rewardName;
+                this.rewardImageUrl = rewardImageUrl;
+                this.status = status;
+            }
+        }
+
+    }
+
 }
