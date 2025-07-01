@@ -27,9 +27,11 @@ public class PostResponse {
             this.username = post.getUser().getUsername();
             this.content = post.getContent();
             this.createdAt = post.getCreatedAt();
-            this.pictures = runRecord.getPictures().stream()
-                    .map(picture -> new PictureResponse.DTO(picture))
-                    .toList();
+            this.pictures = (runRecord != null && runRecord.getPictures() != null) ?
+                    runRecord.getPictures().stream()
+                            .map(picture -> new PictureResponse.DTO(picture))
+                            .toList()
+                    : List.of();
             this.likeCount = likeCount;
             this.commentCount = commentCount;
             this.isLiked = isLiked;
