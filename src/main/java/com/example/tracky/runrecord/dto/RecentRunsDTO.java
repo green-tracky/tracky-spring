@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.dto1;
+package com.example.tracky.runrecord.dto;
 
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
