@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -143,4 +144,50 @@ public class RunRecordRepository {
         query.setParameter("endDate", endDate);
         return ((Long) query.getSingleResult()).intValue();
     }
+
+    /**
+     * RunRecord 엔티티 전체 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserId(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId", RunRecord.class);
+        query.setParameter("userId", userId);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * 최근 기록 3개 불러오기
+     *
+     * @return
+     */
+    public List<RunRecord> findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(Integer userId) {
+        Query query = em.createQuery("select r from RunRecord r left outer join fetch r.runBadgeAchvs rba where r.user.id = : userId order by r.createdAt desc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setMaxResults(3);
+        List<RunRecord> recentRuns = query.getResultList();
+        return recentRuns;
+    }
+
+    /**
+     * 특정 기간 동안 생성된 RunRecord 엔티티를 조회
+     * <p></p>
+     * - createdAt 기준으로 시작일~종료일 사이의 기록만 필터링
+     *
+     * @param start 시작일시
+     * @param end   종료일시
+     * @return 기간 내 러닝 기록 리스트
+     */
+    public List<RunRecord> findAllByCreatedAtBetween(Integer userId, LocalDateTime start, LocalDateTime end) {
+        Query query = em.createQuery(
+                "SELECT r FROM RunRecord r WHERE r.user.id = :userId AND r.createdAt BETWEEN :start AND :end",
+                RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
 }
