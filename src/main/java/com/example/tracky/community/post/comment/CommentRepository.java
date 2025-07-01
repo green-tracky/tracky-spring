@@ -11,11 +11,11 @@ public class CommentRepository {
 
     private final EntityManager em;
 
-    public Long findByPostId(int postId) {
+    public Integer countByPostId(int postId) {
         Query query = em.createQuery("select count(c) from Comment c where c.post.id = :postId");
         query.setParameter("postId", postId);
 
         Long count = (Long) query.getSingleResult();
-        return count;
+        return count.intValue();
     }
 }

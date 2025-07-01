@@ -18,21 +18,22 @@ public class PostService {
 
     private final CommentRepository commentRepository;
 
-    public List<PostResponse.ListDTO> getPosts(Integer userId) {
-        List<Post> postsPS = postRepository.findAllWithRunRecord();
+    public List<PostResponse.ListDTO>
+    getPosts(Integer userId) {
+        List<Post> postsPS = postRepository.findAllJoinRunRecord();
 
         return postsPS.stream()
                 .map(post -> {
                     Like like = likeRepository.findByUserIdAndPostId(userId, post.getId()).orElse(null);
-                    Long likeCount = likeRepository.findByPostId(post.getId());
-                    Long commentCount = commentRepository.findByPostId(post.getId());
+                    Integer likeCount = likeRepository.countByPostId(post.getId());
+                    Integer commentCount = commentRepository.countByPostId(post.getId());
                     boolean isLiked = like != null;
 
                     return new PostResponse.ListDTO(
                             post,
                             post.getRunRecord(),
-                            likeCount.intValue(),
-                            commentCount.intValue(),
+                            likeCount,
+                            commentCount,
                             isLiked
                     );
                 })

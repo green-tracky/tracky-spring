@@ -18,9 +18,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/community/posts")
-    public ResponseEntity<?> getPosts(Integer userId) {
+    public ResponseEntity<?> getPosts() {
 
-        userId = 1;
+        Integer userId = 1;
 
         User user = User.builder().id(userId).build();
 
