@@ -1,25 +1,21 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.Enum.RunPlaceEnum;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.example.tracky.runrecord.DTO.TotalStatsDTO;
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.RecentRunsDTO;
+import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RunRecordResponse {
 
@@ -194,7 +190,7 @@ public class RunRecordResponse {
         private List<PictureResponse.DTO> pictures;
         private LocalDateTime createdAt;
         private Integer intensity; // 러닝 강도
-        private RunPlaceEnum place; // 러닝 장소
+        private RunPlaceTypeEnum place; // 러닝 장소
 
         public DetailDTO(RunRecord runRecord) {
             this.id = runRecord.getId();
@@ -245,7 +241,7 @@ public class RunRecordResponse {
         private LocalDateTime createdAt;
         private Integer userId;
         private Integer intensity; // 러닝 강도
-        private RunPlaceEnum place; // 러닝 장소
+        private RunPlaceTypeEnum place; // 러닝 장소
 
         public UpdateDTO(RunRecord runRecord) {
             this.id = runRecord.getId();

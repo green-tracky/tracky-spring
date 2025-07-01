@@ -1,15 +1,22 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.error.Enum.ErrorCodeEnum;
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.runrecord.dto.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.RecentRunsDTO;
+import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvRepository;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvService;
+import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
 import com.example.tracky.user.runlevel.RunLevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -18,19 +25,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-
-import com.example.tracky.runrecord.DTO.TotalStatsDTO;
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.AvgStatsDTO;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import com.example.tracky.runrecord.runbadge.RunBadge;
-import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
-import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 @Slf4j
 @Service
@@ -398,13 +392,13 @@ public class RunRecordService {
 
         // 3. 뱃지 서비스를 호출하여, 저장된 기록에 대해 획득 가능한 모든 뱃지를 확인하고 부여합니다.
         // 이 과정에서 새로 획득한 뱃지 목록을 반환받습니다.
-        List<RunBadgeAchv> awardedBadges = runBadgeAchvService.checkAndAwardRunBadges(runRecordPS);
+        List<RunBadgeAchv> awardedBadgesPS = runBadgeAchvService.checkAndAwardRunBadges(runRecordPS);
 
         // 4. 레벨업 서비스를 호출하여 사용자의 레벨을 업데이트합니다.
         runLevelService.updateUserLevelIfNeeded(user);
 
         // 5. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
-        return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadges);
+        return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadgesPS);
 
     }
 
