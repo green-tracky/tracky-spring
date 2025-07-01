@@ -1,9 +1,9 @@
 package com.example.tracky.user.runlevel;
 
+import com.example.tracky.user.runlevel.utils.RunLevelUtil;
 import lombok.Data;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class RunLevelResponse {
 
@@ -50,23 +50,7 @@ public class RunLevelResponse {
             this.totalDistance = totalDistance;
 
             // 2. '다음 레벨까지 남은 거리'를 계산합니다.
-            // 먼저 사용자의 현재 레벨이 전체 리스트에서 몇 번째인지 찾습니다.
-            // (레벨의 개수가 100개가 넘어가면 for 문이 더 좋다)
-            int currentIndex = IntStream.range(0, runLevels.size())
-                    .filter(i -> runLevels.get(i).getId().equals(currentRunLevel.getId()))
-                    .findFirst()
-                    .orElse(-1);
-
-            // 현재 레벨이 마지막 레벨이 아닌 경우에만 남은 거리를 계산합니다.
-            if (currentIndex != -1 && currentIndex < runLevels.size() - 1) {
-                RunLevel nextLevel = runLevels.get(currentIndex + 1);
-                int remaining = nextLevel.getMinDistance() - totalDistance;
-                // ⬇ 관리자가 임의로 사용자의 누적거리를 수정했을 때를 대비해서 방어적 코드를 추가
-                this.distanceToNextLevel = Math.max(0, remaining);
-            } else {
-                // 마지막 레벨이거나, 알 수 없는 이유로 현재 레벨을 못 찾은 경우 null로 설정합니다.
-                this.distanceToNextLevel = null;
-            }
+            this.distanceToNextLevel = RunLevelUtil.getDistanceToNextLevel(currentRunLevel, runLevels, totalDistance);
 
             // 3. '레벨 목록 (runLevels)'을 생성합니다.
             // 모든 레벨 정보를 순회하며, 각 레벨이 현재 사용자의 레벨인지 판별하여 DTO 리스트를 만듭니다.
