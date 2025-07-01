@@ -14,30 +14,30 @@ public class RewardTypeConverter implements AttributeConverter<RewardTypeEnum, S
     /**
      * Enum 객체 -> DB 데이터(String)로 변환
      *
-     * @param attribute RewardTypeEnum.GOLD 등
+     * @param rewardTypeEnum RewardTypeEnum.GOLD 등
      * @return "금메달" 등
      */
     @Override
-    public String convertToDatabaseColumn(RewardTypeEnum attribute) {
-        if (attribute == null) {
+    public String convertToDatabaseColumn(RewardTypeEnum rewardTypeEnum) {
+        if (rewardTypeEnum == null) {
             return null;
         }
         // Enum이 가지고 있는 한글 이름을 반환
-        return attribute.getKoreanName();
+        return rewardTypeEnum.getValue();
     }
 
     /**
      * DB 데이터(String) -> Enum 객체로 변환
      *
-     * @param dbData "금메달" 등
+     * @param value "금메달" 등
      * @return RewardTypeEnum.GOLD 등
      */
     @Override
-    public RewardTypeEnum convertToEntityAttribute(String dbData) {
-        if (dbData == null || dbData.isEmpty()) {
+    public RewardTypeEnum convertToEntityAttribute(String value) {
+        if (value == null || value.isEmpty()) {
             return null;
         }
-        // Enum에 만들어 둔 fromKoreanName 메소드를 사용하여 안전하게 변환
-        return RewardTypeEnum.fromKoreanName(dbData);
+        // Enum에 만들어 둔 fromString 메소드를 사용하여 안전하게 변환
+        return RewardTypeEnum.fromString(value);
     }
 }

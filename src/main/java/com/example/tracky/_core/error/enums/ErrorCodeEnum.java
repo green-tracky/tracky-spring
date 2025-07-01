@@ -1,4 +1,4 @@
-package com.example.tracky._core.error.Enum;
+package com.example.tracky._core.error.enums;
 
 /**
  * API 전반에서 사용하는 공통 에러 코드와 메시지를 정의한 Enum 클래스입니다.
@@ -8,6 +8,11 @@ package com.example.tracky._core.error.Enum;
  * </p>
  */
 public enum ErrorCodeEnum {
+
+    /**
+     * 400 Bad Request - 유효하지 않은 리워드 값입니다.
+     */
+    INVALID_REWARD_TYPE(400, "유효하지 않은 리워드 값입니다"),
 
     /**
      * 400 Bad Request - 유효하지 않은 장소 값입니다.
