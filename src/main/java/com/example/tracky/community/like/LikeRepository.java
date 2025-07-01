@@ -13,7 +13,7 @@ public class LikeRepository {
 
     private final EntityManager em;
 
-    public Integer countByPostId(int postId) {
+    public Integer countByPostId(Integer postId) {
         Query query = em.createQuery("select count(li) from Like li where li.post.id = :postId");
         query.setParameter("postId", postId);
 

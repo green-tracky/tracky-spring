@@ -11,7 +11,7 @@ public class CommentRepository {
 
     private final EntityManager em;
 
-    public Integer countByPostId(int postId) {
+    public Integer countByPostId(Integer postId) {
         Query query = em.createQuery("select count(c) from Comment c where c.post.id = :postId");
         query.setParameter("postId", postId);
 
