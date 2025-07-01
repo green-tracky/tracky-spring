@@ -18,7 +18,7 @@ public class PostService {
 
     private final CommentRepository commentRepository;
 
-    public List<PostResponse.ListDTO> getList(Integer userId) {
+    public List<PostResponse.ListDTO> getPosts(Integer userId) {
         List<Post> postsPS = postRepository.findAllWithRunRecord();
 
         return postsPS.stream()
