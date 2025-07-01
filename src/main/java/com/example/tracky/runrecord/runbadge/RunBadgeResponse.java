@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 
 public class RunBadgeResponse {
     @Data
-    public static class ListDTO {
+    public static class GroupedBadgeListDTO {
         private List<DTO> recents; // 최근 획득 목록
         private List<DTO> bests; // 최고기록 목록
         private List<DTO> monthly; // 월간 기록 목록
 
-        public ListDTO(List<RunBadge> runBadges, List<RunBadgeAchv> runBadgeAchvs) {
+        public GroupedBadgeListDTO(List<RunBadge> runBadges, List<RunBadgeAchv> runBadgeAchvs) {
             // 최근 획득 뱃지 5개
             this.recents = runBadgeAchvs.stream()
                     .sorted((achv1, achv2) -> achv2.getAchievedAt().compareTo(achv1.getAchievedAt()))
