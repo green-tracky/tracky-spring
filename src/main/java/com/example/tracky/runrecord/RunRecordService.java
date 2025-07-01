@@ -22,6 +22,7 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -353,17 +354,54 @@ public class RunRecordService {
         return new RunRecordResponse.AllDTO(avgStats, allStats, runBadgeList, recentRunList);
     }
 
-
+    /**
+     * 최근 러닝 기록을 연도-월 기준으로 그룹핑하여 통계 반환
+     * <p>
+     * - 사용자 ID로 전체 기록을 조회한 뒤 정렬 조건(order)에 따라 정렬
+     * <p>
+     * - 각 기록을 YearMonth 단위로 그룹핑
+     * <p>
+     * - 각 그룹에 대해 거리, 시간, 평균 페이스 등 통계 생성
+     * <p>
+     * - RecentOneDTO 리스트를 모아 GroupedRecentListDTO 로 반환
+     * <p>
+     *
+     * @param user  통계를 조회할 사용자 정보
+     * @param order 정렬 기준 (latest, oldest)
+     * @param year  기준 연도
+     * @return GroupedRecentListDTO - 연도/월별 러닝 통계 + 상세 기록 리스트 포함 DTO
+     */
     public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(User user, String order, Integer year) {
-        List<RunRecord> runRecords;
-        switch (order) {
-            case "latest" -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId());
-            case "oldest" -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtAsc(user.getId());
-            default -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId()); // 기본: 최신순
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
+        if (year != null) {
+            runRecords = runRecords.stream()
+                    .filter(runRecord -> runRecord.getCreatedAt().getYear() == year)
+                    .sorted((r1, r2) -> {
+                        if ("oldest".equals(order)) {
+                            return r1.getCreatedAt().compareTo(r2.getCreatedAt()); // 오름차순
+                        } else {
+                            return r2.getCreatedAt().compareTo(r1.getCreatedAt()); // 내림차순 (latest 또는 default)
+                        }
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            // year 필터가 없으면 정렬만 수행
+            runRecords = runRecords.stream()
+                    .sorted((r1, r2) -> {
+                        if ("oldest".equals(order)) {
+                            return r1.getCreatedAt().compareTo(r2.getCreatedAt());
+                        } else {
+                            return r2.getCreatedAt().compareTo(r1.getCreatedAt());
+                        }
+                    })
+                    .collect(Collectors.toList());
         }
 
         // 1. YearMonth 기준으로 그룹핑
-        Map<YearMonth, List<RunRecord>> groupedByMonth = new TreeMap<>(Comparator.reverseOrder());
+        Comparator<YearMonth> ymComparator = "oldest".equals(order) ? Comparator.naturalOrder() : Comparator.reverseOrder();
+
+        Map<YearMonth, List<RunRecord>> groupedByMonth = new TreeMap<>(ymComparator);
+
         for (RunRecord record : runRecords) {
             YearMonth ym = YearMonth.from(record.getCreatedAt());
             groupedByMonth.computeIfAbsent(ym, k -> new ArrayList<>()).add(record);
@@ -405,7 +443,20 @@ public class RunRecordService {
         return new RunRecordResponse.GroupedRecentListDTO(groupRecentList);
     }
 
-
+    /**
+     * 최근 러닝 기록을 거리/페이스 정렬 기준의 전체 러닝 기록 리스트 반환
+     * <p>
+     * - 사용자 ID로 모든 러닝 기록을 조회하고, 정렬 기준(order)에 따라 정렬
+     * <p>
+     * - 각 기록을 RecentRunsDTO로 변환하여 리스트 구성
+     * <p>
+     * - 그룹핑 없이 평면(flat) 리스트 형태로 반환
+     *
+     * @param user  사용자 정보
+     * @param order 정렬 기준 (distance-asc, distance-desc, pace-asc, pace-desc)
+     * @param year  기준 연도
+     * @return FlatRecentListDTO - 정렬된 러닝 기록 리스트 포함 DTO
+     */
     public RunRecordResponse.FlatRecentListDTO getFlatActivities(User user, String order, Integer year) {
         List<RunRecord> runRecords;
         switch (order) {
@@ -414,6 +465,12 @@ public class RunRecordService {
             case "pace-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceDesc(user.getId());
             case "pace-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceAsc(user.getId());
             default -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId()); // 기본: 최신순
+        }
+
+        if (year != null) {
+            runRecords = runRecords.stream()
+                    .filter(r -> r.getCreatedAt().getYear() == year)
+                    .collect(Collectors.toList());
         }
 
         List<RecentRunsDTO> recentRuns = runRecords.stream()
