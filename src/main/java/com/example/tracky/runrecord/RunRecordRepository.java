@@ -1,18 +1,13 @@
 package com.example.tracky.runrecord;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import org.springframework.stereotype.Repository;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
