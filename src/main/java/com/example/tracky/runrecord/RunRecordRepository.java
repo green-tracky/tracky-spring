@@ -5,6 +5,7 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Optional;
 
@@ -82,10 +83,9 @@ public class RunRecordRepository {
      * @return
      */
     public Integer findTotalDistanceByUserId(Integer userId) {
-        Query query = em.createQuery("select sum(r.totalDistanceMeters) from RunRecord r where r.user.id = :userId", Long.class);
+        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId", Long.class);
         query.setParameter("userId", userId);
-        Long totalDistance = (Long) query.getSingleResult();
-        return totalDistance == null ? 0 : totalDistance.intValue();
+        return ((Long) query.getSingleResult()).intValue();
     }
 
     /**
@@ -104,23 +104,43 @@ public class RunRecordRepository {
         query.setParameter("userId", userId);
         query.setParameter("year", yearMonth.getYear());
         query.setParameter("month", yearMonth.getMonth());
-        Long totalCount = (Long) query.getSingleResult();
-        return totalCount == null ? 0 : totalCount.intValue();
+        return ((Long) query.getSingleResult()).intValue();
     }
 
     /**
+     * <pre>
      * 특정 사용자(userId)가 특정 연월(yearMonth)에 달린 총 거리를 미터(m) 단위로 조회합니다.
+     * yearMonth 를 그대로 where 절에 조건문으로 사용하면 인덱스를 타지 않는다
+     * between 으로 사용하면 인덱스를 탄다
+     * </pre>
      *
      * @param userId    조회할 사용자의 ID
      * @param yearMonth 조회할 연월 (예: YearMonth.of(2025, 6))
      * @return 해당 사용자의 해당 월 총 달리기 거리 (미터 단위). 기록이 없으면 0을 반환합니다.
      */
     public Integer findTotalDistanceByUserIdAndYearMonth(Integer userId, YearMonth yearMonth) {
-        Query query = em.createQuery("select sum (r.totalDistanceMeters) from RunRecord r where r.user.id = :userId and function('YEAR', r.createdAt) = :year and function('MONTH', r.createdAt) = :month", Long.class);
+        // 1. YearMonth 객체를 사용하여 해당 월의 시작일과 종료일을 계산합니다.
+        LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay(); // 예: 2025-06-01 00:00:00
+        LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 예: 2025-06-30 23:59:59
+
+        // 2. 계산된 시작일과 종료일을 사용하여 BETWEEN 쿼리를 실행합니다.
+        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId and r.createdAt between :startDate and :endDate", Long.class);
         query.setParameter("userId", userId);
-        query.setParameter("year", yearMonth.getYear());
-        query.setParameter("month", yearMonth.getMonthValue());
-        Long totalDistance = (Long) query.getSingleResult();
-        return totalDistance == null ? 0 : totalDistance.intValue();
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        return ((Long) query.getSingleResult()).intValue();
+    }
+
+    /**
+     * 특정 사용자가 특정 기간 동안 달린 거리의 총합을 조회합니다.
+     * 'myDistance' 필드를 채우는 데 사용됩니다.
+     * [핵심] COALESCE 함수: 달리기 기록이 하나도 없을 경우 합계가 NULL이 되는 것을 방지하고 0.0을 반환해줍니다.
+     */
+    public Integer findTotalDistanceByUserIdAndDateRange(Integer userId, LocalDateTime startDate, LocalDateTime endDate) {
+        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId and r.createdAt between :startDate and :endDate", Long.class);
+        query.setParameter("userId", userId);
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        return ((Long) query.getSingleResult()).intValue();
     }
 }

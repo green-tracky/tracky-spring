@@ -57,13 +57,13 @@ public class RunRecordService {
 
         // 3. 뱃지 서비스를 호출하여, 저장된 기록에 대해 획득 가능한 모든 뱃지를 확인하고 부여합니다.
         // 이 과정에서 새로 획득한 뱃지 목록을 반환받습니다.
-        List<RunBadgeAchv> awardedBadges = runBadgeAchvService.checkAndAwardRunBadges(runRecordPS);
+        List<RunBadgeAchv> awardedBadgesPS = runBadgeAchvService.checkAndAwardRunBadges(runRecordPS);
 
         // 4. 레벨업 서비스를 호출하여 사용자의 레벨을 업데이트합니다.
         runLevelService.updateUserLevelIfNeeded(user);
 
         // 5. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
-        return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadges);
+        return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadgesPS);
 
     }
 
