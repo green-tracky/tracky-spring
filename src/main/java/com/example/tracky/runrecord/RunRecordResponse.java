@@ -1,15 +1,9 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.enums.RunPlaceEnum;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.example.tracky.runrecord.dto.TotalStatsDTO;
-import com.example.tracky.runrecord.dto.RecentRunsDTO;
 import com.example.tracky.runrecord.dto.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.RecentRunsDTO;
+import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.enums.RunPlaceEnum;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
@@ -18,17 +12,15 @@ import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RunRecordResponse {
 
     /**
      * 주간 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class WeekDTO {
@@ -46,12 +38,6 @@ public class RunRecordResponse {
 
     /**
      * 월간 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class MonthDTO {
@@ -70,14 +56,6 @@ public class RunRecordResponse {
 
     /**
      * 연간 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private TotalStatsDTO allStats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class YearDTO {
@@ -97,14 +75,6 @@ public class RunRecordResponse {
 
     /**
      * 전체 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private TotalStatsDTO allStats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class AllDTO {
@@ -121,6 +91,9 @@ public class RunRecordResponse {
         }
     }
 
+    /**
+     * 연도-월 단위로 그룹핑된 러닝 기록을 담는 DTO
+     */
     @Data
     public static class RecentOneDTO {
         private LocalDateTime yearMonth; // 예: "2025-06-01 00:00:00"
@@ -134,6 +107,9 @@ public class RunRecordResponse {
         }
     }
 
+    /**
+     * 연도-월별로 그룹화된 러닝 활동 목록 전체를 담는 DTO
+     */
     @Data
     public static class GroupedRecentListDTO {
         private List<RecentOneDTO> GroupedrecentList;
@@ -143,6 +119,9 @@ public class RunRecordResponse {
         }
     }
 
+    /**
+     * 기본 리스트 형태로 정렬된 최근 러닝 기록 리스트 DTO
+     */
     @Data
     public static class FlatRecentListDTO {
         private List<RecentRunsDTO> recentList;
@@ -152,19 +131,6 @@ public class RunRecordResponse {
         }
     }
 
-    /**
-     * private Integer id;
-     * <p>
-     * private String title;
-     * <p>
-     * private String memo;
-     * <p>
-     * private Integer calories;
-     * <p>
-     * private List<RunSegmentResponse.DTO> segments;
-     * <p>
-     * private List<PictureResponse.DTO> pictures;
-     */
     @Data
     public static class SaveDTO {
         private Integer id;
