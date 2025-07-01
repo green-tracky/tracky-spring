@@ -3,14 +3,20 @@ package com.example.tracky.runrecord;
 import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.runrecord.DTO.AvgStatsDTO;
+import com.example.tracky.runrecord.DTO.RecentRunsDTO;
+import com.example.tracky.runrecord.DTO.TotalStatsDTO;
+import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvRepository;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvService;
+import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
-import com.example.tracky.user.runlevel.RunLevelRepository;
 import com.example.tracky.user.runlevel.RunLevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -19,19 +25,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-
-import com.example.tracky.runrecord.DTO.TotalStatsDTO;
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.AvgStatsDTO;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import com.example.tracky.runrecord.runbadge.RunBadge;
-import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
-import com.example.tracky.runrecord.utils.RunRecordUtil;
 
 @Slf4j
 @Service
@@ -167,7 +160,6 @@ public class RunRecordService {
         }
 
         // 8. 레벨
-        RunLevelRepository
 
         // 📌 8. 최종 DTO 반환
         RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList);
