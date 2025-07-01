@@ -27,12 +27,12 @@ public class PostController {
         return Resp.ok(respDTOs);
     }
 
-    @PostMapping("/community/post")
-    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest.SaveDTO reqDTO) {
+    @PostMapping("/community/posts")
+    public ResponseEntity<?> savePost(@Valid @RequestBody PostRequest.SaveDTO reqDTO) {
         Integer userId = 1;
         User user = User.builder().id(userId).build();
 
-        PostResponse.DTO respDTO = postService.createPost(reqDTO, user);
+        PostResponse.DTO respDTO = postService.savePost(reqDTO, user);
         return Resp.ok(respDTO);
     }
 }
