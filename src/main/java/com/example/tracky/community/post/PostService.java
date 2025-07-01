@@ -3,6 +3,7 @@ package com.example.tracky.community.post;
 import com.example.tracky.community.like.Like;
 import com.example.tracky.community.like.LikeRepository;
 import com.example.tracky.community.post.comment.CommentRepository;
+import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,12 @@ public class PostService {
     private final CommentRepository commentRepository;
 
     public List<PostResponse.ListDTO>
-    getPosts(Integer userId) {
+    getPosts(User user) {
         List<Post> postsPS = postRepository.findAllJoinRunRecord();
 
         return postsPS.stream()
                 .map(post -> {
-                    Like like = likeRepository.findByUserIdAndPostId(userId, post.getId()).orElse(null);
+                    Like like = likeRepository.findByUserIdAndPostId(user.getId(), post.getId()).orElse(null);
                     Integer likeCount = likeRepository.countByPostId(post.getId());
                     Integer commentCount = commentRepository.countByPostId(post.getId());
                     boolean isLiked = like != null;

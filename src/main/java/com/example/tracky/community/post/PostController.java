@@ -24,7 +24,7 @@ public class PostController {
 
         User user = User.builder().id(userId).build();
 
-        List<PostResponse.ListDTO> respDTOs = postService.getPosts(userId);
+        List<PostResponse.ListDTO> respDTOs = postService.getPosts(user);
         return Resp.ok(respDTOs);
     }
 }
