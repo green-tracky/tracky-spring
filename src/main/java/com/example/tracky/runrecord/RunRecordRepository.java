@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -13,6 +14,11 @@ import java.util.Optional;
 public class RunRecordRepository {
 
     private final EntityManager em;
+
+    public List<RunRecord> findAll() {
+        return em.createQuery("select r from RunRecord r", RunRecord.class)
+                .getResultList();
+    }
 
     /**
      * 테스트용 findById

@@ -12,8 +12,14 @@ public class PostRepository {
 
     private final EntityManager em;
 
-    public List<Post> findAll() {
-        return em.createQuery("select p from Post p", Post.class)
+    public List<Post> findAllWithRunRecord() {
+        return em.createQuery("""
+                        SELECT p FROM Post p 
+                        JOIN FETCH p.user 
+                        LEFT JOIN FETCH p.runRecord
+                        """, Post.class)
                 .getResultList();
     }
+
+
 }

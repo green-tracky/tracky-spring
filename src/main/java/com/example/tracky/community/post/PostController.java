@@ -17,8 +17,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/community/posts")
-    public ResponseEntity<?> getPosts() {
-        List<PostResponse.DTO> respDTOs = postService.getPosts();
+    public ResponseEntity<?> getList(Integer userId) {
+        List<PostResponse.ListDTO> respDTOs = postService.getList(userId);
         return Resp.ok(respDTOs);
     }
 }
