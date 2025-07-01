@@ -2,13 +2,14 @@ package com.example.tracky.community.challenge.dto;
 
 import com.example.tracky.community.challenge.domain.Challenge;
 import com.example.tracky.community.challenge.domain.PublicChallenge;
+import com.example.tracky.community.challenge.utils.ChallengeUtil;
 import lombok.Data;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 
 public class ChallengeResponse {
 
@@ -62,7 +63,7 @@ public class ChallengeResponse {
             // PublicChallenge 엔티티와 참가자 수를 받아 필드를 초기화합니다.
             public RecommendedDTO(PublicChallenge challenge, Integer participantCount) {
                 this.id = challenge.getId();
-                this.title = formatTitle(challenge.getTargetDistance());
+                this.title = ChallengeUtil.formatTitle(challenge.getTargetDistance());
                 this.imageUrl = challenge.getRewardImageUrl();
                 this.participantCount = participantCount;
             }
@@ -84,10 +85,10 @@ public class ChallengeResponse {
             // '나의 챌린지' (진행 중) 용 생성자
             ChallengeItemDTO(Challenge challenge, Integer achievedDistance) {
                 this.id = challenge.getId();
-                this.title = formatTitle(challenge.getTargetDistance());
+                this.title = ChallengeUtil.formatTitle(challenge.getTargetDistance());
                 this.name = challenge.getName();
                 this.sub = null;
-                this.remainingTime = calculateRemainingSeconds(challenge.getEndDate());
+                this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
                 this.myDistance = achievedDistance;
                 this.targetDistance = challenge.getTargetDistance();
                 this.isInProgress = challenge.getIsInProgress();
@@ -97,10 +98,10 @@ public class ChallengeResponse {
             // '참여하기' (미참여) 용 생성자
             ChallengeItemDTO(PublicChallenge challenge) {
                 this.id = challenge.getId();
-                this.title = formatTitle(challenge.getTargetDistance());
+                this.title = ChallengeUtil.formatTitle(challenge.getTargetDistance());
                 this.name = challenge.getName();
                 this.sub = challenge.getSub();
-                this.remainingTime = calculateRemainingSeconds(challenge.getEndDate());
+                this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
                 this.myDistance = null; // 아직 참여 안 했으므로 null
                 this.targetDistance = null;
                 this.isInProgress = challenge.getIsInProgress();
@@ -110,7 +111,7 @@ public class ChallengeResponse {
             // '이전 챌린지' (종료) 용 생성자
             ChallengeItemDTO(Challenge challenge, Integer achievedDistance, boolean isPast) {
                 this.id = challenge.getId();
-                this.title = formatTitle(challenge.getTargetDistance());
+                this.title = ChallengeUtil.formatTitle(challenge.getTargetDistance());
                 this.name = challenge.getName();
                 this.sub = null;
                 this.remainingTime = 0; // 종료됐으므로 0
@@ -121,26 +122,5 @@ public class ChallengeResponse {
             }
         }
     }
-
-    /**
-     * 챌린지 이미지 대체용 문자열
-     *
-     * @param targetDistance
-     * @return
-     */
-    private static String formatTitle(Integer targetDistance) {
-        return targetDistance / 1000 + "K";
-    }
-
-    /**
-     * 남은 시간 초단위로 알려줌
-     *
-     * @param endDate
-     * @return
-     */
-    private static Integer calculateRemainingSeconds(LocalDateTime endDate) {
-        Duration duration = Duration.between(LocalDateTime.now(), endDate);
-        return duration.isNegative() ? 0 : (int) duration.getSeconds();
-    }
-
+    
 }
