@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord.runbadge;
 
-import com.example.tracky.runrecord.runbadge.Enum.RunBadgeType;
+import com.example.tracky.runrecord.runbadge.enums.RunBadgeTypeEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,13 +20,13 @@ public class RunBadge {
     private String name; // 뱃지 이름
     private String description; // 뱃지 조건 설명
     private String imageUrl; // 뱃지 이미지
-    private RunBadgeType type; // 뱃지 타입 필드 추가. RunBadgeType 타입 확인 바람
-    
+    private RunBadgeTypeEnum type; // 뱃지 타입 필드 추가. RunBadgeType 타입 확인 바람
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Builder
-    public RunBadge(Integer id, String name, String description, String imageUrl, RunBadgeType type) {
+    public RunBadge(Integer id, String name, String description, String imageUrl, RunBadgeTypeEnum type) {
         this.id = id;
         this.name = name;
         this.description = description;
