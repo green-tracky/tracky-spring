@@ -95,7 +95,7 @@ public class RunRecordService {
         // 📌 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
-                .map(RecentRunsDTO::new)
+                .map(r -> new RecentRunsDTO(r))
                 .toList();
 
 
@@ -201,7 +201,7 @@ public class RunRecordService {
         // 📌 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
-                .map(RecentRunsDTO::new)
+                .map(r -> new RecentRunsDTO(r))
                 .toList();
 
         // 📌 6. 연도별-월 리스트 구성 (기록 기준)
@@ -268,7 +268,7 @@ public class RunRecordService {
         // 📌 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
-                .map(RecentRunsDTO::new)
+                .map(r -> new RecentRunsDTO(r))
                 .toList();
 
         // 📌 6. 주간 평균 통계 계산
@@ -331,7 +331,7 @@ public class RunRecordService {
         // 📌 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
-                .map(RecentRunsDTO::new)
+                .map(r -> new RecentRunsDTO(r))
                 .toList();
 
         // 📌 6. 전체 주 수 계산 (월~일 단위로 포함)
