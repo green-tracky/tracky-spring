@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.DTO;
+package com.example.tracky.runrecord.dto;
 
 import lombok.Data;
 

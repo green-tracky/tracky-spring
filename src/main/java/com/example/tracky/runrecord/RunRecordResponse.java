@@ -1,25 +1,23 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.Enum.RunPlaceEnum;
+import com.example.tracky.runrecord.enums.RunPlaceEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.tracky.runrecord.DTO.TotalStatsDTO;
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.dto.RecentRunsDTO;
+import com.example.tracky.runrecord.dto.AvgStatsDTO;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class RunRecordResponse {
 
@@ -120,6 +118,28 @@ public class RunRecordResponse {
             this.totalstats = totalstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+        }
+    }
+
+    @Data
+    public static class RecentOneDTO {
+        private LocalDateTime yearMonth; // 예: "2025-06"
+        private AvgStatsDTO avgStats;
+        private List<RecentRunsDTO> recentRuns;
+
+        public RecentOneDTO(LocalDateTime yearMonth, AvgStatsDTO avgStats, List<RecentRunsDTO> recentRuns) {
+            this.yearMonth = yearMonth;
+            this.avgStats = avgStats;
+            this.recentRuns = recentRuns;
+        }
+    }
+
+    @Data
+    public static class RecentListDTO {
+        private List<RecentOneDTO> RecentList;
+
+        public RecentListDTO(List<RecentOneDTO> RecentList) {
+            this.RecentList = RecentList;
         }
     }
 

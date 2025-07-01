@@ -73,6 +73,18 @@ public class RunRecordController {
         return Resp.ok(respDTO);
     }
 
+    @GetMapping("/activities/recent")
+    public ResponseEntity<?> getActivitiesRecent() {
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
+        RunRecordResponse.RecentListDTO respDTO = runRecordService.getActivitiesRecent(user);
+        return Resp.ok(respDTO);
+    }
+
     @PostMapping("/runs")
     public ResponseEntity<?> save(@RequestBody RunRecordRequest.SaveDTO reqDTO) {
         // 유저 아이디를 임시로 1 로 함

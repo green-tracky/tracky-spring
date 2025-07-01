@@ -11,24 +11,19 @@ import com.example.tracky.user.runlevel.RunLevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
-import com.example.tracky.runrecord.DTO.TotalStatsDTO;
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.dto.RecentRunsDTO;
+import com.example.tracky.runrecord.dto.AvgStatsDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import com.example.tracky.runrecord.runbadge.RunBadge;
-import com.example.tracky.runrecord.runbadge.RunBadgeRepository;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 
@@ -68,6 +63,7 @@ public class RunRecordService {
      * <p>
      *
      * @param baseDate 기준 날짜
+     * @param user     통계를 조회할 사용자 정보
      * @return WeekDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
      */
     public RunRecordResponse.WeekDTO getActivitiesWeek(LocalDate baseDate, User user) {
@@ -179,6 +175,7 @@ public class RunRecordService {
      *
      * @param month 조회할 월 (1~12)
      * @param year  조회할 연도
+     * @param user  통계를 조회할 사용자 정보
      * @return MonthDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
      */
     public RunRecordResponse.MonthDTO getActivitiesMonth(Integer month, Integer year, User user) {
@@ -251,6 +248,7 @@ public class RunRecordService {
      * <p>
      *
      * @param year 조회할 연도
+     * @param user 통계를 조회할 사용자 정보
      * @return YearDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 최근 기록 목록 포함
      */
     public RunRecordResponse.YearDTO getActivitiesYear(Integer year, User user) {
@@ -323,6 +321,7 @@ public class RunRecordService {
      * - 모든 기록을 바탕으로 누적 통계 + 주당 평균 활동 정보 반환
      * <p>
      *
+     * @param user 통계를 조회할 사용자 정보
      * @return AllDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 전체 기록 목록 포함
      */
     public RunRecordResponse.AllDTO getActivitiesAll(User user) {
@@ -381,6 +380,67 @@ public class RunRecordService {
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
         return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList);
     }
+
+    /**
+     * 전체 러닝 활동 리스트를 조회
+     * <p>
+     * - 사용자 ID로 모든 러닝 기록을 조회한다.
+     * <p>
+     * - 조회된 기록들을 연도-월(YearMonth) 단위로 그룹핑한다.
+     * <p>
+     * - 각 연도-월별 기록을 집계하여 거리, 시간, 평균 페이스 등의 통계 정보를 생성한다.
+     * <p>
+     * - 각 그룹별 통계 및 상세 러닝 기록 리스트를 DTO에 담아 반환한다.
+     *
+     * @param user 통계를 조회할 사용자 정보
+     * @return RunRecordResponse.RecentListDTO - 연도-월별 통계 및 상세 러닝 기록 리스트 포함 DTO
+     */
+    public RunRecordResponse.RecentListDTO getActivitiesRecent(User user) {
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
+
+        // 1. YearMonth 기준으로 그룹핑
+        Map<YearMonth, List<RunRecord>> groupedByMonth = new TreeMap<>(Comparator.reverseOrder());
+        for (RunRecord record : runRecords) {
+            YearMonth ym = YearMonth.from(record.getCreatedAt());
+            groupedByMonth.computeIfAbsent(ym, k -> new ArrayList<>()).add(record);
+        }
+
+        // 2. MonthGroupDTO 만들기
+        List<RunRecordResponse.RecentOneDTO> recentList = new ArrayList<>();
+
+        for (Map.Entry<YearMonth, List<RunRecord>> entry : groupedByMonth.entrySet()) {
+            YearMonth ym = entry.getKey();
+            List<RunRecord> records = entry.getValue();
+
+            // 거리, 시간 합산
+            int totalDistance = records.stream().mapToInt(r -> r.getTotalDistanceMeters()).sum();
+            int totalDuration = records.stream().mapToInt(r -> r.getTotalDurationSeconds()).sum();
+            int count = records.size();
+            int avgPace = RunRecordUtil.calculatePace(totalDistance, totalDuration);
+
+            // AvgStatsDTO 생성
+            RunRecord dummy = RunRecord.builder()
+                    .totalDistanceMeters(totalDistance)
+                    .totalDurationSeconds(totalDuration)
+                    .build();
+            AvgStatsDTO avgStats = new AvgStatsDTO(dummy, count, avgPace);
+
+            // RecentRunsDTO 리스트로 변환 (람다식 사용)
+            List<RecentRunsDTO> recents = records.stream()
+                    .map(r -> new RecentRunsDTO(r))
+                    .toList();
+
+            // 기준일을 recentRuns 첫 번째의 createdAt 으로
+            LocalDateTime baseDateTime = recents.get(0).getCreatedAt();
+            LocalDateTime dateTime = YearMonth.from(baseDateTime).atDay(1).atStartOfDay();
+
+            // 최종 DTO에 추가
+            recentList.add(new RunRecordResponse.RecentOneDTO(dateTime, avgStats, recents));
+        }
+
+        return new RunRecordResponse.RecentListDTO(recentList);
+    }
+
 
     /**
      * 러닝 저장
@@ -456,5 +516,6 @@ public class RunRecordService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
     }
+
 
 }

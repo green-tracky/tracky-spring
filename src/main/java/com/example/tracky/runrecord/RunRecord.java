@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.Enum.RunPlaceEnum;
+import com.example.tracky.runrecord.enums.RunPlaceEnum;
 import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runsegment.RunSegment;

@@ -4,16 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.time.YearMonth;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -137,7 +134,7 @@ public class RunRecordRepository {
      * @return
      */
     public List<RunRecord> findAllByUserId(Integer userId) {
-        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId", RunRecord.class);
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt desc", RunRecord.class);
         query.setParameter("userId", userId);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
