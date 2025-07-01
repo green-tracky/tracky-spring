@@ -22,7 +22,7 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 유저 타입 값입니다.
      */
-    INVALID_USER_TYPE(400, "유효하지 않은 유저 타입 값입니다"),
+    INVALID_USER_TYPE(400, "유효하지 않은 유저 타입입니다"),
 
     /**
      * 400 Bad Request - 유효하지 않은 성별 값입니다.
@@ -32,7 +32,7 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 챌린지 타입 값입니다.
      */
-    INVALID_CHALLENGE_TYPE(400, "유효하지 않은 챌린지 타입 값입니다"),
+    INVALID_CHALLENGE_TYPE(400, "유효하지 않은 챌린지 타입입니다"),
 
     /**
      * 400 Bad Request - 이미 종료된 챌린지입니다.
