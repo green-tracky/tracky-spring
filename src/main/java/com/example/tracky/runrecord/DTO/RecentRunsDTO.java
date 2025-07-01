@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.DTO;
+package com.example.tracky.runrecord.dto;
 
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class RecentRunsDTO {
