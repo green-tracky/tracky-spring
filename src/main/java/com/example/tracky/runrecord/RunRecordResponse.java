@@ -136,10 +136,10 @@ public class RunRecordResponse {
 
     @Data
     public static class RecentListDTO {
-        private List<RecentOneDTO> RecentList;
+        private List<RecentOneDTO> recentList;
 
-        public RecentListDTO(List<RecentOneDTO> RecentList) {
-            this.RecentList = RecentList;
+        public RecentListDTO(List<RecentOneDTO> recentList) {
+            this.recentList = recentList;
         }
     }
 
