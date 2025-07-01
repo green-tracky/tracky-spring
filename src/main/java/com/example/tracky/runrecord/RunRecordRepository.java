@@ -83,7 +83,7 @@ public class RunRecordRepository {
      * @return
      */
     public Integer findTotalDistanceByUserId(Integer userId) {
-        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId", Long.class);
+        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId");
         query.setParameter("userId", userId);
         return ((Long) query.getSingleResult()).intValue();
     }
@@ -100,7 +100,7 @@ public class RunRecordRepository {
      */
     public Integer countByUserIdAndYearMonth(Integer userId, YearMonth yearMonth) {
         // JPQL의 FUNCTION 키워드를 사용하여 데이터베이스의 네이티브 날짜 함수(YEAR, MONTH)를 호출
-        Query query = em.createQuery("select count(r) from RunRecord r where r.user.id = :userId and function('YEAR', r.createdAt) = :year and function('MONTH', r.createdAt) = :month", Long.class);
+        Query query = em.createQuery("select count(r) from RunRecord r where r.user.id = :userId and function('YEAR', r.createdAt) = :year and function('MONTH', r.createdAt) = :month");
         query.setParameter("userId", userId);
         query.setParameter("year", yearMonth.getYear());
         query.setParameter("month", yearMonth.getMonth());
@@ -124,7 +124,7 @@ public class RunRecordRepository {
         LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 예: 2025-06-30 23:59:59
 
         // 2. 계산된 시작일과 종료일을 사용하여 BETWEEN 쿼리를 실행합니다.
-        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId and r.createdAt between :startDate and :endDate", Long.class);
+        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId and r.createdAt between :startDate and :endDate");
         query.setParameter("userId", userId);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
@@ -137,7 +137,7 @@ public class RunRecordRepository {
      * [핵심] COALESCE 함수: 달리기 기록이 하나도 없을 경우 합계가 NULL이 되는 것을 방지하고 0.0을 반환해줍니다.
      */
     public Integer findTotalDistanceByUserIdAndDateRange(Integer userId, LocalDateTime startDate, LocalDateTime endDate) {
-        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId and r.createdAt between :startDate and :endDate", Long.class);
+        Query query = em.createQuery("select coalesce(sum(r.totalDistanceMeters), 0.0) from RunRecord r where r.user.id = :userId and r.createdAt between :startDate and :endDate");
         query.setParameter("userId", userId);
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);

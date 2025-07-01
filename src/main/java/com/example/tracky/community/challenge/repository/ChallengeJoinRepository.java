@@ -36,7 +36,7 @@ public class ChallengeJoinRepository {
      * </pre>
      */
     public Set<Integer> findChallengeIdsByUserId(Integer userId) {
-        Query query = em.createQuery("select cj.challenge.id from ChallengeJoin cj where cj.user.id = :userId", Integer.class);
+        Query query = em.createQuery("select cj.challenge.id from ChallengeJoin cj where cj.user.id = :userId");
         query.setParameter("userId", userId);
         List<Integer> resultList = query.getResultList();
         return new HashSet<>(resultList);
@@ -49,7 +49,7 @@ public class ChallengeJoinRepository {
      * </pre>
      */
     public Integer countByChallengeId(Integer challengeId) {
-        Query query = em.createQuery("select count(cj) from ChallengeJoin cj where cj.challenge.id = :challengeId", Long.class);
+        Query query = em.createQuery("select count(cj) from ChallengeJoin cj where cj.challenge.id = :challengeId");
         query.setParameter("challengeId", challengeId);
         return ((Long) query.getSingleResult()).intValue();
     }
