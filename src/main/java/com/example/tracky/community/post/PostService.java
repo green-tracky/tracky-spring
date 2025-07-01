@@ -19,7 +19,7 @@ public class PostService {
     private final CommentRepository commentRepository;
 
     public List<PostResponse.ListDTO> getList(Integer userId) {
-        List<Post> postsPS = postRepository.findAllWithRunRecord();  // user + runRecord까지 fetch된 상태
+        List<Post> postsPS = postRepository.findAllWithRunRecord();
 
         return postsPS.stream()
                 .map(post -> {
@@ -30,7 +30,7 @@ public class PostService {
 
                     return new PostResponse.ListDTO(
                             post,
-                            post.getRunRecord(),              // Post에서 runRecord 꺼내기
+                            post.getRunRecord(),
                             likeCount.intValue(),
                             commentCount.intValue(),
                             isLiked
