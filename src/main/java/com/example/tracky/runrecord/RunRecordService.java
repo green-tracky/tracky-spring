@@ -74,22 +74,16 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 📌 2. 해당 주간의 기록 조회 및 총 거리/시간 계산
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecords = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
         Integer totalDistanceMeters = 0;
         Integer totalDurationSeconds = 0;
-        for (RunRecord record : runRecordList) {
+        for (RunRecord record : runRecords) {
             totalDistanceMeters += record.getTotalDistanceMeters();
             totalDurationSeconds += record.getTotalDurationSeconds();
         }
 
         // 📌 3. 누적 통계용 AvgStatsDTO 생성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-        int statsCount = runRecordList.size();
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-        AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecords, totalDistanceMeters, totalDurationSeconds);
 
         // 📌 4. 배지 리스트 생성
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
@@ -162,7 +156,7 @@ public class RunRecordService {
         }
 
         // 📌 8. 최종 DTO 반환
-        RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList);
+        RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(avgStats, runBadgeList, recentRunList);
         weekDTO.setWeeks(sortedWeeksMap);
         return weekDTO;
     }
@@ -186,22 +180,16 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 📌 2. 해당 월의 기록 조회 및 총 거리/시간 계산
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecords = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
         Integer totalDistanceMeters = 0;
         Integer totalDurationSeconds = 0;
-        for (RunRecord record : runRecordList) {
+        for (RunRecord record : runRecords) {
             totalDistanceMeters += record.getTotalDistanceMeters();
             totalDurationSeconds += record.getTotalDurationSeconds();
         }
 
         // 📌 3. 누적 통계용 AvgStatsDTO 생성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-        int statsCount = runRecordList.size();
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-        AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecords, totalDistanceMeters, totalDurationSeconds);
 
         // 📌 4. 배지 리스트 생성
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
@@ -229,7 +217,7 @@ public class RunRecordService {
         }
 
         // 📌 7. 최종 DTO 생성 및 연도/월 정보 세팅
-        RunRecordResponse.MonthDTO monthDTO = new RunRecordResponse.MonthDTO(stats, runBadgeList, recentRunList);
+        RunRecordResponse.MonthDTO monthDTO = new RunRecordResponse.MonthDTO(avgStats, runBadgeList, recentRunList);
         monthDTO.setYears(yearSet.stream().sorted().toList());
 
         Map<Integer, List<Integer>> sortedMonthMap = new HashMap<>();
@@ -259,22 +247,16 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 📌 2. 해당 연도의 기록 조회 및 총 거리/시간 계산
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecords = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
         Integer totalDistanceMeters = 0;
         Integer totalDurationSeconds = 0;
-        for (RunRecord record : runRecordList) {
+        for (RunRecord record : runRecords) {
             totalDistanceMeters += record.getTotalDistanceMeters();
             totalDurationSeconds += record.getTotalDurationSeconds();
         }
 
         // 📌 3. 누적 통계용 AvgStatsDTO 생성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-        int statsCount = runRecordList.size();
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-        AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecords, totalDistanceMeters, totalDurationSeconds);
 
         // 📌 4. 배지 리스트 생성
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
@@ -294,10 +276,10 @@ public class RunRecordService {
                 start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
                 end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
         ) + 1;
-        double avgCountData = statsCount > 0 ? (double) statsCount / totalWeeksInYear : 0;
+        double avgCountData = avgStats.getCountRecode() > 0 ? (double) avgStats.getCountRecode() / totalWeeksInYear : 0;
         double avgCount = Math.floor(avgCountData * 10) / 10.0;
-        Integer avgDistanceMeters = statsCount > 0 ? totalDistanceMeters / statsCount : 0;
-        Integer avgDurationSeconds = statsCount > 0 ? totalDurationSeconds / statsCount : 0;
+        Integer avgDistanceMeters = avgStats.getCountRecode() > 0 ? totalDistanceMeters / avgStats.getCountRecode() : 0;
+        Integer avgDurationSeconds = avgStats.getCountRecode() > 0 ? totalDurationSeconds / avgStats.getCountRecode() : 0;
         Integer statsAvgPace = RunRecordUtil.calculatePace(avgDistanceMeters, avgDurationSeconds);
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
@@ -309,7 +291,7 @@ public class RunRecordService {
         }
 
         // 📌 8. 최종 DTO 반환
-        RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(stats, allStats, runBadgeList, recentRunList);
+        RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(avgStats, allStats, runBadgeList, recentRunList);
         yearDTO.setYears(new ArrayList<>(yearData));
 
         return yearDTO;
@@ -337,13 +319,7 @@ public class RunRecordService {
         }
 
         // 📌 3. 누적 통계용 AvgStatsDTO 생성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-        int statsCount = runRecords.size();
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-        AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecords, totalDistanceMeters, totalDurationSeconds);
 
         // 📌 4. 배지 리스트 생성
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
@@ -361,7 +337,7 @@ public class RunRecordService {
         // 📌 6. 전체 주 수 계산 (월~일 단위로 포함)
         if (runRecords.isEmpty()) {
             TotalStatsDTO allStats = new TotalStatsDTO(0.0, 0, 0, 0);
-            return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList);
+            return new RunRecordResponse.AllDTO(avgStats, allStats, runBadgeList, recentRunList);
         }
 
         LocalDateTime start = runRecords.stream().map(RunRecord::getCreatedAt).min(Comparator.naturalOrder()).orElse(LocalDateTime.now());
@@ -370,15 +346,15 @@ public class RunRecordService {
         LocalDateTime adjustedEnd = end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
         long weeks = ChronoUnit.WEEKS.between(adjustedStart, adjustedEnd) + 1;
 
-        double avgCountData = statsCount > 0 ? (double) statsCount / weeks : 0;
+        double avgCountData = avgStats.getCountRecode() > 0 ? (double) avgStats.getCountRecode() / weeks : 0;
         double avgCount = Math.floor(avgCountData * 10) / 10.0;
-        Integer avgDistanceMeters = statsCount > 0 ? totalDistanceMeters / statsCount : 0;
-        Integer avgDurationSeconds = statsCount > 0 ? totalDurationSeconds / statsCount : 0;
+        Integer avgDistanceMeters = avgStats.getCountRecode() > 0 ? totalDistanceMeters / avgStats.getCountRecode() : 0;
+        Integer avgDurationSeconds = avgStats.getCountRecode() > 0 ? totalDurationSeconds / avgStats.getCountRecode() : 0;
         Integer statsAvgPace = RunRecordUtil.calculatePace(avgDistanceMeters, avgDurationSeconds);
 
         // 📌 7. 평균 통계 생성 + 최종 DTO 반환
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
-        return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList);
+        return new RunRecordResponse.AllDTO(avgStats, allStats, runBadgeList, recentRunList);
     }
 
     /**

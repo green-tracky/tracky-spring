@@ -123,7 +123,7 @@ public class RunRecordResponse {
 
     @Data
     public static class RecentOneDTO {
-        private LocalDateTime yearMonth; // 예: "2025-06"
+        private LocalDateTime yearMonth; // 예: "2025-06-01 00:00:00"
         private AvgStatsDTO avgStats;
         private List<RecentRunsDTO> recentRuns;
 
