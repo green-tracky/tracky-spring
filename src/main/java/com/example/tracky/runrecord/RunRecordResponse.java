@@ -1,9 +1,9 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky.runrecord.Enum.RunPlaceEnum;
-import com.example.tracky.runrecord.dto.AvgStatsDTO;
-import com.example.tracky.runrecord.dto.RecentRunsDTO;
-import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.dto1.AvgStatsDTO;
+import com.example.tracky.runrecord.dto1.RecentRunsDTO;
+import com.example.tracky.runrecord.dto1.TotalStatsDTO;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
