@@ -19,7 +19,8 @@ public class RunRecordController {
     private final RunRecordService runRecordService;
 
     @GetMapping("/activities/week")
-    public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "base-date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+    public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "base-date", required = false)
+                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
@@ -78,23 +79,20 @@ public class RunRecordController {
     }
 
     @GetMapping("/activities/recent")
-    public ResponseEntity<?> getActivitiesRecent(@RequestParam(value = "order", defaultValue = "latest") String order, @RequestParam(value = "year", required = false) Integer year) {
+    public ResponseEntity<?> getActivitiesRecent(@RequestParam(value = "order", defaultValue = "latest") String order,
+                                                 @RequestParam(value = "year", required = false) Integer year,
+                                                 @RequestParam(value = "page", defaultValue = "1") Integer page) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        // year가 null이면 현재 연도로 기본 설정
-        if (year == null) {
-            year = LocalDate.now().getYear();
-        }
-
         if ("latest".equals(order) || "oldest".equals(order)) {
-            RunRecordResponse.GroupedRecentListDTO grouped = runRecordService.getGroupedActivities(user, order, year);
+            RunRecordResponse.GroupedRecentListDTO grouped = runRecordService.getGroupedActivities(user, order, year, page);
             return Resp.ok(grouped);
         } else {
-            RunRecordResponse.FlatRecentListDTO flat = runRecordService.getFlatActivities(user, order, year);
+            RunRecordResponse.FlatRecentListDTO flat = runRecordService.getFlatActivities(user, order, year, page);
             return Resp.ok(flat);
         }
     }

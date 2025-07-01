@@ -371,31 +371,31 @@ public class RunRecordService {
      * @param year  기준 연도
      * @return GroupedRecentListDTO - 연도/월별 러닝 통계 + 상세 기록 리스트 포함 DTO
      */
-    public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(User user, String order, Integer year) {
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
+    public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(User user, String order, Integer year, Integer page) {
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdPage(user.getId(), page);
+        List<RunRecord> filteredAndSorted = new ArrayList<>();
+
         if (year != null) {
-            runRecords = runRecords.stream()
-                    .filter(runRecord -> runRecord.getCreatedAt().getYear() == year)
-                    .sorted((r1, r2) -> {
-                        if ("oldest".equals(order)) {
-                            return r1.getCreatedAt().compareTo(r2.getCreatedAt()); // 오름차순
-                        } else {
-                            return r2.getCreatedAt().compareTo(r1.getCreatedAt()); // 내림차순 (latest 또는 default)
-                        }
-                    })
-                    .collect(Collectors.toList());
+            for (RunRecord record : runRecords) {
+                if (record.getCreatedAt().getYear() == year) {
+                    filteredAndSorted.add(record);
+                }
+            }
         } else {
-            // year 필터가 없으면 정렬만 수행
-            runRecords = runRecords.stream()
-                    .sorted((r1, r2) -> {
-                        if ("oldest".equals(order)) {
-                            return r1.getCreatedAt().compareTo(r2.getCreatedAt());
-                        } else {
-                            return r2.getCreatedAt().compareTo(r1.getCreatedAt());
-                        }
-                    })
-                    .collect(Collectors.toList());
+            filteredAndSorted.addAll(runRecords);
         }
+
+        // 정렬
+        Comparator<RunRecord> comparator = (r1, r2) -> {
+            if ("oldest".equals(order)) {
+                return r1.getCreatedAt().compareTo(r2.getCreatedAt()); // 오름차순
+            } else {
+                return r2.getCreatedAt().compareTo(r1.getCreatedAt()); // 내림차순
+            }
+        };
+        filteredAndSorted.sort(comparator);
+
+        runRecords = filteredAndSorted;
 
         // 1. YearMonth 기준으로 그룹핑
         Comparator<YearMonth> ymComparator = "oldest".equals(order) ? Comparator.naturalOrder() : Comparator.reverseOrder();
@@ -457,14 +457,17 @@ public class RunRecordService {
      * @param year  기준 연도
      * @return FlatRecentListDTO - 정렬된 러닝 기록 리스트 포함 DTO
      */
-    public RunRecordResponse.FlatRecentListDTO getFlatActivities(User user, String order, Integer year) {
+    public RunRecordResponse.FlatRecentListDTO getFlatActivities(User user, String order, Integer year, Integer page) {
         List<RunRecord> runRecords;
         switch (order) {
-            case "distance-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceDesc(user.getId());
-            case "distance-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceAsc(user.getId());
-            case "pace-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceDesc(user.getId());
-            case "pace-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceAsc(user.getId());
-            default -> runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId()); // 기본: 최신순
+            case "distance-desc" ->
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceDesc(user.getId(), page);
+            case "distance-asc" ->
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceAsc(user.getId(), page);
+            case "pace-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceDesc(user.getId(), page);
+            case "pace-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceAsc(user.getId(), page);
+            default ->
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId(), page); // 기본: 최신순
         }
 
         if (year != null) {
