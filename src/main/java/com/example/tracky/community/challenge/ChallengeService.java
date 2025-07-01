@@ -31,8 +31,8 @@ public class ChallengeService {
 
         // 1. [재료 준비] 사용자가 참가한 챌린지 엔티티 목록 조회
         // ChallengeJoin 테이블을 통해, 현재 유저가 참가한 Challenge 엔티티들을 가져옵니다.
-        List<ChallengeJoin> myJoinsPS = challengeJoinRepository.findAllByUserIdJoin(userId);
-        List<Challenge> joinedChallengesPS = myJoinsPS.stream()
+        List<ChallengeJoin> challengeJoinsPS = challengeJoinRepository.findAllByUserIdJoin(userId);
+        List<Challenge> joinedChallengesPS = challengeJoinsPS.stream()
                 .map(challengeJoin -> challengeJoin.getChallenge())
                 .toList();
 
@@ -44,7 +44,7 @@ public class ChallengeService {
 
         // 3. [재료 준비] 챌린지별 누적 달리기 거리 계산 (Map)
         // 참가한 각 챌린지에 대해, 기간 내 누적 거리를 계산하여 Map에 저장합니다.
-        Map<Integer, Integer> achievedDistances = joinedChallengesPS.stream()
+        Map<Integer, Integer> totalDistancesMap = joinedChallengesPS.stream()
                 .collect(Collectors.toMap(
                         challenge -> challenge.getId(),
                         challenge -> runRecordRepository.findTotalDistanceByUserIdAndDateRange(
@@ -56,7 +56,7 @@ public class ChallengeService {
 
         // 4. [재료 준비] 챌린지별 참가자 수 계산 (Map)
         // 참여 가능한 각 챌린지에 대해, 참가자 수를 계산하여 Map에 저장합니다.
-        Map<Integer, Integer> participantCounts = unjoinedChallengesPS.stream()
+        Map<Integer, Integer> participantCountsMap = unjoinedChallengesPS.stream()
                 .collect(Collectors.toMap(
                         publicChallenge -> publicChallenge.getId(),
                         challenge -> challengeJoinRepository.countByChallengeId(challenge.getId())
@@ -67,8 +67,8 @@ public class ChallengeService {
         return new ChallengeResponse.MainDTO(
                 joinedChallengesPS,
                 unjoinedChallengesPS,
-                achievedDistances,
-                participantCounts
+                totalDistancesMap,
+                participantCountsMap
         );
     }
 }

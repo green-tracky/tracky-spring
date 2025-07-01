@@ -2,7 +2,7 @@ package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
 import com.example.tracky.runrecord.RunRecordRequest;
-import com.example.tracky.runrecord.enums.RunPlaceEnum;
+import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -270,7 +270,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
         reqDTO.setTitle("수정 확인");
         reqDTO.setMemo("수정 확인");
-        reqDTO.setPlace(RunPlaceEnum.TRACK);
+        reqDTO.setPlace(RunPlaceTypeEnum.TRACK);
         reqDTO.setIntensity(1);
 
         String requestBody = om.writeValueAsString(reqDTO);

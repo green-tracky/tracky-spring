@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
  * 각 Enum 상수는 데이터베이스에 저장될 한글 값을 필드로 가집니다.
  */
 @RequiredArgsConstructor
-public enum RunBadgeType {
+public enum RunBadgeTypeEnum {
 
     /**
      * '최고 기록' 뱃지 타입입니다.

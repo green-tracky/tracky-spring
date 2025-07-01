@@ -1,7 +1,7 @@
 package com.example.tracky.runrecord.runbadge;
 
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.runrecord.runbadge.enums.RunBadgeType;
+import com.example.tracky.runrecord.runbadge.enums.RunBadgeTypeEnum;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import lombok.Data;
 
@@ -32,13 +32,13 @@ public class RunBadgeResponse {
                             achv -> achv // value
                     ));
 
-            this.bests = buildCategorizedList(runBadges, achievedMap, RunBadgeType.RECORD);
-            this.monthly = buildCategorizedList(runBadges, achievedMap, RunBadgeType.MONTHLY_ACHIEVEMENT);
+            this.bests = buildCategorizedList(runBadges, achievedMap, RunBadgeTypeEnum.RECORD);
+            this.monthly = buildCategorizedList(runBadges, achievedMap, RunBadgeTypeEnum.MONTHLY_ACHIEVEMENT);
         }
 
         private List<DTO> buildCategorizedList(List<RunBadge> runBadges,
                                                Map<Integer, RunBadgeAchv> achievedMap,
-                                               RunBadgeType type) {
+                                               RunBadgeTypeEnum type) {
             return runBadges.stream()
                     .filter(badge -> badge.getType() == type)
                     .map(badge -> {
@@ -60,7 +60,7 @@ public class RunBadgeResponse {
         private String name; // 뱃지 이름
         private String description; // 뱃지 설명
         private String imageUrl; // 뱃지 이미지
-        private RunBadgeType type; // 뱃지 타입
+        private RunBadgeTypeEnum type; // 뱃지 타입
         private LocalDateTime achievedAt; // 뱃지 획득날짜 (획득 못했으면 null)
         private Integer runRecordDistance; // 러닝 기록의 거리 (획득 못했으면 null)
         private Integer runRecordSeconds; // 러닝 기록의 시간 (획득 못했으면 null)

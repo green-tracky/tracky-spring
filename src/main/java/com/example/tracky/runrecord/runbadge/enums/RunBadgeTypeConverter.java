@@ -15,24 +15,24 @@ import java.util.stream.Stream;
  * 이 컨버터가 자동으로 적용되어, 개발자가 매번 @Convert를 명시할 필요가 없습니다.
  */
 @Converter(autoApply = true)
-public class RunBadgeTypeConverter implements AttributeConverter<RunBadgeType, String> {
+public class RunBadgeTypeConverter implements AttributeConverter<RunBadgeTypeEnum, String> {
 
     /**
      * [Java Enum -> DB String]
      * Java 코드의 Enum 상수를 데이터베이스에 저장될 한글 문자열로 변환합니다.
      * 예: RunBadgeType.RECORD -> "최고 기록"
      *
-     * @param runBadgeType 엔티티에 저장된 RunBadgeType Enum 객체
+     * @param runBadgeTypeEnum 엔티티에 저장된 RunBadgeType Enum 객체
      * @return 데이터베이스에 저장될 한글 문자열
      */
     @Override
-    public String convertToDatabaseColumn(RunBadgeType runBadgeType) {
+    public String convertToDatabaseColumn(RunBadgeTypeEnum runBadgeTypeEnum) {
         // null 값이 들어올 경우를 대비한 방어 코드입니다.
-        if (runBadgeType == null) {
+        if (runBadgeTypeEnum == null) {
             return null;
         }
         // Enum이 가진 한글 값(value 필드)을 반환합니다.
-        return runBadgeType.getValue();
+        return runBadgeTypeEnum.getValue();
     }
 
     /**
@@ -44,14 +44,14 @@ public class RunBadgeTypeConverter implements AttributeConverter<RunBadgeType, S
      * @return 문자열에 해당하는 RunBadgeType Enum 객체
      */
     @Override
-    public RunBadgeType convertToEntityAttribute(String dbData) {
+    public RunBadgeTypeEnum convertToEntityAttribute(String dbData) {
         // null 값이 들어올 경우를 대비한 방어 코드입니다.
         if (dbData == null) {
             return null;
         }
 
         // Enum의 모든 상수를 스트림으로 변환하여 순회합니다.
-        return Stream.of(RunBadgeType.values())
+        return Stream.of(RunBadgeTypeEnum.values())
                 // 각 Enum 상수가 가진 한글 값(value)이 DB에서 읽어온 문자열(dbData)과 일치하는지 확인합니다.
                 .filter(c -> c.getValue().equals(dbData))
                 // 일치하는 첫 번째 Enum 상수를 찾습니다.

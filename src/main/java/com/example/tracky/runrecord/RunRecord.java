@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.enums.RunPlaceEnum;
+import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runsegment.RunSegment;
@@ -36,7 +36,7 @@ public class RunRecord {
     @ColumnDefault("0")
     @Max(value = 10, message = "러닝 강도는 10을 초과할 수 없습니다.")
     private Integer intensity; // 러닝 강도 (1~10). 기본값 0
-    private RunPlaceEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
+    private RunPlaceTypeEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -51,10 +51,10 @@ public class RunRecord {
     private List<RunBadgeAchv> runBadgeAchvs = new ArrayList<>(); // 자식 뱃지들
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Picture> pictures = new ArrayList<>(); // 자식 뱃지들
+    private List<Picture> pictures = new ArrayList<>(); // 자식 사진들
 
     @Builder
-    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceEnum place, User user) {
+    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceTypeEnum place, User user) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
