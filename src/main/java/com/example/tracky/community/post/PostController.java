@@ -2,11 +2,10 @@ package com.example.tracky.community.post;
 
 import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +25,14 @@ public class PostController {
 
         List<PostResponse.ListDTO> respDTOs = postService.getPosts(user);
         return Resp.ok(respDTOs);
+    }
+
+    @PostMapping("/community/post")
+    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest.SaveDTO reqDTO) {
+        Integer userId = 1;
+        User user = User.builder().id(userId).build();
+
+        PostResponse.DTO respDTO = postService.createPost(reqDTO, user);
+        return Resp.ok(respDTO);
     }
 }

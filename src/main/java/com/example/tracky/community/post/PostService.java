@@ -3,7 +3,10 @@ package com.example.tracky.community.post;
 import com.example.tracky.community.like.Like;
 import com.example.tracky.community.like.LikeRepository;
 import com.example.tracky.community.post.comment.CommentRepository;
+import com.example.tracky.runrecord.RunRecord;
+import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ public class PostService {
     private final LikeRepository likeRepository;
 
     private final CommentRepository commentRepository;
+
+    private final RunRecordRepository runRecordRepository;
 
     public List<PostResponse.ListDTO>
     getPosts(User user) {
@@ -40,4 +45,19 @@ public class PostService {
                 })
                 .toList();
     }
+
+    @Transactional
+    public PostResponse.DTO createPost(PostRequest.SaveDTO reqDTO, User user) {
+
+        RunRecord runRecord = null;
+        if (reqDTO.getRunRecordId() != null) {
+            runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
+                    .orElseThrow(() -> new RuntimeException("러닝 기록을 찾을 수 없습니다"));
+        }
+
+        Post post = reqDTO.toEntity(user, runRecord);
+        Post postPS = postRepository.save(post);
+        return new PostResponse.DTO(postPS);
+    }
+
 }

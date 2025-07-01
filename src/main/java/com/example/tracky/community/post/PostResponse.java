@@ -12,6 +12,24 @@ import java.util.List;
 public class PostResponse {
 
     @Data
+    public static class DTO {
+        private Integer id;
+        private String title;
+        private String content;
+        private Integer userId;
+        private String createdAt;
+
+        public DTO(Post post) {
+            this.id = post.getId();
+            this.title = post.getTitle();
+            this.content = post.getContent();
+            this.userId = post.getUser().getId();
+            this.createdAt = post.getCreatedAt().toString();
+        }
+    }
+
+
+    @Data
     public static class ListDTO {
         private final Integer id;
         private final String username;
@@ -39,7 +57,7 @@ public class PostResponse {
     }
 
     @Data
-    public static class DTO {
+    public static class DetailDTO {
 
         private final Integer id;
         private final String title;
@@ -50,7 +68,7 @@ public class PostResponse {
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
 
-        public DTO(Post post) {
+        public DetailDTO(Post post) {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
@@ -65,9 +83,9 @@ public class PostResponse {
             this.updatedAt = post.getUpdatedAt();
         }
 
-        public static List<DTO> toPostResponseDTOs(List<Post> posts) {
+        public static List<DetailDTO> toPostResponseDTOs(List<Post> posts) {
             return posts.stream()
-                    .map(post -> new DTO(post))
+                    .map(post -> new DetailDTO(post))
                     .toList();
         }
     }

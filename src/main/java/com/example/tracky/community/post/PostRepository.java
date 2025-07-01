@@ -21,4 +21,9 @@ public class PostRepository {
                 .getResultList();
     }
 
+    public Post save(Post post) {
+        em.persist(post);
+        return post;
+    }
+
 }
