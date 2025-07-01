@@ -7,6 +7,7 @@ import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvRepository;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvService;
 import com.example.tracky.user.User;
+import com.example.tracky.user.runlevel.RunLevelRepository;
 import com.example.tracky.user.runlevel.RunLevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -164,6 +165,9 @@ public class RunRecordService {
 
             sortedWeeksMap.put(baseYearMonth, sortedWeeks);
         }
+
+        // 8. 레벨
+        RunLevelRepository
 
         // 📌 8. 최종 DTO 반환
         RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList);

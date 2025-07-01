@@ -1,25 +1,23 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky.runrecord.DTO.AvgStatsDTO;
+import com.example.tracky.runrecord.DTO.RecentRunsDTO;
+import com.example.tracky.runrecord.DTO.TotalStatsDTO;
 import com.example.tracky.runrecord.Enum.RunPlaceEnum;
+import com.example.tracky.runrecord.picture.PictureResponse;
+import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
+import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
+import com.example.tracky.runrecord.utils.RunRecordUtil;
+import com.example.tracky.user.runlevel.RunLevel;
+import com.example.tracky.user.runlevel.RunLevelResponse;
+import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.example.tracky.runrecord.DTO.TotalStatsDTO;
-import com.example.tracky.runrecord.DTO.RecentRunsDTO;
-import com.example.tracky.runrecord.DTO.AvgStatsDTO;
-import com.example.tracky.runrecord.picture.PictureResponse;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
-import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
-import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
-import com.example.tracky.runrecord.utils.RunRecordUtil;
-import lombok.Data;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class RunRecordResponse {
 
@@ -38,11 +36,13 @@ public class RunRecordResponse {
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
         private Map<String, List<String>> weeks = new HashMap<>();
+        private List<RunLevelResponse.ListDTO.RunLevelDTO> runLevel;
 
-        public WeekDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public WeekDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevel runLevel) {
             this.avgStats = avgStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
         }
     }
 
@@ -62,11 +62,13 @@ public class RunRecordResponse {
         private List<RunBadgeResponse.DTO> badges;
         private List<Integer> years = new ArrayList<>();
         private Map<Integer, List<Integer>> mounts = new HashMap<>();
+        private RunLevel runLevel;
 
-        public MonthDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public MonthDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevel runLevel) {
             this.avgStats = avgStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
         }
     }
 
@@ -88,12 +90,14 @@ public class RunRecordResponse {
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
         private List<Integer> years = new ArrayList<>();
+        private RunLevel runLevel;
 
-        public YearDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public YearDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevel runLevel) {
             this.avgStats = avgStats;
             this.totalstats = totalstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
         }
     }
 
@@ -114,12 +118,14 @@ public class RunRecordResponse {
         private TotalStatsDTO totalstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private RunLevel runLevel;
 
-        public AllDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public AllDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevel runLevel) {
             this.avgStats = avgStats;
             this.totalstats = totalstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
         }
     }
 
