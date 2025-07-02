@@ -59,4 +59,10 @@ public class Post {
         this.title = title;
     }
 
+    public void update (String title, String content, RunRecord runRecord) {
+        this.title = title;
+        this.content = content;
+        this.runRecord = runRecord;
+    }
+
 }

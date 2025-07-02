@@ -1,6 +1,7 @@
 package com.example.tracky.community.post;
 
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.like.Like;
 import com.example.tracky.community.like.LikeRepository;
@@ -56,6 +57,23 @@ public class PostService {
         Post post = reqDTO.toEntity(user, runRecord);
         Post postPS = postRepository.save(post);
         return new PostResponse.SaveDTO(postPS);
+    }
+
+    @Transactional
+    public PostResponse.UpdateDTO update(PostRequest.UpdateDTO reqDTO, Integer id, User user) {
+        Post postPS = postRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        if (!postPS.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        RunRecord runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
+
+        postPS.update(reqDTO.getTitle(), reqDTO.getContent(), runRecord);
+
+        return new PostResponse.UpdateDTO(postPS);
     }
 
 }

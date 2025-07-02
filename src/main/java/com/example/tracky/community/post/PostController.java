@@ -5,6 +5,7 @@ import com.example.tracky.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,16 @@ public class PostController {
         User user = User.builder().id(userId).build();
 
         PostResponse.SaveDTO respDTO = postService.save(reqDTO, user);
+        return Resp.ok(respDTO);
+    }
+
+    @PutMapping("/community/posts/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody PostRequest.UpdateDTO reqDTO, Errors errors) {
+        Integer userId = 1;
+        User user = User.builder().id(userId).build();
+
+        PostResponse.UpdateDTO respDTO = postService.update(reqDTO, id, user);
+
         return Resp.ok(respDTO);
     }
 }

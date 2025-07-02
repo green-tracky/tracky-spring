@@ -91,4 +91,19 @@ public class PostResponse {
                     .toList();
         }
     }
+
+    @Data
+    public static class UpdateDTO {
+        private String title;
+        private String content;
+        private String updatedAt;
+        private Integer runRecordId;
+
+        public UpdateDTO(Post post) {
+            this.title = post.getTitle();
+            this.content = post.getContent();
+            this.updatedAt = post.getUpdatedAt().toString();
+            this.runRecordId = post.getRunRecord().getId();
+        }
+    }
 }
