@@ -6,12 +6,10 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "run_badge_achv_tb")
 @Entity
@@ -38,5 +36,8 @@ public class RunBadgeAchv {
         this.runRecord = runRecord;
         this.user = user;
         this.runBadge = runBadge;
+    }
+
+    protected RunBadgeAchv() {
     }
 }

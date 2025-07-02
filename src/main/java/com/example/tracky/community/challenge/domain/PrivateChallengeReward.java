@@ -3,7 +3,6 @@ package com.example.tracky.community.challenge.domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * [핵심] PrivateChallenge와 RewardMaster의 다대다 관계를 해결하기 위한 연결 엔티티입니다.
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(name = "private_challenge_reward_tb")
 public class PrivateChallengeReward {
 
@@ -30,5 +28,8 @@ public class PrivateChallengeReward {
         this.id = id;
         this.privateChallenge = privateChallenge;
         this.rewardMaster = rewardMaster;
+    }
+
+    protected PrivateChallengeReward() {
     }
 }
