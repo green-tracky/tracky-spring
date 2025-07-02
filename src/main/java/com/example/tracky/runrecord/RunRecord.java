@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.enums.RunPlaceEnum;
+import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runsegment.RunSegment;
@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "run_record_tb")
 @Entity
@@ -36,7 +34,7 @@ public class RunRecord {
     @ColumnDefault("0")
     @Max(value = 10, message = "러닝 강도는 10을 초과할 수 없습니다.")
     private Integer intensity; // 러닝 강도 (1~10). 기본값 0
-    private RunPlaceEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
+    private RunPlaceTypeEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -54,7 +52,7 @@ public class RunRecord {
     private List<Picture> pictures = new ArrayList<>(); // 자식 사진들
 
     @Builder
-    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceEnum place, User user) {
+    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceTypeEnum place, User user) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
@@ -66,6 +64,10 @@ public class RunRecord {
         this.intensity = intensity;
         this.place = place;
         this.user = user;
+    }
+
+    // 기본생성자 사용금지
+    protected RunRecord() {
     }
 
     /**

@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
 public class RunRecordController {
-
+ 
     private final RunRecordService runRecordService;
 
     @GetMapping("/activities/week")

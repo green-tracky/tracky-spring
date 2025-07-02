@@ -1,6 +1,6 @@
 package com.example.tracky.user.enums;
 
-import com.example.tracky._core.error.Enum.ErrorCodeEnum;
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -19,8 +19,8 @@ public enum GenderEnum {
      * DB에서 읽어온 값(String)으로 적절한 Enum 상수(Gender)를 찾습니다.
      *
      * @param value DB의 "남" 또는 "여"
-     * @return Gender.MALE 또는 Gender.FEMALE
-     * @JsonCreator JSON의 특정 값(여기서는 "도로" 같은 문자열)으로 Java 객체(여기서는 RunPlaceEnum)를 만드는 방법을 Jackson(Spring의 기본 JSON 라이브러리)에게 알려줄 수 있습니다.
+     * @return GenderEnum.MALE 또는 GenderEnum.FEMALE
+     * @JsonCreator JSON의 특정 값(여기서는 "도로" 같은 문자열)으로 Java 객체(여기서는 GenderEnum)를 만드는 방법을 Jackson(Spring의 기본 JSON 라이브러리)에게 알려줄 수 있습니다.
      */
     @JsonCreator
     public static GenderEnum fromString(String value) {

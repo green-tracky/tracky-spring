@@ -10,25 +10,25 @@ import jakarta.persistence.Converter;
  * 모든 RunPlace 타입 필드에 자동으로 이 컨버터가 적용됩니다.
  */
 @Converter(autoApply = true)
-public class RunPlaceConverter implements AttributeConverter<RunPlaceEnum, String> {
+public class RunPlaceTypeConverter implements AttributeConverter<RunPlaceTypeEnum, String> {
 
     // Enum -> DB (String)
     // 애플리케이션의 RunPlace.ROAD을 DB의 "도로"으로 변환
     @Override
-    public String convertToDatabaseColumn(RunPlaceEnum runPlaceEnum) {
-        if (runPlaceEnum == null) {
+    public String convertToDatabaseColumn(RunPlaceTypeEnum runPlaceTypeEnum) {
+        if (runPlaceTypeEnum == null) {
             return null;
         }
-        return runPlaceEnum.getValue();
+        return runPlaceTypeEnum.getValue();
     }
 
     // DB (String) -> Enum
     // DB의 "도로"을 애플리케이션의 RunPlace.ROAD로 변환
     @Override
-    public RunPlaceEnum convertToEntityAttribute(String value) {
+    public RunPlaceTypeEnum convertToEntityAttribute(String value) {
         if (value == null) {
             return null;
         }
-        return RunPlaceEnum.fromString(value);
+        return RunPlaceTypeEnum.fromString(value);
     }
 }

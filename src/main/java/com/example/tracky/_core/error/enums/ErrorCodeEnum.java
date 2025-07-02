@@ -1,4 +1,4 @@
-package com.example.tracky._core.error.Enum;
+package com.example.tracky._core.error.enums;
 
 /**
  * API 전반에서 사용하는 공통 에러 코드와 메시지를 정의한 Enum 클래스입니다.
@@ -10,12 +10,17 @@ package com.example.tracky._core.error.Enum;
 public enum ErrorCodeEnum {
 
     /**
-     * 400 Bad Request - 유효하지 않은 성별 값입니다.
+     * 400 Bad Request - 유효하지 않은 리워드 값입니다.
+     */
+    INVALID_REWARD_TYPE(400, "유효하지 않은 리워드 값입니다"),
+
+    /**
+     * 400 Bad Request - 유효하지 않은 장소 값입니다.
      */
     INVALID_RUN_PLACE_TYPE(400, "유효하지 않은 장소 값입니다"),
 
     /**
-     * 400 Bad Request - 유효하지 않은 성별 값입니다.
+     * 400 Bad Request - 유효하지 않은 유저 타입 값입니다.
      */
     INVALID_USER_TYPE(400, "유효하지 않은 유저 타입 값입니다"),
 
@@ -23,6 +28,11 @@ public enum ErrorCodeEnum {
      * 400 Bad Request - 유효하지 않은 성별 값입니다.
      */
     INVALID_GENDER(400, "유효하지 않은 성별 값입니다"),
+
+    /**
+     * 400 Bad Request - 유효하지 않은 챌린지 타입 값입니다.
+     */
+    INVALID_CHALLENGE_TYPE(400, "유효하지 않은 챌린지 타입 값입니다"),
 
     /**
      * 400 Bad Request - 이미 종료된 챌린지입니다.
