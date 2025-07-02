@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
@@ -24,6 +25,7 @@ public class ChallengeJoinController {
         ChallengeJoinResponse.DTO respDTO = challengeJoinService.save(id, user);
         return Resp.ok(respDTO);
     }
+
 
     @DeleteMapping("/community/challenges/{id}/joins")
     public ResponseEntity<?> delete(@PathVariable Integer id) {

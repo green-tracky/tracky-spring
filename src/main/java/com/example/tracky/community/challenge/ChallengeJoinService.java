@@ -53,4 +53,5 @@ public class ChallengeJoinService {
         // 삭제
         challengeJoinRepository.delete(challengeJoinPS);
     }
+
 }
