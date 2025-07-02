@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -106,5 +107,33 @@ public class ChallengeJoinRepository {
     public ChallengeJoin save(ChallengeJoin challengeJoin) {
         em.persist(challengeJoin);
         return challengeJoin;
+    }
+
+    /**
+     * 나의 챌린지 참여 조회
+     *
+     * @param challengeId
+     * @param userId
+     * @return
+     */
+    public Optional<ChallengeJoin> findByChallengeIdAndUserId(Integer challengeId, Integer userId) {
+        Query query = em.createQuery("select cj from ChallengeJoin cj where cj.user.id = :userId and cj.challenge.id = :challengeId", ChallengeJoin.class);
+        query.setParameter("userId", userId);
+        query.setParameter("challengeId", challengeId);
+
+        try {
+            return Optional.of((ChallengeJoin) query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
+    }
+
+    /**
+     * 챌린지 참여 삭제
+     *
+     * @param challengeJoinPS
+     */
+    public void delete(ChallengeJoin challengeJoinPS) {
+        em.remove(challengeJoinPS);
     }
 }
