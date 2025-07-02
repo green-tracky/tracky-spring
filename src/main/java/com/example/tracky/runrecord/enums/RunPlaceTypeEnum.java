@@ -1,6 +1,6 @@
-package com.example.tracky.runrecord.Enum;
+package com.example.tracky.runrecord.enums;
 
-import com.example.tracky._core.error.Enum.ErrorCodeEnum;
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public enum RunPlaceEnum {
+public enum RunPlaceTypeEnum {
 
     ROAD("도로"),
     TRACK("트랙"),
@@ -25,11 +25,11 @@ public enum RunPlaceEnum {
      * @JsonCreator JSON의 특정 값(여기서는 "도로" 같은 문자열)으로 Java 객체(여기서는 RunPlaceEnum)를 만드는 방법을 Jackson(Spring의 기본 JSON 라이브러리)에게 알려줄 수 있습니다.
      */
     @JsonCreator
-    public static RunPlaceEnum fromString(String value) {
+    public static RunPlaceTypeEnum fromString(String value) {
         if (value == null || value.isEmpty()) {
             return null;
         }
-        return Stream.of(RunPlaceEnum.values())
+        return Stream.of(RunPlaceTypeEnum.values())
                 .filter(runPlaceEnum -> runPlaceEnum.getValue().equals(value))
                 .findFirst()
                 .orElseThrow(() -> new ExceptionApi400(ErrorCodeEnum.INVALID_RUN_PLACE_TYPE));

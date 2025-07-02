@@ -78,7 +78,7 @@ public class RunBadgeAchvRepository {
      * @param yearMonth  검사할 연월
      * @return 해당 연월에 획득 내역이 존재하면 true, 아니면 false
      */
-    public boolean existsByUserIdAndRunBadgeIdAndYearMonth(Integer userId, Integer runBadgeId, YearMonth yearMonth) {
+    public Boolean existsByUserIdAndRunBadgeIdAndYearMonth(Integer userId, Integer runBadgeId, YearMonth yearMonth) {
         Long count = em.createQuery("select count (rba) from RunBadgeAchv rba where rba.user.id = :userId and rba.runBadge.id = :runBadgeId and function('YEAR', rba.achievedAt) = :year and function('MONTH', rba.achievedAt) = :month", Long.class)
                 .setParameter("userId", userId)
                 .setParameter("runBadgeId", runBadgeId)

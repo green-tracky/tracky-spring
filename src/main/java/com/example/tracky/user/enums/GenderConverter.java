@@ -1,4 +1,4 @@
-package com.example.tracky.user.Enum;
+package com.example.tracky.user.enums;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -13,7 +13,7 @@ import jakarta.persistence.Converter;
 public class GenderConverter implements AttributeConverter<GenderEnum, String> {
 
     // Enum -> DB (String)
-    // 애플리케이션의 Gender.MALE을 DB의 "남"으로 변환
+    // 애플리케이션의 GenderEnum.MALE을 DB의 "남"으로 변환
     @Override
     public String convertToDatabaseColumn(GenderEnum genderEnum) {
         if (genderEnum == null) {
@@ -23,7 +23,7 @@ public class GenderConverter implements AttributeConverter<GenderEnum, String> {
     }
 
     // DB (String) -> Enum
-    // DB의 "남"을 애플리케이션의 Gender.MALE로 변환
+    // DB의 "남"을 애플리케이션의 GenderEnum.MALE로 변환
     @Override
     public GenderEnum convertToEntityAttribute(String value) {
         if (value == null) {

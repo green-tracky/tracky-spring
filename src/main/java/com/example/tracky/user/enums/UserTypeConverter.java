@@ -1,4 +1,4 @@
-package com.example.tracky.user.Enum;
+package com.example.tracky.user.enums;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -13,7 +13,7 @@ import jakarta.persistence.Converter;
 public class UserTypeConverter implements AttributeConverter<UserTypeEnum, String> {
 
     // Enum -> DB (String)
-    // 애플리케이션의 Type.GENERAL을 DB의 "일반"으로 변환
+    // 애플리케이션의 UserTypeEnum.GENERAL을 DB의 "일반"으로 변환
     @Override
     public String convertToDatabaseColumn(UserTypeEnum userTypeEnum) {
         if (userTypeEnum == null) {
@@ -23,7 +23,7 @@ public class UserTypeConverter implements AttributeConverter<UserTypeEnum, Strin
     }
 
     // DB (String) -> Enum
-    // DB의 "일반"을 애플리케이션의 Type.GENERAL로 변환
+    // DB의 "일반"을 애플리케이션의 UserTypeEnum.GENERAL로 변환
     @Override
     public UserTypeEnum convertToEntityAttribute(String value) {
         if (value == null) {
