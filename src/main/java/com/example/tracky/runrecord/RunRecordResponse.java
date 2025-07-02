@@ -1,6 +1,7 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky.runrecord.dto.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.PageDTO;
 import com.example.tracky.runrecord.dto.RecentRunsDTO;
 import com.example.tracky.runrecord.dto.TotalStatsDTO;
 import com.example.tracky.runrecord.enums.RunPlaceEnum;
@@ -112,10 +113,12 @@ public class RunRecordResponse {
      */
     @Data
     public static class GroupedRecentListDTO {
-        private List<RecentOneDTO> GroupedrecentList;
+        private List<RecentOneDTO> groupedrecentList;
+        private PageDTO page;
 
-        public GroupedRecentListDTO(List<RecentOneDTO> GroupedrecentList) {
-            this.GroupedrecentList = GroupedrecentList;
+        public GroupedRecentListDTO(List<RecentOneDTO> groupedrecentList, PageDTO page) {
+            this.groupedrecentList = groupedrecentList;
+            this.page = page;
         }
     }
 
@@ -125,9 +128,11 @@ public class RunRecordResponse {
     @Data
     public static class FlatRecentListDTO {
         private List<RecentRunsDTO> recentList;
+        private PageDTO page;
 
-        public FlatRecentListDTO(List<RecentRunsDTO> recentList) {
+        public FlatRecentListDTO(List<RecentRunsDTO> recentList, PageDTO page) {
             this.recentList = recentList;
+            this.page = page;
         }
     }
 

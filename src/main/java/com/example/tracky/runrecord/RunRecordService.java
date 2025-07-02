@@ -4,6 +4,7 @@ import com.example.tracky._core.error.Enum.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.runrecord.dto.AvgStatsDTO;
+import com.example.tracky.runrecord.dto.PageDTO;
 import com.example.tracky.runrecord.dto.RecentRunsDTO;
 import com.example.tracky.runrecord.dto.TotalStatsDTO;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
@@ -372,7 +373,7 @@ public class RunRecordService {
      * @return GroupedRecentListDTO - 연도/월별 러닝 통계 + 상세 기록 리스트 포함 DTO
      */
     public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(User user, String order, Integer year, Integer page) {
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserIdPage(user.getId(), page);
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
         List<RunRecord> filteredAndSorted = new ArrayList<>();
 
         if (year != null) {
@@ -407,40 +408,53 @@ public class RunRecordService {
             groupedByMonth.computeIfAbsent(ym, k -> new ArrayList<>()).add(record);
         }
 
-        // 2. groupRecentList 만들기
+        // ✅ 2. Entry 리스트로 변환 및 페이징 처리
+        List<Map.Entry<YearMonth, List<RunRecord>>> groupedEntries = new ArrayList<>(groupedByMonth.entrySet());
+        int totalCount = groupedEntries.size();
+        int size = 3;
+        int currentPage = Math.max(1, page);
+        int fromIndex = (currentPage - 1) * size;
+        int toIndex = Math.min(fromIndex + size, totalCount);
         List<RunRecordResponse.RecentOneDTO> groupRecentList = new ArrayList<>();
 
-        for (Map.Entry<YearMonth, List<RunRecord>> entry : groupedByMonth.entrySet()) {
-            YearMonth ym = entry.getKey();
+        for (int i = fromIndex; i < toIndex; i++) {
+            Map.Entry<YearMonth, List<RunRecord>> entry = groupedEntries.get(i);
             List<RunRecord> records = entry.getValue();
 
             // 거리, 시간 합산
-            int totalDistance = records.stream().mapToInt(r -> r.getTotalDistanceMeters()).sum();
-            int totalDuration = records.stream().mapToInt(r -> r.getTotalDurationSeconds()).sum();
+            int totalDistance = 0;
+            int totalDuration = 0;
+            for (RunRecord r : records) {
+                totalDistance += r.getTotalDistanceMeters();
+                totalDuration += r.getTotalDurationSeconds();
+            }
             int count = records.size();
             int avgPace = RunRecordUtil.calculatePace(totalDistance, totalDuration);
 
-            // AvgStatsDTO 생성
+            // AvgStatsDTO 생성용 dummy RunRecord
             RunRecord dummy = RunRecord.builder()
                     .totalDistanceMeters(totalDistance)
                     .totalDurationSeconds(totalDuration)
                     .build();
             AvgStatsDTO avgStats = new AvgStatsDTO(dummy, count, avgPace);
 
-            // RecentRunsDTO 리스트로 변환 (람다식 사용)
-            List<RecentRunsDTO> recents = records.stream()
-                    .map(r -> new RecentRunsDTO(r))
-                    .toList();
+            // RecentRunsDTO 리스트
+            List<RecentRunsDTO> recents = new ArrayList<>();
+            for (RunRecord r : records) {
+                recents.add(new RecentRunsDTO(r));
+            }
 
-            // 기준일을 recentRuns 첫 번째의 createdAt 으로
+            // 기준일을 첫 기록의 createdAt 기준으로 설정
             LocalDateTime baseDateTime = recents.get(0).getCreatedAt();
             LocalDateTime dateTime = YearMonth.from(baseDateTime).atDay(1).atStartOfDay();
 
-            // 최종 DTO에 추가
             groupRecentList.add(new RunRecordResponse.RecentOneDTO(dateTime, avgStats, recents));
         }
 
-        return new RunRecordResponse.GroupedRecentListDTO(groupRecentList);
+        PageDTO pageing = new PageDTO(totalCount, currentPage);
+
+
+        return new RunRecordResponse.GroupedRecentListDTO(groupRecentList, pageing);
     }
 
     /**
@@ -480,7 +494,12 @@ public class RunRecordService {
                 .map(r -> new RecentRunsDTO(r))
                 .toList();
 
-        return new RunRecordResponse.FlatRecentListDTO(recentRuns);
+        // 3. paging
+        Long totalcount = runRecordRepository.totalCount(user.getId());
+
+        PageDTO pageing = new PageDTO(totalcount.intValue(), page);
+
+        return new RunRecordResponse.FlatRecentListDTO(recentRuns, pageing);
     }
 
 

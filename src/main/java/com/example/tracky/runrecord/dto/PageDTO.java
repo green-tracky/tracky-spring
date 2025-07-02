@@ -2,23 +2,21 @@ package com.example.tracky.runrecord.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
+@Data
 public class PageDTO {
-    @Data
-    public class PagedRecentRunsDTO {
-        private List<RecentRunsDTO> content; // 현재 페이지의 러닝 기록 리스트
-        private int page;                    // 현재 페이지 번호 (1부터 시작)
-        private int size;                    // 페이지 당 개수
-        private long totalElements;         // 전체 러닝 기록 수
-        private int totalPages;             // 전체 페이지 수
+    private Integer size;
+    private Integer totalCount;
+    private Integer totalPage;
+    private Integer current;
+    private Boolean isFirst;
+    private Boolean isLast;
 
-        public PagedRecentRunsDTO(List<RecentRunsDTO> content, int page, int size, long totalElements, int totalPages) {
-            this.content = content;
-            this.page = page;
-            this.size = size;
-            this.totalElements = totalElements;
-            this.totalPages = totalPages;
-        }
+    public PageDTO(Integer totalCount, Integer current) {
+        this.size = 3;
+        this.totalCount = totalCount;
+        this.totalPage = (int) Math.ceil((double) totalCount / size);
+        this.current = (current != null && current > 0) ? current : 1;
+        this.isFirst = current == 1;
+        this.isLast = current >= totalPage;
     }
 }

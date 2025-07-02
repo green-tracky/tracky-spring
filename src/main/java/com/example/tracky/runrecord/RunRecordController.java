@@ -88,6 +88,11 @@ public class RunRecordController {
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
+        // page 값 0으로 들어오면 1로 바꿔주기
+        if (page == null || page < 1) {
+            page = 1;
+        }
+
         if ("latest".equals(order) || "oldest".equals(order)) {
             RunRecordResponse.GroupedRecentListDTO grouped = runRecordService.getGroupedActivities(user, order, year, page);
             return Resp.ok(grouped);
