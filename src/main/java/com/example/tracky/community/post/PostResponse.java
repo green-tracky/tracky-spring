@@ -12,19 +12,21 @@ import java.util.List;
 public class PostResponse {
 
     @Data
-    public static class DTO {
+    public static class SaveDTO {
         private Integer id;
         private String title;
         private String content;
         private Integer userId;
         private String createdAt;
+        private Integer runRecordId;
 
-        public DTO(Post post) {
+        public SaveDTO(Post post) {
             this.id = post.getId();
             this.title = post.getTitle();
             this.content = post.getContent();
             this.userId = post.getUser().getId();
             this.createdAt = post.getCreatedAt().toString();
+            this.runRecordId = post.getRunRecord().getId();
         }
     }
 
