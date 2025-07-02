@@ -64,9 +64,12 @@ public class RunRecordService {
      * @param baseDate 기준 날짜
      * @return WeekDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
      */
-    public RunRecordResponse.WeekDTO getActivitiesWeek(LocalDate baseDate, User user) {
+    public RunRecordResponse.WeekDTO getActivitiesWeek(LocalDate baseDate, User user, Integer before) {
+        // before 만큼 주를 뒤로 이동
+        LocalDate targetDate = baseDate.minusWeeks(before);
+
         // 📌 1. 기준 주(월~일)의 시작/끝 날짜 계산
-        LocalDate start = baseDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = start.plusDays(6);
         LocalDateTime startTime = start.atStartOfDay();
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
@@ -137,6 +140,9 @@ public class RunRecordService {
                         // 오늘 날짜 기준으로 이번주/저번주 구하기
                         LocalDate today = LocalDate.now();
 
+                        // 테스트용
+//                        LocalDate today = LocalDate.of(2025, 03, 31);
+
                         LocalDate thisWeekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
                         LocalDate lastWeekStart = thisWeekStart.minusWeeks(1);
 
@@ -144,7 +150,7 @@ public class RunRecordService {
                         String[] startParts = label.split("~")[0].split("\\.");
                         int month = Integer.parseInt(startParts[0]);
                         int day = Integer.parseInt(startParts[1]);
-                        LocalDate weekStart = LocalDate.of(baseDate.getYear(), month, day);
+                        LocalDate weekStart = LocalDate.of(today.getYear(), month, day);
 
                         if (weekStart.equals(thisWeekStart)) {
                             return "이번주";

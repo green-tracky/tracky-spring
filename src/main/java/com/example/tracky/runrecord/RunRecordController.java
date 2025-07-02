@@ -6,13 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
@@ -25,15 +18,24 @@ public class RunRecordController {
     private final RunRecordService runRecordService;
 
     @GetMapping("/activities/week")
-    public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "base-date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+    public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "before", defaultValue = "0") Integer before) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
-        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(baseDate, user);
+        // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
+        if (before == null || before < 0 || before > 4) {
+            before = 0;
+        }
+
+        // 테스트
+//        LocalDate baseDate = LocalDate.of(2025, 3, 31);
+
+        //배포시 사용
+        LocalDate baseDate = LocalDate.now();
+        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(baseDate, user, before);
         return Resp.ok(respDTO);
     }
 
