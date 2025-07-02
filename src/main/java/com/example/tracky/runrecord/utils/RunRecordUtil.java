@@ -2,11 +2,13 @@ package com.example.tracky.runrecord.utils;
 
 import com.example.tracky.runrecord.runsegment.RunSegment;
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 public class RunRecordUtil {
     /**
      * 미터(m) 단위의 거리와 초(s) 단위의 시간을 입력받아

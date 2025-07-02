@@ -18,7 +18,7 @@ public class UserRepositoryTest {
         Integer id = 1;
 
         // when
-        User userPS = userRepository.findById(id).orElseThrow();
+        User userPS = userRepository.findByIdJoin(id).orElseThrow();
 
         // eye
         log.debug("✅유저아이디: " + userPS.getId());

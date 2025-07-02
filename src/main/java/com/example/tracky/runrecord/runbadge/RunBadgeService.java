@@ -15,12 +15,13 @@ public class RunBadgeService {
     private final RunBadgeRepository runBadgeRepository;
     private final RunBadgeAchvRepository runBadgeAchvRepository;
 
-    public RunBadgeResponse.ListDTO getRunBadges(User user) {
-        // 조회
+    public RunBadgeResponse.GroupedBadgeListDTO getRunBadges(User user) {
+        // 1. 조회
         List<RunBadge> runBadgesPS = runBadgeRepository.findAll();
         List<RunBadgeAchv> runBadgeAchvsPS = runBadgeAchvRepository.findByUserIdJoin(user.getId());
 
-        return new RunBadgeResponse.ListDTO(runBadgesPS, runBadgeAchvsPS);
+        // 2. 응답 DTO 로 변환
+        return new RunBadgeResponse.GroupedBadgeListDTO(runBadgesPS, runBadgeAchvsPS);
     }
 
 }

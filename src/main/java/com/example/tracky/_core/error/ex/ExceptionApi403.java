@@ -1,6 +1,6 @@
 package com.example.tracky._core.error.ex;
 
-import com.example.tracky._core.error.Enum.ErrorCodeEnum;
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
 
 public class ExceptionApi403 extends RuntimeException {
     /**

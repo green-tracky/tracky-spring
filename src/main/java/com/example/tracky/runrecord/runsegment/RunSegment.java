@@ -5,14 +5,12 @@ import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "run_segment_tb")
 @Entity
@@ -42,5 +40,9 @@ public class RunSegment {
         this.endDate = endDate;
         this.pace = pace;
         this.runRecord = runRecord;
+    }
+
+    // 기본생성자 사용금지
+    protected RunSegment() {
     }
 }
