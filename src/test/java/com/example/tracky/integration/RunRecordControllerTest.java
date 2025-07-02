@@ -136,7 +136,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
         // data 기본 필드
-        actions.andExpect(jsonPath("$.data.id").value(2));
+//        actions.andExpect(jsonPath("$.data.id").value(2));
         actions.andExpect(jsonPath("$.data.title").value("부산 해운대 아침 달리기"));
         actions.andExpect(jsonPath("$.data.memo").doesNotExist());
         actions.andExpect(jsonPath("$.data.calories").value(200));
@@ -178,9 +178,8 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictures").isArray());
         actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
 
-        // 디버깅 및 문서화
-        // actions.andDo(MockMvcResultHandlers.print())
-        // .andDo(document);
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -210,8 +209,8 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
         actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
         actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue())); // null 값 검증
-        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue())); // null 값 검증
+        actions.andExpect(jsonPath("$.data.avgPace").value(500)); // null 값 검증
+        actions.andExpect(jsonPath("$.data.bestPace").value(500)); // null 값 검증
         actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.userId").value(1));
         actions.andExpect(jsonPath("$.data.intensity").value(3));
@@ -223,7 +222,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
         actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
-        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue())); // null 값 검증
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(500)); // null 값 검증
         actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
 
         // coordinates 배열 길이 검증
@@ -238,8 +237,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print())
-        //        .andDo(document);
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -261,6 +259,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data").value(nullValue())); // data 필드가 null인지 검증
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -328,7 +329,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 }

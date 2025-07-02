@@ -6,14 +6,24 @@
 -- =================================================================================
 
 -- 1. 전체 러닝 기록 (부모)
-INSERT INTO run_record_tb (title, total_distance_meters, total_duration_seconds, calories, memo, intensity, place,
-                           created_at, user_id)
-VALUES ('부산 서면역 15번 출구 100m 러닝', 100, 50, 10, '서면역 15번 출구에서 NC백화점 방향으로 100m 직선 러닝', 3, '도로', '2025-06-24 09:00:50',
+INSERT INTO run_record_tb
+(title, total_distance_meters, total_duration_seconds, calories, memo, avg_pace, best_pace, intensity, place,
+ created_at, user_id)
+VALUES ('부산 서면역 15번 출구 100m 러닝',
+        100,
+        50,
+        10,
+        '서면역 15번 출구에서 NC백화점 방향으로 100m 직선 러닝',
+        500, -- avg_pace: 1km당 500초라고 가정
+        450, -- best_pace: 1km당 450초라고 가정
+        3,
+        '도로',
+        '2025-06-24 09:00:50',
         1);
 
--- 2. 러닝 구간 (자식) - 여기서는 전체 러닝을 하나의 구간으로 처리
-INSERT INTO run_segment_tb (distance_meters, duration_seconds, start_date, end_date, run_record_id)
-VALUES (100, 50, '2025-06-24 09:00:00', '2025-06-24 09:00:50', 1);
+INSERT INTO run_segment_tb
+(distance_meters, duration_seconds, start_date, end_date, pace, run_record_id)
+VALUES (100, 50, '2025-06-24 09:00:00', '2025-06-24 09:00:50', 500, 1);
 
 -- 3. 러닝 좌표 (손자) - 2초 간격으로 생성된 26개의 좌표
 INSERT INTO run_coordinate_tb (lat, lon, created_at, run_segment_id)
