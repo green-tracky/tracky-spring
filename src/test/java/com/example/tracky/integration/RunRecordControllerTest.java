@@ -331,4 +331,334 @@ public class RunRecordControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    public void getActivitiesWeek_test() throws Exception {
+        // given
+        Integer id = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/activities/week", id)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 기본 필드
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.title").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.memo").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.calories").value(10));
+        actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.intensity").value(1));
+        actions.andExpect(jsonPath("$.data.place").value("트랙"));
+
+        // segments 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
+
+        // coordinates 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        // pictures 빈 배열 확인
+        actions.andExpect(jsonPath("$.data.pictures").isArray());
+        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void getActivitiesMonth_test() throws Exception {
+        // given
+        Integer id = 1;
+        RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
+        reqDTO.setTitle("수정 확인");
+        reqDTO.setMemo("수정 확인");
+        reqDTO.setPlace(RunPlaceTypeEnum.TRACK);
+        reqDTO.setIntensity(1);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/runs/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 기본 필드
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.title").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.memo").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.calories").value(10));
+        actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.intensity").value(1));
+        actions.andExpect(jsonPath("$.data.place").value("트랙"));
+
+        // segments 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
+
+        // coordinates 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        // pictures 빈 배열 확인
+        actions.andExpect(jsonPath("$.data.pictures").isArray());
+        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void getActivitiesYear_test() throws Exception {
+        // given
+        Integer id = 1;
+        RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
+        reqDTO.setTitle("수정 확인");
+        reqDTO.setMemo("수정 확인");
+        reqDTO.setPlace(RunPlaceTypeEnum.TRACK);
+        reqDTO.setIntensity(1);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/runs/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 기본 필드
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.title").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.memo").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.calories").value(10));
+        actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.intensity").value(1));
+        actions.andExpect(jsonPath("$.data.place").value("트랙"));
+
+        // segments 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
+
+        // coordinates 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        // pictures 빈 배열 확인
+        actions.andExpect(jsonPath("$.data.pictures").isArray());
+        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void getActivitiesAll_test() throws Exception {
+        // given
+        Integer id = 1;
+        RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
+        reqDTO.setTitle("수정 확인");
+        reqDTO.setMemo("수정 확인");
+        reqDTO.setPlace(RunPlaceTypeEnum.TRACK);
+        reqDTO.setIntensity(1);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/runs/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 기본 필드
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.title").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.memo").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.calories").value(10));
+        actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.intensity").value(1));
+        actions.andExpect(jsonPath("$.data.place").value("트랙"));
+
+        // segments 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
+
+        // coordinates 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        // pictures 빈 배열 확인
+        actions.andExpect(jsonPath("$.data.pictures").isArray());
+        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void getActivitiesRecent_test() throws Exception {
+        // given
+        Integer id = 1;
+        RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
+        reqDTO.setTitle("수정 확인");
+        reqDTO.setMemo("수정 확인");
+        reqDTO.setPlace(RunPlaceTypeEnum.TRACK);
+        reqDTO.setIntensity(1);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/runs/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 기본 필드
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.title").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.memo").value("수정 확인"));
+        actions.andExpect(jsonPath("$.data.calories").value(10));
+        actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.intensity").value(1));
+        actions.andExpect(jsonPath("$.data.place").value("트랙"));
+
+        // segments 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
+
+        // coordinates 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        // pictures 빈 배열 확인
+        actions.andExpect(jsonPath("$.data.pictures").isArray());
+        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print());
+    }
+
 }

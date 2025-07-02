@@ -1,12 +1,10 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky._core.constant.Constant;
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky.runrecord.dto.AvgStatsDTO;
-import com.example.tracky.runrecord.dto.RecentRunsDTO;
-import com.example.tracky.runrecord.dto.RunLevelDTO;
-import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.dto.*;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchvRepository;
@@ -23,13 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
@@ -83,21 +80,27 @@ public class RunRecordService {
 
         // 2. 주간 기록 조회
         List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        // 📌 2. 해당 주간의 기록 조회 및 총 거리/시간 계산
+        List<RunRecord> runRecords = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        Integer totalDistanceMeters = 0;
+        Integer totalDurationSeconds = 0;
+        for (RunRecord record : runRecords) {
+            totalDistanceMeters += record.getTotalDistanceMeters();
+            totalDurationSeconds += record.getTotalDurationSeconds();
+        }
 
         // 3. 거리/시간 합산 및 DTO 생성
-        Integer totalDistanceMeters = runRecordList.stream().mapToInt(RunRecord::getTotalDistanceMeters).sum();
-        Integer totalDurationSeconds = runRecordList.stream().mapToInt(RunRecord::getTotalDurationSeconds).sum();
-        int statsCount = runRecordList.size();
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-        AvgStatsDTO stats = new AvgStatsDTO(RunRecord.builder().totalDistanceMeters(totalDistanceMeters).totalDurationSeconds(totalDurationSeconds).build(), statsCount, avgPace);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecords, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 배지 리스트
         List<RunBadgeResponse.DTO> runBadgeList = runBadgeAchvRepository.findByUserIdJoin(user.getId()).stream()
                 .map(RunBadgeResponse.DTO::new).toList();
 
-        // 5. 최근 3개 기록
-        List<RecentRunsDTO> recentRunList = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId())
-                .stream().map(RecentRunsDTO::new).toList();
+        // 5. 최근 3개 러닝 기록 + DTO 변환
+        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
+        List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
+                .map(r -> new RecentRunsDTO(r))
+                .toList();
 
         // 6. 주차 라벨 생성
         Map<String, Set<String>> weeksMap = new HashMap<>();
@@ -143,7 +146,7 @@ public class RunRecordService {
         RunLevelDTO runLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
         // 9. DTO 반환
-        RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(stats, runBadgeList, recentRunList, runLevel);
+        RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(avgStats, runBadgeList, recentRunList, runLevel);
         weekDTO.setWeeks(sortedWeeksMap);
         return weekDTO;
     }
@@ -176,13 +179,7 @@ public class RunRecordService {
         }
 
         // 3. 누적 통계 DTO 생성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-        int statsCount = runRecordList.size();
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-        AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 획득한 배지 조회
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
@@ -193,7 +190,9 @@ public class RunRecordService {
 
         // 5. 최근 러닝 3개 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
-        List<RecentRunsDTO> recentRunList = recentRunRecords.stream().map(RecentRunsDTO::new).toList();
+        List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
+                .map(r -> new RecentRunsDTO(r))
+                .toList();
 
         // 6. 기록이 있는 월/연도 목록 구성
         List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserId(user.getId());
@@ -217,7 +216,7 @@ public class RunRecordService {
         RunLevelDTO RunLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
         // 8. 최종 DTO 구성
-        RunRecordResponse.MonthDTO monthDTO = new RunRecordResponse.MonthDTO(stats, runBadgeList, recentRunList, RunLevel);
+        RunRecordResponse.MonthDTO monthDTO = new RunRecordResponse.MonthDTO(avgStats, runBadgeList, recentRunList, RunLevel);
         monthDTO.setYears(yearSet.stream().sorted().toList());
 
         Map<Integer, List<Integer>> sortedMonthMap = new HashMap<>();
@@ -255,14 +254,9 @@ public class RunRecordService {
             totalDurationSeconds += record.getTotalDurationSeconds();
         }
 
+
         // 3. 누적 통계용 AvgStatsDTO 생성
-        RunRecord runRecord = RunRecord.builder()
-                .totalDistanceMeters(totalDistanceMeters)
-                .totalDurationSeconds(totalDurationSeconds)
-                .build();
-        int statsCount = runRecordList.size();
-        Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
-        AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 획득한 배지 조회
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
@@ -274,7 +268,7 @@ public class RunRecordService {
         // 5. 최근 3개의 러닝 기록 조회 및 DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
-                .map(RecentRunsDTO::new)
+                .map(r -> new RecentRunsDTO(r))
                 .toList();
 
         // 6. 주간 평균 통계 계산
@@ -282,10 +276,10 @@ public class RunRecordService {
                 start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
                 end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
         ) + 1;
-        double avgCountData = statsCount > 0 ? (double) statsCount / totalWeeksInYear : 0;
+        double avgCountData = avgStats.getRecodeCount() > 0 ? (double) avgStats.getRecodeCount() / totalWeeksInYear : 0;
         double avgCount = Math.floor(avgCountData * 10) / 10.0;
-        Integer avgDistanceMeters = statsCount > 0 ? totalDistanceMeters / statsCount : 0;
-        Integer avgDurationSeconds = statsCount > 0 ? totalDurationSeconds / statsCount : 0;
+        Integer avgDistanceMeters = avgStats.getRecodeCount() > 0 ? totalDistanceMeters / avgStats.getRecodeCount() : 0;
+        Integer avgDurationSeconds = avgStats.getRecodeCount() > 0 ? totalDurationSeconds / avgStats.getRecodeCount() : 0;
         Integer statsAvgPace = RunRecordUtil.calculatePace(avgDistanceMeters, avgDurationSeconds);
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
@@ -306,7 +300,7 @@ public class RunRecordService {
         RunLevelDTO RunLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
         // 9. 최종 DTO 생성 및 반환
-        RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(stats, allStats, runBadgeList, recentRunList, RunLevel);
+        RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(avgStats, allStats, runBadgeList, recentRunList, RunLevel);
         yearDTO.setYears(new ArrayList<>(yearData));
 
         return yearDTO;
@@ -352,7 +346,7 @@ public class RunRecordService {
         // 5. 최근 3개의 러닝 기록 조회
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
-                .map(RecentRunsDTO::new)
+                .map(r -> new RecentRunsDTO(r))
                 .toList();
 
         // 6. 현재 레벨, 총 거리, 다음 레벨까지 거리 계산
@@ -387,6 +381,154 @@ public class RunRecordService {
         // 9. 최종 DTO 반환
         return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList, RunLevel);
     }
+
+    /**
+     * 최근 러닝 기록을 연도-월 기준으로 그룹핑하여 통계 반환
+     * <p>
+     * - 사용자 ID로 전체 기록을 조회한 뒤 정렬 조건(order)에 따라 정렬
+     * <p>
+     * - 각 기록을 YearMonth 단위로 그룹핑
+     * <p>
+     * - 각 그룹에 대해 거리, 시간, 평균 페이스 등 통계 생성
+     * <p>
+     * - RecentOneDTO 리스트를 모아 GroupedRecentListDTO 로 반환
+     * <p>
+     *
+     * @param user  통계를 조회할 사용자 정보
+     * @param order 정렬 기준 (latest, oldest)
+     * @param year  기준 연도
+     * @return GroupedRecentListDTO - 연도/월별 러닝 통계 + 상세 기록 리스트 포함 DTO
+     */
+    public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(User user, String order, Integer year, Integer page) {
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
+        List<RunRecord> filteredAndSorted = new ArrayList<>();
+
+        if (year != null) {
+            for (RunRecord record : runRecords) {
+                if (record.getCreatedAt().getYear() == year) {
+                    filteredAndSorted.add(record);
+                }
+            }
+        } else {
+            filteredAndSorted.addAll(runRecords);
+        }
+
+        // 정렬
+        Comparator<RunRecord> comparator = (r1, r2) -> {
+            if ("oldest".equals(order)) {
+                return r1.getCreatedAt().compareTo(r2.getCreatedAt()); // 오름차순
+            } else {
+                return r2.getCreatedAt().compareTo(r1.getCreatedAt()); // 내림차순
+            }
+        };
+        filteredAndSorted.sort(comparator);
+
+        runRecords = filteredAndSorted;
+
+        // 1. YearMonth 기준으로 그룹핑
+        Comparator<YearMonth> ymComparator = "oldest".equals(order) ? Comparator.naturalOrder() : Comparator.reverseOrder();
+
+        Map<YearMonth, List<RunRecord>> groupedByMonth = new TreeMap<>(ymComparator);
+
+        for (RunRecord record : runRecords) {
+            YearMonth ym = YearMonth.from(record.getCreatedAt());
+            groupedByMonth.computeIfAbsent(ym, k -> new ArrayList<>()).add(record);
+        }
+
+        // ✅ 2. Entry 리스트로 변환 및 페이징 처리
+        List<Map.Entry<YearMonth, List<RunRecord>>> groupedEntries = new ArrayList<>(groupedByMonth.entrySet());
+        int totalCount = groupedEntries.size();
+        int size = Constant.RUN_LIST_FETCH_SIZE;
+        int currentPage = Math.max(1, page);
+        int fromIndex = (currentPage - 1) * size;
+        int toIndex = Math.min(fromIndex + size, totalCount);
+        List<RunRecordResponse.RecentOneDTO> groupRecentList = new ArrayList<>();
+
+        for (int i = fromIndex; i < toIndex; i++) {
+            Map.Entry<YearMonth, List<RunRecord>> entry = groupedEntries.get(i);
+            List<RunRecord> records = entry.getValue();
+
+            // 거리, 시간 합산
+            int totalDistance = 0;
+            int totalDuration = 0;
+            for (RunRecord r : records) {
+                totalDistance += r.getTotalDistanceMeters();
+                totalDuration += r.getTotalDurationSeconds();
+            }
+            int count = records.size();
+            int avgPace = RunRecordUtil.calculatePace(totalDistance, totalDuration);
+
+            // AvgStatsDTO 생성용 dummy RunRecord
+            RunRecord dummy = RunRecord.builder()
+                    .totalDistanceMeters(totalDistance)
+                    .totalDurationSeconds(totalDuration)
+                    .build();
+            AvgStatsDTO avgStats = new AvgStatsDTO(dummy, count, avgPace);
+
+            // RecentRunsDTO 리스트
+            List<RecentRunsDTO> recents = new ArrayList<>();
+            for (RunRecord r : records) {
+                recents.add(new RecentRunsDTO(r));
+            }
+
+            // 기준일을 첫 기록의 createdAt 기준으로 설정
+            LocalDateTime baseDateTime = recents.get(0).getCreatedAt();
+            LocalDateTime dateTime = YearMonth.from(baseDateTime).atDay(1).atStartOfDay();
+
+            groupRecentList.add(new RunRecordResponse.RecentOneDTO(dateTime, avgStats, recents));
+        }
+
+        PageDTO pageing = new PageDTO(totalCount, currentPage);
+
+
+        return new RunRecordResponse.GroupedRecentListDTO(groupRecentList, pageing);
+    }
+
+    /**
+     * 최근 러닝 기록을 거리/페이스 정렬 기준의 전체 러닝 기록 리스트 반환
+     * <p>
+     * - 사용자 ID로 모든 러닝 기록을 조회하고, 정렬 기준(order)에 따라 정렬
+     * <p>
+     * - 각 기록을 RecentRunsDTO로 변환하여 리스트 구성
+     * <p>
+     * - 그룹핑 없이 평면(flat) 리스트 형태로 반환
+     *
+     * @param user  사용자 정보
+     * @param order 정렬 기준 (distance-asc, distance-desc, pace-asc, pace-desc)
+     * @param year  기준 연도
+     * @return FlatRecentListDTO - 정렬된 러닝 기록 리스트 포함 DTO
+     */
+    public RunRecordResponse.FlatRecentListDTO getFlatActivities(User user, String order, Integer year, Integer page) {
+        List<RunRecord> runRecords;
+        switch (order) {
+            case "distance-desc" ->
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceDesc(user.getId(), page);
+            case "distance-asc" ->
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceAsc(user.getId(), page);
+            case "pace-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceDesc(user.getId(), page);
+            case "pace-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceAsc(user.getId(), page);
+            default ->
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId(), page); // 기본: 최신순
+        }
+
+        if (year != null) {
+            runRecords = runRecords.stream()
+                    .filter(r -> r.getCreatedAt().getYear() == year)
+                    .collect(Collectors.toList());
+        }
+
+        List<RecentRunsDTO> recentRuns = runRecords.stream()
+                .map(r -> new RecentRunsDTO(r))
+                .toList();
+
+        // 3. paging
+        Long totalcount = runRecordRepository.totalCount(user.getId());
+
+        PageDTO pageing = new PageDTO(totalcount.intValue(), page);
+
+        return new RunRecordResponse.FlatRecentListDTO(recentRuns, pageing);
+    }
+
 
     /**
      * 러닝 저장
