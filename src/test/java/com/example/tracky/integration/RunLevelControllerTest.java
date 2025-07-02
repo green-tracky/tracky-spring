@@ -40,8 +40,8 @@ public class RunLevelControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
         // data 최상위 필드 검증
-        actions.andExpect(jsonPath("$.data.totalDistance").value(100));
-        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(49900));
+        actions.andExpect(jsonPath("$.data.totalDistance").value(11850));
+        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(38150));
 
         // data.runLevels 배열의 첫 번째 요소 검증
         actions.andExpect(jsonPath("$.data.runLevels[0].id").value(1));
