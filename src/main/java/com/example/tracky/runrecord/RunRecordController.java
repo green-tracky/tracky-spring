@@ -35,7 +35,8 @@ public class RunRecordController {
 
         //배포시 사용
         LocalDate baseDate = LocalDate.now();
-        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(baseDate, user, before);
+        System.out.println("오늘 : " + baseDate);
+        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(user, baseDate, before);
         return Resp.ok(respDTO);
     }
 
@@ -47,7 +48,7 @@ public class RunRecordController {
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(month, year, user);
+        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(user, month, year);
         return Resp.ok(respDTO);
     }
 
@@ -59,7 +60,7 @@ public class RunRecordController {
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(year, user);
+        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(user, year);
         return Resp.ok(respDTO);
     }
 
