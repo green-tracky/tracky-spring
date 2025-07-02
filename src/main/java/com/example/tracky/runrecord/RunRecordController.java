@@ -4,7 +4,6 @@ import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,20 +14,46 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
 public class RunRecordController {
- 
+
     private final RunRecordService runRecordService;
 
     @GetMapping("/activities/week")
-    public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "base-date", required = false)
-                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+    public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "before", defaultValue = "0") Integer before) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        if (baseDate == null) baseDate = LocalDate.now();  // 오늘 날짜로 기본값 설정
-        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(baseDate, user);
+        // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
+        if (before == null || before < 0 || before > 4) {
+            before = 0;
+        }
+
+        //배포시 사용
+        LocalDate baseDate = LocalDate.now();
+        System.out.println("오늘 : " + baseDate);
+        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(user, baseDate, before);
+        return Resp.ok(respDTO);
+    }
+
+    // 테스트 용도
+    @GetMapping("/activities/week/test")
+    public ResponseEntity<?> getActivitiesWeekTest(@RequestParam(value = "before", defaultValue = "0") Integer before) {
+        // 유저 아이디를 임시로 1 로 함
+        Integer userId = 1;
+
+        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
+        User user = User.builder().id(userId).build();
+
+        // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
+        if (before == null || before < 0 || before > 4) {
+            before = 0;
+        }
+
+        // 테스트
+        LocalDate baseDate = LocalDate.of(2025, 6, 24);
+        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(user, baseDate, before);
         return Resp.ok(respDTO);
     }
 
@@ -46,7 +71,7 @@ public class RunRecordController {
         if (month == null) month = today.getMonthValue();  // 1~12
         if (year == null) year = today.getYear();
 
-        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(month, year, user);
+        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(user, month, year);
         return Resp.ok(respDTO);
     }
 
@@ -62,7 +87,7 @@ public class RunRecordController {
         LocalDate today = LocalDate.now();
         if (year == null) year = today.getYear();
 
-        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(year, user);
+        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(user, year);
         return Resp.ok(respDTO);
     }
 
