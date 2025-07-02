@@ -4,13 +4,11 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "user_challenge_tb")
 @Entity
@@ -45,5 +43,8 @@ public class ChallengeInvite {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.challenge = challenge;
+    }
+
+    protected ChallengeInvite() {
     }
 }

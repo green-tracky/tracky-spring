@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(name = "public_challenge_tb")
 @DiscriminatorValue(ChallengeTypeEnum.PUBLIC_TYPE) // 부모 테이블의 challenge_type(DTYPE) 컬럼에 'PUBLIC' 로 저장됨
 public class PublicChallenge extends Challenge {
@@ -32,5 +30,8 @@ public class PublicChallenge extends Challenge {
         // 자식 클래스 고유의 필드를 초기화합니다.
         this.rewardTitle = rewardTitle;
         this.rewardImageUrl = rewardImageUrl;
+    }
+
+    protected PublicChallenge() {
     }
 }
