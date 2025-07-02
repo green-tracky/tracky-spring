@@ -4,7 +4,6 @@ import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +19,6 @@ public class RunRecordController {
 
     @GetMapping("/activities/week")
     public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "before", defaultValue = "0") Integer before) {
-    public ResponseEntity<?> getActivitiesWeek(@RequestParam(value = "base-date", required = false)
-                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
@@ -57,7 +54,7 @@ public class RunRecordController {
         if (month == null) month = today.getMonthValue();  // 1~12
         if (year == null) year = today.getYear();
 
-        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(month, year, user);
+        RunRecordResponse.MonthDTO respDTO = runRecordService.getActivitiesMonth(user, month, year);
         return Resp.ok(respDTO);
     }
 
@@ -73,7 +70,7 @@ public class RunRecordController {
         LocalDate today = LocalDate.now();
         if (year == null) year = today.getYear();
 
-        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(year, user);
+        RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(user, year);
         return Resp.ok(respDTO);
     }
 
