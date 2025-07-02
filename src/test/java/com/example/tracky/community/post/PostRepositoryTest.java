@@ -27,28 +27,28 @@ public class PostRepositoryTest {
     void findAllJoinRunRecord_test() {
         List<Post> posts = postRepository.findAllJoinRunRecord();
         for (Post post : posts) {
-            log.info("결과확인===================");
-            log.info("post.id: {}", post.getId());
-            log.info("post.title: {}", post.getTitle());
+            log.debug("결과확인===================");
+            log.debug("post.id: {}", post.getId());
+            log.debug("post.title: {}", post.getTitle());
 
             if (post.getUser() != null) {
-                log.info("user.id: {}", post.getUser().getId());
-                log.info("user.username: {}", post.getUser().getUsername());
+                log.debug("user.id: {}", post.getUser().getId());
+                log.debug("user.username: {}", post.getUser().getUsername());
             }
 
             if (post.getRunRecord() != null) {
-                log.info("runRecord.id: {}", post.getRunRecord().getId());
-                log.info("runRecord.memo: {}", post.getRunRecord().getMemo());
+                log.debug("runRecord.id: {}", post.getRunRecord().getId());
+                log.debug("runRecord.memo: {}", post.getRunRecord().getMemo());
             }
         }
     }
 
     @Test
     void save_test() {
-        User user = new User();
+        User user = User.builder().build();
         em.persist(user);
 
-        RunRecord runRecord = new RunRecord();
+        RunRecord runRecord = RunRecord.builder().build();
         em.persist(runRecord);
 
         Post post = Post.builder()
@@ -60,12 +60,12 @@ public class PostRepositoryTest {
 
         postRepository.save(post);
 
-        log.info("결과확인===================");
-        log.info("post.id: {}", post.getId());
-        log.info("post.title: {}", post.getTitle());
-        log.info("post.content: {}", post.getContent());
-        log.info("user.id: {}", post.getUser().getId());
-        log.info("runRecord.id: {}", post.getRunRecord().getId());
+        log.debug("결과확인===================");
+        log.debug("post.id: {}", post.getId());
+        log.debug("post.title: {}", post.getTitle());
+        log.debug("post.content: {}", post.getContent());
+        log.debug("user.id: {}", post.getUser().getId());
+        log.debug("runRecord.id: {}", post.getRunRecord().getId());
     }
 
 }
