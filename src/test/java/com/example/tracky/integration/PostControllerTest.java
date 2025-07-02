@@ -47,7 +47,7 @@ class PostControllerTest extends MyRestDoc {
         PostRequest.SaveDTO reqDTO = new PostRequest.SaveDTO();
         reqDTO.setTitle("제목입니다");
         reqDTO.setContent("내용입니다");
-        reqDTO.setRunRecordId(1);
+        reqDTO.setRunRecordId(10);
 
         String requestBody = om.writeValueAsString(reqDTO);
 
