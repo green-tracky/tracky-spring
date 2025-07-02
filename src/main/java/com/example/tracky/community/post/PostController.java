@@ -28,11 +28,11 @@ public class PostController {
     }
 
     @PostMapping("/community/posts")
-    public ResponseEntity<?> savePost(@Valid @RequestBody PostRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody PostRequest.SaveDTO reqDTO) {
         Integer userId = 1;
         User user = User.builder().id(userId).build();
 
-        PostResponse.DTO respDTO = postService.savePost(reqDTO, user);
+        PostResponse.DTO respDTO = postService.save(reqDTO, user);
         return Resp.ok(respDTO);
     }
 }

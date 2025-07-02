@@ -23,7 +23,7 @@ class PostControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("포스트 목록 조회 성공")
-    void get_posts_success() throws Exception {
+    void get_posts_test() throws Exception {
         // given
 
         // when
@@ -41,7 +41,7 @@ class PostControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("포스트 쓰기 성공")
-    void save_success() throws Exception {
+    void save_test() throws Exception {
 
         // given
         PostRequest.SaveDTO reqDTO = new PostRequest.SaveDTO();

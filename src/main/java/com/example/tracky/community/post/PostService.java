@@ -49,7 +49,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse.DTO savePost(PostRequest.SaveDTO reqDTO, User user) {
+    public PostResponse.DTO save(PostRequest.SaveDTO reqDTO, User user) {
 
         RunRecord runRecord = null;
         if (reqDTO.getRunRecordId() != null) {
