@@ -1,5 +1,7 @@
 package com.example.tracky.community.post;
 
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.like.Like;
 import com.example.tracky.community.like.LikeRepository;
 import com.example.tracky.community.post.comment.CommentRepository;
@@ -52,7 +54,7 @@ public class PostService {
         RunRecord runRecord = null;
         if (reqDTO.getRunRecordId() != null) {
             runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
-                    .orElseThrow(() -> new RuntimeException("러닝 기록을 찾을 수 없습니다"));
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
         }
 
         Post post = reqDTO.toEntity(user, runRecord);
