@@ -82,6 +82,17 @@ class PostControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 내부 필드 검증
+        actions.andExpect(jsonPath("$.data.id").value(3));
+        actions.andExpect(jsonPath("$.data.title").value("제목입니다"));
+        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.runRecordId").value(10));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
 
     }
 }
