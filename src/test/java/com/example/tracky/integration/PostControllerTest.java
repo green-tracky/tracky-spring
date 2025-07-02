@@ -13,6 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // MOCK -> 가짜 환경을 만들어 필요한 의존관계를 다 메모리에 올려서 테스트
 @Slf4j
@@ -37,6 +40,20 @@ class PostControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data[0].likeCount").value(1));
+        actions.andExpect(jsonPath("$.data[0].commentCount").value(1));
+        actions.andExpect(jsonPath("$.data[0].isLiked").value(false));
+        actions.andExpect(jsonPath("$.data[0].id").value(1));
+        actions.andExpect(jsonPath("$.data[0].username").value("ssar"));
+        actions.andExpect(jsonPath("$.data[0].content").value("ssar의 러닝 기록을 공유합니다."));
+        actions.andExpect(jsonPath("$.data[0].createdAt").isNotEmpty());
+        actions.andExpect(jsonPath("$.data[0].pictures").isArray());
+        actions.andExpect(jsonPath("$.data[0].pictures").isEmpty());
     }
 
     @Test
@@ -63,5 +80,17 @@ class PostControllerTest extends MyRestDoc {
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 내부 필드 검증
+        actions.andExpect(jsonPath("$.data.id").value(3));
+        actions.andExpect(jsonPath("$.data.title").value("제목입니다"));
+        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
     }
 }
