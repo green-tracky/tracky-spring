@@ -1,8 +1,8 @@
 package com.example.tracky.user;
 
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.user.Enum.GenderEnum;
-import com.example.tracky.user.Enum.UserTypeEnum;
+import com.example.tracky.user.enums.GenderEnum;
+import com.example.tracky.user.enums.UserTypeEnum;
 import com.example.tracky.user.runlevel.RunLevel;
 import jakarta.persistence.*;
 import lombok.Builder;
