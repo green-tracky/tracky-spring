@@ -3,7 +3,6 @@ package com.example.tracky.community.challenge.domain;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
  * JPA 상속 매핑을 통해 '공식 챌린지'와 '사설 챌린지'로 확장됩니다.
  * </pre>
  */
-@NoArgsConstructor
 @Getter
 @Table(name = "challenge_tb")
 @Entity
@@ -42,7 +40,7 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
     @ManyToOne(fetch = FetchType.LAZY, optional = false) // jpa 영속성 관리 null 불가
     @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
-    
+
     public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator) {
         this.id = id;
         this.name = name;
@@ -53,5 +51,8 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
         this.targetDistance = targetDistance;
         this.isInProgress = isInProgress;
         this.creator = creator;
+    }
+
+    protected Challenge() {
     }
 }

@@ -4,12 +4,10 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Getter
 @Table(
         name = "challenge_join_tb",
@@ -43,5 +41,8 @@ public class ChallengeJoin {
         this.id = id;
         this.user = user;
         this.challenge = challenge;
+    }
+
+    protected ChallengeJoin() {
     }
 }

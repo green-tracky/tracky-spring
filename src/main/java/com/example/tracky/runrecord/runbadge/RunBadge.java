@@ -4,12 +4,10 @@ import com.example.tracky.runrecord.runbadge.enums.RunBadgeTypeEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "run_badge_tb")
 @Entity
@@ -34,4 +32,7 @@ public class RunBadge {
         this.type = type;
     }
 
+    // 기본생성자 사용금지
+    protected RunBadge() {
+    }
 }
