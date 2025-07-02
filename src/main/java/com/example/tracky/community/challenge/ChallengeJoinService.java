@@ -1,4 +1,46 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.community.challenge.domain.Challenge;
+import com.example.tracky.community.challenge.domain.ChallengeJoin;
+import com.example.tracky.community.challenge.dto.ChallengeJoinResponse;
+import com.example.tracky.community.challenge.repository.ChallengeJoinRepository;
+import com.example.tracky.community.challenge.repository.ChallengeRepository;
+import com.example.tracky.user.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
 public class ChallengeJoinService {
+    private final ChallengeJoinRepository challengeJoinRepository;
+    private final ChallengeRepository challengeRepository;
+
+    /**
+     * 챌린지 참여
+     *
+     * @param id
+     * @param user
+     * @return
+     */
+    @Transactional
+    public ChallengeJoinResponse.DTO save(Integer id, User user) {
+        // 챌린지 조회
+        Challenge challengePS = challengeRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
+
+        // 챌린지참가 엔티티 생성
+        ChallengeJoin challengeJoin = ChallengeJoin.builder()
+                .challenge(challengePS)
+                .user(user)
+                .build();
+
+        // 챌린지 참가 엔티티 저장
+        ChallengeJoin challengeJoinPS = challengeJoinRepository.save(challengeJoin);
+
+        // 챌린지 참가 엔티티 응답
+        return new ChallengeJoinResponse.DTO(challengeJoinPS);
+    }
 }

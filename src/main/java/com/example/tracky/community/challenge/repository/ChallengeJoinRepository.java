@@ -97,4 +97,14 @@ public class ChallengeJoinRepository {
         return result != null ? ((Number) result).intValue() : null;
     }
 
+    /**
+     * 챌린지참여 저장
+     *
+     * @param challengeJoin
+     * @return
+     */
+    public ChallengeJoin save(ChallengeJoin challengeJoin) {
+        em.persist(challengeJoin);
+        return challengeJoin;
+    }
 }
