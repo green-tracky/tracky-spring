@@ -21,7 +21,7 @@ public class PostRequest {
             return Post.builder()
                     .title(title)
                     .content(content)
-                    .user(user) // user객체 필요
+                    .user(user)
                     .runRecord(runRecord)
                     .build();
         }
