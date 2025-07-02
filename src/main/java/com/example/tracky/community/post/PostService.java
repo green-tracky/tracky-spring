@@ -17,13 +17,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
     private final PostRepository postRepository;
-
     private final LikeRepository likeRepository;
-
     private final CommentRepository commentRepository;
-
     private final RunRecordRepository runRecordRepository;
 
     public List<PostResponse.ListDTO>
@@ -49,7 +45,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse.DTO save(PostRequest.SaveDTO reqDTO, User user) {
+    public PostResponse.SaveDTO save(PostRequest.SaveDTO reqDTO, User user) {
 
         RunRecord runRecord = null;
         if (reqDTO.getRunRecordId() != null) {
@@ -59,7 +55,7 @@ public class PostService {
 
         Post post = reqDTO.toEntity(user, runRecord);
         Post postPS = postRepository.save(post);
-        return new PostResponse.DTO(postPS);
+        return new PostResponse.SaveDTO(postPS);
     }
 
 }

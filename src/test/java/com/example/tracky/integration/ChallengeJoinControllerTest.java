@@ -3,6 +3,8 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,19 +18,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // MOCK -> 가짜 환경을 만들어 필요한 의존관계를 다 메모리에 올려서 테스트
 @Slf4j
-public class RunLevelControllerTest extends MyRestDoc {
+class ChallengeJoinControllerTest extends MyRestDoc {
 
     @Autowired
-    private ObjectMapper om; // json <-> java Object 변환 해주는 객체. IoC에 objectMapper가 이미 떠있음
+    private ObjectMapper om;
 
     @Test
-    public void get_run_levels_test() throws Exception {
+    @DisplayName("챌린지 참여 성공")
+    void save_test() throws Exception {
         // given
+        Integer challengeId = 2;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/run-levels"));
+                        .post("/s/api/community/challenges/{id}/joins", challengeId)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -36,24 +41,14 @@ public class RunLevelControllerTest extends MyRestDoc {
 
         // then
         actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
+        actions.andExpect(jsonPath("$.data.id").value(3));
+        actions.andExpect(jsonPath("$.data.challengeId").value(2));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.joinDate").value(Matchers.matchesRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
-        // data 최상위 필드 검증
-        actions.andExpect(jsonPath("$.data.totalDistance").value(11850));
-        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(38150));
-
-        // data.runLevels 배열의 첫 번째 요소 검증
-        actions.andExpect(jsonPath("$.data.runLevels[0].id").value(1));
-        actions.andExpect(jsonPath("$.data.runLevels[0].name").value("옐로우"));
-        actions.andExpect(jsonPath("$.data.runLevels[0].minDistance").value(0));
-        actions.andExpect(jsonPath("$.data.runLevels[0].maxDistance").value(49999));
-        actions.andExpect(jsonPath("$.data.runLevels[0].description").value("0~49.99킬로미터"));
-        actions.andExpect(jsonPath("$.data.runLevels[0].imageUrl").value("https://example.com/images/yellow.png"));
-        actions.andExpect(jsonPath("$.data.runLevels[0].sortOrder").value(0));
-        actions.andExpect(jsonPath("$.data.runLevels[0].isCurrent").value(true));
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
-    }
 
+    }
 }

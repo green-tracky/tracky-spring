@@ -32,7 +32,7 @@ public class PostController {
         Integer userId = 1;
         User user = User.builder().id(userId).build();
 
-        PostResponse.DTO respDTO = postService.save(reqDTO, user);
+        PostResponse.SaveDTO respDTO = postService.save(reqDTO, user);
         return Resp.ok(respDTO);
     }
 }
