@@ -16,7 +16,7 @@ public enum GenderEnum {
     private final String value; // DB에 저장될 실제 값 ("남", "여")
 
     /**
-     * DB에서 읽어온 값(String)으로 적절한 Enum 상수(Gender)를 찾습니다.
+     * json -> DTO 역직렬화 될때 사용됨. DTO 용
      *
      * @param value DB의 "남" 또는 "여"
      * @return GenderEnum.MALE 또는 GenderEnum.FEMALE

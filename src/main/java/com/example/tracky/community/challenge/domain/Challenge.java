@@ -55,4 +55,5 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
 
     protected Challenge() {
     }
+
 }

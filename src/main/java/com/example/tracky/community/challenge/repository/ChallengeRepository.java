@@ -1,5 +1,6 @@
 package com.example.tracky.community.challenge.repository;
 
+import com.example.tracky.community.challenge.domain.Challenge;
 import com.example.tracky.community.challenge.domain.PublicChallenge;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -18,7 +20,7 @@ public class ChallengeRepository {
 
     /**
      * <pre>
-     * 사용자가 참가하지 않았고, 아직 진행 중인 '공식 챌린지' 목록을 조회합니다.
+     * 사용자가 참가하지 않았고, 아직 진행 중인 '공개 챌린지' 목록을 조회합니다.
      * '참여하기' 목록을 만드는 데 사용됩니다.
      *
      * where 문에 isInProgress 를 사용하지 않는 이유
@@ -38,6 +40,36 @@ public class ChallengeRepository {
         query.setParameter("joinedChallengeIds", joinedChallengeIds);
         query.setParameter("now", now);
         return query.getResultList();
+    }
+
+    /**
+     * <pre>
+     * 챌린지 ID로 상세 정보를 조회합니다.
+     * (공개/사설 모두 Challenge 타입으로 조회 가능)
+     * </pre>
+     */
+    public Optional<Challenge> findById(Integer id) {
+        return Optional.ofNullable(em.find(Challenge.class, id));
+    }
+
+    /**
+     * <pre>
+     * 공개 챌린지 상세정보를 조회합니다.
+     * 부모를 타고 join 해서 접근하는게 아니라 바로 접근하고 싶을 때 사용
+     * </pre>
+     */
+    public Optional<PublicChallenge> findPublicById(Integer id) {
+        return Optional.ofNullable(em.find(PublicChallenge.class, id));
+    }
+
+    /**
+     * <pre>
+     * 사설 챌린지 상세정보를 조회합니다.
+     * 부모를 타고 join 해서 접근하는게 아니라 바로 접근하고 싶을 때 사용
+     * </pre>
+     */
+    public Optional<PublicChallenge> findPrivateById(Integer id) {
+        return Optional.ofNullable(em.find(PublicChallenge.class, id));
     }
 
 }
