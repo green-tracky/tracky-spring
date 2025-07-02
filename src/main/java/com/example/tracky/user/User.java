@@ -7,14 +7,12 @@ import com.example.tracky.user.runlevel.RunLevel;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "user_tb")
 @Entity
@@ -57,6 +55,10 @@ public class User {
         this.flutterTokenId = flutterTokenId;
         this.runLevel = runLevel;
         this.runRecords = runRecords;
+    }
+
+    // 기본 생성자 사용 금지
+    protected User() {
     }
 
     /**

@@ -4,12 +4,10 @@ import com.example.tracky.runrecord.runbadge.Enum.RunBadgeType;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "run_badge_tb")
 @Entity
@@ -21,7 +19,7 @@ public class RunBadge {
     private String description; // 뱃지 조건 설명
     private String imageUrl; // 뱃지 이미지
     private RunBadgeType type; // 뱃지 타입 필드 추가. RunBadgeType 타입 확인 바람
-    
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -34,4 +32,7 @@ public class RunBadge {
         this.type = type;
     }
 
+    // 기본생성자 사용금지
+    protected RunBadge() {
+    }
 }

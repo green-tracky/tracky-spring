@@ -4,11 +4,10 @@ import com.example.tracky.runrecord.runsegment.RunSegment;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
+
 @Getter
 @Table(name = "run_coordinate_tb")
 @Entity
@@ -30,6 +29,10 @@ public class RunCoordinate {
         this.lon = lon;
         this.createdAt = createdAt;
         this.runSegment = runSegment;
+    }
+
+    // 기본생성자 사용금지
+    protected RunCoordinate() {
     }
 
 }
