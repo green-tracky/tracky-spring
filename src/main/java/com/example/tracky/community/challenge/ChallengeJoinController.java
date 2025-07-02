@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChallengeJoinController {
     private final ChallengeJoinService challengeJoinService;
 
-    @PostMapping("/community/challenges/{id}/join")
+    @PostMapping("/community/challenges/{id}/joins")
     public ResponseEntity<?> save(@PathVariable Integer id) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;

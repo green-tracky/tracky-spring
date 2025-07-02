@@ -107,4 +107,5 @@ public class ChallengeJoinRepository {
         em.persist(challengeJoin);
         return challengeJoin;
     }
+
 }

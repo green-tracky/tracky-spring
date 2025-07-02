@@ -3,6 +3,7 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,15 @@ class ChallengeJoinControllerTest extends MyRestDoc {
     private ObjectMapper om;
 
     @Test
-    @DisplayName("챌린지 목록 조회 성공")
-    void get_challenges_test() throws Exception {
+    @DisplayName("챌린지 참여 성공")
+    void save_test() throws Exception {
         // given
         Integer challengeId = 2;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/challenges/{id}/join", challengeId)
+                        .post("/s/api/community/challenges/{id}/joins", challengeId)
         );
 
         // eye
@@ -40,9 +41,11 @@ class ChallengeJoinControllerTest extends MyRestDoc {
 
         // then
         actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
-
+        actions.andExpect(jsonPath("$.data.id").value(3));
+        actions.andExpect(jsonPath("$.data.challengeId").value(2));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.joinDate").value(Matchers.matchesRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
