@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 
 @Getter
 @Table(name = "picture_tb")
@@ -17,13 +18,13 @@ public class Picture {
     private String fileUrl; // 이미지 실제 주소
     private Double lat; // 위도
     private Double lon; // 경도
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
 
     @Builder
-    public Picture(Integer id, String fileUrl, Double lat, Double lon, Timestamp createdAt,
+    public Picture(Integer id, String fileUrl, Double lat, Double lon, LocalDateTime createdAt,
                    RunRecord runRecord) {
         this.id = id;
         this.fileUrl = fileUrl;

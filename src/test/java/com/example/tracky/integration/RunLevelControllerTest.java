@@ -52,9 +52,8 @@ public class RunLevelControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevels[0].imageUrl").value("https://example.com/images/yellow.png"));
         actions.andExpect(jsonPath("$.data.runLevels[0].sortOrder").value(0));
         actions.andExpect(jsonPath("$.data.runLevels[0].isCurrent").value(true));
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 }

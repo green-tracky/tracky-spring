@@ -18,7 +18,7 @@ public enum RunPlaceTypeEnum {
     private final String value;
 
     /**
-     * DB에서 읽어온 값(String)으로 적절한 Enum 상수(RunPlace)를 찾습니다.
+     * json -> DTO 역직렬화 될때 사용됨. DTO 용
      *
      * @param value DB의 "도로" 또는 "트랙"
      * @return RunPlace.ROAD 또는 RunPlace.TRACK

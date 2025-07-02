@@ -20,18 +20,19 @@ import java.time.LocalDateTime;
 @DiscriminatorValue(ChallengeTypeEnum.PUBLIC_TYPE) // 부모 테이블의 challenge_type(DTYPE) 컬럼에 'PUBLIC' 로 저장됨
 public class PublicChallenge extends Challenge {
 
-    private String rewardTitle; // 공개 챌린지 보상 이름
+    private String rewardName; // 공개 챌린지 보상 이름
     private String rewardImageUrl; // 공개 챌린지 보상 이미지
 
     @Builder
-    public PublicChallenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator, String rewardTitle, String rewardImageUrl) {
+    public PublicChallenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator, String rewardName, String rewardImageUrl) {
         // 부모 클래스의 생성자를 호출하여 공통 필드를 초기화합니다.
         super(id, name, sub, description, startDate, endDate, targetDistance, isInProgress, creator);
         // 자식 클래스 고유의 필드를 초기화합니다.
-        this.rewardTitle = rewardTitle;
+        this.rewardName = rewardName;
         this.rewardImageUrl = rewardImageUrl;
     }
 
     protected PublicChallenge() {
     }
+
 }
