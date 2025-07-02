@@ -136,7 +136,6 @@ public class RunRecordResponse {
     public static class SaveDTO {
         private Integer id;
         private String title;
-        private String memo;
         private Integer calories;
         private Integer totalDistanceMeters; // 러닝 총 이동거리
         private Integer totalDurationSeconds; // 러닝 총 시간
@@ -151,7 +150,6 @@ public class RunRecordResponse {
         public SaveDTO(RunRecord runRecord, List<RunBadgeAchv> awardedBadges) {
             this.id = runRecord.getId();
             this.title = runRecord.getTitle();
-            this.memo = runRecord.getMemo();
             this.calories = runRecord.getCalories();
             this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
             this.totalDurationSeconds = runRecord.getTotalDurationSeconds();

@@ -125,7 +125,7 @@ public class ChallengeResponse {
             }
         }
     }
-    
+
     @Data
     public static class DetailDTO {
         // --- 공통 정보 ---
@@ -173,36 +173,36 @@ public class ChallengeResponse {
             this.myDistance = null; // 참여 안 했으므로 달성 거리 없음
 
             // 공식 챌린지의 단일 리워드 정보 생성
-            this.rewards = Collections.singletonList(new RewardItemDTO(challenge.getRewardName(), challenge.getRewardImageUrl(), null));
+            this.rewards = Collections.singletonList(new RewardItemDTO(challenge.getRewardName(), challenge.getRewardImageUrl(), "달성"));
         }
 
         /**
          * 2. 참여 중인 공식 챌린지 조회 시 사용하는 생성자 (진행/종료 모두 포함)
          */
-        public DetailDTO(PublicChallenge challenge, Integer participantCount, Double myDistance, Integer myRank) {
+        public DetailDTO(PublicChallenge challenge, Integer participantCount, Integer myDistance, Integer myRank) {
             // 미참여 생성자를 먼저 호출하여 공통 정보 채우기
             this(challenge, participantCount);
 
             // 사용자 특화 정보 덮어쓰기
             this.isJoined = true; // 참여 상태
             this.rank = myRank;
-            this.myDistance = myDistance.intValue();
+            this.myDistance = myDistance;
 
-            // 리워드 상태 업데이트 (예시: 달성 여부에 따라 '달성' 표시)
-            boolean isAchieved = myDistance >= challenge.getTargetDistance();
-            this.rewards.get(0).setStatus(isAchieved ? "달성" : "미달성");
+            // TODO : [보류] 리워드 상태 업데이트 (예시: 달성 여부에 따라 '달성' 표시)
+//            boolean isAchieved = myDistance >= challenge.getTargetDistance();
+//            this.rewards.get(0).setStatus(isAchieved ? "달성" : "미달성");
         }
 
         /**
          * 3. 참여 중인 사설 챌린지 조회 시 사용하는 생성자 (진행/종료 모두 포함)
          */
-        public DetailDTO(PrivateChallenge challenge, Integer participantCount, Double myDistance, Integer myRank) {
+        public DetailDTO(PrivateChallenge challenge, Integer participantCount, Integer myDistance, Integer myRank) {
             // 공통 정보 설정
             this.id = challenge.getId();
-            this.title = challenge.getTargetDistance() / 1000 + "K";
+            this.title = null;
             this.name = challenge.getName();
-            this.sub = challenge.getSub();
-            this.description = challenge.getDescription();
+            this.sub = challenge.getSub(); // 아마도 null 일것 같다
+            this.description = null;
             this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
             this.targetDistance = challenge.getTargetDistance();
             this.isInProgress = challenge.getIsInProgress();
@@ -215,7 +215,7 @@ public class ChallengeResponse {
             // 사용자 특화 정보 설정
             this.isJoined = true; // 참여 상태
             this.rank = myRank;
-            this.myDistance = myDistance.intValue();
+            this.myDistance = myDistance;
 
             // 사설 챌린지의 여러 리워드 목록을 생성
             this.rewards = challenge.getAvailableRewards().stream()

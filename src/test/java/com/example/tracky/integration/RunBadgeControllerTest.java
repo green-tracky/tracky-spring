@@ -51,7 +51,7 @@ public class RunBadgeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.recents[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.recents[0].runRecordDistance").value(100));
         actions.andExpect(jsonPath("$.data.recents[0].runRecordSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.recents[0].runRecordPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.recents[0].runRecordPace").value(500));
         actions.andExpect(jsonPath("$.data.recents[0].isAchieved").value(true));
 
         // data.bests 배열의 첫 번째 요소 검증
@@ -75,7 +75,7 @@ public class RunBadgeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.monthly[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.monthly[0].runRecordDistance").value(100));
         actions.andExpect(jsonPath("$.data.monthly[0].runRecordSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.monthly[0].runRecordPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.monthly[0].runRecordPace").value(500));
         actions.andExpect(jsonPath("$.data.monthly[0].isAchieved").value(true));
 
         // 디버깅 및 문서화 (필요시 주석 해제)

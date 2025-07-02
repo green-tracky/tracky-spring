@@ -26,7 +26,7 @@ class ChallengeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("챌린지 목록 조회 성공")
-    void get_challenges_success() throws Exception {
+    void get_challenges_test() throws Exception {
         // given
 
         // when
@@ -90,5 +90,24 @@ class ChallengeControllerTest extends MyRestDoc {
 // 디버깅 및 문서화 (필요시 활성화)
 // actions.andDo(MockMvcResultHandlers.print());
 
+    }
+
+    @Test
+    @DisplayName("챌린지 상세 조회 성공")
+    void get_challenge_test() throws Exception {
+        // given
+        Integer challengeId = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/challenges/{id}", challengeId)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
     }
 }
