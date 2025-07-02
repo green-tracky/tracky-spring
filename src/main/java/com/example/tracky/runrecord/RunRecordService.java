@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky._core.constant.Constant;
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
@@ -412,7 +413,7 @@ public class RunRecordService {
         // ✅ 2. Entry 리스트로 변환 및 페이징 처리
         List<Map.Entry<YearMonth, List<RunRecord>>> groupedEntries = new ArrayList<>(groupedByMonth.entrySet());
         int totalCount = groupedEntries.size();
-        int size = 3;
+        int size = Constant.RUN_LIST_FETCH_SIZE;
         int currentPage = Math.max(1, page);
         int fromIndex = (currentPage - 1) * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
