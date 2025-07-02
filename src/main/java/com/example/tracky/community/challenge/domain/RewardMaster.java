@@ -4,14 +4,12 @@ import com.example.tracky.community.challenge.enums.RewardTypeEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(name = "reward_master_tb")
 public class RewardMaster {
     @Id
@@ -35,6 +33,9 @@ public class RewardMaster {
         this.rewardType = rewardType;
         this.rewardName = rewardName;
         this.rewardImageUrl = rewardImageUrl;
+    }
+
+    protected RewardMaster() {
     }
 
 }

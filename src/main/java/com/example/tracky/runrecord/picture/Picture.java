@@ -1,21 +1,12 @@
 package com.example.tracky.runrecord.picture;
 
-import java.sql.Timestamp;
-
 import com.example.tracky.runrecord.RunRecord;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+import java.sql.Timestamp;
+
 @Getter
 @Table(name = "picture_tb")
 @Entity
@@ -33,7 +24,7 @@ public class Picture {
 
     @Builder
     public Picture(Integer id, String fileUrl, Double lat, Double lon, Timestamp createdAt,
-            RunRecord runRecord) {
+                   RunRecord runRecord) {
         this.id = id;
         this.fileUrl = fileUrl;
         this.lat = lat;
@@ -42,4 +33,6 @@ public class Picture {
         this.runRecord = runRecord;
     }
 
+    protected Picture() {
+    }
 }
