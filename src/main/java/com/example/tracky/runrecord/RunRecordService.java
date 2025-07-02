@@ -80,21 +80,22 @@ public class RunRecordService {
 
         // 2. 주간 기록 조회
         List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
-        // 📌 2. 해당 주간의 기록 조회 및 총 거리/시간 계산
-        List<RunRecord> runRecords = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
         Integer totalDistanceMeters = 0;
         Integer totalDurationSeconds = 0;
-        for (RunRecord record : runRecords) {
+        for (RunRecord record : runRecordList) {
             totalDistanceMeters += record.getTotalDistanceMeters();
             totalDurationSeconds += record.getTotalDurationSeconds();
         }
 
         // 3. 거리/시간 합산 및 DTO 생성
-        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecords, totalDistanceMeters, totalDurationSeconds);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
 
-        // 4. 배지 리스트
-        List<RunBadgeResponse.DTO> runBadgeList = runBadgeAchvRepository.findByUserIdJoin(user.getId()).stream()
-                .map(RunBadgeResponse.DTO::new).toList();
+        // 4. 획득한 배지 조회
+        List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
+        for (RunBadgeAchv badge : runBadges) {
+            runBadgeList.add(new RunBadgeResponse.DTO(badge));
+        }
 
         // 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
@@ -102,52 +103,53 @@ public class RunRecordService {
                 .map(r -> new RecentRunsDTO(r))
                 .toList();
 
-        // 6. 주차 라벨 생성
+        // 6. 주차 라벨 생성 (기준 baseDate가 속한 '년-월'에 해당하는 주차만 필터링)
+        String baseYearMonth = String.format("%04d-%02d", baseDate.getYear(), baseDate.getMonthValue());
         Map<String, Set<String>> weeksMap = new HashMap<>();
+
         for (RunRecord record : runRecordsRepository.findAllByUserId(user.getId())) {
             LocalDate date = record.getCreatedAt().toLocalDate();
-            int year = date.getYear();
-            int month = date.getMonthValue();
             LocalDate startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
             LocalDate endOfWeek = startOfWeek.plusDays(6);
-            String weekLabel = startOfWeek.getMonthValue() + "." + startOfWeek.getDayOfMonth() + "~" + endOfWeek.getMonthValue() + "." + endOfWeek.getDayOfMonth();
-            String key = year + "-" + String.format("%02d", month);
-            weeksMap.computeIfAbsent(key, k -> new HashSet<>()).add(weekLabel);
+
+            // 주차 라벨: "MM.DD~MM.DD"
+            String weekLabel = String.format("%02d.%02d~%02d.%02d",
+                    startOfWeek.getMonthValue(), startOfWeek.getDayOfMonth(),
+                    endOfWeek.getMonthValue(), endOfWeek.getDayOfMonth());
+
+            // 주 시작일 기준 '년-월' 키 (2025-03 등)
+            String weekYearMonth = String.format("%04d-%02d", startOfWeek.getYear(), startOfWeek.getMonthValue());
+
+            // 기준 월에 해당하는 주차만 추가
+            if (weekYearMonth.equals(baseYearMonth)) {
+                weeksMap.computeIfAbsent(weekYearMonth, k -> new HashSet<>()).add(weekLabel);
+            }
         }
 
-        // 7. 주차 라벨 정렬 및 '이번주/저번주' 라벨링
-        String baseYearMonth = baseDate.getYear() + "-" + String.format("%02d", baseDate.getMonthValue());
-        Map<String, List<String>> sortedWeeksMap = new HashMap<>();
-        if (weeksMap.containsKey(baseYearMonth)) {
-            List<String> sortedWeeks = weeksMap.get(baseYearMonth).stream()
+        Map<String, List<String>> weeksMapList = new HashMap<>();
+        for (Map.Entry<String, Set<String>> entry : weeksMap.entrySet()) {
+            List<String> sortedList = entry.getValue().stream()
                     .sorted(Comparator.comparing(label -> {
-                        String[] startEnd = label.split("~")[0].split("\\.");
-                        return LocalDate.of(baseDate.getYear(), Integer.parseInt(startEnd[0]), Integer.parseInt(startEnd[1]));
+                        String[] parts = label.split("~")[0].split("\\.");
+                        return LocalDate.of(Integer.parseInt(entry.getKey().split("-")[0]),
+                                Integer.parseInt(parts[0]),
+                                Integer.parseInt(parts[1]));
                     }))
-                    .map(label -> {
-                        LocalDate today = LocalDate.now();
-                        LocalDate thisWeekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-                        LocalDate lastWeekStart = thisWeekStart.minusWeeks(1);
-                        String[] startParts = label.split("~")[0].split("\\.");
-                        LocalDate weekStart = LocalDate.of(today.getYear(), Integer.parseInt(startParts[0]), Integer.parseInt(startParts[1]));
-                        if (weekStart.equals(thisWeekStart)) return "이번주";
-                        else if (weekStart.equals(lastWeekStart)) return "저번주";
-                        else return label;
-                    })
                     .toList();
-            sortedWeeksMap.put(baseYearMonth, sortedWeeks);
+            weeksMapList.put(entry.getKey(), sortedList);
         }
 
-        // 8. 레벨 정보 조회
+
+        // 7. 레벨 정보 조회
         RunLevel currentLevelPS = userRepository.findByIdJoin(user.getId()).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND)).getRunLevel();
         List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
         Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());
         Integer distanceToNextLevel = RunLevelUtil.getDistanceToNextLevel(currentLevelPS, runLevelsPS, totalDistance);
         RunLevelDTO runLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
-        // 9. DTO 반환
+        // 8. DTO 반환
         RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(avgStats, runBadgeList, recentRunList, runLevel);
-        weekDTO.setWeeks(sortedWeeksMap);
+        weekDTO.setWeeks(weeksMapList);
         return weekDTO;
     }
 

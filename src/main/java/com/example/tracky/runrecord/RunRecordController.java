@@ -31,7 +31,7 @@ public class RunRecordController {
         }
 
         // 테스트
-//        LocalDate baseDate = LocalDate.of(2025, 3, 31);
+//        LocalDate baseDate = LocalDate.of(2025, 6, 24);
 
         //배포시 사용
         LocalDate baseDate = LocalDate.now();
