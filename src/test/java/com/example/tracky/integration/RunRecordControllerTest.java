@@ -178,9 +178,8 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictures").isArray());
         actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
 
-        // 디버깅 및 문서화
-        // actions.andDo(MockMvcResultHandlers.print())
-        // .andDo(document);
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -238,8 +237,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print())
-        //        .andDo(document);
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -261,6 +259,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data").value(nullValue())); // data 필드가 null인지 검증
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -328,7 +329,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 }

@@ -77,9 +77,8 @@ public class RunBadgeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.monthly[0].runRecordSeconds").value(50));
         actions.andExpect(jsonPath("$.data.monthly[0].runRecordPace").value(500));
         actions.andExpect(jsonPath("$.data.monthly[0].isAchieved").value(true));
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 }

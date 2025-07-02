@@ -87,8 +87,8 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pastChallenges[0].endDate")
                 .value(matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
-// 디버깅 및 문서화 (필요시 활성화)
-// actions.andDo(MockMvcResultHandlers.print());
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -109,5 +109,30 @@ class ChallengeControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
+        String datePattern = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}";
+
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.title").value("5K"));
+        actions.andExpect(jsonPath("$.data.name").value("6월 주간 챌린지"));
+        actions.andExpect(jsonPath("$.data.sub").value("이번 주 5km를 달려보세요."));
+        actions.andExpect(jsonPath("$.data.description").value("주간 챌린지를 통해 나의 한계를 뛰어넘어 보세요. 이번 주 5km를 달리면 특별한 완주자 기록을 달성할 수 있습니다."));
+        actions.andExpect(jsonPath("$.data.startDate").value(matchesPattern(datePattern)));
+        actions.andExpect(jsonPath("$.data.endDate").value(matchesPattern(datePattern)));
+        actions.andExpect(jsonPath("$.data.targetDistance").value(5000));
+        actions.andExpect(jsonPath("$.data.remainingTime").value(0));
+        actions.andExpect(jsonPath("$.data.isInProgress").value(true));
+        actions.andExpect(jsonPath("$.data.participantCount").value(1));
+        actions.andExpect(jsonPath("$.data.creatorName").doesNotExist());  // null 값일 때
+        actions.andExpect(jsonPath("$.data.challengeType").value("공개"));
+        actions.andExpect(jsonPath("$.data.isJoined").value(true));
+        actions.andExpect(jsonPath("$.data.rank").value(1));
+        actions.andExpect(jsonPath("$.data.myDistance").value(3100));
+        actions.andExpect(jsonPath("$.data.rewards[0].rewardName").value("5km 완주 뱃지"));
+        actions.andExpect(jsonPath("$.data.rewards[0].rewardImageUrl").value("https://example.com/rewards/5km_badge.png"));
+        actions.andExpect(jsonPath("$.data.rewards[0].status").value("달성"));
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }
