@@ -18,6 +18,7 @@ public class PostResponse {
         private Integer userId;
         private String createdAt;
         private Integer runRecordId;
+        private List<Integer> pictureIds;
 
         public SaveDTO(Post post) {
             this.id = post.getId();
@@ -25,6 +26,9 @@ public class PostResponse {
             this.userId = post.getUser().getId();
             this.createdAt = post.getCreatedAt().toString();
             this.runRecordId = post.getRunRecord().getId();
+            this.pictureIds = post.getPostpictures().stream()
+                    .map(pp -> pp.getPicture().getId())
+                    .toList();
         }
     }
 
@@ -93,11 +97,16 @@ public class PostResponse {
         private String content;
         private String updatedAt;
         private Integer runRecordId;
+        private List<Integer> pictureIds;
 
         public UpdateDTO(Post post) {
             this.content = post.getContent();
             this.updatedAt = post.getUpdatedAt().toString();
             this.runRecordId = post.getRunRecord().getId();
+            this.pictureIds = post.getPostpictures().stream()
+                    .map(pp -> pp.getPicture().getId())
+                    .toList();
         }
+
     }
 }

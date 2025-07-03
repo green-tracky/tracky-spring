@@ -3,8 +3,10 @@ package com.example.tracky.community.post;
 import com.example.tracky.runrecord.picture.Picture;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class PostPicture {
 
     @Id
@@ -24,6 +26,7 @@ public class PostPicture {
         this.picture = picture;
     }
 
-    private PostPicture() {
+    protected PostPicture() {
     }
+
 }
