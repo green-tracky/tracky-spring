@@ -1,9 +1,9 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRepository;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
+import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
+import com.example.tracky.runrecord.runsegments.runcoordinates.RunCoordinate;
+import com.example.tracky.runrecord.runsegments.runcoordinates.RunCoordinateRepository;
+import com.example.tracky.runrecord.runsegments.runcoordinates.RunCoordinateRequest;
 import com.example.tracky.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

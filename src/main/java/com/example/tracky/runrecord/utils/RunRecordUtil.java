@@ -2,8 +2,8 @@ package com.example.tracky.runrecord.utils;
 
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.dto.AvgStatsDTO;
-import com.example.tracky.runrecord.runsegment.RunSegment;
-import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+import com.example.tracky.runrecord.runsegments.RunSegment;
+import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
