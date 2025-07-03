@@ -41,4 +41,13 @@ public class RunSegment {
     // 기본생성자 사용금지
     protected RunSegment() {
     }
+
+    /**
+     * OneToOne 에서 연관관계 설정하는 방법
+     *
+     * @param runCoordinate
+     */
+    public void setRunCoordinate(RunCoordinate runCoordinate) {
+        this.runCoordinate = runCoordinate;
+    }
 }
