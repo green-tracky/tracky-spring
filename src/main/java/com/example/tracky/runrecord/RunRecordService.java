@@ -204,7 +204,6 @@ public class RunRecordService {
         return weekDTO;
     }
 
-
     /**
      * 월간 러닝 활동 통계를 조회
      * <p>
@@ -245,9 +244,11 @@ public class RunRecordService {
                 ))
                 .entrySet().stream()
                 .map(entry -> {
-                    RunBadgeAchv sample = entry.getValue().get(0); // 대표 객체 1개
+                    RunBadgeAchv latest = entry.getValue().stream()
+                            .max((a, b) -> a.getAchievedAt().compareTo(b.getAchievedAt()))
+                            .orElse(entry.getValue().get(0));
                     Integer count = entry.getValue().size();
-                    return new AchievementHistoryItemDTO(sample, count);
+                    return new AchievementHistoryItemDTO(latest, count);
                 })
                 .collect(Collectors.toList());
 
@@ -255,17 +256,20 @@ public class RunRecordService {
         List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getId(), // 또는 m.getRewardMaster().getId() 원할 경우
-                        () -> new LinkedHashMap<>(),
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardName(), // 사설 챌린지도 고려
+                        LinkedHashMap::new,
                         Collectors.toList()
                 ))
                 .entrySet().stream()
                 .map(entry -> {
-                    UserChallengeReward sample = entry.getValue().get(0);
+                    UserChallengeReward latest = entry.getValue().stream()
+                            .max((a, b) -> a.getReceivedAt().compareTo(b.getReceivedAt()))
+                            .orElse(entry.getValue().get(0));
                     Integer count = entry.getValue().size();
-                    return new AchievementHistoryItemDTO(sample, count);
+                    return new AchievementHistoryItemDTO(latest, count);
                 })
                 .collect(Collectors.toList());
+
 
         // 통합 DTO로 변환
         List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
@@ -365,9 +369,11 @@ public class RunRecordService {
                 ))
                 .entrySet().stream()
                 .map(entry -> {
-                    RunBadgeAchv sample = entry.getValue().get(0); // 대표 객체 1개
+                    RunBadgeAchv latest = entry.getValue().stream()
+                            .max((a, b) -> a.getAchievedAt().compareTo(b.getAchievedAt()))
+                            .orElse(entry.getValue().get(0));
                     Integer count = entry.getValue().size();
-                    return new AchievementHistoryItemDTO(sample, count);
+                    return new AchievementHistoryItemDTO(latest, count);
                 })
                 .collect(Collectors.toList());
 
@@ -375,17 +381,20 @@ public class RunRecordService {
         List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getId(), // 또는 m.getRewardMaster().getId() 원할 경우
-                        () -> new LinkedHashMap<>(),
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardName(), // 사설 챌린지도 고려
+                        LinkedHashMap::new,
                         Collectors.toList()
                 ))
                 .entrySet().stream()
                 .map(entry -> {
-                    UserChallengeReward sample = entry.getValue().get(0);
+                    UserChallengeReward latest = entry.getValue().stream()
+                            .max((a, b) -> a.getReceivedAt().compareTo(b.getReceivedAt()))
+                            .orElse(entry.getValue().get(0));
                     Integer count = entry.getValue().size();
-                    return new AchievementHistoryItemDTO(sample, count);
+                    return new AchievementHistoryItemDTO(latest, count);
                 })
                 .collect(Collectors.toList());
+
 
         // 통합 DTO로 변환
         List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
@@ -486,9 +495,11 @@ public class RunRecordService {
                 ))
                 .entrySet().stream()
                 .map(entry -> {
-                    RunBadgeAchv sample = entry.getValue().get(0); // 대표 객체 1개
+                    RunBadgeAchv latest = entry.getValue().stream()
+                            .max((a, b) -> a.getAchievedAt().compareTo(b.getAchievedAt()))
+                            .orElse(entry.getValue().get(0));
                     Integer count = entry.getValue().size();
-                    return new AchievementHistoryItemDTO(sample, count);
+                    return new AchievementHistoryItemDTO(latest, count);
                 })
                 .collect(Collectors.toList());
 
@@ -496,17 +507,20 @@ public class RunRecordService {
         List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getId(), // 또는 m.getRewardMaster().getId() 원할 경우
-                        () -> new LinkedHashMap<>(),
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardName(), // 사설 챌린지도 고려
+                        LinkedHashMap::new,
                         Collectors.toList()
                 ))
                 .entrySet().stream()
                 .map(entry -> {
-                    UserChallengeReward sample = entry.getValue().get(0);
+                    UserChallengeReward latest = entry.getValue().stream()
+                            .max((a, b) -> a.getReceivedAt().compareTo(b.getReceivedAt()))
+                            .orElse(entry.getValue().get(0));
                     Integer count = entry.getValue().size();
-                    return new AchievementHistoryItemDTO(sample, count);
+                    return new AchievementHistoryItemDTO(latest, count);
                 })
                 .collect(Collectors.toList());
+
 
         // 통합 DTO로 변환
         List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
