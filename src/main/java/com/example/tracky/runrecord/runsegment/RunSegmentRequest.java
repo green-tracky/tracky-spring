@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord.runsegment;
 
+import com.example.tracky._core.utils.JsonUtil;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
@@ -29,14 +30,19 @@ public class RunSegmentRequest {
                     .pace(RunRecordUtil.calculatePace(distanceMeters, durationSeconds))
                     .build();
 
-            // 좌표 변환
-            List<RunCoordinate> runCoordinates = coordinates.stream()
-                    .map(c -> c.toEntity(runSegment))
-                    .toList();
-            runSegment.getRunCoordinates().addAll(runCoordinates);
+            // 좌표 리스트를 JSON 문자열로 변환
+            String coordinateJson = JsonUtil.toJson(coordinates);
+
+            // RunCoordinate 엔티티 생성(구간별 1:1)
+            RunCoordinate runCoordinate = RunCoordinate.builder()
+                    .coordinate(coordinateJson)
+                    .runSegment(runSegment)
+                    .build();
+
+            // 연관관계 세팅 (구간 <-> 좌표)
+            runSegment.setRunCoordinate(runCoordinate);
 
             return runSegment;
         }
     }
-
 }

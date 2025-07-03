@@ -5,11 +5,8 @@ import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Table(name = "run_segment_tb")
@@ -27,9 +24,8 @@ public class RunSegment {
     @ManyToOne(fetch = FetchType.LAZY)
     private RunRecord runRecord; // 부모 러닝 기록
 
-    @BatchSize(size = 100) // IN 절에 최대 100개의 ID를 담아 조회
-    @OneToMany(mappedBy = "runSegment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RunCoordinate> runCoordinates = new ArrayList<>(); // 자식 좌표들
+    @OneToOne(mappedBy = "runSegment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    private RunCoordinate runCoordinate; // 구간별 1:1 좌표 정보
 
     @Builder
     public RunSegment(Integer id, Integer distanceMeters, Integer durationSeconds, LocalDateTime startDate, LocalDateTime endDate, Integer pace, RunRecord runRecord) {
@@ -44,5 +40,14 @@ public class RunSegment {
 
     // 기본생성자 사용금지
     protected RunSegment() {
+    }
+
+    /**
+     * OneToOne 에서 연관관계 설정하는 방법
+     *
+     * @param runCoordinate
+     */
+    public void setRunCoordinate(RunCoordinate runCoordinate) {
+        this.runCoordinate = runCoordinate;
     }
 }

@@ -1,6 +1,8 @@
 package com.example.tracky.runrecord.runsegment;
 
+import com.example.tracky._core.utils.JsonUtil;
 import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -25,11 +27,14 @@ public class RunSegmentResponse {
             this.durationSeconds = runSegment.getDurationSeconds();
             this.distanceMeters = runSegment.getDistanceMeters();
             this.pace = runSegment.getPace();
-            this.coordinates = runSegment.getRunCoordinates().stream()
-                    .map(c -> new RunCoordinateResponse.DTO(c))
-                    .toList();
+
+            // 좌표 JSON 문자열을 파싱해서 DTO 리스트로 변환
+            String coordinateJson = runSegment.getRunCoordinate().getCoordinate();
+            this.coordinates = JsonUtil.fromJson(
+                    coordinateJson,
+                    new TypeReference<List<RunCoordinateResponse.DTO>>() {
+                    }
+            );
         }
-
     }
-
 }
