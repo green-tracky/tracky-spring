@@ -136,7 +136,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
         // data 기본 필드
-//        actions.andExpect(jsonPath("$.data.id").value(2));
+        actions.andExpect(jsonPath("$.data.id").value(15));
         actions.andExpect(jsonPath("$.data.title").value("부산 해운대 아침 달리기"));
         actions.andExpect(jsonPath("$.data.memo").doesNotExist());
         actions.andExpect(jsonPath("$.data.calories").value(200));
@@ -148,7 +148,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.userId").value(1));
 
         // segments 첫 번째만
-        actions.andExpect(jsonPath("$.data.segments[0].id").value(2));
+        actions.andExpect(jsonPath("$.data.segments[0].id").value(15));
         actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(430));
@@ -157,7 +157,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(3));
 
         // coordinates 첫 번째만
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(27));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(51));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1587));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.1604));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
@@ -302,8 +302,8 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
         actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
         actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue()));
-        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.avgPace").value(500));
+        actions.andExpect(jsonPath("$.data.bestPace").value(450));
         actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.userId").value(1));
         actions.andExpect(jsonPath("$.data.intensity").value(1));
@@ -315,7 +315,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
         actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
-        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(500));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
 
         // coordinates 배열의 첫 번째 요소 검증
