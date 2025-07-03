@@ -16,15 +16,6 @@ public class PostRequest {
 
         private Integer runRecordId;
 
-
-        public Post toEntity(User user, RunRecord runRecord) {
-            return Post.builder()
-                    .title(title)
-                    .content(content)
-                    .user(user)
-                    .runRecord(runRecord)
-                    .build();
-        }
     }
 
     @Data
