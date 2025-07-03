@@ -84,4 +84,42 @@ class PostControllerTest extends MyRestDoc {
         // then
 
     }
+
+    @Test
+    @DisplayName("포스트 쓰기 성공")
+    void update_test() throws Exception {
+
+        // given
+        PostRequest.UpdateDTO reqDTO = new PostRequest.UpdateDTO();
+        reqDTO.setTitle("제목입니다");
+        reqDTO.setContent("내용입니다");
+        reqDTO.setRunRecordId(10);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/community/posts/1")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 내부 필드 검증
+        actions.andExpect(jsonPath("$.data.title").value("제목입니다"));
+        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
+        actions.andExpect(jsonPath("$.data.runRecordId").value(10));
+        actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
+
+    }
 }
