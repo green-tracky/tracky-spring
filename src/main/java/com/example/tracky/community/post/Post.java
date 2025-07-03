@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,10 +42,10 @@ public class Post {
 
     // 댓글 리스트 (1:N)
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PostPicture> postpictures;
+    List<PostPicture> postpictures = new ArrayList<>();
 
     // 생성일 자동 세팅
     @CreationTimestamp

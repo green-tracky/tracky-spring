@@ -8,11 +8,14 @@ import com.example.tracky.community.like.LikeRepository;
 import com.example.tracky.community.post.comment.CommentRepository;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
+import com.example.tracky.runrecord.picture.Picture;
+import com.example.tracky.runrecord.picture.PictureRepository;
 import com.example.tracky.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +25,7 @@ public class PostService {
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
     private final RunRecordRepository runRecordRepository;
+    private final PictureRepository pictureRepository;
 
     public List<PostResponse.ListDTO>
     getPosts(User user) {
@@ -48,14 +52,26 @@ public class PostService {
     @Transactional
     public PostResponse.SaveDTO save(PostRequest.SaveDTO reqDTO, User user) {
 
+        // 러닝 조회
         RunRecord runRecord = null;
         if (reqDTO.getRunRecordId() != null) {
             runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
         }
 
-        Post post = reqDTO.toEntity(user, runRecord);
+        // 사진 조회
+        List<Picture> pictures = new ArrayList<>();
+        if (reqDTO.getPicturesId() != null && !reqDTO.getPicturesId().isEmpty()) {
+            pictures = pictureRepository.findByIds(reqDTO.getPicturesId());
+        }
+
+        // 게시글 엔티티 생성
+        Post post = reqDTO.toEntity(user, runRecord, pictures);
+
+        // 게시글 저장
         Post postPS = postRepository.save(post);
+
+        // 응답 DTO 변환
         return new PostResponse.SaveDTO(postPS);
     }
 
