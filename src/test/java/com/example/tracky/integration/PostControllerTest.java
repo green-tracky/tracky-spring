@@ -86,7 +86,7 @@ class PostControllerTest extends MyRestDoc {
     }
 
     @Test
-    @DisplayName("포스트 쓰기 성공")
+    @DisplayName("포스트 수정 성공")
     void update_test() throws Exception {
 
         // given
