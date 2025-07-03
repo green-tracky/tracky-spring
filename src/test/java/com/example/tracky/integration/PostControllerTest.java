@@ -62,7 +62,6 @@ class PostControllerTest extends MyRestDoc {
 
         // given
         PostRequest.SaveDTO reqDTO = new PostRequest.SaveDTO();
-        reqDTO.setTitle("제목입니다");
         reqDTO.setContent("내용입니다");
         reqDTO.setRunRecordId(10);
 
@@ -91,7 +90,6 @@ class PostControllerTest extends MyRestDoc {
 
         // given
         PostRequest.UpdateDTO reqDTO = new PostRequest.UpdateDTO();
-        reqDTO.setTitle("제목입니다");
         reqDTO.setContent("내용입니다");
         reqDTO.setRunRecordId(10);
 
@@ -116,7 +114,6 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
         // data 내부 필드 검증
-        actions.andExpect(jsonPath("$.data.title").value("제목입니다"));
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.runRecordId").value(10));
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());

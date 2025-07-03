@@ -29,7 +29,6 @@ public class PostRepositoryTest {
         for (Post post : posts) {
             log.debug("결과확인===================");
             log.debug("post.id: {}", post.getId());
-            log.debug("post.title: {}", post.getTitle());
 
             if (post.getUser() != null) {
                 log.debug("user.id: {}", post.getUser().getId());
@@ -53,7 +52,6 @@ public class PostRepositoryTest {
 
         Post post = Post.builder()
                 .user(user)
-                .title("title 출력")
                 .content("content 출력")
                 .runRecord(runRecord)
                 .build();
@@ -62,7 +60,6 @@ public class PostRepositoryTest {
 
         log.debug("결과확인===================");
         log.debug("post.id: {}", post.getId());
-        log.debug("post.title: {}", post.getTitle());
         log.debug("post.content: {}", post.getContent());
         log.debug("user.id: {}", post.getUser().getId());
         log.debug("runRecord.id: {}", post.getRunRecord().getId());
@@ -77,7 +74,6 @@ public class PostRepositoryTest {
         em.persist(user);
 
         Post post = Post.builder()
-                .title("원래 제목")
                 .content("원래 내용")
                 .user(user)
                 .build();
@@ -85,11 +81,10 @@ public class PostRepositoryTest {
 
         // when
         Post postPS = postRepository.findById(post.getId()).orElseThrow();
-        postPS.update("수정된 제목", "수정된 내용", null);
+        postPS.update("수정된 내용", null);
 
         // then
         Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
-        log.debug("✅ 제목: {}", updatedPost.getTitle());
         log.debug("✅ 내용: {}", updatedPost.getContent());
     }
 

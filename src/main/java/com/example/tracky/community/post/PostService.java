@@ -87,7 +87,7 @@ public class PostService {
         RunRecord runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
-        postPS.update(reqDTO.getTitle(), reqDTO.getContent(), runRecord);
+        postPS.update(reqDTO.getContent(), runRecord);
 
         return new PostResponse.UpdateDTO(postPS);
     }

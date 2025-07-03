@@ -37,9 +37,6 @@ public class Post {
     @Column(length = 1000)
     private String content;
 
-    @Column(length = 50, nullable = false)
-    private String title;
-
     // 댓글 리스트 (1:N)
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -55,16 +52,14 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Post(Integer id, User user, RunRecord runRecord, String content, String title) {
+    public Post(Integer id, User user, RunRecord runRecord, String content) {
         this.id = id;
         this.user = user;
         this.runRecord = runRecord;
         this.content = content;
-        this.title = title;
     }
 
-    public void update(String title, String content, RunRecord runRecord) {
-        this.title = title;
+    public void update(String content, RunRecord runRecord) {
         this.content = content;
         this.runRecord = runRecord;
     }

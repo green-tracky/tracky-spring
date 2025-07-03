@@ -14,7 +14,6 @@ public class PostResponse {
     @Data
     public static class SaveDTO {
         private Integer id;
-        private String title;
         private String content;
         private Integer userId;
         private String createdAt;
@@ -22,7 +21,6 @@ public class PostResponse {
 
         public SaveDTO(Post post) {
             this.id = post.getId();
-            this.title = post.getTitle();
             this.content = post.getContent();
             this.userId = post.getUser().getId();
             this.createdAt = post.getCreatedAt().toString();
@@ -62,7 +60,6 @@ public class PostResponse {
     public static class DetailDTO {
 
         private final Integer id;
-        private final String title;
         private final String content;
         private final Integer userId;
         private final RunRecordResponse.DetailDTO runRecord;
@@ -72,7 +69,6 @@ public class PostResponse {
 
         public DetailDTO(Post post) {
             this.id = post.getId();
-            this.title = post.getTitle();
             this.content = post.getContent();
             this.userId = post.getUser().getId();
             this.runRecord = post.getRunRecord() != null
@@ -94,13 +90,11 @@ public class PostResponse {
 
     @Data
     public static class UpdateDTO {
-        private String title;
         private String content;
         private String updatedAt;
         private Integer runRecordId;
 
         public UpdateDTO(Post post) {
-            this.title = post.getTitle();
             this.content = post.getContent();
             this.updatedAt = post.getUpdatedAt().toString();
             this.runRecordId = post.getRunRecord().getId();
