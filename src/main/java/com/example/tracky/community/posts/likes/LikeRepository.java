@@ -1,4 +1,4 @@
-package com.example.tracky.community.likes;
+package com.example.tracky.community.posts.likes;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;

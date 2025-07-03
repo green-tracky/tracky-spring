@@ -2,9 +2,9 @@ package com.example.tracky.community.posts;
 
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky.community.likes.Like;
-import com.example.tracky.community.likes.LikeRepository;
 import com.example.tracky.community.posts.comments.CommentRepository;
+import com.example.tracky.community.posts.likes.Like;
+import com.example.tracky.community.posts.likes.LikeRepository;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;

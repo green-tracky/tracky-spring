@@ -1,4 +1,4 @@
-package com.example.tracky.community.likes;
+package com.example.tracky.community.posts.likes;
 
 import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.comments.Comment;
