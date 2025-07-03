@@ -5,6 +5,8 @@ import com.example.tracky.user.User;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
+import java.util.List;
+
 public class PostRequest {
 
     @Data
@@ -16,6 +18,8 @@ public class PostRequest {
 
         private Integer runRecordId;
 
+        private List<Integer> picturesId;
+
     }
 
     @Data
@@ -26,6 +30,8 @@ public class PostRequest {
         private String content;
 
         private Integer runRecordId;
+
+        private List<Integer> picturesId;
 
 
         public Post toEntity(User user, RunRecord runRecord) {

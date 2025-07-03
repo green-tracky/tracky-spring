@@ -43,6 +43,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<PostPicture> postpictures;
+
     // 생성일 자동 세팅
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -59,7 +62,7 @@ public class Post {
         this.title = title;
     }
 
-    public void update (String title, String content, RunRecord runRecord) {
+    public void update(String title, String content, RunRecord runRecord) {
         this.title = title;
         this.content = content;
         this.runRecord = runRecord;
