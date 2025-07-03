@@ -68,4 +68,34 @@ public class PostRepositoryTest {
         log.debug("runRecord.id: {}", post.getRunRecord().getId());
     }
 
+    @Test
+    void delete_test() {
+        // given
+        User user = User.builder().build();
+        em.persist(user);
+
+        Post post = Post.builder()
+                .user(user)
+                .title("title")
+                .content("content")
+                .build();
+
+        em.persist(post);
+        em.flush();
+
+        Integer postId = post.getId();
+
+        // when
+        postRepository.delete(post);
+        em.flush();
+
+        // then
+        Post found = em.find(Post.class, postId);
+        if (found == null) {
+            log.debug("✅ 삭제 성공: postId = {}", postId);
+        } else {
+            log.debug("❌ 삭제 실패: postId = {}, title = {}", postId, found.getTitle());
+        }
+    }
+
 }

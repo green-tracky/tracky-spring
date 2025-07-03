@@ -58,4 +58,13 @@ public class PostService {
         return new PostResponse.SaveDTO(postPS);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Post post = postRepository.findById(id);
+        if (post == null) {
+            throw new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND);
+        }
+        postRepository.delete(post);
+    }
+
 }

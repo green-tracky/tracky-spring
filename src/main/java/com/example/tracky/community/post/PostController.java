@@ -35,4 +35,10 @@ public class PostController {
         PostResponse.SaveDTO respDTO = postService.save(reqDTO, user);
         return Resp.ok(respDTO);
     }
+
+    @DeleteMapping("/community/posts/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        postService.delete(id);
+        return Resp.ok("삭제 성공");
+    }
 }
