@@ -110,6 +110,11 @@ public enum ErrorCodeEnum {
     CHALLENGE_NOT_FOUND(404, "해당 챌린지를 찾을 수 없습니다"),
 
     /**
+     * 404 Not Found - 해당 챌린지에 참가하지 않았습니다.
+     */
+    CHALLENGE_JOIN_NOT_FOUND(404, "해당 챌린지에 참가하지 않았습니다"),
+
+    /**
      * 500 Internal Server Error - 알 수 없는 오류 발생 시 기본 메시지입니다.
      */
     INTERNAL_SERVER_ERROR(500, "알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요"),

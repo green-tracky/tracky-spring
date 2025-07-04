@@ -1,8 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.dto.AvgStatsDTO;
-import com.example.tracky.runrecord.dto.RecentRunsDTO;
-import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.dto.*;
 import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.picture.PictureResponse;
 import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
@@ -21,61 +19,45 @@ public class RunRecordResponse {
 
     /**
      * 주간 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class WeekDTO {
         private AvgStatsDTO avgStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private RunLevelDTO runLevel;
         private Map<String, List<String>> weeks = new HashMap<>();
 
-        public WeekDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public WeekDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevelDTO runLevel) {
             this.avgStats = avgStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
         }
     }
 
     /**
      * 월간 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class MonthDTO {
         private AvgStatsDTO avgStats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private RunLevelDTO runLevel;
         private List<Integer> years = new ArrayList<>();
         private Map<Integer, List<Integer>> mounts = new HashMap<>();
 
-        public MonthDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public MonthDTO(AvgStatsDTO avgStats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevelDTO runLevel) {
             this.avgStats = avgStats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
         }
     }
 
     /**
      * 연간 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private TotalStatsDTO allStats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class YearDTO {
@@ -83,26 +65,20 @@ public class RunRecordResponse {
         private TotalStatsDTO totalstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private RunLevelDTO runLevel;
         private List<Integer> years = new ArrayList<>();
 
-        public YearDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public YearDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevelDTO runLevel) {
             this.avgStats = avgStats;
             this.totalstats = totalstats;
             this.badges = badges;
             this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
         }
     }
 
     /**
      * 전체 러닝 기록 응답 DTO
-     * <p>
-     * private AvgStatsDTO runstats;
-     * <p>
-     * private TotalStatsDTO allStats;
-     * <p>
-     * private List<RecentRunsDTO> recentRuns;
-     * <p>
-     * private List<RunBadgeResponse.DTO> badges;
      */
     @Data
     public static class AllDTO {
@@ -110,28 +86,61 @@ public class RunRecordResponse {
         private TotalStatsDTO totalstats;
         private List<RecentRunsDTO> recentRuns;
         private List<RunBadgeResponse.DTO> badges;
+        private RunLevelDTO runLevel;
 
-        public AllDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns) {
+        public AllDTO(AvgStatsDTO avgStats, TotalStatsDTO totalstats, List<RunBadgeResponse.DTO> badges, List<RecentRunsDTO> recentRuns, RunLevelDTO runLevel) {
             this.avgStats = avgStats;
             this.totalstats = totalstats;
             this.badges = badges;
+            this.recentRuns = recentRuns;
+            this.runLevel = runLevel;
+        }
+    }
+
+    /**
+     * 연도-월 단위로 그룹핑된 러닝 기록을 담는 DTO
+     */
+    @Data
+    public static class RecentOneDTO {
+        private LocalDateTime yearMonth; // 예: "2025-06-01 00:00:00"
+        private AvgStatsDTO avgStats;
+        private List<RecentRunsDTO> recentRuns;
+
+        public RecentOneDTO(LocalDateTime yearMonth, AvgStatsDTO avgStats, List<RecentRunsDTO> recentRuns) {
+            this.yearMonth = yearMonth;
+            this.avgStats = avgStats;
             this.recentRuns = recentRuns;
         }
     }
 
     /**
-     * private Integer id;
-     * <p>
-     * private String title;
-     * <p>
-     * private String memo;
-     * <p>
-     * private Integer calories;
-     * <p>
-     * private List<RunSegmentResponse.DTO> segments;
-     * <p>
-     * private List<PictureResponse.DTO> pictures;
+     * 연도-월별로 그룹화된 러닝 활동 목록 전체를 담는 DTO
      */
+    @Data
+    public static class GroupedRecentListDTO {
+        private List<RecentOneDTO> groupedrecentList;
+        private PageDTO page;
+
+        public GroupedRecentListDTO(List<RecentOneDTO> groupedrecentList, PageDTO page) {
+            this.groupedrecentList = groupedrecentList;
+            this.page = page;
+        }
+    }
+
+    /**
+     * 기본 리스트 형태로 정렬된 최근 러닝 기록 리스트 DTO
+     */
+    @Data
+    public static class FlatRecentListDTO {
+        private List<RecentRunsDTO> recentList;
+        private PageDTO page;
+
+        public FlatRecentListDTO(List<RecentRunsDTO> recentList, PageDTO page) {
+            this.recentList = recentList;
+            this.page = page;
+        }
+    }
+
     @Data
     public static class SaveDTO {
         private Integer id;

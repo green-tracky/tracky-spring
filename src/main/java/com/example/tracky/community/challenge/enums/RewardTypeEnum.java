@@ -46,4 +46,5 @@ public enum RewardTypeEnum {
     public String getValue() {
         return value;
     }
+
 }

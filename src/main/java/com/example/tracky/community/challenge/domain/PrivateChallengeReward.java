@@ -32,4 +32,5 @@ public class PrivateChallengeReward {
 
     protected PrivateChallengeReward() {
     }
+
 }

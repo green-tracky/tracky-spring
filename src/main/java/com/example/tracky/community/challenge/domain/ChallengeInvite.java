@@ -47,5 +47,4 @@ public class ChallengeInvite {
 
     protected ChallengeInvite() {
     }
-    
 }
