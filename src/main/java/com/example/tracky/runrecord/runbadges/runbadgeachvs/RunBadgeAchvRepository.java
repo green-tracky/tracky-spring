@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.runbadges.runbadgeachv;
+package com.example.tracky.runrecord.runbadges.runbadgeachvs;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;

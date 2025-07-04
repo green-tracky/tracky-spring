@@ -1,7 +1,9 @@
 package com.example.tracky.community.challenges.domain;
 
+import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,12 +19,12 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "challenge_tb")
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // [핵심] JOINED 상속 전략 사용. 조회할 때는 내부적으로 JOIN 쿼리 발생
-@DiscriminatorColumn(name = "challenge_type") // 자식 타입을 구분할 컬럼(DTYPE)의 이름을 'challenge_type'으로 지정. 부모테이블에 컬럼이 자동으로 생김
-public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하지 않음
+public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(unique = true)
     private String name; // 챌린지 이름 (예: "6월 주간 챌린지")
     private String sub; // 챌린지 짧은 설명 (예: "이번 주 5km를 달려보세요.")
     private String description; // 챌린지 설명 (예: "주간 챌린지를 통해 나의 한계를...")
@@ -30,6 +32,8 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
     private LocalDateTime endDate; // 챌린지 종료 날짜
     private Integer targetDistance; // 목표 달리기 거리 (m)
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
+    private ChallengeTypeEnum type; // PUBLIC, PRIVATE
+    private String imageUrl; // 챌린지 이미지
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 챌린지 생성 시간
@@ -41,7 +45,7 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
     @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
 
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator) {
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -50,8 +54,13 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
         this.endDate = endDate;
         this.targetDistance = targetDistance;
         this.isInProgress = isInProgress;
+        this.type = type;
+        this.imageUrl = imageUrl;
         this.creator = creator;
     }
+
+    @Builder
+
 
     protected Challenge() {
     }

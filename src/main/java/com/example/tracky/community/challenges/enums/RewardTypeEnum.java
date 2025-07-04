@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.stream.Stream;
 
+@Deprecated
 @RequiredArgsConstructor
 public enum RewardTypeEnum {
 
@@ -46,4 +47,5 @@ public enum RewardTypeEnum {
     public String getValue() {
         return value;
     }
+
 }
