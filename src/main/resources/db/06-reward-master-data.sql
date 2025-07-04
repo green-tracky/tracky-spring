@@ -5,3 +5,12 @@ VALUES ('금메달', '금메달', 'https://example.com/rewards/gold.png', NOW())
        ('은메달', '은메달', 'https://example.com/rewards/silver.png', NOW()),
        ('동메달', '동메달', 'https://example.com/rewards/bronze.png', NOW()),
        ('참여상', '참여상', 'https://example.com/rewards/participation.png', NOW());
+
+
+
+
+
+
+
+
+
