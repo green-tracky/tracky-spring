@@ -4,7 +4,7 @@ import com.example.tracky.community.challenges.domain.RewardMaster;
 import com.example.tracky.community.challenges.domain.UserChallengeReward;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadges.enums.RunBadgeTypeEnum;
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -24,13 +24,6 @@ public class RunBadgeResponse {
         private List<DTO> monthly; // 월간 기록 목록
 
         public GroupedBadgeListDTO(List<RunBadge> runBadges, List<RunBadgeAchv> runBadgeAchvs) {
-            // 최근 획득 뱃지 5개
-            this.recents = runBadgeAchvs.stream()
-                    .sorted((achv1, achv2) -> achv2.getAchievedAt().compareTo(achv1.getAchievedAt()))
-                    .limit(5)
-                    .map(achv -> new DTO(achv))
-                    .toList();
-
             // 획득한 뱃지 목록을 Map으로 변환합니다
             Map<Integer, RunBadgeAchv> achievedMap = runBadgeAchvs.stream()
                     .collect(Collectors.toMap(
@@ -38,19 +31,39 @@ public class RunBadgeResponse {
                             achv -> achv // value
                     ));
 
-            this.bests = buildCategorizedList(runBadges, achievedMap, RunBadgeTypeEnum.RECORD);
-            this.monthly = buildCategorizedList(runBadges, achievedMap, RunBadgeTypeEnum.MONTHLY_ACHIEVEMENT);
+            // 획득한 뱃지의 획득 횟수를 구합니다
+            Map<Integer, Long> achievedCountMap = runBadgeAchvs.stream()
+                    .collect(Collectors.groupingBy(
+                            achv -> achv.getRunBadge().getId(),
+                            Collectors.counting()
+                    ));
+
+
+            // 최근 획득 뱃지 5개
+            this.recents = runBadgeAchvs.stream()
+                    .sorted((achv1, achv2) -> achv2.getAchievedAt().compareTo(achv1.getAchievedAt()))
+                    .limit(5)
+                    .map(achv -> {
+                        Integer badgeId = achv.getRunBadge().getId();
+                        Integer count = achievedCountMap.getOrDefault(badgeId, 0L).intValue();
+                        return new DTO(achv, count);
+                    })
+                    .toList();
+            this.bests = buildCategorizedList(runBadges, achievedMap, achievedCountMap, RunBadgeTypeEnum.RECORD);
+            this.monthly = buildCategorizedList(runBadges, achievedMap, achievedCountMap, RunBadgeTypeEnum.MONTHLY_ACHIEVEMENT);
         }
 
         private List<DTO> buildCategorizedList(List<RunBadge> runBadges,
                                                Map<Integer, RunBadgeAchv> achievedMap,
+                                               Map<Integer, Long> achievedCountMap,
                                                RunBadgeTypeEnum type) {
             return runBadges.stream()
                     .filter(badge -> badge.getType() == type)
                     .map(badge -> {
                         RunBadgeAchv isAchieved = achievedMap.get(badge.getId());
+                        Integer count = achievedCountMap.getOrDefault(badge.getId(), 0L).intValue();
                         if (isAchieved != null) {
-                            return new DTO(isAchieved);
+                            return new DTO(isAchieved, count);
                         } else {
                             return new DTO(badge);
                         }
@@ -72,6 +85,25 @@ public class RunBadgeResponse {
         private Integer runRecordSeconds; // 러닝 기록의 시간 (획득 못했으면 null)
         private Integer runRecordPace; // 러닝 기록의 페이스 (획득 못했으면 null)
         private Boolean isAchieved; // 획득 유무
+        private Integer achievedCount; // 획득 횟수
+
+        // 획득한 뱃지용 + 횟수
+        public DTO(RunBadgeAchv runBadgeAchv, Integer achievedCount) {
+            RunBadge runBadge = runBadgeAchv.getRunBadge();
+            RunRecord runRecord = runBadgeAchv.getRunRecord();
+
+            this.id = runBadge.getId();
+            this.name = runBadge.getName();
+            this.description = runBadge.getDescription();
+            this.imageUrl = runBadge.getImageUrl();
+            this.type = runBadge.getType();
+            this.achievedAt = runBadgeAchv.getAchievedAt();
+            this.runRecordDistance = runRecord.getTotalDistanceMeters();
+            this.runRecordSeconds = runRecord.getTotalDurationSeconds();
+            this.runRecordPace = runRecord.getAvgPace();
+            this.isAchieved = true; // 획득했으므로 true
+            this.achievedCount = achievedCount;
+        }
 
         // 획득한 뱃지용
         public DTO(RunBadgeAchv runBadgeAchv) {

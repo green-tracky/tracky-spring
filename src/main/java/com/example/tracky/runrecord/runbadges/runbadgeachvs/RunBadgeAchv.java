@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.runbadges.runbadgeachv;
+package com.example.tracky.runrecord.runbadges.runbadgeachvs;
 
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadges.RunBadge;

@@ -6,14 +6,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Stream;
-
 @RequiredArgsConstructor
 public enum GenderEnum {
     MALE("남"),
     FEMALE("여");
 
-    private final String value; // DB에 저장될 실제 값 ("남", "여")
+    private final String displayName; // DB에 저장될 실제 값 ("남", "여")
 
     /**
      * json -> DTO 역직렬화 될때 사용됨. DTO 용
@@ -23,14 +21,18 @@ public enum GenderEnum {
      * @JsonCreator JSON의 특정 값(여기서는 "도로" 같은 문자열)으로 Java 객체(여기서는 GenderEnum)를 만드는 방법을 Jackson(Spring의 기본 JSON 라이브러리)에게 알려줄 수 있습니다.
      */
     @JsonCreator
-    public static GenderEnum fromString(String value) {
-        if (value == null || value.isEmpty()) {
-            return null;
+    public static GenderEnum fromValue(String value) {
+        if (value == null || value.isEmpty()) return null;
+        // 한글 매칭
+        for (GenderEnum gender : values()) {
+            if (gender.displayName.equals(value)) return gender;
         }
-        return Stream.of(GenderEnum.values())
-                .filter(genderEnum -> genderEnum.getValue().equals(value))
-                .findFirst()
-                .orElseThrow(() -> new ExceptionApi400(ErrorCodeEnum.INVALID_GENDER));
+        // 영문 매칭 (대소문자 구분 없이)
+        try {
+            return GenderEnum.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ExceptionApi400(ErrorCodeEnum.INVALID_GENDER);
+        }
     }
 
     /**
@@ -39,7 +41,7 @@ public enum GenderEnum {
      * @return 데이터베이스에 저장될 한글 문자열 값 (예: "남")
      */
     @JsonValue
-    public String getValue() {
-        return value;
+    public String getDisplayName() {
+        return displayName;
     }
 }
