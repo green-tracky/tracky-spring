@@ -1,7 +1,7 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
-import com.example.tracky.community.post.PostRequest;
+import com.example.tracky.community.posts.PostRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

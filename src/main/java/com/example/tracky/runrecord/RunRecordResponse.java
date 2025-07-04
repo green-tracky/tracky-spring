@@ -6,10 +6,10 @@ import com.example.tracky.runrecord.dto.RecentRunsDTO;
 import com.example.tracky.runrecord.dto.RunLevelDTO;
 import com.example.tracky.runrecord.dto.TotalStatsDTO;
 import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
-import com.example.tracky.runrecord.picture.PictureResponse;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
-import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
+import com.example.tracky.runrecord.pictures.PictureResponse;
+import com.example.tracky.runrecord.runbadges.RunBadgeResponse;
+import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.runrecord.runsegments.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord.utils;
 
-import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
