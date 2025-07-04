@@ -84,11 +84,27 @@ public class PostService {
         }
 
 
-        // RunRecord 변경 여부 확인 및 조회
-        RunRecord runRecord = postPS.getRunRecord();
-        if (!reqDTO.getRunRecordId().equals(postPS.getRunRecord().getId())) {
-            runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
+        // RunRecord 변경 로직
+        RunRecord runRecord = null;
+        Integer reqRunRecordId = reqDTO.getRunRecordId(); // 요청에서 받은 러닝 ID
+        RunRecord currentRunRecord = postPS.getRunRecord(); // 현재 저장된 러닝 기록
+
+        if (currentRunRecord == null && reqRunRecordId != null) {
+            // 러닝이 없었는데 새로 들어온 경우
+            runRecord = runRecordRepository.findById(reqRunRecordId)
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
+        } else if (currentRunRecord != null && reqRunRecordId == null) {
+            // 기존 러닝이 있었는데 요청에 없다면 제거
+            runRecord = null;
+        } else if (currentRunRecord != null && reqRunRecordId != null) {
+            // 기존과 요청 둘 다 존재하는데 ID가 다르면 변경
+            if (!currentRunRecord.getId().equals(reqRunRecordId)) {
+                runRecord = runRecordRepository.findById(reqRunRecordId)
+                        .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
+            } else {
+                // 기존과 동일하다면 유지
+                runRecord = currentRunRecord;
+            }
         }
 
         // 사진 조회
