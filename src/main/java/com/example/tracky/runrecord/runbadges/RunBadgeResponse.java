@@ -96,7 +96,7 @@ public class RunBadgeResponse {
             this.name = runBadge.getName();
             this.description = runBadge.getDescription();
             this.imageUrl = runBadge.getImageUrl();
-            this.type = runBadge.getType();
+            this.type = runBadge.getType().getDisplayName();
             this.achievedAt = runBadgeAchv.getAchievedAt();
             this.runRecordDistance = runRecord.getTotalDistanceMeters();
             this.runRecordSeconds = runRecord.getTotalDurationSeconds();
@@ -114,7 +114,7 @@ public class RunBadgeResponse {
             this.name = runBadge.getName();
             this.description = runBadge.getDescription();
             this.imageUrl = runBadge.getImageUrl();
-            this.type = runBadge.getType();
+            this.type = runBadge.getType().getDisplayName();
             this.achievedAt = runBadgeAchv.getAchievedAt();
             this.runRecordDistance = runRecord.getTotalDistanceMeters();
             this.runRecordSeconds = runRecord.getTotalDurationSeconds();
@@ -128,7 +128,7 @@ public class RunBadgeResponse {
             this.name = runBadge.getName();
             this.description = runBadge.getDescription();
             this.imageUrl = runBadge.getImageUrl();
-            this.type = runBadge.getType();
+            this.type = runBadge.getType().getDisplayName();
             this.achievedAt = null; // 획득 정보 없음
             this.runRecordDistance = null; // 획득 정보 없음
             this.runRecordSeconds = null; // 획득 정보 없음
@@ -144,7 +144,7 @@ public class RunBadgeResponse {
             this.name = rewardMaster.getRewardName();
             this.description = "챌린지를 완료하셨습니다";
             this.imageUrl = rewardMaster.getRewardImageUrl();
-            this.type = rewardMaster.getType();
+            this.type = rewardMaster.getType().getDisplayName();
             this.achievedAt = userChallengeReward.getReceivedAt(); // 획득 정보 없음
             this.runRecordDistance = null; // 획득 정보 없음
             this.runRecordSeconds = null; // 획득 정보 없음

@@ -1,5 +1,8 @@
 package com.example.tracky.runrecord.runbadges.enums;
 
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi400;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;
 
@@ -31,19 +34,32 @@ public enum RunBadgeTypeEnum {
      */
     MONTHLY_ACHIEVEMENT("월간업적");
 
-    /**
-     * 데이터베이스에 저장될 한글 문자열 값입니다.
-     * 예: RECORD -> "최고 기록"
-     */
-    private final String value;
+    private final String displayName;
 
     /**
-     * Jackson이 이 Enum을 JSON으로 변환할 때 이 메서드의 반환값을 사용하도록 지정합니다.
-     *
-     * @return 데이터베이스에 저장될 한글 문자열 값 (예: "최고기록")
+     * JSON 역직렬화 및 DB → Enum 변환 모두 지원
+     * - 한글("최고기록", "월간업적") 또는 영문("RECORD", "MONTHLY_ACHIEVEMENT") 모두 허용
+     */
+    @JsonCreator
+    public static RunBadgeTypeEnum fromValue(String value) {
+        if (value == null || value.isEmpty()) return null;
+        // 한글 매칭
+        for (RunBadgeTypeEnum type : values()) {
+            if (type.displayName.equals(value)) return type;
+        }
+        // 영문 매칭 (대소문자 구분 없이)
+        try {
+            return RunBadgeTypeEnum.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ExceptionApi400(ErrorCodeEnum.INVALID_RUNBADGE_TYPE);
+        }
+    }
+
+    /**
+     * JSON 직렬화 시 한글로 내려줌
      */
     @JsonValue
-    public String getValue() {
-        return value;
+    public String getDisplayName() {
+        return displayName;
     }
 }
