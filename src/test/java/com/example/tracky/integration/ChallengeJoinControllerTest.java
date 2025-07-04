@@ -45,10 +45,37 @@ class ChallengeJoinControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.id").value(3));
         actions.andExpect(jsonPath("$.data.challengeId").value(2));
         actions.andExpect(jsonPath("$.data.userId").value(1));
-        actions.andExpect(jsonPath("$.data.joinDate").value(Matchers.matchesRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.joinDate").value(
+                Matchers.matchesRegex("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
+        ));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
+    }
+
+    @Test
+    @DisplayName("챌린지 나가기 성공")
+    void delete_test() throws Exception {
+        // given
+        Integer challengeId = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/challenges/{id}/joins", challengeId)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+        actions.andExpect(jsonPath("$.data").isEmpty());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }

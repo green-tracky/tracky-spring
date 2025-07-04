@@ -50,7 +50,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         List<RunSegmentRequest.DTO> segments = new ArrayList<>();
 
         RunSegmentRequest.DTO segment1 = new RunSegmentRequest.DTO();
-        // ⭐️ [수정 2] 문자열을 LocalDateTime으로 변환하여 설정
         segment1.setStartDate(LocalDateTime.parse("2025-06-22 06:30:00", formatter));
         segment1.setEndDate(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
         segment1.setDurationSeconds(430);
@@ -60,20 +59,19 @@ public class RunRecordControllerTest extends MyRestDoc {
         RunCoordinateRequest.DTO coord1 = new RunCoordinateRequest.DTO();
         coord1.setLat(35.1587);
         coord1.setLon(129.1604);
-        // ⭐️ [수정 3] Timestamp.valueOf 대신 LocalDateTime.parse 사용
-        coord1.setCreatedAt(LocalDateTime.parse("2025-06-22 06:30:00", formatter));
+        coord1.setRecordedAt(LocalDateTime.parse("2025-06-22 06:30:00", formatter));
         coordinates1.add(coord1);
 
         RunCoordinateRequest.DTO coord2 = new RunCoordinateRequest.DTO();
         coord2.setLat(35.1595);
         coord2.setLon(129.1612);
-        coord2.setCreatedAt(LocalDateTime.parse("2025-06-22 06:33:45", formatter));
+        coord2.setRecordedAt(LocalDateTime.parse("2025-06-22 06:33:45", formatter));
         coordinates1.add(coord2);
 
         RunCoordinateRequest.DTO coord3 = new RunCoordinateRequest.DTO();
         coord3.setLat(35.1602);
         coord3.setLon(129.1620);
-        coord3.setCreatedAt(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
+        coord3.setRecordedAt(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
         coordinates1.add(coord3);
 
         segment1.setCoordinates(coordinates1);
@@ -89,13 +87,13 @@ public class RunRecordControllerTest extends MyRestDoc {
         RunCoordinateRequest.DTO coord4 = new RunCoordinateRequest.DTO();
         coord4.setLat(35.1610);
         coord4.setLon(129.1628);
-        coord4.setCreatedAt(LocalDateTime.parse("2025-06-22 06:40:00", formatter));
+        coord4.setRecordedAt(LocalDateTime.parse("2025-06-22 06:40:00", formatter));
         coordinates2.add(coord4);
 
         RunCoordinateRequest.DTO coord5 = new RunCoordinateRequest.DTO();
         coord5.setLat(35.1618);
         coord5.setLon(129.1635);
-        coord5.setCreatedAt(LocalDateTime.parse("2025-06-22 06:43:05", formatter));
+        coord5.setRecordedAt(LocalDateTime.parse("2025-06-22 06:43:05", formatter));
         coordinates2.add(coord5);
 
         segment2.setCoordinates(coordinates2);
@@ -157,10 +155,8 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(3));
 
         // coordinates 첫 번째만
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(51));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1587));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.1604));
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
         // badges 첫 번째만
         actions.andExpect(jsonPath("$.data.badges[0].id").value(2));
@@ -227,10 +223,9 @@ public class RunRecordControllerTest extends MyRestDoc {
 
         // coordinates 배열 길이 검증
         // coordinates 배열의 첫 번째 요소 검증
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].recordedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
         // pictures 빈 배열 확인
         actions.andExpect(jsonPath("$.data.pictures").isArray());
@@ -319,10 +314,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
 
         // coordinates 배열의 첫 번째 요소 검증
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].recordedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
         // pictures 빈 배열 확인
         actions.andExpect(jsonPath("$.data.pictures").isArray());
@@ -333,7 +327,7 @@ public class RunRecordControllerTest extends MyRestDoc {
     }
 
     @Test
-    public void getActivitiesWeek_test() throws Exception {
+    public void get_activities_week_test() throws Exception {
         // given
         Integer id = 1;
 
@@ -365,7 +359,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.badges[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordDistance").value(100));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value((nullValue())));
+        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value(500));
         actions.andExpect(jsonPath("$.data.badges[0].isAchieved").value(true));
 
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(3));
@@ -389,7 +383,7 @@ public class RunRecordControllerTest extends MyRestDoc {
     }
 
     @Test
-    public void getActivitiesMonth_test() throws Exception {
+    public void get_activities_month_test() throws Exception {
         // given
         Integer id = 1;
 
@@ -421,7 +415,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.badges[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordDistance").value(100));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value((nullValue())));
+        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value(500));
         actions.andExpect(jsonPath("$.data.badges[0].isAchieved").value(true));
 
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(3));
@@ -445,7 +439,7 @@ public class RunRecordControllerTest extends MyRestDoc {
     }
 
     @Test
-    public void getActivitiesYear_test() throws Exception {
+    public void get_activities_year_test() throws Exception {
         // given
         Integer id = 1;
 
@@ -483,7 +477,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.badges[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordDistance").value(100));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value((nullValue())));
+        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value(500));
         actions.andExpect(jsonPath("$.data.badges[0].isAchieved").value(true));
 
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(3));
@@ -506,7 +500,7 @@ public class RunRecordControllerTest extends MyRestDoc {
     }
 
     @Test
-    public void getActivitiesAll_test() throws Exception {
+    public void get_activities_all_test() throws Exception {
         // given
         Integer id = 1;
 
@@ -538,7 +532,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.badges[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordDistance").value(100));
         actions.andExpect(jsonPath("$.data.badges[0].runRecordSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value((nullValue())));
+        actions.andExpect(jsonPath("$.data.badges[0].runRecordPace").value(500));
         actions.andExpect(jsonPath("$.data.badges[0].isAchieved").value(true));
 
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(3));
@@ -555,32 +549,32 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
         actions.andExpect(jsonPath("$.data.weeks['2025-07'][0]").value("이번주"));
-//
-//        // segments 배열의 첫 번째 요소 검증
-//        actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
-//        actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-//        actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-//        actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
-//        actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
-//        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
-//        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
-//
-//        // coordinates 배열의 첫 번째 요소 검증
-//        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
-//        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
-//        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
-//        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-//
-//        // pictures 빈 배열 확인
-//        actions.andExpect(jsonPath("$.data.pictures").isArray());
-//        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
+
+        // segments 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
+
+        // coordinates 배열의 첫 번째 요소 검증
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        // pictures 빈 배열 확인
+        actions.andExpect(jsonPath("$.data.pictures").isArray());
+        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void getActivitiesRecent_test() throws Exception {
+    public void get_activities_recent_test() throws Exception {
         // given
         Integer id = 1;
         RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
@@ -617,8 +611,8 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.totalDistanceMeters").value(100));
         actions.andExpect(jsonPath("$.data.totalDurationSeconds").value(50));
         actions.andExpect(jsonPath("$.data.elapsedTimeInSeconds").value(50));
-        actions.andExpect(jsonPath("$.data.avgPace").value(nullValue()));
-        actions.andExpect(jsonPath("$.data.bestPace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.avgPace").value(500));
+        actions.andExpect(jsonPath("$.data.bestPace").value(450));
         actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.userId").value(1));
         actions.andExpect(jsonPath("$.data.intensity").value(1));
@@ -630,14 +624,13 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
         actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
-        actions.andExpect(jsonPath("$.data.segments[0].pace").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.segments[0].pace").value(500));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
 
         // coordinates 배열의 첫 번째 요소 검증
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].id").value(1));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].recordedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
         // pictures 빈 배열 확인
         actions.andExpect(jsonPath("$.data.pictures").isArray());

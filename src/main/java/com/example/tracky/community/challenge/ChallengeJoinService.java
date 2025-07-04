@@ -43,4 +43,15 @@ public class ChallengeJoinService {
         // 챌린지 참가 엔티티 응답
         return new ChallengeJoinResponse.DTO(challengeJoinPS);
     }
+
+    @Transactional
+    public void delete(Integer id, User user) {
+        // 챌린지 참여 조회
+        ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, user.getId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND));
+
+        // 삭제
+        challengeJoinRepository.delete(challengeJoinPS);
+    }
+
 }
