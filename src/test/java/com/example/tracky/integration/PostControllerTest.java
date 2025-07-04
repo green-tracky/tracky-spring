@@ -129,8 +129,10 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
         // data 내부 필드 검증
+        actions.andExpect(jsonPath("$.data.id").value(1));
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.runRecordId").value(10));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
 
         // pictureIds가 빈 배열인지 확인
