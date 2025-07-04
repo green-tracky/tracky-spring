@@ -81,7 +81,7 @@ public class RunBadgeResponse {
         private Boolean isAchieved; // 획득 유무
         private Integer achievedCount; // 획득 횟수
 
-        // 획득한 뱃지용
+        // 획득한 뱃지용 + 횟수
         public DTO(RunBadgeAchv runBadgeAchv, Integer achievedCount) {
             RunBadge runBadge = runBadgeAchv.getRunBadge();
             RunRecord runRecord = runBadgeAchv.getRunRecord();
@@ -97,6 +97,23 @@ public class RunBadgeResponse {
             this.runRecordPace = runRecord.getAvgPace();
             this.isAchieved = true; // 획득했으므로 true
             this.achievedCount = achievedCount;
+        }
+
+        // 획득한 뱃지용
+        public DTO(RunBadgeAchv runBadgeAchv) {
+            RunBadge runBadge = runBadgeAchv.getRunBadge();
+            RunRecord runRecord = runBadgeAchv.getRunRecord();
+
+            this.id = runBadge.getId();
+            this.name = runBadge.getName();
+            this.description = runBadge.getDescription();
+            this.imageUrl = runBadge.getImageUrl();
+            this.type = runBadge.getType();
+            this.achievedAt = runBadgeAchv.getAchievedAt();
+            this.runRecordDistance = runRecord.getTotalDistanceMeters();
+            this.runRecordSeconds = runRecord.getTotalDurationSeconds();
+            this.runRecordPace = runRecord.getAvgPace();
+            this.isAchieved = true; // 획득했으므로 true
         }
 
         // 획득하지 못한 뱃지용

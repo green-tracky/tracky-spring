@@ -156,7 +156,7 @@ public class RunRecordResponse {
         private Integer userId;
         private List<RunBadgeResponse.DTO> badges;
 
-        public SaveDTO(RunRecord runRecord, List<RunBadgeAchv> awardedBadges) {
+        public SaveDTO(RunRecord runRecord, List<RunBadgeAchv> runBadgeAchvs) {
             this.id = runRecord.getId();
             this.title = runRecord.getTitle();
             this.calories = runRecord.getCalories();
@@ -174,7 +174,7 @@ public class RunRecordResponse {
             this.userId = runRecord.getUser().getId();
 
             // 전달받은 뱃지 획득 엔티티 목록을 DTO 목록으로 변환
-            this.badges = awardedBadges.stream()
+            this.badges = runBadgeAchvs.stream()
                     .map(ba -> new RunBadgeResponse.DTO(ba))
                     .toList();
         }
