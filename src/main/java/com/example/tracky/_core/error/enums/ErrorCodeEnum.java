@@ -22,7 +22,7 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 유저 타입 값입니다.
      */
-    INVALID_USER_TYPE(400, "유효하지 않은 유저 타입 값입니다"),
+    INVALID_USER_TYPE(400, "유효하지 않은 유저 타입입니다"),
 
     /**
      * 400 Bad Request - 유효하지 않은 성별 값입니다.
@@ -32,7 +32,7 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 챌린지 타입 값입니다.
      */
-    INVALID_CHALLENGE_TYPE(400, "유효하지 않은 챌린지 타입 값입니다"),
+    INVALID_CHALLENGE_TYPE(400, "유효하지 않은 챌린지 타입입니다"),
 
     /**
      * 400 Bad Request - 이미 종료된 챌린지입니다.
@@ -108,6 +108,11 @@ public enum ErrorCodeEnum {
      * 404 Not Found - 해당 챌린지를 찾을 수 없습니다.
      */
     CHALLENGE_NOT_FOUND(404, "해당 챌린지를 찾을 수 없습니다"),
+
+    /**
+     * 404 Not Found - 해당 챌린지에 참가하지 않았습니다.
+     */
+    CHALLENGE_JOIN_NOT_FOUND(404, "해당 챌린지에 참가하지 않았습니다"),
 
     /**
      * 500 Internal Server Error - 알 수 없는 오류 발생 시 기본 메시지입니다.

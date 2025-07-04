@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "run_record_tb")
 @Entity
@@ -66,6 +64,10 @@ public class RunRecord {
         this.intensity = intensity;
         this.place = place;
         this.user = user;
+    }
+
+    // 기본생성자 사용금지
+    protected RunRecord() {
     }
 
     /**

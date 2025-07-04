@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky._core.constant.Constant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -146,7 +147,7 @@ public class RunRecordRepository {
     }
 
     /**
-     * RunRecord 엔티티 전체 조회
+     * RunRecord 전체 조회
      *
      * @return
      */
@@ -190,4 +191,113 @@ public class RunRecordRepository {
         return runRecords;
     }
 
+    /**
+     * RunRecord 전체 조회 + 페이징
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdPage(Integer userId, Integer page) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최신순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByCreatedAtDesc(Integer userId, Integer page) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId  order by r.createdAt desc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 오래된 순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByCreatedAtAsc(Integer userId, Integer page) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt asc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최장거리 순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByDistanceDesc(Integer userId, Integer page) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.totalDistanceMeters desc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최단거리 순 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByDistanceAsc(Integer userId, Integer page) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.totalDistanceMeters asc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최고 페이스 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByAvgPaceDesc(Integer userId, Integer page) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.avgPace desc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * RunRecord 최저 페이스 조회
+     *
+     * @return
+     */
+    public List<RunRecord> findAllByUserIdOrderByAvgPaceAsc(Integer userId, Integer page) {
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.avgPace asc", RunRecord.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        List<RunRecord> runRecords = query.getResultList();
+        return runRecords;
+    }
+
+    /**
+     * 페이징 갯수 조회
+     *
+     * @return
+     */
+    public Long totalCount(Integer userId) {
+        String sql = "select count(r) from RunRecord r where r.user.id = :userId";
+        Query query = em.createQuery(sql, Long.class);
+        query.setParameter("userId", userId);
+        return (Long) query.getSingleResult();
+    }
 }

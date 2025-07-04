@@ -1,12 +1,16 @@
 package com.example.tracky.runrecord.utils;
 
+import com.example.tracky.runrecord.RunRecord;
+import com.example.tracky.runrecord.dto.AvgStatsDTO;
 import com.example.tracky.runrecord.runsegment.RunSegment;
 import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 public class RunRecordUtil {
     /**
      * 미터(m) 단위의 거리와 초(s) 단위의 시간을 입력받아
@@ -139,4 +143,34 @@ public class RunRecordUtil {
         LocalDateTime endDate = runSegments.get(runSegments.size() - 1).getEndDate();
         return (int) ChronoUnit.SECONDS.between(startDate, endDate);
     }
+
+    /**
+     * 통계 구하는 로직
+     *
+     * @param runRecords
+     * @param totalDistanceMeters
+     * @param totalDurationSeconds
+     * @return AvgStatsDTO
+     */
+    public static AvgStatsDTO avgStats(List<RunRecord> runRecords, Integer totalDistanceMeters, Integer totalDurationSeconds) {
+        // 평균 페이스 구하기
+        int avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
+
+        // 누적 거리, 시간 구하기
+        for (RunRecord record : runRecords) {
+            totalDistanceMeters += record.getTotalDistanceMeters();
+            totalDurationSeconds += record.getTotalDurationSeconds();
+        }
+        RunRecord RunRecords = RunRecord.builder()
+                .totalDistanceMeters(totalDistanceMeters)
+                .totalDurationSeconds(totalDurationSeconds)
+                .build();
+
+        // 갯수 구하기
+        int statsCount = runRecords.size();
+
+        return new AvgStatsDTO(RunRecords, statsCount, avgPace);
+    }
+
+
 }

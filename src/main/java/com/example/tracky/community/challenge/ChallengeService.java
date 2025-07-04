@@ -1,7 +1,11 @@
 package com.example.tracky.community.challenge;
 
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi400;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.challenge.domain.Challenge;
 import com.example.tracky.community.challenge.domain.ChallengeJoin;
+import com.example.tracky.community.challenge.domain.PrivateChallenge;
 import com.example.tracky.community.challenge.domain.PublicChallenge;
 import com.example.tracky.community.challenge.dto.ChallengeResponse;
 import com.example.tracky.community.challenge.repository.ChallengeJoinRepository;
@@ -25,6 +29,12 @@ public class ChallengeService {
     private final ChallengeJoinRepository challengeJoinRepository;
     private final RunRecordRepository runRecordRepository;
 
+    /**
+     * 챌린지 목록 보기
+     *
+     * @param user
+     * @return
+     */
     public ChallengeResponse.MainDTO getChallenges(User user) {
         Integer userId = user.getId();
         LocalDateTime now = LocalDateTime.now(); // 조회 시점
@@ -71,4 +81,53 @@ public class ChallengeService {
                 participantCountsMap
         );
     }
+
+    /**
+     * 챌린지 상세보기
+     *
+     * @param id   challengeId
+     * @param user
+     * @return
+     */
+    public ChallengeResponse.DetailDTO getChallenge(Integer id, User user) {
+        // 1. 챌린지 엔티티 조회 (공식/사설 구분)
+        Challenge challenge = challengeRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
+
+        // 2. 참가자 수 조회
+        int participantCount = challengeJoinRepository.countByChallengeId(id);
+
+        // 3. 내 참가 여부
+        boolean isJoined = challengeJoinRepository.existsByUserIdAndChallengeId(user.getId(), id);
+
+        // 4. 내 누적 거리, 내 순위 (참가자만)
+        Integer myDistance = null;
+        Integer myRank = null;
+        if (isJoined) {
+            myDistance = runRecordRepository.findTotalDistanceByUserIdAndDateRange(
+                    user.getId(),
+                    challenge.getStartDate(),
+                    challenge.getEndDate()
+            );
+            myRank = challengeJoinRepository.findRankByChallengeIdAndUserId(id, user.getId());
+        }
+
+        // 5. 리워드 정보
+        // 공식 챌린지
+        if (challenge instanceof PublicChallenge publicChallenge) {
+            return isJoined
+                    ? new ChallengeResponse.DetailDTO(publicChallenge, participantCount, myDistance != null ? myDistance : 0, myRank)
+                    : new ChallengeResponse.DetailDTO(publicChallenge, participantCount);
+        }
+        // 사설 챌린지
+        else if (challenge instanceof PrivateChallenge privateChallenge) {
+            // 리워드 목록은 연관관계 필드에서 바로 가져오기
+            return new ChallengeResponse.DetailDTO(privateChallenge, participantCount, myDistance != null ? myDistance : 0, myRank);
+        }
+        // 기타(잘못된 타입)
+        else {
+            throw new ExceptionApi400(ErrorCodeEnum.INVALID_CHALLENGE_TYPE);
+        }
+    }
+
 }

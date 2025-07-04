@@ -18,7 +18,7 @@ import java.util.List;
 public class RunLevelService {
 
     private final RunRecordRepository runRecordRepository;
-    private final RunLevelRepository runningLevelRepository;
+    private final RunLevelRepository runLevelRepository;
     private final UserRepository userRepository;
 
     /**
@@ -32,7 +32,7 @@ public class RunLevelService {
         Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());
 
         // 2. 모든 레벨 정보를 DB에서 조회합니다. (가장 높은 레벨부터 정렬)
-        List<RunLevel> runLevelsPS = runningLevelRepository.findAllByOrderBySortOrderDesc();
+        List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderDesc();
 
         // 3. 사용자의 새로운 레벨을 결정합니다.
         // (레벨의 개수가 100개가 넘어가면 for 문이 더 좋다)
@@ -58,7 +58,7 @@ public class RunLevelService {
                 .getRunLevel();
 
         // 2. 러닝레벨들 조회
-        List<RunLevel> runLevelsPS = runningLevelRepository.findAllByOrderBySortOrderAsc();
+        List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
 
         // 3. 유저의 누적 거리 조회
         Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());

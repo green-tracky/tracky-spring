@@ -3,12 +3,10 @@ package com.example.tracky.user.runlevel;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Getter
 @Table(name = "run_level_tb")
 @Entity
@@ -35,6 +33,10 @@ public class RunLevel {
         this.description = description;
         this.imageUrl = imageUrl;
         this.sortOrder = sortOrder;
+    }
+
+    // 기본 생성자 사용금지
+    protected RunLevel() {
     }
 }
 

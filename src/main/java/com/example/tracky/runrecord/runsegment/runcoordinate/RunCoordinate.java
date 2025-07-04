@@ -4,32 +4,39 @@ import com.example.tracky.runrecord.runsegment.RunSegment;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
+
 @Getter
 @Table(name = "run_coordinate_tb")
 @Entity
 public class RunCoordinate {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "run_segment_id")
     private Integer id;
-    private Double lat; // 위도
-    private Double lon; // 경도
-    private LocalDateTime createdAt; // 프론트에서 좌표 생성시간을 받아야 한다
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Lob
+    private String coordinate; //[{"lat": 37.123, "lon": 127.456, "recordedAt": "2025-07-03 09:00:00"}]
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId // PK와 FK를 공유
+    @JoinColumn(name = "run_segment_id")
     private RunSegment runSegment; // 부모 러닝 구간
 
     @Builder
-    public RunCoordinate(Integer id, Double lat, Double lon, LocalDateTime createdAt, RunSegment runSegment) {
+    public RunCoordinate(Integer id, String coordinate, RunSegment runSegment) {
         this.id = id;
-        this.lat = lat;
-        this.lon = lon;
-        this.createdAt = createdAt;
+        this.coordinate = coordinate;
         this.runSegment = runSegment;
+    }
+
+    // 기본생성자 사용금지
+    protected RunCoordinate() {
     }
 
 }

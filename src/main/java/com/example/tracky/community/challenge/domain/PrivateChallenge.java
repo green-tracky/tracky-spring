@@ -5,7 +5,6 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.List;
  */
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(name = "private_challenge_tb")
 @DiscriminatorValue(ChallengeTypeEnum.PRIVATE_TYPE)
 public class PrivateChallenge extends Challenge {
@@ -34,6 +32,9 @@ public class PrivateChallenge extends Challenge {
     @Builder
     public PrivateChallenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator) {
         super(id, name, sub, description, startDate, endDate, targetDistance, isInProgress, creator);
+    }
+    
+    protected PrivateChallenge() {
     }
 
 }

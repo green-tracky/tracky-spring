@@ -4,7 +4,6 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(
         name = "user_challenge_reward_tb",
         uniqueConstraints = @UniqueConstraint(
@@ -59,4 +57,8 @@ public class UserChallengeReward {
         this.rewardName = rewardName;
         this.rewardImageUrl = rewardImageUrl;
     }
+
+    protected UserChallengeReward() {
+    }
+
 }
