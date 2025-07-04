@@ -16,7 +16,7 @@ public class PostRequest {
 
         private Integer runRecordId;
 
-        private List<Integer> picturesIds;
+        private List<Integer> pictureIds;
 
     }
 
@@ -27,7 +27,7 @@ public class PostRequest {
 
         private Integer runRecordId;
 
-        private List<Integer> picturesId;
+        private List<Integer> pictureIds;
 
 
         public Post toEntity(User user, RunRecord runRecord, List<Picture> pictures) {

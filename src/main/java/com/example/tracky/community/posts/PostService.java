@@ -60,8 +60,8 @@ public class PostService {
 
         // 사진 조회
         List<Picture> pictures = new ArrayList<>();
-        if (reqDTO.getPicturesId() != null && !reqDTO.getPicturesId().isEmpty()) {
-            pictures = pictureRepository.findAllById(reqDTO.getPicturesId());
+        if (reqDTO.getPictureIds() != null && !reqDTO.getPictureIds().isEmpty()) {
+            pictures = pictureRepository.findAllById(reqDTO.getPictureIds());
         }
 
         // 게시글 엔티티 생성
@@ -109,8 +109,8 @@ public class PostService {
 
         // 사진 조회
         List<Picture> pictures = new ArrayList<>();
-        if (reqDTO.getPicturesIds() != null && !reqDTO.getPicturesIds().isEmpty()) {
-            pictures = pictureRepository.findAllById(reqDTO.getPicturesIds());
+        if (reqDTO.getPictureIds() != null && !reqDTO.getPictureIds().isEmpty()) {
+            pictures = pictureRepository.findAllById(reqDTO.getPictureIds());
         }
 
         postPS.update(reqDTO.getContent(), runRecord, pictures);
