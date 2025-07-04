@@ -1,9 +1,9 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
-import com.example.tracky.runrecord.picture.Picture;
-import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runsegment.RunSegment;
+import com.example.tracky.runrecord.pictures.Picture;
+import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.runrecord.runsegments.RunSegment;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
