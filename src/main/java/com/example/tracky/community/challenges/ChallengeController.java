@@ -34,7 +34,7 @@ public class ChallengeController {
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
-        User user = User.builder().id(userId).build();
+        User user = User.builder().id(userId).build(); // 지금 필터로 세션없으면 못들어가게 안되있는거지?
 
         ChallengeResponse.DetailDTO respDTO = challengeService.getChallenge(id, user);
         return Resp.ok(respDTO);
