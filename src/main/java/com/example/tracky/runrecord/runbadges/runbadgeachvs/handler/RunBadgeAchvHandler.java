@@ -1,9 +1,9 @@
-package com.example.tracky.runrecord.runbadges.runbadgeachv.handler;
+package com.example.tracky.runrecord.runbadges.runbadgeachvs.handler;
 
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadges.RunBadge;
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchvRepository;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchvRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
