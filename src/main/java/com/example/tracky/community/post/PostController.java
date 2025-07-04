@@ -2,10 +2,8 @@ package com.example.tracky.community.post;
 
 import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public class PostController {
     }
 
     @PostMapping("/community/posts")
-    public ResponseEntity<?> save(@Valid @RequestBody PostRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@RequestBody PostRequest.SaveDTO reqDTO) {
         Integer userId = 1;
         User user = User.builder().id(userId).build();
 
@@ -38,7 +36,7 @@ public class PostController {
     }
 
     @PutMapping("/community/posts/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody PostRequest.UpdateDTO reqDTO, Errors errors) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PostRequest.UpdateDTO reqDTO) {
         Integer userId = 1;
         User user = User.builder().id(userId).build();
 

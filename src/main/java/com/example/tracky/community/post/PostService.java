@@ -27,8 +27,7 @@ public class PostService {
     private final RunRecordRepository runRecordRepository;
     private final PictureRepository pictureRepository;
 
-    public List<PostResponse.ListDTO>
-    getPosts(User user) {
+    public List<PostResponse.ListDTO> getPosts(User user) {
         List<Post> postsPS = postRepository.findAllJoinRunRecord();
 
         return postsPS.stream()

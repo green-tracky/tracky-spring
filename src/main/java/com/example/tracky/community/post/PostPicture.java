@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
+@Table(name = "post_picture_tb")
 public class PostPicture {
 
     @Id
