@@ -12,7 +12,7 @@ public class PictureRepository {
 
     private final EntityManager em;
 
-    public List<Picture> findByIds(List<Integer> ids) {
+    public List<Picture> findAllById(List<Integer> ids) {
         return em.createQuery("""
                         SELECT p 
                         FROM Picture p 

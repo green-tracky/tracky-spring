@@ -61,7 +61,7 @@ public class PostService {
         // 사진 조회
         List<Picture> pictures = new ArrayList<>();
         if (reqDTO.getPicturesId() != null && !reqDTO.getPicturesId().isEmpty()) {
-            pictures = pictureRepository.findByIds(reqDTO.getPicturesId());
+            pictures = pictureRepository.findAllById(reqDTO.getPicturesId());
         }
 
         // 게시글 엔티티 생성
@@ -86,7 +86,13 @@ public class PostService {
         RunRecord runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
-        postPS.update(reqDTO.getContent(), runRecord);
+        // 사진 조회
+        List<Picture> pictures = new ArrayList<>();
+        if (reqDTO.getPicturesId() != null && !reqDTO.getPicturesId().isEmpty()) {
+            pictures = pictureRepository.findAllById(reqDTO.getPicturesId());
+        }
+
+        postPS.update(reqDTO.getContent(), runRecord, pictures);
 
         return new PostResponse.UpdateDTO(postPS);
     }

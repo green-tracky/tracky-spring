@@ -81,6 +81,20 @@ class PostControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 내부 필드 검증
+        actions.andExpect(jsonPath("$.data.id").isNumber());
+        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.runRecordId").value(10));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+
+        // pictureIds가 빈 배열인지 확인
+        actions.andExpect(jsonPath("$.data.pictureIds").isArray());
+        actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
 
     }
 
@@ -117,6 +131,10 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.runRecordId").value(10));
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
+
+        // pictureIds가 빈 배열인지 확인
+        actions.andExpect(jsonPath("$.data.pictureIds").isArray());
+        actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
 
     }
 }

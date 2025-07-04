@@ -2,6 +2,7 @@ package com.example.tracky.community.post;
 
 import com.example.tracky.community.post.comment.Comment;
 import com.example.tracky.runrecord.RunRecord;
+import com.example.tracky.runrecord.picture.Picture;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -59,9 +60,23 @@ public class Post {
         this.content = content;
     }
 
-    public void update(String content, RunRecord runRecord) {
+    public void update(String content, RunRecord runRecord, List<Picture> pictures) {
         this.content = content;
         this.runRecord = runRecord;
+
+        // 기존 postPictures 비우기
+        this.postPictures.clear();
+
+        // 새로 PostPicture 생성해서 넣기
+        if (pictures != null && !pictures.isEmpty()) {
+            for (Picture picture : pictures) {
+                PostPicture postPicture = PostPicture.builder()
+                        .post(this)
+                        .picture(picture)
+                        .build();
+                this.postPictures.add(postPicture);
+            }
+        }
     }
 
 }
