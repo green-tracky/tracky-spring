@@ -39,7 +39,7 @@ public class PostService {
 
                     return new PostResponse.ListDTO(
                             post,
-                            post.getRunRecord(),
+                            post.getPostPictures(),
                             likeCount,
                             commentCount,
                             isLiked

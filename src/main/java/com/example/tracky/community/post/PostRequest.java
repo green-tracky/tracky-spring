@@ -41,7 +41,7 @@ public class PostRequest {
                     .map(picture -> PostPicture.builder().post(post).picture(picture).build())
                     .toList();
 
-            post.postpictures.addAll(postpictures);
+            post.postPictures.addAll(postpictures);
 
             return post;
         }

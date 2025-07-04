@@ -4,6 +4,9 @@ import com.example.tracky.runrecord.picture.Picture;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,6 +22,9 @@ public class PostPicture {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Picture picture;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Builder
     public PostPicture(Integer id, Post post, Picture picture) {

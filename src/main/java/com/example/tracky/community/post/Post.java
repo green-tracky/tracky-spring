@@ -42,7 +42,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PostPicture> postpictures = new ArrayList<>();
+    List<PostPicture> postPictures = new ArrayList<>();
 
     // 생성일 자동 세팅
     @CreationTimestamp
