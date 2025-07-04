@@ -41,6 +41,10 @@ public abstract class Challenge { // 직접 인스턴스화 시켜서 사용하�
     @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
 
+    // 읽기 전용 컬럼. 챌린지 타입을 구별하기 위함
+    @Column(name = "challenge_type", insertable = false, updatable = false)
+    private String challengeType;
+
     public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, User creator) {
         this.id = id;
         this.name = name;

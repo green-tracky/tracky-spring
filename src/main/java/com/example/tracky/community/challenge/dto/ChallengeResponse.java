@@ -3,7 +3,6 @@ package com.example.tracky.community.challenge.dto;
 import com.example.tracky.community.challenge.domain.Challenge;
 import com.example.tracky.community.challenge.domain.PrivateChallenge;
 import com.example.tracky.community.challenge.domain.PublicChallenge;
-import com.example.tracky.community.challenge.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenge.utils.ChallengeUtil;
 import lombok.Data;
 
@@ -141,7 +140,7 @@ public class ChallengeResponse {
         private Boolean isInProgress; // 챌린지 진행 상태
         private Integer participantCount; // 챌린지 참가자 수
         private String creatorName; // 생성자 이름. 공식이면 null 넣기
-        private ChallengeTypeEnum challengeType; // "PUBLIC" 또는 "PRIVATE"
+        private String challengeType; // "PUBLIC" 또는 "PRIVATE". 이넘은 사용 못함 테이블에 있는 값을 그대로 사용
         private Boolean isJoined; // 사용자의 참여 여부
         private Integer rank; // 순위 정보
         private Integer myDistance; // 챌린지 기간의 나의 누적 거리. m 단위
@@ -167,7 +166,7 @@ public class ChallengeResponse {
             this.endDate = challenge.getEndDate();
             this.participantCount = participantCount;
             this.creatorName = null; // 공식 챌린지이므로 null
-            this.challengeType = ChallengeTypeEnum.PUBLIC;
+            this.challengeType = challenge.getChallengeType();
             this.isJoined = false; // 미참여 상태
             this.rank = null; // 참여 안 했으므로 순위 없음
             this.myDistance = null; // 참여 안 했으므로 달성 거리 없음
@@ -210,7 +209,7 @@ public class ChallengeResponse {
             this.endDate = challenge.getEndDate();
             this.participantCount = participantCount;
             this.creatorName = challenge.getCreator().getUsername(); // 사설 챌린지 크리에이터 이름 설정
-            this.challengeType = ChallengeTypeEnum.PRIVATE;
+            this.challengeType = challenge.getChallengeType();
 
             // 사용자 특화 정보 설정
             this.isJoined = true; // 참여 상태
@@ -244,4 +243,11 @@ public class ChallengeResponse {
         }
     }
 
+
+    public static class abcDTO {
+        private LocalDateTime achievedAt;
+        private String description;
+        private String 챌린지달성;
+
+    }
 }
