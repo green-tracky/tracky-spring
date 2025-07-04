@@ -2,10 +2,10 @@ package com.example.tracky.runrecord;
 
 import com.example.tracky.runrecord.dto.*;
 import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
-import com.example.tracky.runrecord.picture.PictureResponse;
-import com.example.tracky.runrecord.runbadge.RunBadgeResponse;
-import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runsegment.RunSegmentResponse;
+import com.example.tracky.runrecord.pictures.PictureResponse;
+import com.example.tracky.runrecord.runbadges.RunBadgeResponse;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
+import com.example.tracky.runrecord.runsegments.RunSegmentResponse;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import lombok.Data;
 

@@ -1,0 +1,49 @@
+package com.example.tracky.community.posts;
+
+import com.example.tracky.runrecord.RunRecord;
+import com.example.tracky.runrecord.pictures.Picture;
+import com.example.tracky.user.User;
+import lombok.Data;
+
+import java.util.List;
+
+public class PostRequest {
+
+    @Data
+    public static class UpdateDTO {
+
+        private String content;
+
+        private Integer runRecordId;
+
+        private List<Integer> pictureIds;
+
+    }
+
+    @Data
+    public static class SaveDTO {
+
+        private String content;
+
+        private Integer runRecordId;
+
+        private List<Integer> pictureIds;
+
+
+        public Post toEntity(User user, RunRecord runRecord, List<Picture> pictures) {
+            Post post = Post.builder()
+                    .content(content)
+                    .user(user) // user객체 필요
+                    .runRecord(runRecord)
+                    .build();
+
+            List<PostPicture> postPictures = pictures.stream()
+                    .map(picture -> PostPicture.builder().post(post).picture(picture).build())
+                    .toList();
+
+            post.postPictures.addAll(postPictures);
+
+            return post;
+        }
+    }
+}
