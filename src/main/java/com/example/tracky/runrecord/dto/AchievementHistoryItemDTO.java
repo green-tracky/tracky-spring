@@ -1,8 +1,8 @@
 package com.example.tracky.runrecord.dto;
 
-import com.example.tracky.community.challenge.domain.UserChallengeReward;
-import com.example.tracky.runrecord.runbadge.enums.RunBadgeTypeEnum;
-import com.example.tracky.runrecord.runbadge.runbadgeachv.RunBadgeAchv;
+import com.example.tracky.community.challenges.domain.UserChallengeReward;
+import com.example.tracky.runrecord.runbadges.enums.RunBadgeTypeEnum;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
 import lombok.Data;
 
 import java.time.LocalDateTime;

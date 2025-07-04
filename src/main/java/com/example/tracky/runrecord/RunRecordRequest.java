@@ -1,10 +1,10 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
-import com.example.tracky.runrecord.picture.Picture;
-import com.example.tracky.runrecord.picture.PictureRequest;
-import com.example.tracky.runrecord.runsegment.RunSegment;
-import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
+import com.example.tracky.runrecord.pictures.Picture;
+import com.example.tracky.runrecord.pictures.PictureRequest;
+import com.example.tracky.runrecord.runsegments.RunSegment;
+import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
 import lombok.Data;
