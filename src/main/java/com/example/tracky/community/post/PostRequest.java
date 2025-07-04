@@ -37,11 +37,11 @@ public class PostRequest {
                     .runRecord(runRecord)
                     .build();
 
-            List<PostPicture> postpictures = pictures.stream()
+            List<PostPicture> postPictures = pictures.stream()
                     .map(picture -> PostPicture.builder().post(post).picture(picture).build())
                     .toList();
 
-            post.postPictures.addAll(postpictures);
+            post.postPictures.addAll(postPictures);
 
             return post;
         }
