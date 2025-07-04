@@ -1,5 +1,7 @@
 package com.example.tracky.runrecord.runbadges;
 
+import com.example.tracky.community.challenges.domain.RewardMaster;
+import com.example.tracky.community.challenges.domain.UserChallengeReward;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.runbadges.enums.RunBadgeTypeEnum;
 import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchv;
@@ -11,6 +13,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RunBadgeResponse {
+
+    /**
+     * 뱃지 보상 및 챌린지 보상이 포함되어 있습니다
+     */
     @Data
     public static class GroupedBadgeListDTO {
         private List<DTO> recents; // 최근 획득 목록
@@ -60,7 +66,7 @@ public class RunBadgeResponse {
         private String name; // 뱃지 이름
         private String description; // 뱃지 설명
         private String imageUrl; // 뱃지 이미지
-        private RunBadgeTypeEnum type; // 뱃지 타입
+        private String type; // 뱃지 타입 !! 나중에 타입으로 처리하겠음. 뱃지 타입과 챌린지 보상 타입 다르기 때문
         private LocalDateTime achievedAt; // 뱃지 획득날짜 (획득 못했으면 null)
         private Integer runRecordDistance; // 러닝 기록의 거리 (획득 못했으면 null)
         private Integer runRecordSeconds; // 러닝 기록의 시간 (획득 못했으면 null)
@@ -96,6 +102,22 @@ public class RunBadgeResponse {
             this.runRecordSeconds = null; // 획득 정보 없음
             this.runRecordPace = null; // 획득 정보 없음
             this.isAchieved = false; // 획득 못했으므로 false
+        }
+
+        // 획득하지 못한 뱃지용
+        public DTO(UserChallengeReward userChallengeReward) {
+            RewardMaster rewardMaster = userChallengeReward.getRewardMaster();
+
+            this.id = rewardMaster.getId();
+            this.name = rewardMaster.getRewardName();
+            this.description = "챌린지를 완료하셨습니다";
+            this.imageUrl = rewardMaster.getRewardImageUrl();
+            this.type = rewardMaster.getType();
+            this.achievedAt = userChallengeReward.getReceivedAt(); // 획득 정보 없음
+            this.runRecordDistance = null; // 획득 정보 없음
+            this.runRecordSeconds = null; // 획득 정보 없음
+            this.runRecordPace = null; // 획득 정보 없음
+            this.isAchieved = true; // 획득 못했으므로 false
         }
 
     }
