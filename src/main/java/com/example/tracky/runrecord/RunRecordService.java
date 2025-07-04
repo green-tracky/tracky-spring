@@ -113,7 +113,7 @@ public class RunRecordService {
         List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardName(), // 사설 챌린지도 고려
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
                         LinkedHashMap::new,
                         Collectors.toList()
                 ))
@@ -255,7 +255,7 @@ public class RunRecordService {
         List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardName(), // 사설 챌린지도 고려
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
                         LinkedHashMap::new,
                         Collectors.toList()
                 ))
@@ -380,7 +380,7 @@ public class RunRecordService {
         List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardName(), // 사설 챌린지도 고려
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
                         LinkedHashMap::new,
                         Collectors.toList()
                 ))
@@ -506,7 +506,7 @@ public class RunRecordService {
         List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardName(), // 사설 챌린지도 고려
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
                         LinkedHashMap::new,
                         Collectors.toList()
                 ))

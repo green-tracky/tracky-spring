@@ -15,8 +15,8 @@ public class ChallengeRewardResponse {
         private Integer CountReward; // 메달 받은 횟수
 
         public DTO(UserChallengeReward UserChallengeReward) {
-            this.rewardName = UserChallengeReward.getRewardName();
-            this.rewardImageUrl = UserChallengeReward.getRewardImageUrl();
+            this.rewardName = UserChallengeReward.getRewardMaster().getRewardName();
+            this.rewardImageUrl = UserChallengeReward.getRewardMaster().getRewardImageUrl();
             this.receivedAt = UserChallengeReward.getReceivedAt();
 //            this.CountReward = countReward;
         }

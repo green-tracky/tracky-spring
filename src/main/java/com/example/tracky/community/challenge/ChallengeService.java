@@ -1,15 +1,15 @@
 package com.example.tracky.community.challenge;
 
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
-import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.challenge.domain.Challenge;
 import com.example.tracky.community.challenge.domain.ChallengeJoin;
-import com.example.tracky.community.challenge.domain.PrivateChallenge;
-import com.example.tracky.community.challenge.domain.PublicChallenge;
+import com.example.tracky.community.challenge.domain.RewardMaster;
 import com.example.tracky.community.challenge.dto.ChallengeResponse;
+import com.example.tracky.community.challenge.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenge.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenge.repository.ChallengeRepository;
+import com.example.tracky.community.challenge.repository.RewardMasterRepository;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeJoinRepository challengeJoinRepository;
     private final RunRecordRepository runRecordRepository;
+    private final RewardMasterRepository rewardMasterRepository;
 
     /**
      * 챌린지 목록 보기
@@ -50,7 +51,7 @@ public class ChallengeService {
         // 먼저, 참가한 챌린지들의 ID 목록을 효율적으로 가져옵니다.
         Set<Integer> joinedChallengeIds = challengeJoinRepository.findChallengeIdsByUserId(userId); // 물음: 1번에서 조회를 했는데 또 해야하나?
         // 이 ID 목록을 제외하고, 아직 진행 중인 공식 챌린지들을 조회합니다. now -> 조회 조건용
-        List<PublicChallenge> unjoinedChallengesPS = challengeRepository.findUnjoinedPublicChallenges(joinedChallengeIds, now);
+        List<Challenge> unjoinedChallengesPS = challengeRepository.findUnjoinedPublicChallenges(joinedChallengeIds, now);
 
         // 3. [재료 준비] 챌린지별 누적 달리기 거리 계산 (Map)
         // 참가한 각 챌린지에 대해, 기간 내 누적 거리를 계산하여 Map에 저장합니다.
@@ -68,7 +69,7 @@ public class ChallengeService {
         // 참여 가능한 각 챌린지에 대해, 참가자 수를 계산하여 Map에 저장합니다.
         Map<Integer, Integer> participantCountsMap = unjoinedChallengesPS.stream()
                 .collect(Collectors.toMap(
-                        publicChallenge -> publicChallenge.getId(),
+                        challenge -> challenge.getId(),
                         challenge -> challengeJoinRepository.countByChallengeId(challenge.getId())
                 ));
 
@@ -112,21 +113,24 @@ public class ChallengeService {
             myRank = challengeJoinRepository.findRankByChallengeIdAndUserId(id, user.getId());
         }
 
-        // 5. 리워드 정보
-        // 공식 챌린지
-        if (challenge instanceof PublicChallenge publicChallenge) {
-            return isJoined
-                    ? new ChallengeResponse.DetailDTO(publicChallenge, participantCount, myDistance != null ? myDistance : 0, myRank)
-                    : new ChallengeResponse.DetailDTO(publicChallenge, participantCount);
+        // 5. 리워드 정보 (공식/사설 모두 RewardMaster에서 조회)
+        List<RewardMaster> rewardMasters;
+        if (challenge.getType() == ChallengeTypeEnum.PRIVATE) {
+            // 사설 챌린지: type이 사설인 모든 리워드
+            rewardMasters = rewardMasterRepository.findAllByType(ChallengeTypeEnum.PRIVATE);
+        } else {
+            // 공개 챌린지: 챌린지 이름과 rewardName이 동일한 리워드
+            rewardMasters = rewardMasterRepository.findAllByRewardName(challenge.getName());
         }
-        // 사설 챌린지
-        else if (challenge instanceof PrivateChallenge privateChallenge) {
-            // 리워드 목록은 연관관계 필드에서 바로 가져오기
-            return new ChallengeResponse.DetailDTO(privateChallenge, participantCount, myDistance != null ? myDistance : 0, myRank);
-        }
-        // 기타(잘못된 타입)
-        else {
-            throw new ExceptionApi400(ErrorCodeEnum.INVALID_CHALLENGE_TYPE);
-        }
+
+        // 6. DTO 조립
+        return new ChallengeResponse.DetailDTO(
+                challenge,
+                participantCount,
+                myDistance,
+                myRank,
+                isJoined,
+                rewardMasters
+        );
     }
 }

@@ -39,8 +39,8 @@ public class AchievementHistoryItemDTO {
     // 메달 기반 생성자
     public AchievementHistoryItemDTO(UserChallengeReward userChallengeReward, Integer count) {
         this.type = "메달";
-        this.name = userChallengeReward.getRewardName();
-        this.imageUrl = userChallengeReward.getRewardImageUrl();
+        this.name = userChallengeReward.getRewardMaster().getRewardName();
+        this.imageUrl = userChallengeReward.getRewardMaster().getRewardImageUrl();
         this.achievedAt = userChallengeReward.getReceivedAt();
         this.count = count;
 
