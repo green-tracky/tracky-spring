@@ -103,6 +103,7 @@ class PostControllerTest extends MyRestDoc {
     void update_test() throws Exception {
 
         // given
+        int postId = 1;
         PostRequest.UpdateDTO reqDTO = new PostRequest.UpdateDTO();
         reqDTO.setContent("내용입니다");
         reqDTO.setRunRecordId(10);
@@ -114,7 +115,7 @@ class PostControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/community/posts/1")
+                        .put("/s/api/community/posts/" + postId)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON));
 
