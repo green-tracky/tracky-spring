@@ -97,11 +97,11 @@ public class PostResponse {
             this.updatedAt = post.getUpdatedAt();
         }
 
-        public static List<DetailDTO> toPostResponseDTOs(List<Post> posts) {
-            return posts.stream()
-                    .map(post -> new DetailDTO(post))
-                    .toList();
-        }
+//        public static List<DetailDTO> toPostResponseDTOs(List<Post> posts) {
+//            return posts.stream()
+//                    .map(post -> new DetailDTO(post))
+//                    .toList();
+//        }
     }
 
     @Data

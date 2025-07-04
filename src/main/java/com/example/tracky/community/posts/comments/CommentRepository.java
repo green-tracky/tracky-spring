@@ -5,6 +5,8 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Repository
 public class CommentRepository {
@@ -17,5 +19,15 @@ public class CommentRepository {
 
         Long count = (Long) query.getSingleResult();
         return count.intValue();
+    }
+
+    public List<Comment> findByPostId(Integer postId, int page) {
+
+        Query query = em.createQuery(
+                        "SELECT c FROM Comment c WHERE c.post.id = :postId AND c.parent IS NULL ORDER BY c.id DESC", Comment.class)
+                .setParameter("postId", postId)
+                .setFirstResult(page * 5)
+                .setMaxResults(5)
+                .getResultList();
     }
 }
