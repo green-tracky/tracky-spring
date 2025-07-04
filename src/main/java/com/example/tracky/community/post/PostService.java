@@ -83,8 +83,13 @@ public class PostService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
 
-        RunRecord runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
+
+        // RunRecord 변경 여부 확인 및 조회
+        RunRecord runRecord = postPS.getRunRecord();
+        if (!reqDTO.getRunRecordId().equals(postPS.getRunRecord().getId())) {
+            runRecord = runRecordRepository.findById(reqDTO.getRunRecordId())
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
+        }
 
         // 사진 조회
         List<Picture> pictures = new ArrayList<>();
