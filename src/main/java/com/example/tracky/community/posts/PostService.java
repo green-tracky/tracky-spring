@@ -8,8 +8,8 @@ import com.example.tracky.community.posts.likes.Like;
 import com.example.tracky.community.posts.likes.LikeRepository;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
-import com.example.tracky.runrecord.picture.Picture;
-import com.example.tracky.runrecord.picture.PictureRepository;
+import com.example.tracky.runrecord.pictures.Picture;
+import com.example.tracky.runrecord.pictures.PictureRepository;
 import com.example.tracky.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -93,8 +93,8 @@ public class PostService {
 
         // 사진 조회
         List<Picture> pictures = new ArrayList<>();
-        if (reqDTO.getPicturesId() != null && !reqDTO.getPicturesId().isEmpty()) {
-            pictures = pictureRepository.findAllById(reqDTO.getPicturesId());
+        if (reqDTO.getPicturesIds() != null && !reqDTO.getPicturesIds().isEmpty()) {
+            pictures = pictureRepository.findAllById(reqDTO.getPicturesIds());
         }
 
         postPS.update(reqDTO.getContent(), runRecord, pictures);

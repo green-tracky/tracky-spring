@@ -2,7 +2,7 @@ package com.example.tracky.community.posts;
 
 import com.example.tracky.community.posts.comments.Comment;
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.runrecord.picture.Picture;
+import com.example.tracky.runrecord.pictures.Picture;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;

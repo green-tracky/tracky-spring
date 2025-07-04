@@ -94,13 +94,17 @@ public class PostResponse {
 
     @Data
     public static class UpdateDTO {
+        private Integer id;
         private String content;
+        private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private Integer runRecordId;
         private List<Integer> pictureIds;
 
         public UpdateDTO(Post post) {
+            this.id = post.getId();
             this.content = post.getContent();
+            this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
             this.runRecordId = post.getRunRecord().getId();
             this.pictureIds = post.getPostPictures().stream()
