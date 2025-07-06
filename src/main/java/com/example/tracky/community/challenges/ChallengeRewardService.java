@@ -70,42 +70,30 @@ public class ChallengeRewardService {
             if (totalDistanceInChallenge >= challenge.getTargetDistance()) {
                 // 5. 목표 달성! 챌린지 타입에 따라 보상을 생성합니다.
                 UserChallengeReward newReward = null;
+                RewardMaster rewardMasterPS = null;
 
                 if (challenge.getType() == ChallengeTypeEnum.PUBLIC) {
                     // 공개 챌린지: 챌린지 이름과 동일한 이름의 보상을 찾습니다.
-                    RewardMaster rewardMasterPS = rewardMasterRepository.findByRewardName(challenge.getName())
-                            .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND)); // 보상이 없으면 에러
-
-                    // UserChallengeReward 엔티티를 생성합니다.
-                    newReward = UserChallengeReward.builder()
-                            .user(user)
-                            .challenge(challenge)
-                            .rewardMaster(rewardMasterPS)
-                            .type(ChallengeTypeEnum.PUBLIC)
-                            .build();
-
+                    rewardMasterPS = rewardMasterRepository.findByRewardName(challenge.getName())
+                            .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND));
                 } else if (challenge.getType() == ChallengeTypeEnum.PRIVATE) {
                     // 사설 챌린지: '완주자' 보상을 찾습니다.
                     final String PARTICIPATION_REWARD_NAME = "완주자";
-                    RewardMaster rewardMasterPS = rewardMasterRepository.findByRewardName(PARTICIPATION_REWARD_NAME)
+                    rewardMasterPS = rewardMasterRepository.findByRewardName(PARTICIPATION_REWARD_NAME)
                             .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND));
-
-                    newReward = UserChallengeReward.builder()
-                            .user(user)
-                            .challenge(challenge)
-                            .rewardMaster(rewardMasterPS)
-                            .type(ChallengeTypeEnum.PRIVATE)
-                            .build();
                 }
+                newReward = UserChallengeReward.builder()
+                        .user(user)
+                        .challenge(challenge)
+                        .rewardMaster(rewardMasterPS)
+                        .type(ChallengeTypeEnum.PRIVATE)
+                        .build();
 
-                // 6. 생성된 보상이 있다면, DB에 저장하고 결과 리스트에 추가합니다.
-                if (newReward != null) {
-                    UserChallengeReward savedReward = userChallengeRewardRepository.save(newReward);
-                    newlyAwardedRewards.add(savedReward);
-                }
+                // 6. DB에 저장하고 결과 리스트에 추가합니다.
+                UserChallengeReward savedReward = userChallengeRewardRepository.save(newReward);
+                newlyAwardedRewards.add(savedReward);
             }
         }
-
         return newlyAwardedRewards;
     }
 }
