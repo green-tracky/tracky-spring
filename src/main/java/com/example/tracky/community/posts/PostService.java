@@ -122,7 +122,7 @@ public class PostService {
         return new PostResponse.UpdateDTO(postPS);
     }
 
-    @Transactional
+
     public PostResponse.DetailDTO getPostDetail(Integer postId, User user) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));

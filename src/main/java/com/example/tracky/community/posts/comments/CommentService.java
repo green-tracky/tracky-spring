@@ -20,7 +20,7 @@ public class CommentService {
 
         // 2. 부모 ID 목록 추출
         List<Integer> parentIds = parentComments.stream()
-                .map(Comment::getId)
+                .map(comment -> comment.getId())
                 .toList();
 
         // 3. 대댓글 조회
