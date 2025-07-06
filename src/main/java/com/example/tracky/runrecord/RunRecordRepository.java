@@ -191,6 +191,18 @@ public class RunRecordRepository {
         return runRecords;
     }
 
+    // 여러 유저용 (새로 추가)
+    public List<RunRecord> findAllByCreatedAtBetween(List<Integer> userIds, LocalDateTime start, LocalDateTime end) {
+        if (userIds == null || userIds.isEmpty()) return List.of(); // 빈 목록 처리
+        Query query = em.createQuery(
+                "SELECT r FROM RunRecord r WHERE r.user.id IN :userIds AND r.createdAt BETWEEN :start AND :end",
+                RunRecord.class);
+        query.setParameter("userIds", userIds);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        return query.getResultList();
+    }
+
     /**
      * RunRecord 전체 조회 + 페이징
      *
