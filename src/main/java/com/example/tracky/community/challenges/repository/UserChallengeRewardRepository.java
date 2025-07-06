@@ -13,7 +13,7 @@ import java.util.List;
 public class UserChallengeRewardRepository {
     private final EntityManager em;
 
-    public List<UserChallengeReward> findByUserId(Integer userId) {
+    public List<UserChallengeReward> findAllByUserId(Integer userId) {
         Query query = em.createQuery("select u from UserChallengeReward u where u.user.id = :userId", UserChallengeReward.class);
         query.setParameter("userId", userId);
         List<UserChallengeReward> userChallengeRewards = query.getResultList();
