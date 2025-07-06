@@ -1,136 +1,77 @@
 package com.example.tracky.community.leaderboard;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
-import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky.community.challenges.domain.Challenge;
-import com.example.tracky.community.challenges.domain.ChallengeJoin;
-import com.example.tracky.community.challenges.domain.RewardMaster;
-import com.example.tracky.community.challenges.dto.ChallengeResponse;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
-import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
-import com.example.tracky.community.challenges.repository.ChallengeRepository;
-import com.example.tracky.community.challenges.repository.RewardMasterRepository;
+import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.friends.Friend;
+import com.example.tracky.user.friends.FriendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LeaderBoardService {
-
-    private final ChallengeRepository challengeRepository;
-    private final ChallengeJoinRepository challengeJoinRepository;
     private final RunRecordRepository runRecordRepository;
-    private final RewardMasterRepository rewardMasterRepository;
+    private final FriendRepository friendRepository;
+    private final UserRepository userRepository;
 
-    /**
-     * 챌린지 목록 보기
-     *
-     * @param user
-     * @return
-     */
-    public ChallengeResponse.MainDTO getChallenges(User user) {
-        Integer userId = user.getId();
-        LocalDateTime now = LocalDateTime.now(); // 조회 시점
 
-        // 1. [재료 준비] 사용자가 참가한 챌린지 엔티티 목록 조회
-        // ChallengeJoin 테이블을 통해, 현재 유저가 참가한 Challenge 엔티티들을 가져옵니다.
-        List<ChallengeJoin> challengeJoinsPS = challengeJoinRepository.findAllByUserIdJoin(userId);
-        List<Challenge> joinedChallengesPS = challengeJoinsPS.stream()
-                .map(challengeJoin -> challengeJoin.getChallenge())
-                .toList();
+    public LeaderBoardsResponse.MainDTO getLederBoards(User user, LocalDate baseDate, Integer before) {
+        // 1. 기준 주 계산
+        LocalDate targetDate = baseDate.minusWeeks(before);
+        LocalDate start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate end = start.plusDays(6);
+        LocalDateTime startTime = start.atStartOfDay();
+        LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
-        // 2. [재료 준비] 참여 가능한 공식 챌린지 엔티티 목록 조회
-        // 먼저, 참가한 챌린지들의 ID 목록을 효율적으로 가져옵니다.
-        Set<Integer> joinedChallengeIds = challengeJoinRepository.findChallengeIdsByUserId(userId); // 물음: 1번에서 조회를 했는데 또 해야하나?
-        // 이 ID 목록을 제외하고, 아직 진행 중인 공식 챌린지들을 조회합니다. now -> 조회 조건용
-        List<Challenge> unjoinedChallengesPS = challengeRepository.findUnjoinedPublicChallenges(joinedChallengeIds, now);
-
-        // 3. [재료 준비] 챌린지별 누적 달리기 거리 계산 (Map)
-        // 참가한 각 챌린지에 대해, 기간 내 누적 거리를 계산하여 Map에 저장합니다.
-        Map<Integer, Integer> totalDistancesMap = joinedChallengesPS.stream()
-                .collect(Collectors.toMap(
-                        challenge -> challenge.getId(),
-                        challenge -> runRecordRepository.findTotalDistanceByUserIdAndDateRange(
-                                userId,
-                                challenge.getStartDate(),
-                                challenge.getEndDate()
-                        )
-                ));
-
-        // 4. [재료 준비] 챌린지별 참가자 수 계산 (Map)
-        // 참여 가능한 각 챌린지에 대해, 참가자 수를 계산하여 Map에 저장합니다.
-        Map<Integer, Integer> participantCountsMap = unjoinedChallengesPS.stream()
-                .collect(Collectors.toMap(
-                        challenge -> challenge.getId(),
-                        challenge -> challengeJoinRepository.countByChallengeId(challenge.getId())
-                ));
-
-        // 5. [최종 조립] 모든 재료를 MainDTO 생성자에게 전달
-        // DTO 내부에서 모든 가공 로직이 처리됩니다.
-        return new ChallengeResponse.MainDTO(
-                joinedChallengesPS,
-                unjoinedChallengesPS,
-                totalDistancesMap,
-                participantCountsMap
-        );
-    }
-
-    /**
-     * 챌린지 상세보기
-     *
-     * @param id   challengeId
-     * @param user
-     * @return
-     */
-    public ChallengeResponse.DetailDTO getChallenge(Integer id, User user) {
-        // 1. 챌린지 엔티티 조회 (공식/사설 구분)
-        Challenge challenge = challengeRepository.findById(id)
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
-
-        // 2. 참가자 수 조회
-        int participantCount = challengeJoinRepository.countByChallengeId(id);
-
-        // 3. 내 참가 여부
-        boolean isJoined = challengeJoinRepository.existsByUserIdAndChallengeId(user.getId(), id);
-
-        // 4. 내 누적 거리, 내 순위 (참가자만)
-        Integer myDistance = null;
-        Integer myRank = null;
-        if (isJoined) {
-            myDistance = runRecordRepository.findTotalDistanceByUserIdAndDateRange(
-                    user.getId(),
-                    challenge.getStartDate(),
-                    challenge.getEndDate()
-            );
-            myRank = challengeJoinRepository.findRankByChallengeIdAndUserId(id, user.getId());
+        // 2. 친구 목록 조회 및 친구 유저 리스트 추출
+        List<Friend> friendList = friendRepository.findfriendByUserIdJoinFriend(user.getId());
+        List<User> friendUsers = new ArrayList<>();
+        for (Friend friend : friendList) {
+            friendUsers.add(friend.getToUser());
         }
 
-        // 5. 리워드 정보 (공식/사설 모두 RewardMaster에서 조회)
-        List<RewardMaster> rewardMasters;
-        if (challenge.getType() == ChallengeTypeEnum.PRIVATE) {
-            // 사설 챌린지: type이 사설인 모든 리워드
-            rewardMasters = rewardMasterRepository.findAllByType(ChallengeTypeEnum.PRIVATE);
-        } else {
-            // 공개 챌린지: 챌린지 이름과 rewardName이 동일한 리워드
-            rewardMasters = rewardMasterRepository.findAllByRewardName(challenge.getName());
+        // 3. 전체 유저 리스트 (나 + 친구들)
+        List<User> allUsers = new ArrayList<>();
+        allUsers.add(user);
+        for (User friendUser : friendUsers) {
+            allUsers.add(friendUser);
         }
 
-        // 6. DTO 조립
-        return new ChallengeResponse.DetailDTO(
-                challenge,
-                participantCount,
-                myDistance,
-                myRank,
-                isJoined,
-                rewardMasters
-        );
+        // 4. 전체 유저 ID 리스트
+        List<Integer> allUserIds = new ArrayList<>();
+        for (User myUser : allUsers) {
+            allUserIds.add(myUser.getId());
+        }
+
+        // 5. 모든 사람 러닝 기록 조회
+        List<RunRecord> runRecords = runRecordRepository.findAllByCreatedAtBetween(allUserIds, startTime, endTime);
+        Integer totalDistanceMeters = 0;
+        for (RunRecord runRecord : runRecords) {
+            totalDistanceMeters += runRecord.getTotalDistanceMeters();
+        }
+
+        // 6. 리스트 DTO에 하나씩 변환
+        List<LeaderBoardsResponse.RankingListDTO> rankingList = new ArrayList<>();
+        for (User u : allUsers) {
+            Integer distance = distanceMap.getOrDefault(u.getId(), 0);
+            rankingList.add(new LeaderBoardsResponse.RankingListDTO(u, distance));
+        }
+
+
+        LeaderBoardsResponse.MyRankingDTO myRanking = new LeaderBoardsResponse.MyRankingDTO(totalDistanceMeters);
+        List<LeaderBoardsResponse.RankingListDTO> rankingList = new LeaderBoardsResponse.RankingListDTO(allUsers, totalDistanceMeters);
+
+
+        return new LeaderBoardsResponse.MainDTO(myRanking, rankingList);
     }
 }
