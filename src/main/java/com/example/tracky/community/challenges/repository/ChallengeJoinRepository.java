@@ -136,4 +136,20 @@ public class ChallengeJoinRepository {
     public void delete(ChallengeJoin challengeJoinPS) {
         em.remove(challengeJoinPS);
     }
+
+    // ...
+
+    /**
+     * 참여중인 챌린지 중에서 현재 진행중인 챌린지들만 조회
+     *
+     * @param userId
+     * @return
+     */
+    public List<ChallengeJoin> findAllByUserIdAndIsInProgressTrue(Integer userId) {
+        Query query = em.createQuery("select cj from ChallengeJoin cj join fetch cj.challenge c " +
+                "where cj.user.id = :userId and c.isInProgress = true", ChallengeJoin.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+
 }

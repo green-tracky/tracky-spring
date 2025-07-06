@@ -53,5 +53,5 @@ public class ChallengeRepository {
     public Optional<Challenge> findById(Integer id) {
         return Optional.ofNullable(em.find(Challenge.class, id));
     }
-
+    
 }
