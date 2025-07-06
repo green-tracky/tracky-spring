@@ -75,16 +75,14 @@ public class PostResponse {
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
 
-        public DetailDTO(Post post, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked) {
+        public DetailDTO(Post post, List<CommentResponse.DTO> commentDTOs, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked) {
             this.id = post.getId();
             this.content = post.getContent();
             this.userId = post.getUser().getId();
             this.runRecord = post.getRunRecord() != null
                     ? new RunRecordResponse.DetailDTO(post.getRunRecord())
                     : null;
-            this.commentDTOs = post.getComments().stream()
-                    .map(comment -> new CommentResponse.DTO(comment)) // 생성자 직접 호출
-                    .toList();
+            this.commentDTOs = commentDTOs;
             this.pictures = (postPictures != null) ?
                     postPictures.stream()
                             .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))

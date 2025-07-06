@@ -4,6 +4,8 @@ import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.comments.CommentRepository;
+import com.example.tracky.community.posts.comments.CommentResponse;
+import com.example.tracky.community.posts.comments.CommentService;
 import com.example.tracky.community.posts.likes.Like;
 import com.example.tracky.community.posts.likes.LikeRepository;
 import com.example.tracky.runrecord.RunRecord;
@@ -26,6 +28,8 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final RunRecordRepository runRecordRepository;
     private final PictureRepository pictureRepository;
+    private final CommentService commentService;
+
 
     public List<PostResponse.ListDTO> getPosts(User user) {
         List<Post> postsPS = postRepository.findAllJoinRunRecord();
@@ -116,6 +120,24 @@ public class PostService {
         postPS.update(reqDTO.getContent(), runRecord, pictures);
 
         return new PostResponse.UpdateDTO(postPS);
+    }
+
+    @Transactional
+    public PostResponse.DetailDTO getPostDetail(Integer postId, User user) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        Integer likeCount = likeRepository.countByPostId(postId);
+        Integer commentCount = commentRepository.countByPostId(postId);
+        Like like = likeRepository.findByUserIdAndPostId(user.getId(), post.getId()).orElse(null);
+        boolean isLiked = like != null;
+
+        List<PostPicture> pictures = post.getPostPictures();
+
+        // ✅ 댓글 + 대댓글 조회
+        List<CommentResponse.DTO> commentDTOs = commentService.getCommentsWithReplies(postId.longValue(), 0);
+
+        return new PostResponse.DetailDTO(post, commentDTOs, pictures, likeCount, commentCount, isLiked);
     }
 
 }
