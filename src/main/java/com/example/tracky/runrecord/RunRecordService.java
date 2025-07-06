@@ -134,22 +134,27 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
+
 
         // 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 주차 라벨 생성 (기준 baseDate가 속한 '년-월'에 해당하는 주차만 필터링)
@@ -276,22 +281,26 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 러닝 3개 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 기록이 있는 월/연도 목록 구성
@@ -401,22 +410,26 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회 및 DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 주간 평균 통계 계산
@@ -527,22 +540,26 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 현재 레벨, 총 거리, 다음 레벨까지 거리 계산
