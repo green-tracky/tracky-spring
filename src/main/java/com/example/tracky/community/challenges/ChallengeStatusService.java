@@ -120,7 +120,7 @@ public class ChallengeStatusService {
         for (int i = 0; i < Math.min(3, achievers.size()); i++) {
             User user = achievers.get(i).user;
             Optional<RewardMaster> medalReward = rewardMasterRepository.findByRewardName(medals[i]);
-            // 보상 메달이 없어도 예외처리하지 않는다
+            // 보상 메달이 없어도 예외처리하지 않는다 TODO : 그냥 예외터트리자
             if (medalReward.isPresent()) {
                 UserChallengeReward reward = UserChallengeReward.builder()
                         .user(user)
@@ -132,6 +132,20 @@ public class ChallengeStatusService {
             } else {
                 log.warn(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND.getMessage());
             }
+        }
+    }
+
+    /**
+     * 참가자가 없는 사설 챌린지 삭제
+     */
+    @Transactional
+    public void cleanupEmptyPrivateChallenges() {
+        // 1. 참가자가 0명인, '진행 중인' 모든 사설 챌린지를 조회
+        List<Challenge> emptyChallenges = challengeRepository.findOngoingEmptyPrivateChallenges();
+
+        // 2. 조회된 챌린지가 있다면, DB에서 삭제
+        if (emptyChallenges != null && !emptyChallenges.isEmpty()) {
+            challengeRepository.deleteAllInBatchCustom(emptyChallenges);
         }
     }
 }

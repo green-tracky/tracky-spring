@@ -125,6 +125,11 @@ public enum ErrorCodeEnum {
     REWARD_MASTER_NOT_FOUND(404, "해당 챌린지 보상이 존재하지 않습니다"),
 
     /**
+     * 404 Not Found - 관리자가 존재하지 않습니다.
+     */
+    ADMIN_NOT_FOUND(404, "관리자가 존재하지 않습니다"),
+
+    /**
      * 500 Internal Server Error - 알 수 없는 오류 발생 시 기본 메시지입니다.
      */
     INTERNAL_SERVER_ERROR(500, "알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요"),
