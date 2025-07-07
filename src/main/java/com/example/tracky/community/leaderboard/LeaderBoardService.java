@@ -5,7 +5,7 @@ import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
-import com.example.tracky.community.leaderboard.enums.DateEnums;
+import com.example.tracky.community.leaderboard.enums.DateRangeType;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
@@ -35,11 +35,11 @@ public class LeaderBoardService {
     private final ChallengeJoinRepository challengeJoinRepository;
 
 
-    public LeaderBoardsResponse.LeaderBoardDTO getLeaderBoards(User user, LocalDate baseDate, Integer before, DateEnums datetype) {
+    public LeaderBoardsResponse.LeaderBoardDTO getLeaderBoards(User user, LocalDate baseDate, Integer before, DateRangeType dateRangeType) {
         LocalDate start;
         LocalDate end;
 
-        switch (datetype) {
+        switch (dateRangeType) {
             case MONTHDATE -> {
                 LocalDate targetDate = baseDate.minusMonths(before);
                 start = targetDate.with(TemporalAdjusters.firstDayOfMonth());
