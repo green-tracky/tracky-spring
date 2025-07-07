@@ -1,6 +1,11 @@
 package com.example.tracky.community.leaderboard;
 
-import com.example.tracky.community.leaderboard.enums.DateEnums;
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.community.challenges.domain.Challenge;
+import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
+import com.example.tracky.community.challenges.repository.ChallengeRepository;
+import com.example.tracky.community.leaderboard.enums.DateRangeType;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
@@ -26,18 +31,15 @@ public class LeaderBoardService {
     private final RunRecordRepository runRecordRepository;
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final ChallengeRepository challengeRepository;
+    private final ChallengeJoinRepository challengeJoinRepository;
 
 
-    public LeaderBoardsResponse.MainDTO getLederBoards(User user, LocalDate baseDate, Integer before, DateEnums datetype) {
+    public LeaderBoardsResponse.LeaderBoardDTO getLeaderBoards(User user, LocalDate baseDate, Integer before, DateRangeType dateRangeType) {
         LocalDate start;
         LocalDate end;
 
-        switch (datetype) {
-            case WEEK -> {
-                LocalDate targetDate = baseDate.minusWeeks(before);
-                start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-                end = start.plusDays(6);
-            }
+        switch (dateRangeType) {
             case MONTH -> {
                 LocalDate targetDate = baseDate.minusMonths(before);
                 start = targetDate.with(TemporalAdjusters.firstDayOfMonth());
@@ -48,7 +50,12 @@ public class LeaderBoardService {
                 start = targetDate.with(TemporalAdjusters.firstDayOfYear());
                 end = targetDate.with(TemporalAdjusters.lastDayOfYear());
             }
-            default -> throw new IllegalArgumentException("Invalid LeaderBoardTerm");
+            // datetype == null 이면 WEEK(기본값)
+            default -> {
+                LocalDate targetDate = baseDate.minusWeeks(before);
+                start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                end = start.plusDays(6);
+            }
         }
 
 
@@ -72,7 +79,7 @@ public class LeaderBoardService {
 
         // 4. 내 정보 조회
         User me = userRepository.findByIdJoin(user.getId())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 3. 전체 유저 리스트 (나 + 친구들)
         List<User> allUsers = new ArrayList<>();
@@ -153,6 +160,61 @@ public class LeaderBoardService {
 
         LeaderBoardsResponse.MyRankingDTO myRanking = new LeaderBoardsResponse.MyRankingDTO(myDistance, myRank);
 
-        return new LeaderBoardsResponse.MainDTO(myRanking, rankingList);
+        return new LeaderBoardsResponse.LeaderBoardDTO(myRanking, rankingList);
+    }
+
+    public LeaderBoardsResponse.ChallengeLeaderBoardDTO getChallengeLeaderBoards(Integer id, User user) {
+        // 1. 챌린지 조회
+        Challenge challengeDate = challengeRepository.findById(id).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
+
+        // 2. 해당 챌린지 날짜 조회
+        LocalDateTime start = challengeDate.getStartDate();
+        LocalDateTime end = challengeDate.getEndDate();
+
+        // 3. 해당 챌린지 참여자 조회
+        List<User> userList = challengeJoinRepository.findUserAllById(id);
+
+        // 4. 유저별 거리 기록 조회 및 DTO 생성
+        List<LeaderBoardsResponse.RankingListDTO> rankingList = new ArrayList<>();
+        for (User u : userList) {
+            int distance = runRecordRepository.findTotalDistanceByUserIdAndDateRange(u.getId(), start, end);
+            rankingList.add(new LeaderBoardsResponse.RankingListDTO(
+                    u.getUsername(),
+                    u.getProfileUrl(),
+                    distance,
+                    0, // 초기 랭킹 (나중에 정렬 후 재계산)
+                    u.getId()
+            ));
+        }
+
+        rankingList.sort((a, b) -> b.getTotalDistanceMeters().compareTo(a.getTotalDistanceMeters()));
+
+        // 7. 해당 챌린지 유저 랭크
+        List<LeaderBoardsResponse.RankingListDTO> newRankingList = new ArrayList<>();
+        int rank = 1;
+        int prevDistance = -1;
+        int actualRank = 1; // 표시될 순위
+
+        for (int i = 0; i < rankingList.size(); i++) {
+            LeaderBoardsResponse.RankingListDTO dto = rankingList.get(i);
+            int distance = dto.getTotalDistanceMeters();
+
+            if (distance != prevDistance) {
+                actualRank = rank; // 현재 인덱스를 기반으로 순위 갱신
+                prevDistance = distance;
+            }
+
+            newRankingList.add(new LeaderBoardsResponse.RankingListDTO(
+                    dto.getUsername(),
+                    dto.getProfileUrl(),
+                    distance,
+                    actualRank,
+                    dto.getUserId()
+            ));
+            rank++;
+        }
+        rankingList = newRankingList;
+
+        return new LeaderBoardsResponse.ChallengeLeaderBoardDTO(rankingList);
     }
 }
