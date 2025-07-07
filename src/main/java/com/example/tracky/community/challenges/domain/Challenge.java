@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges.domain;
 
 import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
+import com.example.tracky.community.challenges.enums.PeriodTypeEnum;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -34,6 +35,10 @@ public class Challenge {
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
     private ChallengeTypeEnum type; // PUBLIC, PRIVATE
     private String imageUrl; // 챌린지 이미지
+    private Integer year; // 년도
+    private Integer month; // 월
+    private Integer weekOfMonth; // 주차 (1주차, 2주차)
+    private PeriodTypeEnum periodType; // 주간 or 월간
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 챌린지 생성 시간
@@ -45,7 +50,8 @@ public class Challenge {
     @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
 
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, User creator) {
+    @Builder
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, Integer year, Integer month, Integer weekOfMonth, PeriodTypeEnum periodType, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -56,13 +62,18 @@ public class Challenge {
         this.isInProgress = isInProgress;
         this.type = type;
         this.imageUrl = imageUrl;
+        this.year = year;
+        this.month = month;
+        this.weekOfMonth = weekOfMonth;
+        this.periodType = periodType;
         this.creator = creator;
     }
 
-    @Builder
-
-
     protected Challenge() {
+    }
+
+    public void closeChallenge() {
+        this.isInProgress = false;
     }
 
 }
