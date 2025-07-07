@@ -1,6 +1,7 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky._core.utils.Resp;
+import com.example.tracky._core.value.TimeValue;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,32 +32,12 @@ public class RunRecordController {
         }
 
         //배포시 사용
-        LocalDate baseDate = LocalDate.now();
+        LocalDate baseDate = TimeValue.getServerTime().toLocalDate();
         System.out.println("오늘 : " + baseDate);
         RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(user, baseDate, before);
         return Resp.ok(respDTO);
     }
-
-    // 테스트 용도
-    @GetMapping("/activities/week/test")
-    public ResponseEntity<?> getActivitiesWeekTest(@RequestParam(value = "before", defaultValue = "0") Integer before) {
-        // 유저 아이디를 임시로 1 로 함
-        Integer userId = 1;
-
-        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
-        User user = User.builder().id(userId).build();
-
-        // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
-        if (before == null || before < 0 || before > 4) {
-            before = 0;
-        }
-
-        // 테스트
-        LocalDate baseDate = LocalDate.of(2025, 6, 30);
-        RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(user, baseDate, before);
-        return Resp.ok(respDTO);
-    }
-
+    
     @GetMapping("/activities/month")
     public ResponseEntity<?> getActivitiesMonth(@RequestParam(value = "month", required = false) Integer month,
                                                 @RequestParam(value = "year", required = false) Integer year) {
@@ -67,7 +48,7 @@ public class RunRecordController {
         User user = User.builder().id(userId).build();
 
         // 오늘 날짜 기준으로 기본값 설정
-        LocalDate today = LocalDate.now();
+        LocalDate today = TimeValue.getServerTime().toLocalDate();
         if (month == null) month = today.getMonthValue();  // 1~12
         if (year == null) year = today.getYear();
 
@@ -84,7 +65,7 @@ public class RunRecordController {
         User user = User.builder().id(userId).build();
 
         // 오늘 날짜 기준으로 기본값 설정
-        LocalDate today = LocalDate.now();
+        LocalDate today = TimeValue.getServerTime().toLocalDate();
         if (year == null) year = today.getYear();
 
         RunRecordResponse.YearDTO respDTO = runRecordService.getActivitiesYear(user, year);

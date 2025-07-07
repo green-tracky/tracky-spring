@@ -42,8 +42,8 @@ public class RunBadgeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
 // recents[0] 검증
-        actions.andExpect(jsonPath("$.data.recents[0].id").value(3));
-        actions.andExpect(jsonPath("$.data.recents[0].name").value("동메달"));
+        actions.andExpect(jsonPath("$.data.recents[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.recents[0].name").value("첫 시작"));
         actions.andExpect(jsonPath("$.data.recents[0].description").value("챌린지를 완료하셨습니다"));
         actions.andExpect(jsonPath("$.data.recents[0].imageUrl").value("https://example.com/rewards/bronze.png"));
         actions.andExpect(jsonPath("$.data.recents[0].type").value("챌린지 우승자"));
