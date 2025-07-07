@@ -1,5 +1,6 @@
 package com.example.tracky.community.challenges;
 
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
@@ -13,6 +14,7 @@ import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeStatusService {
@@ -116,18 +119,17 @@ public class ChallengeStatusService {
         for (int i = 0; i < Math.min(3, achievers.size()); i++) {
             User user = achievers.get(i).user;
             Optional<RewardMaster> medalReward = rewardMasterRepository.findByRewardName(medals[i]);
+            // 보상 메달이 없어도 예외처리하지 않는다
             if (medalReward.isPresent()) {
-                boolean alreadyRewarded = userChallengeRewardRepository.existsPrivateRewardByRewardId(
-                        user.getId(), challenge.getId(), medalReward.get().getId());
-                if (!alreadyRewarded) {
-                    UserChallengeReward reward = UserChallengeReward.builder()
-                            .user(user)
-                            .challenge(challenge)
-                            .rewardMaster(medalReward.get())
-                            .type(ChallengeTypeEnum.PRIVATE)
-                            .build();
-                    userChallengeRewardRepository.save(reward);
-                }
+                UserChallengeReward reward = UserChallengeReward.builder()
+                        .user(user)
+                        .challenge(challenge)
+                        .rewardMaster(medalReward.get())
+                        .type(ChallengeTypeEnum.PRIVATE)
+                        .build();
+                userChallengeRewardRepository.save(reward);
+            } else {
+                log.warn(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND.getMessage());
             }
         }
     }
