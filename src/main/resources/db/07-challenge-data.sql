@@ -2,7 +2,7 @@
 INSERT INTO challenge_tb (name, sub, description, start_date, end_date, target_distance, is_in_progress, creator_id,
                           created_at, type, image_url)
 VALUES ('6월 5k 챌린지', '이번 주 5km를 달려보세요.', '주간 챌린지를 통해 나의 한계를 뛰어넘어 보세요. 이번 주 5km를 달리면 특별한 완주자 기록을 달성할 수 있습니다.',
-        '2025-06-01 00:00:00', '2025-06-30 23:59:59', 5000, true, 1, NOW(), 'PUBLIC',
+        '2025-06-01 00:00:00', '2025-07-30 23:59:59', 5000, true, 1, NOW(), 'PUBLIC',
         'https://example.com/rewards/5km_badge.png');
 
 -- 2. 10km 공식 챌린지
