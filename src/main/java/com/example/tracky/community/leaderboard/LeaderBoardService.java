@@ -57,15 +57,10 @@ public class LeaderBoardService {
         List<Integer> allUserIds = new ArrayList<>();
         for (User myUser : allUsers) {
             allUserIds.add(myUser.getId());
-            System.out.println("유저 아이디들 : " + myUser.getId());
         }
 
         // 5. 모든 사람 러닝 기록 조회
         List<RunRecord> runRecords = runRecordRepository.findAllByCreatedAtBetween(allUserIds, startTime, endTime);
-        Integer totalDistanceMeters = 0;
-        for (RunRecord runRecord : runRecords) {
-            totalDistanceMeters += runRecord.getTotalDistanceMeters();
-        }
 
         // 6. 유저별 거리 누적용 Map 초기화
         Map<Integer, Integer> userDistanceMap = new HashMap<>();
@@ -80,15 +75,54 @@ public class LeaderBoardService {
             userDistanceMap.put(userId, currentDistance + runRecord.getTotalDistanceMeters());
         }
 
-        // 8. 유저별 DTO 생성
+        // 8. 유저별 DTO 생성 + 거리 기준 정렬
         List<LeaderBoardsResponse.RankingListDTO> rankingList = new ArrayList<>();
         for (User u : allUsers) {
+            String username = u.getUsername();
+            String profileUrl = u.getProfileUrl();
             int userDistance = userDistanceMap.getOrDefault(u.getId(), 0);
-            rankingList.add(new LeaderBoardsResponse.RankingListDTO(u, userDistance));
+            rankingList.add(new LeaderBoardsResponse.RankingListDTO(username, profileUrl, userDistance, 0, u.getId()));
+        }
+        rankingList.sort((a, b) -> b.getTotalDistanceMeters().compareTo(a.getTotalDistanceMeters()));
+
+        // 랭킹 계산
+        List<LeaderBoardsResponse.RankingListDTO> newRankingList = new ArrayList<>();
+        int rank = 1;
+        int prevDistance = -1;
+        int actualRank = 1; // 표시될 순위
+
+        for (int i = 0; i < rankingList.size(); i++) {
+            LeaderBoardsResponse.RankingListDTO dto = rankingList.get(i);
+            int distance = dto.getTotalDistanceMeters();
+
+            if (distance != prevDistance) {
+                actualRank = rank; // 현재 인덱스를 기반으로 순위 갱신
+                prevDistance = distance;
+            }
+
+            newRankingList.add(new LeaderBoardsResponse.RankingListDTO(
+                    dto.getUsername(),
+                    dto.getProfileUrl(),
+                    distance,
+                    actualRank,
+                    dto.getUserId()
+            ));
+
+            rank++;
         }
 
+        rankingList = newRankingList;
+
         int myDistance = userDistanceMap.getOrDefault(user.getId(), 0);
-        LeaderBoardsResponse.MyRankingDTO myRanking = new LeaderBoardsResponse.MyRankingDTO(myDistance);
+        int myRank = 0;
+        for (LeaderBoardsResponse.RankingListDTO dto : rankingList) {
+            if (dto.getUserId() == user.getId()) {
+                myRank = dto.getRank();
+                break;
+            }
+        }
+
+        LeaderBoardsResponse.MyRankingDTO myRanking = new LeaderBoardsResponse.MyRankingDTO(myDistance, myRank);
 
         return new LeaderBoardsResponse.MainDTO(myRanking, rankingList);
     }
