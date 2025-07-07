@@ -152,17 +152,29 @@ class PostControllerTest extends MyRestDoc {
         //when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/community/posts/1")
-        );
-
-        // eye
-        String responseBody = actions.andReturn().getResponse().getContentAsString();
-        log.debug("✅응답 바디: " + responseBody);
+                        .delete("/s/api/community/posts/1"));
 
         // then
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data").value("삭제 성공"));
+
+    }
+
+    @DisplayName("포스트 상세 조회 성공")
+    void get_detail_test() throws Exception {
+        // given
+        int postId = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/posts/" + postId)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
 
     }
 

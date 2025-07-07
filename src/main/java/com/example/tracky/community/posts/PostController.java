@@ -50,4 +50,15 @@ public class PostController {
 
         return Resp.ok(respDTO);
     }
+
+    @GetMapping("/community/posts/{id}")
+    public ResponseEntity<?> getPostDetail(@PathVariable int id) {
+
+        Integer userId = 1;
+
+        User user = User.builder().id(userId).build();
+
+        PostResponse.DetailDTO respDTO = postService.getPostDetail(id, user);
+        return Resp.ok(respDTO);
+    }
 }
