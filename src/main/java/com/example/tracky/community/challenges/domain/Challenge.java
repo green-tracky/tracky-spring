@@ -50,7 +50,8 @@ public class Challenge {
     @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
 
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, User creator) {
+    @Builder
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, Integer year, Integer month, Integer weekOfMonth, PeriodTypeEnum periodType, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -61,13 +62,18 @@ public class Challenge {
         this.isInProgress = isInProgress;
         this.type = type;
         this.imageUrl = imageUrl;
+        this.year = year;
+        this.month = month;
+        this.weekOfMonth = weekOfMonth;
+        this.periodType = periodType;
         this.creator = creator;
     }
 
-    @Builder
-
-
     protected Challenge() {
+    }
+
+    public void closeChallenge() {
+        this.isInProgress = false;
     }
 
 }

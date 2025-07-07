@@ -152,4 +152,9 @@ public class ChallengeJoinRepository {
         return query.getResultList();
     }
 
+    public List<ChallengeJoin> findAllByChallengeId(Integer challengeId) {
+        return em.createQuery("select cj from ChallengeJoin cj where cj.challenge.id = :challengeId", ChallengeJoin.class)
+                .setParameter("challengeId", challengeId)
+                .getResultList();
+    }
 }

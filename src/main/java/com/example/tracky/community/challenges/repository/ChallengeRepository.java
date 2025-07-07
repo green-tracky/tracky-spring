@@ -20,8 +20,8 @@ public class ChallengeRepository {
 
     /**
      * <pre>
-     * 사용자가 참가하지 않았고, 아직 진행 중인 '공개 챌린지' 목록을 조회합니다.
-     * '참여하기' 목록을 만드는 데 사용됩니다.
+     * 사용자가 참가하지 않았고, 아직 진행 중인 '공개 챌린지' 목록을 조회
+     * '참여하기' 목록을 만드는 데 사용
      *
      * where 문에 isInProgress 를 사용하지 않는 이유
      * - 만약 이 스케줄러가 1분이라도 늦게 돌거나, 에러로 인해 실패한다면 그 시간 동안 데이터는 **'오염된 상태(Stale Data)'**가 되기 때문
@@ -46,12 +46,23 @@ public class ChallengeRepository {
 
     /**
      * <pre>
-     * 챌린지 ID로 상세 정보를 조회합니다.
-     * (공개/사설 모두 Challenge 타입으로 조회 가능)
+     * 챌린지 ID로 상세 정보를 조회
      * </pre>
      */
     public Optional<Challenge> findById(Integer id) {
         return Optional.ofNullable(em.find(Challenge.class, id));
     }
-    
+
+    /**
+     * 진행중이면서 종료날짜가 지나간 챌린지들 조회
+     *
+     * @param now
+     * @return
+     */
+    public List<Challenge> findAllByIsInProgressTrueAndEndDateBefore(LocalDateTime now) {
+        Query query = em.createQuery("select c from Challenge c where c.isInProgress = true and c.endDate < :now", Challenge.class);
+        query.setParameter("now", now);
+        return query.getResultList();
+    }
+
 }
