@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky._core.value.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
@@ -24,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -119,19 +119,16 @@ public class ChallengeStatusService {
         // 금, 은, 동 으로 최대 3번 반복한다
         for (int i = 0; i < Math.min(3, achievers.size()); i++) {
             User user = achievers.get(i).user;
-            Optional<RewardMaster> medalReward = rewardMasterRepository.findByRewardName(medals[i]);
-            // 보상 메달이 없어도 예외처리하지 않는다 TODO : 그냥 예외터트리자
-            if (medalReward.isPresent()) {
-                UserChallengeReward reward = UserChallengeReward.builder()
-                        .user(user)
-                        .challenge(challenge)
-                        .rewardMaster(medalReward.get())
-                        .type(ChallengeTypeEnum.PRIVATE)
-                        .build();
-                userChallengeRewardRepository.save(reward);
-            } else {
-                log.warn(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND.getMessage());
-            }
+            RewardMaster medalReward = rewardMasterRepository.findByRewardName(medals[i])
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND));
+
+            UserChallengeReward reward = UserChallengeReward.builder()
+                    .user(user)
+                    .challenge(challenge)
+                    .rewardMaster(medalReward)
+                    .type(ChallengeTypeEnum.PRIVATE)
+                    .build();
+            userChallengeRewardRepository.save(reward);
         }
     }
 
