@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +42,13 @@ public class LeaderBoardService {
             friendUsers.add(friend.getToUser());
         }
 
+        // 4. 내 정보 조회
+        User me = userRepository.findByIdJoin(user.getId())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
         // 3. 전체 유저 리스트 (나 + 친구들)
         List<User> allUsers = new ArrayList<>();
-        allUsers.add(user);
+        allUsers.add(me);
         for (User friendUser : friendUsers) {
             allUsers.add(friendUser);
         }
@@ -51,6 +57,7 @@ public class LeaderBoardService {
         List<Integer> allUserIds = new ArrayList<>();
         for (User myUser : allUsers) {
             allUserIds.add(myUser.getId());
+            System.out.println("유저 아이디들 : " + myUser.getId());
         }
 
         // 5. 모든 사람 러닝 기록 조회
@@ -60,17 +67,28 @@ public class LeaderBoardService {
             totalDistanceMeters += runRecord.getTotalDistanceMeters();
         }
 
-        // 6. 리스트 DTO에 하나씩 변환
-        List<LeaderBoardsResponse.RankingListDTO> rankingList = new ArrayList<>();
+        // 6. 유저별 거리 누적용 Map 초기화
+        Map<Integer, Integer> userDistanceMap = new HashMap<>();
         for (User u : allUsers) {
-            Integer distance = distanceMap.getOrDefault(u.getId(), 0);
-            rankingList.add(new LeaderBoardsResponse.RankingListDTO(u, distance));
+            userDistanceMap.put(u.getId(), 0);
         }
 
+        // 7. 각 기록마다 해당 유저 ID 기준 거리 누적
+        for (RunRecord runRecord : runRecords) {
+            Integer userId = runRecord.getUser().getId();
+            Integer currentDistance = userDistanceMap.getOrDefault(userId, 0);
+            userDistanceMap.put(userId, currentDistance + runRecord.getTotalDistanceMeters());
+        }
 
-        LeaderBoardsResponse.MyRankingDTO myRanking = new LeaderBoardsResponse.MyRankingDTO(totalDistanceMeters);
-        List<LeaderBoardsResponse.RankingListDTO> rankingList = new LeaderBoardsResponse.RankingListDTO(allUsers, totalDistanceMeters);
+        // 8. 유저별 DTO 생성
+        List<LeaderBoardsResponse.RankingListDTO> rankingList = new ArrayList<>();
+        for (User u : allUsers) {
+            int userDistance = userDistanceMap.getOrDefault(u.getId(), 0);
+            rankingList.add(new LeaderBoardsResponse.RankingListDTO(u, userDistance));
+        }
 
+        int myDistance = userDistanceMap.getOrDefault(user.getId(), 0);
+        LeaderBoardsResponse.MyRankingDTO myRanking = new LeaderBoardsResponse.MyRankingDTO(myDistance);
 
         return new LeaderBoardsResponse.MainDTO(myRanking, rankingList);
     }
