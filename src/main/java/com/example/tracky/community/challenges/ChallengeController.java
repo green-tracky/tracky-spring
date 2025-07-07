@@ -51,7 +51,7 @@ public class ChallengeController {
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        LeaderBoardsResponse.ChallengeLeaderBoardDTO respDTO = leaderBoardService.getChallengeLederBoards(id, user);
+        LeaderBoardsResponse.ChallengeLeaderBoardDTO respDTO = leaderBoardService.getChallengeLeaderBoards(id, user);
         return Resp.ok(respDTO);
     }
 
