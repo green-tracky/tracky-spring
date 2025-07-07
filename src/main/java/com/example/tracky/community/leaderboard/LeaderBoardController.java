@@ -69,7 +69,7 @@ public class LeaderBoardController {
         User user = User.builder().id(userId).build();
 
         // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
-        if (before == null || before < 0 || before > 2) {
+        if (before == null || before < 0 || before > 0) {
             before = 0;
         }
 
