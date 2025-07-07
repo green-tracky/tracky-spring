@@ -163,7 +163,7 @@ public class LeaderBoardService {
         return new LeaderBoardsResponse.LeaderBoardDTO(myRanking, rankingList);
     }
 
-    public LeaderBoardsResponse.ChallengeLeaderBoardDTO getChallengeLederBoards(Integer id, User user) {
+    public LeaderBoardsResponse.ChallengeLeaderBoardDTO getChallengeLeaderBoards(Integer id, User user) {
         // 1. 챌린지 조회
         Challenge challengeDate = challengeRepository.findById(id).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
 
