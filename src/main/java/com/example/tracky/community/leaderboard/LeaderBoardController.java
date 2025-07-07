@@ -78,5 +78,4 @@ public class LeaderBoardController {
         return Resp.ok(respDTO);
     }
 
-
 }
