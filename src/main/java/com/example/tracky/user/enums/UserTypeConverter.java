@@ -12,23 +12,16 @@ import jakarta.persistence.Converter;
 @Converter(autoApply = true)
 public class UserTypeConverter implements AttributeConverter<UserTypeEnum, String> {
 
-    // Enum -> DB (String)
-    // 애플리케이션의 UserTypeEnum.GENERAL을 DB의 "일반"으로 변환
+    // Enum → DB 저장 (영문 코드)
     @Override
-    public String convertToDatabaseColumn(UserTypeEnum userTypeEnum) {
-        if (userTypeEnum == null) {
-            return null;
-        }
-        return userTypeEnum.getValue();
+    public String convertToDatabaseColumn(UserTypeEnum attribute) {
+        return attribute == null ? null : attribute.name();
     }
 
-    // DB (String) -> Enum
-    // DB의 "일반"을 애플리케이션의 UserTypeEnum.GENERAL로 변환
+    // DB → Enum (영문 코드 → Enum)
     @Override
-    public UserTypeEnum convertToEntityAttribute(String value) {
-        if (value == null) {
-            return null;
-        }
-        return UserTypeEnum.fromString(value);
+    public UserTypeEnum convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) return null;
+        return UserTypeEnum.fromValue(dbData);
     }
 }

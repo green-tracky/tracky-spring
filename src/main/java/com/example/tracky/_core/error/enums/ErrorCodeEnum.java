@@ -12,6 +12,11 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 리워드 값입니다.
      */
+    INVALID_RUNBADGE_TYPE(400, "유효하지 않은 러닝뱃지 타입입니다"),
+
+    /**
+     * 400 Bad Request - 유효하지 않은 리워드 값입니다.
+     */
     INVALID_REWARD_TYPE(400, "유효하지 않은 리워드 값입니다"),
 
     /**
@@ -113,6 +118,11 @@ public enum ErrorCodeEnum {
      * 404 Not Found - 해당 챌린지에 참가하지 않았습니다.
      */
     CHALLENGE_JOIN_NOT_FOUND(404, "해당 챌린지에 참가하지 않았습니다"),
+
+    /**
+     * 404 Not Found - 해당 챌린지에 참가하지 않았습니다.
+     */
+    REWARD_MASTER_NOT_FOUND(404, "해당 챌린지 보상이 존재하지 않습니다"),
 
     /**
      * 500 Internal Server Error - 알 수 없는 오류 발생 시 기본 메시지입니다.

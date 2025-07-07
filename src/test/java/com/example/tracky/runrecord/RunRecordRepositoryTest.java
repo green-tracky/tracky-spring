@@ -1,9 +1,9 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.runsegment.RunSegmentRequest;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinate;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRepository;
-import com.example.tracky.runrecord.runsegment.runcoordinate.RunCoordinateRequest;
+import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
+import com.example.tracky.runrecord.runsegments.runcoordinates.RunCoordinate;
+import com.example.tracky.runrecord.runsegments.runcoordinates.RunCoordinateRepository;
+import com.example.tracky.runrecord.runsegments.runcoordinates.RunCoordinateRequest;
 import com.example.tracky.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ public class RunRecordRepositoryTest {
         RunCoordinateRequest.DTO cDTO = new RunCoordinateRequest.DTO();
         cDTO.setLat(10.0);
         cDTO.setLon(15.0);
-        cDTO.setCreatedAt(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
+        cDTO.setRecordedAt(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
 
         RunSegmentRequest.DTO sDTO = new RunSegmentRequest.DTO();
         sDTO.setEndDate(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
@@ -71,7 +71,7 @@ public class RunRecordRepositoryTest {
         // eye
         log.debug("✅기록 아이디: " + runRecordPS.getId());
         log.debug("✅구간 아이디: " + runRecordPS.getRunSegments().get(0).getId());
-        log.debug("✅좌표 아이디: " + runRecordPS.getRunSegments().get(0).getRunCoordinates().get(0).getId());
+        log.debug("✅좌표 아이디: " + runRecordPS.getRunSegments().get(0).getRunCoordinate().getId());
 
     }
 
@@ -83,7 +83,7 @@ public class RunRecordRepositoryTest {
 
         RunRecord runRecordPS = runRecordRepository.findByIdJoin(runRecordId).orElseThrow();
         // 배치 로딩 확인
-        runRecordPS.getRunSegments().get(0).getRunCoordinates().get(0).getCreatedAt();
+        runRecordPS.getRunSegments().get(0).getRunCoordinate().getCreatedAt();
 
         // when
         runRecordRepository.delete(runRecordPS);

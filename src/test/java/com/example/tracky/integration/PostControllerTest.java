@@ -1,7 +1,7 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
-import com.example.tracky.community.post.PostRequest;
+import com.example.tracky.community.posts.PostRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -66,7 +66,6 @@ class PostControllerTest extends MyRestDoc {
 
         // given
         PostRequest.SaveDTO reqDTO = new PostRequest.SaveDTO();
-        reqDTO.setTitle("제목입니다");
         reqDTO.setContent("내용입니다");
         reqDTO.setRunRecordId(10);
 
@@ -86,6 +85,63 @@ class PostControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 내부 필드 검증
+        actions.andExpect(jsonPath("$.data.id").isNumber());
+        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.runRecordId").value(10));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+
+        // pictureIds가 빈 배열인지 확인
+        actions.andExpect(jsonPath("$.data.pictureIds").isArray());
+        actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
+
+    }
+
+    @Test
+    @DisplayName("포스트 수정 성공")
+    void update_test() throws Exception {
+
+        // given
+        int postId = 1;
+        PostRequest.UpdateDTO reqDTO = new PostRequest.UpdateDTO();
+        reqDTO.setContent("내용입니다");
+        reqDTO.setRunRecordId(10);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/community/posts/" + postId)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data 내부 필드 검증
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
+        actions.andExpect(jsonPath("$.data.runRecordId").value(10));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+        actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
+
+        // pictureIds가 빈 배열인지 확인
+        actions.andExpect(jsonPath("$.data.pictureIds").isArray());
+        actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
 
     }
 
