@@ -1,10 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.dto.AvgStatsDTO;
-import com.example.tracky.runrecord.dto.PageDTO;
-import com.example.tracky.runrecord.dto.RecentRunsDTO;
-import com.example.tracky.runrecord.dto.RunLevelDTO;
-import com.example.tracky.runrecord.dto.TotalStatsDTO;
+import com.example.tracky.runrecord.dto.*;
 import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.pictures.PictureResponse;
 import com.example.tracky.runrecord.runbadges.RunBadgeResponse;
@@ -275,6 +271,53 @@ public class RunRecordResponse {
             this.intensity = runRecord.getIntensity();
             this.place = runRecord.getPlace();
         }
+    }
+
+    @Data
+    public static class PostRunRecordDTO {
+        private Integer id;
+        private String title;
+        private String memo;
+        private Integer calories;
+        private Integer totalDistanceMeters; // 러닝 총 이동거리
+        private Integer totalDurationSeconds; // 러닝 총 시간
+        private Integer elapsedTimeInSeconds; // 러닝 총 경과시간
+        private Integer avgPace;
+        private Integer bestPace;
+        private Integer userId;
+        private List<RunSegmentResponse.DTO> segments;
+        private LocalDateTime createdAt;
+        private Integer intensity; // 러닝 강도
+        private RunPlaceTypeEnum place; // 러닝 장소
+
+        public PostRunRecordDTO(RunRecord runRecord) {
+            this.id = runRecord.getId();
+            this.title = runRecord.getTitle();
+            this.memo = runRecord.getMemo();
+            this.calories = runRecord.getCalories();
+            this.totalDistanceMeters = runRecord.getTotalDistanceMeters();
+            this.totalDurationSeconds = runRecord.getTotalDurationSeconds();
+            this.elapsedTimeInSeconds = RunRecordUtil.calculateElapsedTimeInSeconds(runRecord.getRunSegments());
+            this.createdAt = runRecord.getCreatedAt();
+            this.segments = runRecord.getRunSegments().stream()
+                    .map(s -> new RunSegmentResponse.DTO(s))
+                    .toList();
+            this.avgPace = runRecord.getAvgPace();
+            this.bestPace = runRecord.getBestPace();
+            this.userId = runRecord.getUser().getId();
+            this.intensity = runRecord.getIntensity();
+            this.place = runRecord.getPlace();
+            this.avgPace = (int) this.segments.stream()
+                    .mapToInt(s -> s.getPace())
+                    .average()
+                    .orElse(0);
+            this.bestPace = this.segments.stream()
+                    .mapToInt(s -> s.getPace())
+                    .min()
+                    .orElse(0);
+            this.userId = runRecord.getUser().getId();
+        }
+
     }
 
 }

@@ -137,7 +137,7 @@ public class PostService {
         // ✅ 댓글 + 대댓글 조회
         List<CommentResponse.DTO> commentDTOs = commentService.getCommentsWithReplies(postId.longValue(), 0);
 
-        return new PostResponse.DetailDTO(post, commentDTOs, pictures, likeCount, commentCount, isLiked);
+        return new PostResponse.DetailDTO(post, null, pictures, likeCount, commentCount, isLiked);
     }
 
 }
