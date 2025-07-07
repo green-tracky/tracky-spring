@@ -3,6 +3,7 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.example.tracky.community.post.PostRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,9 @@ class PostControllerTest extends MyRestDoc {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private EntityManager em;
 
     @Test
     @DisplayName("포스트 목록 조회 성공")
@@ -107,3 +111,4 @@ class PostControllerTest extends MyRestDoc {
     }
 
 }
+

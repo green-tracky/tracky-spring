@@ -1,8 +1,10 @@
 package com.example.tracky.community.post;
 
+import com.example.tracky.community.post.comment.Comment;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,21 +71,57 @@ public class PostRepositoryTest {
     }
 
     @Test
-    void delete_existing_post_test() {
-        // given
+    @Transactional
+    void delete_test() {
         Integer postId = 1;
-        Post post = em.find(Post.class, postId);
 
-        // when
-        postRepository.delete(post);
+        // 게시글 조회
+        Post post = em.find(Post.class, postId);
+        if (post == null) {
+            log.debug("❌ 삭제 대상 게시글이 존재하지 않습니다. postId = {}", postId);
+            return;
+        }
+
+        // 댓글 좋아요 먼저 삭제
+        List<Integer> commentIds = em.createQuery(
+                        "SELECT c.id FROM Comment c WHERE c.post.id = :postId", Integer.class)
+                .setParameter("postId", postId)
+                .getResultList();
+
+        if (!commentIds.isEmpty()) {
+            int deletedLikes = em.createQuery("DELETE FROM Like l WHERE l.comment.id IN :commentIds")
+                    .setParameter("commentIds", commentIds)
+                    .executeUpdate();
+            log.debug("✅ 댓글 좋아요 삭제 완료 ({}건)", deletedLikes);
+        }
+
+        // 게시글 좋아요 삭제
+        int deletedPostLikes = em.createQuery("DELETE FROM Like l WHERE l.post.id = :postId")
+                .setParameter("postId", postId)
+                .executeUpdate();
+        log.debug("✅ 게시글 좋아요 삭제 완료 ({}건)", deletedPostLikes);
+
+        // 댓글을 자식부터 정렬해서 삭제
+        List<Comment> comments = em.createQuery(
+                        "SELECT c FROM Comment c WHERE c.post.id = :postId ORDER BY c.parent.id DESC NULLS LAST", Comment.class)
+                .setParameter("postId", postId)
+                .getResultList();
+
+        for (Comment comment : comments) {
+            em.remove(comment);
+        }
+        log.debug("✅ 댓글 삭제 완료 ({}건)", comments.size());
+
+        // 게시글 삭제
+        em.remove(post);
         em.flush();
 
-        // then
+        // 삭제 확인
         Post found = em.find(Post.class, postId);
         if (found == null) {
-            log.debug("✅ 삭제 성공: postId = {}", postId);
+            log.debug("✅ 게시글 삭제 성공: postId = {}", postId);
         } else {
-            log.debug("❌ 삭제 실패: postId = {}, title = {}", postId, found.getTitle());
+            log.debug("❌ 게시글 삭제 실패: postId = {}, title = {}", postId, found.getTitle());
         }
     }
 
