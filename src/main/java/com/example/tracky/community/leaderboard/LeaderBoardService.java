@@ -39,7 +39,14 @@ public class LeaderBoardService {
         List<Friend> friendList = friendRepository.findfriendByUserIdJoinFriend(user.getId());
         List<User> friendUsers = new ArrayList<>();
         for (Friend friend : friendList) {
-            friendUsers.add(friend.getToUser());
+            // 내가 fromUser면 상대는 toUser
+            if (friend.getFromUser().getId().equals(user.getId())) {
+                friendUsers.add(friend.getToUser());
+            }
+            // 내가 toUser면 상대는 fromUser
+            else if (friend.getToUser().getId().equals(user.getId())) {
+                friendUsers.add(friend.getFromUser());
+            }
         }
 
         // 4. 내 정보 조회
@@ -85,7 +92,7 @@ public class LeaderBoardService {
         }
         rankingList.sort((a, b) -> b.getTotalDistanceMeters().compareTo(a.getTotalDistanceMeters()));
 
-        // 랭킹 계산
+        // 9. 랭킹 계산
         List<LeaderBoardsResponse.RankingListDTO> newRankingList = new ArrayList<>();
         int rank = 1;
         int prevDistance = -1;
@@ -113,6 +120,7 @@ public class LeaderBoardService {
 
         rankingList = newRankingList;
 
+        // 10. 나의 랭킹 구하기
         int myDistance = userDistanceMap.getOrDefault(user.getId(), 0);
         int myRank = 0;
         for (LeaderBoardsResponse.RankingListDTO dto : rankingList) {
