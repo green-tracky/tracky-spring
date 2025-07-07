@@ -1,6 +1,5 @@
 package com.example.tracky.community.leaderboard;
 
-import com.example.tracky.user.User;
 import lombok.Data;
 
 import java.util.List;
@@ -25,9 +24,9 @@ public class LeaderBoardsResponse {
         private Integer totalDistanceMeters; // 총 거리. 미터 단위
         private Integer rank;
 
-        public MyRankingDTO(Integer totalDistanceMeters) {
+        public MyRankingDTO(Integer totalDistanceMeters, Integer rank) {
             this.totalDistanceMeters = totalDistanceMeters;
-
+            this.rank = rank;
         }
     }
 
@@ -36,12 +35,15 @@ public class LeaderBoardsResponse {
         private String profileUrl; // 프로필 이미지 주소
         private String username; // 유저 이름
         private Integer totalDistanceMeters; // 총 거리. 미터 단위
+        private Integer rank;
+        private Integer userId;
 
-        // 여기 새 생성자 추가
-        public RankingListDTO(User user, Integer totalDistanceMeters) {
-            this.profileUrl = user.getProfileUrl();
-            this.username = user.getUsername();
+        public RankingListDTO(String profileUrl, String username, Integer totalDistanceMeters, Integer rank, Integer userId) {
+            this.profileUrl = profileUrl;
+            this.username = username;
             this.totalDistanceMeters = totalDistanceMeters;
+            this.rank = rank;
+            this.userId = userId;
         }
     }
 }
