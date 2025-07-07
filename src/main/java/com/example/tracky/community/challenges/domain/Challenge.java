@@ -35,8 +35,8 @@ public class Challenge {
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
     private ChallengeTypeEnum type; // PUBLIC, PRIVATE
     private String imageUrl; // 챌린지 이미지
-    private Integer year; // 년도
-    private Integer month; // 월
+    private Integer challengeYear; // 년도
+    private Integer challengeMonth; // 월
     private Integer weekOfMonth; // 주차 (1주차, 2주차)
     private PeriodTypeEnum periodType; // 주간 or 월간
 
@@ -50,7 +50,8 @@ public class Challenge {
     @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
 
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, User creator) {
+    @Builder
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, Integer challengeYear, Integer challengeMonth, Integer weekOfMonth, PeriodTypeEnum periodType, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -61,13 +62,18 @@ public class Challenge {
         this.isInProgress = isInProgress;
         this.type = type;
         this.imageUrl = imageUrl;
+        this.challengeYear = challengeYear;
+        this.challengeMonth = challengeMonth;
+        this.weekOfMonth = weekOfMonth;
+        this.periodType = periodType;
         this.creator = creator;
     }
 
-    @Builder
-
-
     protected Challenge() {
+    }
+
+    public void closeChallenge() {
+        this.isInProgress = false;
     }
 
 }
