@@ -31,10 +31,8 @@ public class LeaderBoardsResponse {
         }
     }
 
-
     @Data
     public static class RankingListDTO {
-
         private String profileUrl; // 프로필 이미지 주소
         private String username; // 유저 이름
         private Integer totalDistanceMeters; // 총 거리. 미터 단위
