@@ -26,7 +26,7 @@ public class PostRepository {
         return post;
     }
 
-    public Post findById(Long id) {
+    public Post findById(Integer id) {
         return em.find(Post.class, id);
     }
 

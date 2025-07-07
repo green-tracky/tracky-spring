@@ -37,7 +37,7 @@ public class PostController {
     }
 
     @DeleteMapping("/community/posts/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
         postService.delete(id);
         return Resp.ok("삭제 성공");
     }

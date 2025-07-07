@@ -59,7 +59,7 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Integer id) {
         Post post = postRepository.findById(id);
         if (post == null) {
             throw new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND);

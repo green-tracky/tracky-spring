@@ -69,21 +69,10 @@ public class PostRepositoryTest {
     }
 
     @Test
-    void delete_test() {
+    void delete_existing_post_test() {
         // given
-        User user = User.builder().build();
-        em.persist(user);
-
-        Post post = Post.builder()
-                .user(user)
-                .title("title")
-                .content("content")
-                .build();
-
-        em.persist(post);
-        em.flush();
-
-        Integer postId = post.getId();
+        Integer postId = 1;
+        Post post = em.find(Post.class, postId);
 
         // when
         postRepository.delete(post);
