@@ -1,5 +1,6 @@
 package com.example.tracky.community.leaderboard;
 
+import com.example.tracky.community.leaderboard.enums.DateEnums;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
@@ -27,11 +28,31 @@ public class LeaderBoardService {
     private final UserRepository userRepository;
 
 
-    public LeaderBoardsResponse.MainDTO getLederBoards(User user, LocalDate baseDate, Integer before) {
+    public LeaderBoardsResponse.MainDTO getLederBoards(User user, LocalDate baseDate, Integer before, DateEnums datetype) {
+        LocalDate start;
+        LocalDate end;
+
+        switch (datetype) {
+            case WEEK -> {
+                LocalDate targetDate = baseDate.minusWeeks(before);
+                start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                end = start.plusDays(6);
+            }
+            case MONTH -> {
+                LocalDate targetDate = baseDate.minusMonths(before);
+                start = targetDate.with(TemporalAdjusters.firstDayOfMonth());
+                end = targetDate.with(TemporalAdjusters.lastDayOfMonth());
+            }
+            case YEAR -> {
+                LocalDate targetDate = baseDate.minusYears(before);
+                start = targetDate.with(TemporalAdjusters.firstDayOfYear());
+                end = targetDate.with(TemporalAdjusters.lastDayOfYear());
+            }
+            default -> throw new IllegalArgumentException("Invalid LeaderBoardTerm");
+        }
+
+
         // 1. 기준 주 계산
-        LocalDate targetDate = baseDate.minusWeeks(before);
-        LocalDate start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        LocalDate end = start.plusDays(6);
         LocalDateTime startTime = start.atStartOfDay();
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
