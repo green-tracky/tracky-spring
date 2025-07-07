@@ -1,5 +1,7 @@
 package com.example.tracky.community.leaderboard;
 
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
@@ -33,16 +35,11 @@ public class LeaderBoardService {
     private final ChallengeJoinRepository challengeJoinRepository;
 
 
-    public LeaderBoardsResponse.LeaderBoardDTO getLederBoards(User user, LocalDate baseDate, Integer before, DateEnums datetype) {
+    public LeaderBoardsResponse.LeaderBoardDTO getLeaderBoards(User user, LocalDate baseDate, Integer before, DateEnums datetype) {
         LocalDate start;
         LocalDate end;
 
         switch (datetype) {
-            case WEEK -> {
-                LocalDate targetDate = baseDate.minusWeeks(before);
-                start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-                end = start.plusDays(6);
-            }
             case MONTH -> {
                 LocalDate targetDate = baseDate.minusMonths(before);
                 start = targetDate.with(TemporalAdjusters.firstDayOfMonth());
@@ -53,7 +50,12 @@ public class LeaderBoardService {
                 start = targetDate.with(TemporalAdjusters.firstDayOfYear());
                 end = targetDate.with(TemporalAdjusters.lastDayOfYear());
             }
-            default -> throw new IllegalArgumentException("Invalid LeaderBoardTerm");
+            // datetype == null 이면 WEEK(기본값)
+            default -> {
+                LocalDate targetDate = baseDate.minusWeeks(before);
+                start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                end = start.plusDays(6);
+            }
         }
 
 
@@ -77,7 +79,7 @@ public class LeaderBoardService {
 
         // 4. 내 정보 조회
         User me = userRepository.findByIdJoin(user.getId())
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 3. 전체 유저 리스트 (나 + 친구들)
         List<User> allUsers = new ArrayList<>();
@@ -163,7 +165,7 @@ public class LeaderBoardService {
 
     public LeaderBoardsResponse.ChallengeLeaderBoardDTO getChallengeLederBoards(Integer id, User user) {
         // 1. 챌린지 조회
-        Challenge challengeDate = challengeRepository.findById(id).orElseThrow(() -> new RuntimeException("챌린지가 없습니다"));
+        Challenge challengeDate = challengeRepository.findById(id).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
 
         // 2. 해당 챌린지 날짜 조회
         LocalDateTime start = challengeDate.getStartDate();

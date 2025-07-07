@@ -195,7 +195,7 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByCreatedAtBetween(List<Integer> userIds, LocalDateTime start, LocalDateTime end) {
         if (userIds == null || userIds.isEmpty()) return List.of(); // 빈 목록 처리
         Query query = em.createQuery(
-                "SELECT r FROM RunRecord r WHERE r.user.id IN :userIds AND r.createdAt BETWEEN :start AND :end",
+                "select r from RunRecord r where r.user.id in :userIds and r.createdAt between :start and :end",
                 RunRecord.class);
         query.setParameter("userIds", userIds);
         query.setParameter("start", start);

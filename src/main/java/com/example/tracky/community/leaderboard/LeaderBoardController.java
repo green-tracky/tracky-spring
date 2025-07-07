@@ -36,7 +36,7 @@ public class LeaderBoardController {
 //        LocalDate baseDate = LocalDate.now();
         LocalDate baseDate = LocalDate.of(2025, 06, 05);
 
-        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.WEEK);
+        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLeaderBoards(user, baseDate, before, DateEnums.WEEK);
         return Resp.ok(respDTO);
     }
 
@@ -56,7 +56,7 @@ public class LeaderBoardController {
         // TODO : 전역변수로 나중에 설정
         LocalDate baseDate = LocalDate.now();
 
-        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.MONTH);
+        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLeaderBoards(user, baseDate, before, DateEnums.MONTH);
         return Resp.ok(respDTO);
     }
 
@@ -74,7 +74,7 @@ public class LeaderBoardController {
         // TODO : 전역변수로 나중에 설정
         LocalDate baseDate = LocalDate.now();
 
-        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.YEAR);
+        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLeaderBoards(user, baseDate, before, DateEnums.YEAR);
         return Resp.ok(respDTO);
     }
 
