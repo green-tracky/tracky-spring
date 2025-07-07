@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -157,10 +158,11 @@ class PostControllerTest extends MyRestDoc {
         // then
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
-        actions.andExpect(jsonPath("$.data").value("삭제 성공"));
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
 
     }
 
+    @Test
     @DisplayName("포스트 상세 조회 성공")
     void get_detail_test() throws Exception {
         // given
@@ -176,6 +178,7 @@ class PostControllerTest extends MyRestDoc {
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
 
+        // then 댓글까지 끝나면 나중에 작성
     }
 
 }
