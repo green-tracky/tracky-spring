@@ -12,6 +12,11 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 리워드 값입니다.
      */
+    INVALID_RUNBADGE_TYPE(400, "유효하지 않은 러닝뱃지 타입입니다"),
+
+    /**
+     * 400 Bad Request - 유효하지 않은 리워드 값입니다.
+     */
     INVALID_REWARD_TYPE(400, "유효하지 않은 리워드 값입니다"),
 
     /**

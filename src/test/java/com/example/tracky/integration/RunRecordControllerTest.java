@@ -351,12 +351,12 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.avgStats.totalDistanceMeters").value(3000));
         actions.andExpect(jsonPath("$.data.avgStats.totalDurationSeconds").value(1280));
 
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("동메달"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/bronze.png"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value("2025-07-03 16:45:00"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].count").value(3));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].badgeType").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(3));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(nullValue()));
@@ -368,7 +368,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(400));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(300));
         actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value("2025-07-04 15:00:00"));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(1));
 
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(11850));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(38150));
@@ -406,12 +406,12 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.avgStats.totalDistanceMeters").value(3000));
         actions.andExpect(jsonPath("$.data.avgStats.totalDurationSeconds").value(1280));
 
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("동메달"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/bronze.png"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value("2025-07-03 16:45:00"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].count").value(3));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].badgeType").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(3));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(nullValue()));
@@ -423,7 +423,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(400));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(300));
         actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value("2025-07-04 15:00:00"));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(1));
 
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(11850));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(38150));
@@ -467,12 +467,12 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.totalStats.avgDistanceMeters").value(858));
         actions.andExpect(jsonPath("$.data.totalStats.avgDurationSeconds").value(377));
 
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("동메달"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/bronze.png"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value("2025-07-03 16:45:00"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].count").value(3));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].badgeType").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(3));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(nullValue()));
@@ -484,7 +484,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(400));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(300));
         actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value("2025-07-04 15:00:00"));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(1));
 
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(11850));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(38150));
@@ -527,12 +527,12 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.totalStats.avgDistanceMeters").value(846));
         actions.andExpect(jsonPath("$.data.totalStats.avgDurationSeconds").value(377));
 
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("동메달"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/bronze.png"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value("2025-07-03 16:45:00"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].count").value(3));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].badgeType").value(nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(3));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(nullValue()));
@@ -544,7 +544,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(400));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(300));
         actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value("2025-07-04 15:00:00"));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(1));
 
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(11850));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(38150));
@@ -587,7 +587,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.groupedrecentList[0].recentRuns[0].totalDurationSeconds").value(400));
         actions.andExpect(jsonPath("$.data.groupedrecentList[0].recentRuns[0].avgPace").value(300));
         actions.andExpect(jsonPath("$.data.groupedrecentList[0].recentRuns[0].createdAt").value("2025-07-04 15:00:00"));
-        actions.andExpect(jsonPath("$.data.groupedrecentList[0].recentRuns[0].badges.length()").value(0));
+        actions.andExpect(jsonPath("$.data.groupedrecentList[0].recentRuns[0].badges.length()").value(1));
 
         actions.andExpect(jsonPath("$.data.page.totalCount").value(5));
         actions.andExpect(jsonPath("$.data.page.current").value(1));
