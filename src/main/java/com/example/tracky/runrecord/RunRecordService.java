@@ -110,7 +110,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -134,17 +134,21 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
+
 
         // 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
@@ -252,7 +256,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -276,17 +280,20 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 러닝 3개 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
@@ -377,7 +384,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -401,17 +408,20 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회 및 DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
@@ -503,7 +513,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findByUserId(user.getId());
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -527,17 +537,20 @@ public class RunRecordService {
         achievementHistorys.addAll(medalList);
 
         // 시간순으로 정렬
-        achievementHistorys.sort((a, b) -> {
-            LocalDateTime aTime = a.getAchievedAt();
-            LocalDateTime bTime = b.getAchievedAt();
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
 
-            // nullsLast 처리를 수동으로 구현
-            if (aTime == null && bTime == null) return 0;
-            if (aTime == null) return 1;
-            if (bTime == null) return -1;
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
 
-            return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
-        });
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
