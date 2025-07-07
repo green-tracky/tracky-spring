@@ -27,8 +27,8 @@ public class LeaderBoardController {
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
-        if (before == null || before < 0 || before > 2) {
+        // before가 0~1 사이가 아니면 0으로 기본 처리 (범위 제한)
+        if (before == null || before < 0 || before > 1) {
             before = 0;
         }
 
@@ -36,7 +36,7 @@ public class LeaderBoardController {
 //        LocalDate baseDate = LocalDate.now();
         LocalDate baseDate = LocalDate.of(2025, 06, 05);
 
-        LeaderBoardsResponse.MainDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.WEEK);
+        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.WEEK);
         return Resp.ok(respDTO);
     }
 
@@ -48,36 +48,35 @@ public class LeaderBoardController {
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
-        if (before == null || before < 0 || before > 2) {
+        // before가 0~1 사이가 아니면 0으로 기본 처리 (범위 제한)
+        if (before == null || before < 0 || before > 1) {
             before = 0;
         }
 
         // TODO : 전역변수로 나중에 설정
         LocalDate baseDate = LocalDate.now();
 
-        LeaderBoardsResponse.MainDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.MONTH);
+        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.MONTH);
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/community/leaderboards/year")
-    public ResponseEntity<?> getLeaderBoardsYear(@RequestParam(value = "before", defaultValue = "0") Integer before) {
+    public ResponseEntity<?> getLeaderBoardsYear() {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        // before가 0~4 사이가 아니면 0으로 기본 처리 (범위 제한)
-        if (before == null || before < 0 || before > 0) {
-            before = 0;
-        }
+        // before가 0 밖에 없음
+        Integer before = 0;
 
         // TODO : 전역변수로 나중에 설정
         LocalDate baseDate = LocalDate.now();
 
-        LeaderBoardsResponse.MainDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.YEAR);
+        LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLederBoards(user, baseDate, before, DateEnums.YEAR);
         return Resp.ok(respDTO);
     }
+
 
 }
