@@ -140,4 +140,23 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
 
     }
+
+    @Test
+    @DisplayName("포스트 상세 조회 성공")
+    void get_detail_test() throws Exception {
+        // given
+        int postId = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/posts/" + postId)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then -> 댓글 완료 후 GPT 써서 작성
+    }
 }

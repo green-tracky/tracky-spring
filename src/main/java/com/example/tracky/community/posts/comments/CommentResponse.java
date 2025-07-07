@@ -3,6 +3,7 @@ package com.example.tracky.community.posts.comments;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentResponse {
@@ -20,7 +21,7 @@ public class CommentResponse {
         private final LocalDateTime updatedAt;
         private final List<DTO> children;
 
-        public DTO(Comment comment) {
+        public DTO(Comment comment, List<Comment> reply) {
             this.id = comment.getId();
             this.postId = comment.getPost().getId();
             this.userId = comment.getUser().getId();
@@ -30,7 +31,7 @@ public class CommentResponse {
             this.createdAt = comment.getCreatedAt();
             this.updatedAt = comment.getUpdatedAt();
             this.children = comment.getChildren().stream()
-                    .map(child -> new DTO(child))
+                    .map(child -> new DTO(child, new ArrayList<>()))
                     .toList();
         }
     }
