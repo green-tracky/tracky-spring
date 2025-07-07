@@ -1,7 +1,9 @@
 package com.example.tracky.runrecord.runbadges;
 
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchvRepository;
+import com.example.tracky.community.challenges.domain.UserChallengeReward;
+import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchvRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,14 +16,16 @@ public class RunBadgeService {
 
     private final RunBadgeRepository runBadgeRepository;
     private final RunBadgeAchvRepository runBadgeAchvRepository;
+    private final UserChallengeRewardRepository userChallengeRewardRepository;
 
     public RunBadgeResponse.GroupedBadgeListDTO getRunBadges(User user) {
         // 1. 조회
         List<RunBadge> runBadgesPS = runBadgeRepository.findAll();
         List<RunBadgeAchv> runBadgeAchvsPS = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<UserChallengeReward> userChallengeRewardsPS = userChallengeRewardRepository.findAllByUserId(user.getId());
 
         // 2. 응답 DTO 로 변환
-        return new RunBadgeResponse.GroupedBadgeListDTO(runBadgesPS, runBadgeAchvsPS);
+        return new RunBadgeResponse.GroupedBadgeListDTO(runBadgesPS, runBadgeAchvsPS, userChallengeRewardsPS);
     }
 
 }

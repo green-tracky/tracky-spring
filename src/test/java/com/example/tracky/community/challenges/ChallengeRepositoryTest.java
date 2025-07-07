@@ -7,12 +7,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @Slf4j
-@Import({ChallengeRepository.class, ChallengeRepository.class})
+@Import(ChallengeRepository.class)
 @DataJpaTest
 public class ChallengeRepositoryTest {
 
     @Autowired
     private ChallengeRepository challengeRepository;
-
 
 }

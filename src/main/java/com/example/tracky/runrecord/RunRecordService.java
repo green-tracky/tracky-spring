@@ -4,11 +4,13 @@ import com.example.tracky._core.constant.Constant;
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.community.challenges.ChallengeRewardService;
+import com.example.tracky.community.challenges.domain.UserChallengeReward;
+import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
 import com.example.tracky.runrecord.dto.*;
-import com.example.tracky.runrecord.runbadges.RunBadgeResponse;
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchv;
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchvRepository;
-import com.example.tracky.runrecord.runbadges.runbadgeachv.RunBadgeAchvService;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchvRepository;
+import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchvService;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
@@ -27,7 +29,6 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,8 @@ public class RunRecordService {
     private final RunBadgeAchvRepository runBadgeAchvRepository;
     private final UserRepository userRepository;
     private final RunLevelRepository runLevelRepository;
+    private final UserChallengeRewardRepository userChallengeRewardRepository;
+    private final ChallengeRewardService challengeRewardService;
 
     /**
      * 러닝 상세 조회
@@ -90,17 +93,70 @@ public class RunRecordService {
         // 3. 거리/시간 합산 및 DTO 생성
         AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
 
-        // 4. 획득한 배지 조회
+        // 4. 뱃지 조회
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
-        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
-        for (RunBadgeAchv badge : runBadges) {
-            runBadgeList.add(new RunBadgeResponse.DTO(badge));
-        }
+        List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
+                .collect(Collectors.groupingBy(
+                        b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
+                        () -> new LinkedHashMap<>(),
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    RunBadgeAchv latest = entry.getValue().stream()
+                            .max((a, b) -> a.getAchievedAt().compareTo(b.getAchievedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+        //  메달 조회
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<AchievementHistoryItemDTO> medalList = medals.stream()
+                .collect(Collectors.groupingBy(
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    UserChallengeReward latest = entry.getValue().stream()
+                            .max((a, b) -> a.getReceivedAt().compareTo(b.getReceivedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+
+        // 통합 DTO로 변환
+        List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
+        achievementHistorys.addAll(runBadgeList);
+        achievementHistorys.addAll(medalList);
+
+        // 시간순으로 정렬
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
+
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
+
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
+
 
         // 5. 최근 3개 러닝 기록 + DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 주차 라벨 생성 (기준 baseDate가 속한 '년-월'에 해당하는 주차만 필터링)
@@ -117,12 +173,14 @@ public class RunRecordService {
                     startOfWeek.getMonthValue(), startOfWeek.getDayOfMonth(),
                     endOfWeek.getMonthValue(), endOfWeek.getDayOfMonth());
 
-            // 주 시작일 기준 '년-월' 키 (2025-03 등)
-            String weekYearMonth = String.format("%04d-%02d", startOfWeek.getYear(), startOfWeek.getMonthValue());
+            // 주 시작일 월-년 문자열
+            String startYearMonth = String.format("%04d-%02d", startOfWeek.getYear(), startOfWeek.getMonthValue());
+            // 주 종료일 월-년 문자열
+            String endYearMonth = String.format("%04d-%02d", endOfWeek.getYear(), endOfWeek.getMonthValue());
 
-            // 기준 월에 해당하는 주차만 추가
-            if (weekYearMonth.equals(baseYearMonth)) {
-                weeksMap.computeIfAbsent(weekYearMonth, k -> new HashSet<>()).add(weekLabel);
+            // 기준 월과 주 시작일/종료일 중 하나라도 일치하면 포함
+            if (baseYearMonth.equals(startYearMonth) || baseYearMonth.equals(endYearMonth)) {
+                weeksMap.computeIfAbsent(baseYearMonth, k -> new HashSet<>()).add(weekLabel);
             }
         }
 
@@ -139,7 +197,6 @@ public class RunRecordService {
             weeksMapList.put(entry.getKey(), sortedList);
         }
 
-
         // 7. 레벨 정보 조회
         RunLevel currentLevelPS = userRepository.findByIdJoin(user.getId()).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND)).getRunLevel();
         List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
@@ -148,7 +205,7 @@ public class RunRecordService {
         RunLevelDTO runLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
         // 8. DTO 반환
-        RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(avgStats, runBadgeList, recentRunList, runLevel);
+        RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(avgStats, achievementHistorys, recentRunList, runLevel);
         weekDTO.setWeeks(weeksMapList);
         return weekDTO;
     }
@@ -183,17 +240,69 @@ public class RunRecordService {
         // 3. 누적 통계 DTO 생성
         AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
 
-        // 4. 획득한 배지 조회
+        // 4. 뱃지 조회
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
-        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
-        for (RunBadgeAchv badge : runBadges) {
-            runBadgeList.add(new RunBadgeResponse.DTO(badge));
-        }
+        List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
+                .collect(Collectors.groupingBy(
+                        b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
+                        () -> new LinkedHashMap<>(),
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    RunBadgeAchv latest = entry.getValue().stream()
+                            .max((a, b) -> a.getAchievedAt().compareTo(b.getAchievedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+        //  메달 조회
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<AchievementHistoryItemDTO> medalList = medals.stream()
+                .collect(Collectors.groupingBy(
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    UserChallengeReward latest = entry.getValue().stream()
+                            .max((a, b) -> a.getReceivedAt().compareTo(b.getReceivedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+
+        // 통합 DTO로 변환
+        List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
+        achievementHistorys.addAll(runBadgeList);
+        achievementHistorys.addAll(medalList);
+
+        // 시간순으로 정렬
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
+
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
+
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 러닝 3개 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 기록이 있는 월/연도 목록 구성
@@ -218,7 +327,7 @@ public class RunRecordService {
         RunLevelDTO RunLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
         // 8. 최종 DTO 구성
-        RunRecordResponse.MonthDTO monthDTO = new RunRecordResponse.MonthDTO(avgStats, runBadgeList, recentRunList, RunLevel);
+        RunRecordResponse.MonthDTO monthDTO = new RunRecordResponse.MonthDTO(avgStats, achievementHistorys, recentRunList, RunLevel);
         monthDTO.setYears(yearSet.stream().sorted().toList());
 
         Map<Integer, List<Integer>> sortedMonthMap = new HashMap<>();
@@ -260,17 +369,69 @@ public class RunRecordService {
         // 3. 누적 통계용 AvgStatsDTO 생성
         AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
 
-        // 4. 획득한 배지 조회
+        // 4. 뱃지 조회
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
-        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
-        for (RunBadgeAchv badge : runBadges) {
-            runBadgeList.add(new RunBadgeResponse.DTO(badge));
-        }
+        List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
+                .collect(Collectors.groupingBy(
+                        b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
+                        () -> new LinkedHashMap<>(),
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    RunBadgeAchv latest = entry.getValue().stream()
+                            .max((a, b) -> a.getAchievedAt().compareTo(b.getAchievedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+        //  메달 조회
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<AchievementHistoryItemDTO> medalList = medals.stream()
+                .collect(Collectors.groupingBy(
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    UserChallengeReward latest = entry.getValue().stream()
+                            .max((a, b) -> a.getReceivedAt().compareTo(b.getReceivedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+
+        // 통합 DTO로 변환
+        List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
+        achievementHistorys.addAll(runBadgeList);
+        achievementHistorys.addAll(medalList);
+
+        // 시간순으로 정렬
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
+
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
+
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회 및 DTO 변환
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 주간 평균 통계 계산
@@ -302,7 +463,7 @@ public class RunRecordService {
         RunLevelDTO RunLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
         // 9. 최종 DTO 생성 및 반환
-        RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(avgStats, allStats, runBadgeList, recentRunList, RunLevel);
+        RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(avgStats, allStats, achievementHistorys, recentRunList, RunLevel);
         yearDTO.setYears(new ArrayList<>(yearData));
 
         return yearDTO;
@@ -338,17 +499,69 @@ public class RunRecordService {
         Integer avgPace = RunRecordUtil.calculatePace(totalDistanceMeters, totalDurationSeconds);
         AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
 
-        // 4. 배지 목록 조회
+        // 4. 뱃지 조회
         List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
-        List<RunBadgeResponse.DTO> runBadgeList = new ArrayList<>();
-        for (RunBadgeAchv badge : runBadges) {
-            runBadgeList.add(new RunBadgeResponse.DTO(badge));
-        }
+        List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
+                .collect(Collectors.groupingBy(
+                        b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
+                        () -> new LinkedHashMap<>(),
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    RunBadgeAchv latest = entry.getValue().stream()
+                            .max((a, b) -> a.getAchievedAt().compareTo(b.getAchievedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+        //  메달 조회
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<AchievementHistoryItemDTO> medalList = medals.stream()
+                .collect(Collectors.groupingBy(
+                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    UserChallengeReward latest = entry.getValue().stream()
+                            .max((a, b) -> a.getReceivedAt().compareTo(b.getReceivedAt()))
+                            .orElse(entry.getValue().get(0));
+                    Integer count = entry.getValue().size();
+                    return new AchievementHistoryItemDTO(latest, count);
+                })
+                .collect(Collectors.toList());
+
+
+        // 통합 DTO로 변환
+        List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
+        achievementHistorys.addAll(runBadgeList);
+        achievementHistorys.addAll(medalList);
+
+        // 시간순으로 정렬
+        achievementHistorys = achievementHistorys.stream()
+                .sorted((a, b) -> {
+                    LocalDateTime aTime = a.getAchievedAt();
+                    LocalDateTime bTime = b.getAchievedAt();
+
+                    // nullsLast 처리를 수동으로 구현
+                    if (aTime == null && bTime == null) return 0;
+                    if (aTime == null) return 1;
+                    if (bTime == null) return -1;
+
+                    return bTime.compareTo(aTime); // 내림차순 정렬 (reversed)
+                })
+                .limit(5) // 상위 5개만 선택
+                .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 현재 레벨, 총 거리, 다음 레벨까지 거리 계산
@@ -363,7 +576,7 @@ public class RunRecordService {
         // 7. 전체 주 수 계산 (최초 기록 ~ 마지막 기록 사이의 월~일 기준 주차 수)
         if (runRecords.isEmpty()) {
             TotalStatsDTO allStats = new TotalStatsDTO(0.0, 0, 0, 0);
-            return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList, RunLevel);
+            return new RunRecordResponse.AllDTO(stats, allStats, achievementHistorys, recentRunList, RunLevel);
         }
 
         LocalDateTime start = runRecords.stream().map(RunRecord::getCreatedAt).min(Comparator.naturalOrder()).orElse(LocalDateTime.now());
@@ -381,7 +594,7 @@ public class RunRecordService {
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
         // 9. 최종 DTO 반환
-        return new RunRecordResponse.AllDTO(stats, allStats, runBadgeList, recentRunList, RunLevel);
+        return new RunRecordResponse.AllDTO(stats, allStats, achievementHistorys, recentRunList, RunLevel);
     }
 
     /**
@@ -553,7 +766,10 @@ public class RunRecordService {
         // 4. 레벨업 서비스를 호출하여 사용자의 레벨을 업데이트합니다.
         runLevelService.updateUserLevelIfNeeded(user);
 
-        // 5. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
+        // 5. 러닝 저장시 챌린지 보상 획득(공개, 사설(완주자))
+        List<UserChallengeReward> awardedChallengeRewardsPS = challengeRewardService.checkAndAwardChallengeRewards(user);
+
+        // 6. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
         return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadgesPS);
 
     }

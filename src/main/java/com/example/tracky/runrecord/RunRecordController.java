@@ -52,7 +52,7 @@ public class RunRecordController {
         }
 
         // 테스트
-        LocalDate baseDate = LocalDate.of(2025, 6, 24);
+        LocalDate baseDate = LocalDate.of(2025, 6, 30);
         RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(user, baseDate, before);
         return Resp.ok(respDTO);
     }

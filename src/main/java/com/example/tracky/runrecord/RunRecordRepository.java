@@ -11,7 +11,6 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
-
 @Repository
 @RequiredArgsConstructor
 public class RunRecordRepository {
@@ -190,6 +189,18 @@ public class RunRecordRepository {
         query.setParameter("end", end);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
+    }
+
+    // 여러 유저용 (새로 추가)
+    public List<RunRecord> findAllByCreatedAtBetween(List<Integer> userIds, LocalDateTime start, LocalDateTime end) {
+        if (userIds == null || userIds.isEmpty()) return List.of(); // 빈 목록 처리
+        Query query = em.createQuery(
+                "select r from RunRecord r where r.user.id in :userIds and r.createdAt between :start and :end",
+                RunRecord.class);
+        query.setParameter("userIds", userIds);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        return query.getResultList();
     }
 
     /**

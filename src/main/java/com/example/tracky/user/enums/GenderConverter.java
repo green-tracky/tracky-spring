@@ -12,23 +12,16 @@ import jakarta.persistence.Converter;
 @Converter(autoApply = true)
 public class GenderConverter implements AttributeConverter<GenderEnum, String> {
 
-    // Enum -> DB (String)
-    // 애플리케이션의 GenderEnum.MALE을 DB의 "남"으로 변환
+    // Enum → DB 저장 (영문 코드)
     @Override
-    public String convertToDatabaseColumn(GenderEnum genderEnum) {
-        if (genderEnum == null) {
-            return null;
-        }
-        return genderEnum.getValue();
+    public String convertToDatabaseColumn(GenderEnum attribute) {
+        return attribute == null ? null : attribute.name();
     }
 
-    // DB (String) -> Enum
-    // DB의 "남"을 애플리케이션의 GenderEnum.MALE로 변환
+    // DB → Enum (영문 코드 → Enum)
     @Override
-    public GenderEnum convertToEntityAttribute(String value) {
-        if (value == null) {
-            return null;
-        }
-        return GenderEnum.fromString(value);
+    public GenderEnum convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) return null;
+        return GenderEnum.fromValue(dbData);
     }
 }

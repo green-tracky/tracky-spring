@@ -1,4 +1,4 @@
-package com.example.tracky.runrecord.runbadges.runbadgeachv;
+package com.example.tracky.runrecord.runbadges.runbadgeachvs;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
