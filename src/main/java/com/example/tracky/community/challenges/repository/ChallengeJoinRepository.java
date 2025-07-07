@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges.repository;
 
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
+import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -135,6 +136,19 @@ public class ChallengeJoinRepository {
      */
     public void delete(ChallengeJoin challengeJoinPS) {
         em.remove(challengeJoinPS);
+    }
+
+    /**
+     * 챌린지에 참여한 모든 유저 조회
+     *
+     * @param challengeId
+     * @return
+     */
+    public List<User> findUserAllById(Integer challengeId) {
+        Query query = em.createQuery("select c.user from ChallengeJoin c where c.challenge.id = :challengeId", User.class);
+        query.setParameter("challengeId", challengeId);
+        List<User> resultList = query.getResultList();
+        return resultList;
     }
 
     // ...

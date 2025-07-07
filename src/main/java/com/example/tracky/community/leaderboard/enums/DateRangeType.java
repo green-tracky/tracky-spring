@@ -1,6 +1,6 @@
 package com.example.tracky.community.leaderboard.enums;
 
-public enum DateEnums {
+public enum DateRangeType {
     WEEK,
     MONTH,
     YEAR

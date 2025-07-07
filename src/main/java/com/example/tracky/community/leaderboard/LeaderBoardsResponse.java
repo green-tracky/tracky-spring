@@ -7,14 +7,28 @@ import java.util.List;
 
 public class LeaderBoardsResponse {
 
-    // 최종 응답을 감싸는 메인 DTO
+    /**
+     * 친구끼리 LeaderBoard DTO
+     */
     @Data
-    public static class MainDTO {
+    public static class LeaderBoardDTO {
         private MyRankingDTO myRanking;
         private List<RankingListDTO> rankingList;
 
-        public MainDTO(MyRankingDTO myRanking, List<RankingListDTO> rankingList) {
+        public LeaderBoardDTO(MyRankingDTO myRanking, List<RankingListDTO> rankingList) {
             this.myRanking = myRanking;
+            this.rankingList = rankingList;
+        }
+    }
+
+    /**
+     * 챌린지에 참여한 사람들의 ChallengeLeadeBoardDTO
+     */
+    @Data
+    public static class ChallengeLeaderBoardDTO {
+        private List<RankingListDTO> rankingList;
+
+        public ChallengeLeaderBoardDTO(List<RankingListDTO> rankingList) {
             this.rankingList = rankingList;
         }
     }
