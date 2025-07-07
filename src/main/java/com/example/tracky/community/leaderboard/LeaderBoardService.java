@@ -40,12 +40,12 @@ public class LeaderBoardService {
         LocalDate end;
 
         switch (datetype) {
-            case MONTH -> {
+            case MONTHDATE -> {
                 LocalDate targetDate = baseDate.minusMonths(before);
                 start = targetDate.with(TemporalAdjusters.firstDayOfMonth());
                 end = targetDate.with(TemporalAdjusters.lastDayOfMonth());
             }
-            case YEAR -> {
+            case YEARDATE -> {
                 LocalDate targetDate = baseDate.minusYears(before);
                 start = targetDate.with(TemporalAdjusters.firstDayOfYear());
                 end = targetDate.with(TemporalAdjusters.lastDayOfYear());
