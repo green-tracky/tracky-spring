@@ -35,8 +35,8 @@ public class Challenge {
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
     private ChallengeTypeEnum type; // PUBLIC, PRIVATE
     private String imageUrl; // 챌린지 이미지
-    private Integer year; // 년도
-    private Integer month; // 월
+    private Integer challenge_year; // 년도
+    private Integer challenge_month; // 월
     private Integer weekOfMonth; // 주차 (1주차, 2주차)
     private PeriodTypeEnum periodType; // 주간 or 월간
 
@@ -62,8 +62,8 @@ public class Challenge {
         this.isInProgress = isInProgress;
         this.type = type;
         this.imageUrl = imageUrl;
-        this.year = year;
-        this.month = month;
+        this.challenge_year = year;
+        this.challenge_month = month;
         this.weekOfMonth = weekOfMonth;
         this.periodType = periodType;
         this.creator = creator;
