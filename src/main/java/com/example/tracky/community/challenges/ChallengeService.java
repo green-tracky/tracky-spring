@@ -6,6 +6,7 @@ import com.example.tracky._core.value.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
+import com.example.tracky.community.challenges.dto.ChallengeRequest;
 import com.example.tracky.community.challenges.dto.ChallengeResponse;
 import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
@@ -15,6 +16,7 @@ import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -132,5 +134,22 @@ public class ChallengeService {
                 isJoined,
                 rewardMasters
         );
+    }
+
+    @Transactional
+    public ChallengeResponse.SaveDTO save(User user, ChallengeRequest.SaveDTO reqDTO) {
+        // 1. DTO를 사용하여 챌린지 엔티티를 생성
+        Challenge challenge = reqDTO.toEntity(user);
+        Challenge challengePS = challengeRepository.save(challenge);
+
+        // 2. 생성자를 챌린지에 바로 참여
+        ChallengeJoin join = ChallengeJoin.builder()
+                .user(user)
+                .challenge(challengePS)
+                .build();
+        challengeJoinRepository.save(join);
+
+        // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환합니다.
+        return new ChallengeResponse.SaveDTO(challengePS);
     }
 }

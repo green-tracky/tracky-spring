@@ -1,6 +1,7 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
+import com.example.tracky.community.challenges.dto.ChallengeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
@@ -8,9 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -126,5 +131,52 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.rewards[0].status").value("달성"));
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @Test
+    void save_test() throws Exception {
+        // given
+        // 1. 요청 DTO 생성
+        ChallengeRequest.SaveDTO reqDTO = new ChallengeRequest.SaveDTO();
+        reqDTO.setName("달리기 초보 모여라!");
+        reqDTO.setTargetDistance(5000); // 목표: 5km
+        reqDTO.setStartDate(LocalDateTime.of(2025, 7, 8, 0, 0));
+        reqDTO.setEndDate(LocalDateTime.of(2025, 7, 15, 23, 59));
+        reqDTO.setImageUrl("https://example.com/images/new_challenge.png");
+
+        // 2. 요청 본문을 JSON 문자열로 변환
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/challenges")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isOk());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+        
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(7));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("달리기 초보 모여라!"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.targetDistance").value(5000));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.remainingTime").value(1987140));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isInProgress").value(true));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.participantCount").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.creatorName").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.type").value("사설"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isJoined").value(true));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.imageUrl").value("https://example.com/images/new_challenge.png"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.periodType").value("기타"));
     }
 }

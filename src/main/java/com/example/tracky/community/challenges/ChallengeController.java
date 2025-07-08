@@ -1,16 +1,14 @@
 package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.utils.Resp;
+import com.example.tracky.community.challenges.dto.ChallengeRequest;
 import com.example.tracky.community.challenges.dto.ChallengeResponse;
 import com.example.tracky.community.leaderboard.LeaderBoardService;
 import com.example.tracky.community.leaderboard.LeaderBoardsResponse;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,5 +53,13 @@ public class ChallengeController {
         return Resp.ok(respDTO);
     }
 
+    @PostMapping("/community/challenges")
+    public ResponseEntity<?> save(@RequestBody ChallengeRequest.SaveDTO reqDTO) {
+        Integer userId = 1;
+        User user = User.builder().id(userId).build();
 
+        ChallengeResponse.SaveDTO respDTO = challengeService.save(user, reqDTO);
+
+        return Resp.ok(respDTO);
+    }
 }
