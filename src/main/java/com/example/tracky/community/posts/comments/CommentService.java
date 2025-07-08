@@ -15,8 +15,11 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public List<CommentResponse.DTO> getCommentsWithReplies(Integer postId, int page) {
+
+        if (page < 0) page = 0;
+
         // 1. 댓글(부모) 페이징 조회
-        List<Comment> parentComments = commentRepository.findParentComments(postId, page);
+        List<Comment> parentComments = commentRepository.findParentComments(postId, page-1);
 
         // 2. 부모 ID 목록 추출
         List<Integer> parentIds = parentComments.stream()
