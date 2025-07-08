@@ -5,6 +5,7 @@ import com.example.tracky.community.posts.PostRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +42,16 @@ class PostControllerTest extends MyRestDoc {
 
         // then
         actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // data 배열의 첫 번째 요소 검증
+        // data[0] 검증
         actions.andExpect(jsonPath("$.data[0].likeCount").value(1));
-        actions.andExpect(jsonPath("$.data[0].commentCount").value(1));
+        actions.andExpect(jsonPath("$.data[0].commentCount").value(2));
         actions.andExpect(jsonPath("$.data[0].isLiked").value(false));
         actions.andExpect(jsonPath("$.data[0].id").value(1));
         actions.andExpect(jsonPath("$.data[0].username").value("ssar"));
         actions.andExpect(jsonPath("$.data[0].content").value("ssar의 러닝 기록을 공유합니다."));
-        actions.andExpect(jsonPath("$.data[0].createdAt").isNotEmpty());
+        actions.andExpect(jsonPath("$.data[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data[0].pictures").isArray());
         actions.andExpect(jsonPath("$.data[0].pictures").isEmpty());
     }

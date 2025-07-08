@@ -219,4 +219,18 @@ public class RunBadgeResponse {
 
     }
 
+    @Data
+    public static class simpleDTO {
+        private Integer id;
+        private String name;
+        private String imageUrl;
+
+        public simpleDTO(RunBadgeAchv runBadgeAchv) {
+            RunBadge runBadge = runBadgeAchv.getRunBadge();
+            this.id = runBadge.getId();
+            this.name = runBadge.getName();
+            this.imageUrl = runBadge.getImageUrl();
+        }
+    }
+
 }
