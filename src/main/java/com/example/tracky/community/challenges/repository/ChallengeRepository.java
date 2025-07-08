@@ -91,8 +91,9 @@ public class ChallengeRepository {
         return count > 0;
     }
 
-    public void save(Challenge challenge) {
+    public Challenge save(Challenge challenge) {
         em.persist(challenge);
+        return challenge;
     }
 
     /**
