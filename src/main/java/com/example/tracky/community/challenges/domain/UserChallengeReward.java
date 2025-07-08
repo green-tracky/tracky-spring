@@ -28,7 +28,7 @@ public class UserChallengeReward {
     private Challenge challenge; // 보상 대상 챌린지
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private RewardMaster rewardMaster; // 보상 목록
+    private RewardMaster rewardMaster; // 보상
 
     @CreationTimestamp
     private LocalDateTime receivedAt; // 보상 받는 날짜

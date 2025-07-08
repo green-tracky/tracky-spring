@@ -4,6 +4,7 @@ package com.example.tracky.community.posts;
 import com.example.tracky.community.posts.comments.CommentResponse;
 import com.example.tracky.runrecord.RunRecordResponse;
 import com.example.tracky.runrecord.pictures.PictureResponse;
+import com.example.tracky.user.UserResponse;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -65,31 +66,41 @@ public class PostResponse {
 
         private final Integer id;
         private final String content;
-        private final Integer userId;
-        private final RunRecordResponse.DetailDTO runRecord;
-        private final List<CommentResponse.DTO> commentDTOs;
+        private final UserResponse.PostUserDTO user; // User 엔티티를 -> DTO 로
+        private final RunRecordResponse.PostRunRecordDTO runRecord;
+        private final List<PictureResponse.DTO> pictures;
+        private final List<CommentResponse.DTO> comments;
+        private final Integer likeCount;
+        private final Integer commentCount;
+        private final Boolean isLiked;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
 
-        public DetailDTO(Post post) {
+        public DetailDTO(Post post, List<CommentResponse.DTO> comments, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked) {
             this.id = post.getId();
             this.content = post.getContent();
-            this.userId = post.getUser().getId();
+            this.user = new UserResponse.PostUserDTO(post.getUser());
             this.runRecord = post.getRunRecord() != null
-                    ? new RunRecordResponse.DetailDTO(post.getRunRecord())
+                    ? new RunRecordResponse.PostRunRecordDTO(post.getRunRecord())
                     : null;
-            this.commentDTOs = post.getComments().stream()
-                    .map(comment -> new CommentResponse.DTO(comment)) // 생성자 직접 호출
-                    .toList();
+            this.comments = comments;
+            this.pictures = (postPictures != null) ?
+                    postPictures.stream()
+                            .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
+                            .toList()
+                    : List.of();
+            this.likeCount = likeCount;
+            this.commentCount = commentCount;
+            this.isLiked = isLiked;
             this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
         }
 
-        public static List<DetailDTO> toPostResponseDTOs(List<Post> posts) {
-            return posts.stream()
-                    .map(post -> new DetailDTO(post))
-                    .toList();
-        }
+//        public static List<DetailDTO> toPostResponseDTOs(List<Post> posts) {
+//            return posts.stream()
+//                    .map(post -> new DetailDTO(post))
+//                    .toList();
+//        }
     }
 
     @Data

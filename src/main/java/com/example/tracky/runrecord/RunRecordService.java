@@ -4,6 +4,8 @@ import com.example.tracky._core.constant.Constant;
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky._core.value.TimeValue;
+import com.example.tracky.community.challenges.ChallengeRewardService;
 import com.example.tracky.community.challenges.domain.UserChallengeReward;
 import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
 import com.example.tracky.runrecord.dto.*;
@@ -41,6 +43,7 @@ public class RunRecordService {
     private final UserRepository userRepository;
     private final RunLevelRepository runLevelRepository;
     private final UserChallengeRewardRepository userChallengeRewardRepository;
+    private final ChallengeRewardService challengeRewardService;
 
     /**
      * 러닝 상세 조회
@@ -154,6 +157,7 @@ public class RunRecordService {
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 주차 라벨 생성 (기준 baseDate가 속한 '년-월'에 해당하는 주차만 필터링)
@@ -299,6 +303,7 @@ public class RunRecordService {
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 기록이 있는 월/연도 목록 구성
@@ -427,6 +432,7 @@ public class RunRecordService {
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 주간 평균 통계 계산
@@ -556,6 +562,7 @@ public class RunRecordService {
         List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
+                .limit(3)
                 .toList();
 
         // 6. 현재 레벨, 총 거리, 다음 레벨까지 거리 계산
@@ -573,8 +580,8 @@ public class RunRecordService {
             return new RunRecordResponse.AllDTO(stats, allStats, achievementHistorys, recentRunList, RunLevel);
         }
 
-        LocalDateTime start = runRecords.stream().map(RunRecord::getCreatedAt).min(Comparator.naturalOrder()).orElse(LocalDateTime.now());
-        LocalDateTime end = runRecords.stream().map(RunRecord::getCreatedAt).max(Comparator.naturalOrder()).orElse(LocalDateTime.now());
+        LocalDateTime start = runRecords.stream().map(RunRecord::getCreatedAt).min(Comparator.naturalOrder()).orElse(TimeValue.getServerTime());
+        LocalDateTime end = runRecords.stream().map(RunRecord::getCreatedAt).max(Comparator.naturalOrder()).orElse(TimeValue.getServerTime());
         LocalDateTime adjustedStart = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDateTime adjustedEnd = end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
         long weeks = ChronoUnit.WEEKS.between(adjustedStart, adjustedEnd) + 1;
@@ -760,7 +767,10 @@ public class RunRecordService {
         // 4. 레벨업 서비스를 호출하여 사용자의 레벨을 업데이트합니다.
         runLevelService.updateUserLevelIfNeeded(user);
 
-        // 5. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
+        // 5. 러닝 저장시 챌린지 보상 획득(공개, 사설(완주자))
+        List<UserChallengeReward> awardedChallengeRewardsPS = challengeRewardService.checkAndAwardChallengeRewards(user);
+
+        // 6. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
         return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadgesPS);
 
     }

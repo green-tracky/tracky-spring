@@ -2,7 +2,7 @@ INSERT INTO reward_master_tb (type, reward_name, reward_image_url, created_at)
 VALUES ('PRIVATE', '금메달', 'https://example.com/rewards/gold.png', NOW()),
        ('PRIVATE', '은메달', 'https://example.com/rewards/silver.png', NOW()),
        ('PRIVATE', '동메달', 'https://example.com/rewards/bronze.png', NOW()),
-       ('PRIVATE', '참여상', 'https://example.com/rewards/participation.png', NOW());
+       ('PRIVATE', '완주자', 'https://example.com/rewards/participation.png', NOW());
 
 -- 1월
 INSERT INTO reward_master_tb (type, reward_name, reward_image_url, created_at)
