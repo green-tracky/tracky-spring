@@ -23,7 +23,7 @@ public class RewardMasterRepository {
      */
     public List<RewardMaster> findAllByType(ChallengeTypeEnum type) {
         Query query = em.createQuery(
-                "select r from RewardMaster r where r.type = :type", RewardMaster.class);
+                "select r from RewardMaster r where r.challengeType = :type", RewardMaster.class);
         query.setParameter("type", type);
         return query.getResultList();
     }

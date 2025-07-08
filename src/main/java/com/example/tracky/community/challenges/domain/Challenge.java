@@ -25,7 +25,6 @@ public class Challenge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
     private String name; // 챌린지 이름 (예: "6월 주간 챌린지")
     private String sub; // 챌린지 짧은 설명 (예: "이번 주 5km를 달려보세요.")
     private String description; // 챌린지 설명 (예: "주간 챌린지를 통해 나의 한계를...")

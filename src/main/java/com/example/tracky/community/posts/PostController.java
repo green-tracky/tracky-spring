@@ -35,6 +35,15 @@ public class PostController {
         return Resp.ok(respDTO);
     }
 
+    @DeleteMapping("/community/posts/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        Integer userId = 1;
+        User user = User.builder().id(userId).build();
+
+        postService.delete(id, user);
+        return Resp.ok(null);
+    }
+
     @PutMapping("/community/posts/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PostRequest.UpdateDTO reqDTO) {
         Integer userId = 1;

@@ -123,6 +123,18 @@ public class PostService {
     }
 
 
+    @Transactional
+    public void delete(Integer id, User user) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        if (!post.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+        postRepository.delete(post);
+    }
+
+
     public PostResponse.DetailDTO getPostDetail(Integer postId, User user) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));

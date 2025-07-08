@@ -26,7 +26,7 @@ public class ChallengeJoinService {
      * @return
      */
     @Transactional
-    public ChallengeJoinResponse.DTO save(Integer id, User user) {
+    public ChallengeJoinResponse.DTO join(Integer id, User user) {
         // 챌린지 조회
         Challenge challengePS = challengeRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
@@ -45,7 +45,7 @@ public class ChallengeJoinService {
     }
 
     @Transactional
-    public void delete(Integer id, User user) {
+    public void leave(Integer id, User user) {
         // 챌린지 참여 조회
         ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND));

@@ -50,11 +50,9 @@ public class PostResponse {
             this.username = post.getUser().getUsername();
             this.content = post.getContent();
             this.createdAt = post.getCreatedAt();
-            this.pictures = (postPictures != null) ?
-                    postPictures.stream()
-                            .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
-                            .toList()
-                    : List.of();
+            this.pictures = postPictures.stream()
+                    .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
+                    .toList();
             this.likeCount = likeCount;
             this.commentCount = commentCount;
             this.isLiked = isLiked;
@@ -84,11 +82,9 @@ public class PostResponse {
                     ? new RunRecordResponse.PostRunRecordDTO(post.getRunRecord())
                     : null;
             this.comments = comments;
-            this.pictures = (postPictures != null) ?
-                    postPictures.stream()
-                            .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
-                            .toList()
-                    : List.of();
+            this.pictures = postPictures.stream()
+                    .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
+                    .toList();
             this.likeCount = likeCount;
             this.commentCount = commentCount;
             this.isLiked = isLiked;
@@ -96,11 +92,6 @@ public class PostResponse {
             this.updatedAt = post.getUpdatedAt();
         }
 
-//        public static List<DetailDTO> toPostResponseDTOs(List<Post> posts) {
-//            return posts.stream()
-//                    .map(post -> new DetailDTO(post))
-//                    .toList();
-//        }
     }
 
     @Data
@@ -122,6 +113,5 @@ public class PostResponse {
                     .map(pp -> pp.getPicture().getId())
                     .toList();
         }
-
     }
 }

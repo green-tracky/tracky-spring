@@ -25,7 +25,7 @@ public class CommentRepository {
     public List<Comment> findParentComments(Long postId, int page) {
         if (page < 0) page = 0;
         return em.createQuery(
-                        "SELECT c FROM Comment c JOIN FETCH c.post WHERE c.post.id = :postId AND c.parent IS NULL ORDER BY c.id DESC",
+                        "SELECT c FROM Comment c WHERE c.post.id = :postId AND c.parent IS NULL ORDER BY c.id DESC",
                         Comment.class)
                 .setParameter("postId", postId)
                 .setFirstResult(page * 5)
