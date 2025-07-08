@@ -1,7 +1,5 @@
 package com.example.tracky.community.posts.comments;
 
-import com.example.tracky.community.posts.Post;
-import com.example.tracky.community.posts.PostRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
