@@ -3,6 +3,7 @@ package com.example.tracky.community.posts;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,11 @@ public class PostRepository {
     public Post save(Post post) {
         em.persist(post);
         return post;
+    }
+
+
+    public void delete(Post post) {
+        em.remove(post);
     }
 
     public Optional<Post> findById(Integer id) {
