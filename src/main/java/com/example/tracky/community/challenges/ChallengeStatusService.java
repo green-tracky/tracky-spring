@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.value.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
@@ -44,7 +45,7 @@ public class ChallengeStatusService {
      */
     @Transactional
     public void closeAndRewardChallenges() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = TimeValue.getServerTime();
 
         // 1. 종료 대상 챌린지 조회 (진행중이고, 종료일이 현재보다 이전)
         List<Challenge> toCloseChallengesPS = challengeRepository.findAllByIsInProgressTrueAndEndDateBefore(now);

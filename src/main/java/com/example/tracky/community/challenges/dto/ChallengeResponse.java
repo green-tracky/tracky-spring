@@ -26,17 +26,15 @@ public class ChallengeResponse {
                        List<Challenge> unjoinedChallenges,
                        Map<Integer, Integer> totalDistancesMap,
                        Map<Integer, Integer> participantCountsMap) {
-
-            LocalDateTime now = LocalDateTime.now();
-
+            
             // 1. 내가 참여한 챌린지를 '진행 중'과 '지난 챌린지'로 분류하여 생성
             this.myChallenges = joinedChallenges.stream()
-                    .filter(challenge -> challenge.getEndDate().isAfter(now))
+                    .filter(challenge -> challenge.getIsInProgress())
                     .map(challenge -> new ChallengeItemDTO(challenge, totalDistancesMap.getOrDefault(challenge.getId(), 0)))
                     .toList();
 
             this.pastChallenges = joinedChallenges.stream()
-                    .filter(challenge -> challenge.getEndDate().isBefore(now))
+                    .filter(challenge -> !challenge.getIsInProgress())
                     .map(challenge -> new ChallengeItemDTO(challenge, totalDistancesMap.getOrDefault(challenge.getId(), 0), true))
                     .toList();
 

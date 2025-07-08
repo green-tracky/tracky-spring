@@ -91,7 +91,7 @@ public class PostResponse {
             this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
         }
-        
+
     }
 
     @Data
@@ -113,6 +113,5 @@ public class PostResponse {
                     .map(pp -> pp.getPicture().getId())
                     .toList();
         }
-
     }
 }

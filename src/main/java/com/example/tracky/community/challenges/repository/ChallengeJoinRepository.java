@@ -166,6 +166,12 @@ public class ChallengeJoinRepository {
         return query.getResultList();
     }
 
+    /**
+     * 해당 챌린지에 참여한 사람들 조회
+     *
+     * @param challengeId
+     * @return
+     */
     public List<ChallengeJoin> findAllByChallengeId(Integer challengeId) {
         return em.createQuery("select cj from ChallengeJoin cj where cj.challenge.id = :challengeId", ChallengeJoin.class)
                 .setParameter("challengeId", challengeId)

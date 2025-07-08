@@ -2,6 +2,7 @@ package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky._core.value.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
@@ -38,7 +39,7 @@ public class ChallengeService {
      */
     public ChallengeResponse.MainDTO getChallenges(User user) {
         Integer userId = user.getId();
-        LocalDateTime now = LocalDateTime.now(); // 조회 시점
+        LocalDateTime now = TimeValue.getServerTime(); // 조회 시점
 
         // 1. 사용자가 참가한 챌린지 엔티티 목록 조회
         // ChallengeJoin 테이블을 통해, 현재 유저가 참가한 Challenge 엔티티들을 가져온다

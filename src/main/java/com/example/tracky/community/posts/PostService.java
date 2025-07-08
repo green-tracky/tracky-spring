@@ -122,6 +122,7 @@ public class PostService {
         return new PostResponse.UpdateDTO(postPS);
     }
 
+
     @Transactional
     public void delete(Integer id) {
         Post post = postRepository.findById(id)
@@ -131,6 +132,7 @@ public class PostService {
         }
         postRepository.delete(post);
     }
+
 
     public PostResponse.DetailDTO getPostDetail(Integer postId, User user) {
         Post post = postRepository.findById(postId)
