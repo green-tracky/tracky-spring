@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 public enum PeriodTypeEnum {
 
     WEEKLY("주간"),
-    MONTHLY("월간");
+    MONTHLY("월간"),
+    ETC("기타"); // 사설 챌린지 용
 
     private final String displayName;
 

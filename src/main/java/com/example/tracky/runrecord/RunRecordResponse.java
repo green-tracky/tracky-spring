@@ -118,11 +118,11 @@ public class RunRecordResponse {
      */
     @Data
     public static class GroupedRecentListDTO {
-        private List<RecentOneDTO> groupedrecentList;
+        private List<RecentOneDTO> groupedRecentList;
         private PageDTO page;
 
-        public GroupedRecentListDTO(List<RecentOneDTO> groupedrecentList, PageDTO page) {
-            this.groupedrecentList = groupedrecentList;
+        public GroupedRecentListDTO(List<RecentOneDTO> groupedRecentList, PageDTO page) {
+            this.groupedRecentList = groupedRecentList;
             this.page = page;
         }
     }

@@ -6,19 +6,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;
 
-import java.util.stream.Stream;
-
-@Deprecated
 @RequiredArgsConstructor
 public enum RewardTypeEnum {
 
-    GOLD("금메달"),
-    SILVER("은메달"),
-    BRONZE("동메달"),
-    PARTICIPATION("참여상");
+    FINISHER("챌린지 우승자"),
+    AWARDEE("챌린지 수상자");
 
-    // DB에 저장될 고유한 한글 이름
-    private final String value;
+    private final String displayName;
 
     /**
      * json -> DTO 역직렬화 될때 사용됨. DTO 용
@@ -28,14 +22,18 @@ public enum RewardTypeEnum {
      * @JsonCreator JSON의 특정 값(여기서는 "도로" 같은 문자열)으로 Java 객체(여기서는 RewardTypeEnum)를 만드는 방법을 Jackson(Spring의 기본 JSON 라이브러리)에게 알려줄 수 있습니다.
      */
     @JsonCreator
-    public static RewardTypeEnum fromString(String value) {
-        if (value == null || value.isEmpty()) {
-            return null;
+    public static RewardTypeEnum fromValue(String value) {
+        if (value == null || value.isEmpty()) return null;
+        // 한글 매칭
+        for (RewardTypeEnum type : values()) {
+            if (type.displayName.equals(value)) return type;
         }
-        return Stream.of(RewardTypeEnum.values())
-                .filter(type -> type.getValue().equals(value))
-                .findFirst()
-                .orElseThrow(() -> new ExceptionApi400(ErrorCodeEnum.INVALID_REWARD_TYPE));
+        // 영문 매칭 (대소문자 구분 없이)
+        try {
+            return RewardTypeEnum.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ExceptionApi400(ErrorCodeEnum.INVALID_REWARD_TYPE);
+        }
     }
 
     /**
@@ -44,8 +42,8 @@ public enum RewardTypeEnum {
      * @return 데이터베이스에 저장될 한글 문자열 값 (예: "일반")
      */
     @JsonValue
-    public String getValue() {
-        return value;
+    public String getDisplayName() {
+        return displayName;
     }
 
 }

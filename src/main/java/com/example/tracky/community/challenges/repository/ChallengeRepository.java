@@ -2,6 +2,7 @@ package com.example.tracky.community.challenges.repository;
 
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
+import com.example.tracky.community.challenges.enums.PeriodTypeEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,117 @@ public class ChallengeRepository {
         Query query = em.createQuery("select c from Challenge c where c.isInProgress = true and c.endDate < :now", Challenge.class);
         query.setParameter("now", now);
         return query.getResultList();
+    }
+
+    /**
+     * <pre>
+     * 특정 년, 월, 주, 거리, 타입까지 확인해서 그 챌린지가 존재하는지 확인하는 쿼리
+     * 주간 챌린지 중복 확인용
+     * </pre>
+     *
+     * @param year
+     * @param month
+     * @param week
+     * @param distance
+     * @param periodType
+     * @return
+     */
+    public boolean existsByYearAndMonthAndWeekAndPeriod(int year, int month, int week, int distance, PeriodTypeEnum periodType) {
+        Long count = em.createQuery("select count(c) from Challenge c where c.challengeYear = :year and c.challengeMonth = :month and c.weekOfMonth = :week and c.targetDistance = :distance and c.periodType = :periodType", Long.class)
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("week", week)
+                .setParameter("distance", distance)
+                .setParameter("periodType", periodType)
+                .getSingleResult();
+
+        return count > 0;
+    }
+
+    public void save(Challenge challenge) {
+        em.persist(challenge);
+    }
+
+    /**
+     * <pre>
+     * 특정 년, 월, 거리, 타입까지 확인해서 그 챌린지가 존재하는지 확인하는 쿼리
+     * 월간 챌린지 중복 확인용
+     * </pre>
+     *
+     * @param year
+     * @param month
+     * @param distance
+     * @param periodType
+     * @return
+     */
+    public boolean existsByYearAndMonthAndPeriod(int year, int month, int distance, PeriodTypeEnum periodType) {
+        Long count = em.createQuery("select count (c) from Challenge c where c.challengeYear = :year and c.challengeMonth = :month and c.targetDistance = :distance and c.periodType = :periodType", Long.class)
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("distance", distance)
+                .setParameter("periodType", periodType)
+                .getSingleResult();
+
+        return count > 0;
+    }
+
+    /**
+     * 참가자가 없는 사설 챌린지들 조회
+     *
+     * @return
+     */
+    public List<Challenge> findOngoingEmptyPrivateChallenges() {
+        // 서브쿼리를 사용하여, ChallengeJoin 테이블에 존재하지 않는 챌린지만을 선택합니다.
+        Query query = em.createQuery("select c from Challenge c where c.type = :type and c.isInProgress = true and c.id not in (select distinct cj.challenge.id from ChallengeJoin cj)", Challenge.class);
+        query.setParameter("type", ChallengeTypeEnum.PRIVATE);
+        return query.getResultList();
+    }
+
+    /**
+     * 챌린지 아이디 묶음으로 삭제
+     *
+     * @param challenges 삭제할 챌린지 목록
+     */
+    public void deleteAllEmptyChallenge(List<Challenge> challenges) {
+        // 1. 삭제할 대상이 없으면 즉시 종료하여 불필요한 작업을 방지
+        if (challenges == null || challenges.isEmpty()) {
+            return;
+        }
+
+        // 2. 전달받은 챌린지 목록에서 ID만 추출
+        List<Integer> challengeIds = challenges.stream()
+                .map(challenge -> challenge.getId())
+                .toList();
+
+        // 3. JPQL의 IN 절을 사용하여, ID 목록에 해당하는 모든 챌린지를 삭제하는 쿼리를 작성
+        em.createQuery("delete from Challenge c where c.id in :ids")
+                .setParameter("ids", challengeIds)
+                .executeUpdate();
+    }
+
+    // 주간 챌린지 조회
+    public List<Challenge> findByYearAndMonthAndWeekOfMonthAndPeriodType(
+            int year, int month, int weekOfMonth, PeriodTypeEnum periodType) {
+        String jpql = "SELECT c FROM Challenge c WHERE c.challengeYear = :year AND c.challengeMonth = :month " +
+                "AND c.weekOfMonth = :weekOfMonth AND c.periodType = :periodType";
+        return em.createQuery(jpql, Challenge.class)
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("weekOfMonth", weekOfMonth)
+                .setParameter("periodType", periodType)
+                .getResultList();
+    }
+
+    // 월간 챌린지 조회 (weekOfMonth 조건 없음)
+    public List<Challenge> findByYearAndMonthAndPeriodType(
+            int year, int month, PeriodTypeEnum periodType) {
+        String jpql = "SELECT c FROM Challenge c WHERE c.challengeYear = :year AND c.challengeMonth = :month " +
+                "AND c.periodType = :periodType";
+        return em.createQuery(jpql, Challenge.class)
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("periodType", periodType)
+                .getResultList();
     }
 
 }
