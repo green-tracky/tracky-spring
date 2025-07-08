@@ -1,6 +1,6 @@
 package com.example.tracky.user;
 
-import com.example.tracky.user.enums.UserTypeEnum;
+import com.example.tracky._core.enums.UserTypeEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;

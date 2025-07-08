@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.constant.Constant;
+import com.example.tracky._core.constants.Constant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;

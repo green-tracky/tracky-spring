@@ -1,6 +1,6 @@
 package com.example.tracky.community.challenges.domain;
 
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -19,15 +19,20 @@ public class UserChallengeReward {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
     private ChallengeTypeEnum type; // 공개, 사설 구분용
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private User user; // 보상 받은 유저
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private Challenge challenge; // 보상 대상 챌린지
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private RewardMaster rewardMaster; // 보상
 
     @CreationTimestamp

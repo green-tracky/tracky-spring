@@ -1,8 +1,8 @@
 package com.example.tracky.community.challenges.repository;
 
+import com.example.tracky._core.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.PeriodTypeEnum;
 import com.example.tracky.community.challenges.domain.Challenge;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
-import com.example.tracky.community.challenges.enums.PeriodTypeEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;

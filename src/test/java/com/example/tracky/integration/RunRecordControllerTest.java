@@ -1,8 +1,8 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
+import com.example.tracky._core.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.RunRecordRequest;
-import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
 import com.example.tracky.runrecord.runsegments.runcoordinates.RunCoordinateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;

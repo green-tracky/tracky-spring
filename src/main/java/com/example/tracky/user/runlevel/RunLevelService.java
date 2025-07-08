@@ -1,6 +1,6 @@
 package com.example.tracky.user.runlevel;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;

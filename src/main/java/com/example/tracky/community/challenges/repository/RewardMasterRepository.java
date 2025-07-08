@@ -1,7 +1,7 @@
 package com.example.tracky.community.challenges.repository;
 
+import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.domain.RewardMaster;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
