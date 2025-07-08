@@ -55,6 +55,7 @@ public class ChallengeRewardService {
                 // "완주자" 보상을 조회
                 RewardMaster rewardMasterOP = rewardMasterRepository.findByRewardName("완주자")
                         .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND));
+                // ID를 파라미터로 받는 새로운 메서드를 호출
                 alreadyRewarded = userChallengeRewardRepository.existsPrivateRewardByRewardId(user.getId(), challenge.getId(), rewardMasterOP.getId());
             }
 

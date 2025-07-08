@@ -165,7 +165,7 @@ public class ChallengeJoinRepository {
         query.setParameter("userId", userId);
         return query.getResultList();
     }
-
+    
     /**
      * 해당 챌린지에 참여한 사람들 조회
      *
