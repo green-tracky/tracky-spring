@@ -50,4 +50,8 @@ public class UserRepository {
             return Optional.ofNullable(null);
         }
     }
+
+    public Optional<User> findById(Integer userId) {
+        return Optional.ofNullable(em.find(User.class, userId));
+    }
 }

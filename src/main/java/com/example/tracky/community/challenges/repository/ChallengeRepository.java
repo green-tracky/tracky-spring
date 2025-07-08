@@ -152,4 +152,29 @@ public class ChallengeRepository {
                 .executeUpdate();
     }
 
+    // 주간 챌린지 조회
+    public List<Challenge> findByYearAndMonthAndWeekOfMonthAndPeriodType(
+            int year, int month, int weekOfMonth, PeriodTypeEnum periodType) {
+        String jpql = "SELECT c FROM Challenge c WHERE c.challengeYear = :year AND c.challengeMonth = :month " +
+                "AND c.weekOfMonth = :weekOfMonth AND c.periodType = :periodType";
+        return em.createQuery(jpql, Challenge.class)
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("weekOfMonth", weekOfMonth)
+                .setParameter("periodType", periodType)
+                .getResultList();
+    }
+
+    // 월간 챌린지 조회 (weekOfMonth 조건 없음)
+    public List<Challenge> findByYearAndMonthAndPeriodType(
+            int year, int month, PeriodTypeEnum periodType) {
+        String jpql = "SELECT c FROM Challenge c WHERE c.challengeYear = :year AND c.challengeMonth = :month " +
+                "AND c.periodType = :periodType";
+        return em.createQuery(jpql, Challenge.class)
+                .setParameter("year", year)
+                .setParameter("month", month)
+                .setParameter("periodType", periodType)
+                .getResultList();
+    }
+
 }

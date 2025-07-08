@@ -36,7 +36,7 @@ public class UserChallengeRewardRepository {
     public Boolean existsPublicRewardByChallengeName(Integer userId, Integer challengeId, String challengeName) {
         // 공개 챌린지 중복 확인 쿼리
         // 유저, 챌린지가 일치하고, 보상의 이름(rewardName)이 챌린지의 이름(name)과 같은 기록이 있는지 확인
-        Long count = em.createQuery("select count(ucr.id) from UserChallengeReward ucr join ucr.rewardMaster rm where ucr.user.id = :userId and ucr.challenge.id = :challengeId and rm.rewardName = :challengeName", Long.class)
+        Long count = em.createQuery("select count(ucr) from UserChallengeReward ucr join ucr.rewardMaster rm where ucr.user.id = :userId and ucr.challenge.id = :challengeId and rm.rewardName = :challengeName", Long.class)
                 .setParameter("userId", userId)
                 .setParameter("challengeId", challengeId)
                 .setParameter("challengeName", challengeName)
@@ -54,7 +54,7 @@ public class UserChallengeRewardRepository {
      * @return
      */
     public Boolean existsPrivateRewardByRewardId(Integer userId, Integer challengeId, Integer rewardId) {
-        Long count = em.createQuery("select count(ucr.id) from UserChallengeReward ucr join ucr.rewardMaster rm where ucr.user.id = :userId and ucr.challenge.id = :challengeId and rm.id = :rewardId", Long.class)
+        Long count = em.createQuery("select count(ucr) from UserChallengeReward ucr join ucr.rewardMaster rm where ucr.user.id = :userId and ucr.challenge.id = :challengeId and rm.id = :rewardId", Long.class)
                 .setParameter("userId", userId)
                 .setParameter("challengeId", challengeId)
                 .setParameter("rewardId", rewardId)
