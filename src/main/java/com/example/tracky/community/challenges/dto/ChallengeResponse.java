@@ -3,6 +3,7 @@ package com.example.tracky.community.challenges.dto;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.RewardMaster;
 import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
+import com.example.tracky.community.challenges.enums.PeriodTypeEnum;
 import com.example.tracky.community.challenges.utils.ChallengeUtil;
 import lombok.Data;
 
@@ -26,7 +27,7 @@ public class ChallengeResponse {
                        List<Challenge> unjoinedChallenges,
                        Map<Integer, Integer> totalDistancesMap,
                        Map<Integer, Integer> participantCountsMap) {
-            
+
             // 1. 내가 참여한 챌린지를 '진행 중'과 '지난 챌린지'로 분류하여 생성
             this.myChallenges = joinedChallenges.stream()
                     .filter(challenge -> challenge.getIsInProgress())
@@ -189,6 +190,39 @@ public class ChallengeResponse {
                 this.rewardImageUrl = rewardMaster.getRewardImageUrl();
                 this.status = "달성";
             }
+        }
+    }
+
+    @Data
+    public static class SaveDTO {
+        private Integer id;
+        private String name;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private Integer targetDistance;
+        private Integer remainingTime;
+        private Boolean isInProgress;
+        private Integer participantCount;
+        private String creatorName;
+        private ChallengeTypeEnum type;
+        private Boolean isJoined;
+        private String imageUrl;
+        private PeriodTypeEnum periodType;
+
+        public SaveDTO(Challenge challenge) {
+            this.id = challenge.getId();
+            this.name = challenge.getName();
+            this.startDate = challenge.getStartDate();
+            this.endDate = challenge.getEndDate();
+            this.targetDistance = challenge.getTargetDistance();
+            this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
+            this.isInProgress = challenge.getIsInProgress();
+            this.participantCount = 1;
+            this.creatorName = challenge.getCreator().getUsername();
+            this.type = challenge.getType();
+            this.isJoined = true;
+            this.imageUrl = challenge.getImageUrl();
+            this.periodType = challenge.getPeriodType();
         }
     }
 }
