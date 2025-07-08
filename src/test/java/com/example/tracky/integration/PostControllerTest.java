@@ -149,11 +149,13 @@ class PostControllerTest extends MyRestDoc {
     @Test
     @DisplayName("삭제 성공 테스트")
     void delete_test() throws Exception {
+        // given
+        int postId = 1;
 
         //when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/community/posts/1"));
+                        .delete("/s/api/community/posts/" + postId));
 
         // then
         actions.andExpect(jsonPath("$.status").value(200));

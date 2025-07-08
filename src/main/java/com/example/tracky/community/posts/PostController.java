@@ -37,7 +37,10 @@ public class PostController {
 
     @DeleteMapping("/community/posts/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        postService.delete(id);
+        Integer userId = 1;
+        User user = User.builder().id(userId).build();
+
+        postService.delete(id, user);
         return Resp.ok(null);
     }
 

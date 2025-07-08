@@ -124,13 +124,12 @@ public class PostService {
 
 
     @Transactional
-    public void delete(Integer id) {
+    public void delete(Integer id, User user) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
-        if (post == null) {
-            throw new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND);
-        }
-        postRepository.delete(post);
+
+        if (post.getUser().getId() == user.getId())
+            postRepository.delete(post);
     }
 
 
