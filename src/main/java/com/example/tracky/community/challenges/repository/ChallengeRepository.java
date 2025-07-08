@@ -135,7 +135,7 @@ public class ChallengeRepository {
      *
      * @param challenges 삭제할 챌린지 목록
      */
-    public void deleteAllInBatchCustom(List<Challenge> challenges) {
+    public void deleteAllEmptyChallenge(List<Challenge> challenges) {
         // 1. 삭제할 대상이 없으면 즉시 종료하여 불필요한 작업을 방지
         if (challenges == null || challenges.isEmpty()) {
             return;

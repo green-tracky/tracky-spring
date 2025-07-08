@@ -143,7 +143,7 @@ public class RunBadgeResponse {
         private String name; // 뱃지 이름
         private String description; // 뱃지 설명
         private String imageUrl; // 뱃지 이미지
-        private String type; // 뱃지 타입 !! 나중에 타입으로 처리하겠음. 뱃지 타입과 챌린지 보상 타입 다르기 때문
+        private String type; // 뱃지 타입 !! 문자열로 처리
         private LocalDateTime achievedAt; // 뱃지 획득날짜 (획득 못했으면 null)
         private Integer runRecordDistance; // 러닝 기록의 거리 (획득 못했으면 null)
         private Integer runRecordSeconds; // 러닝 기록의 시간 (획득 못했으면 null)
@@ -206,9 +206,9 @@ public class RunBadgeResponse {
 
             this.id = rewardMaster.getId();
             this.name = rewardMaster.getRewardName();
-            this.description = "챌린지를 완료하셨습니다";
+            this.description = rewardMaster.getDescription();
             this.imageUrl = rewardMaster.getRewardImageUrl();
-            this.type = "챌린지 우승자";
+            this.type = rewardMaster.getRewardType().getDisplayName();
             this.achievedAt = userChallengeReward.getReceivedAt();
             this.runRecordDistance = null; // 획득 정보 없음
             this.runRecordSeconds = null; // 획득 정보 없음

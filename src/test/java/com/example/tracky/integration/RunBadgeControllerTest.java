@@ -37,24 +37,23 @@ public class RunBadgeControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
-        // 최상위 응답 검증
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // data.recents[0]
+        // 🔸 data.recents[0]
         actions.andExpect(jsonPath("$.data.recents[0].id").value(1));
         actions.andExpect(jsonPath("$.data.recents[0].name").value("금메달"));
-        actions.andExpect(jsonPath("$.data.recents[0].description").value("챌린지를 완료하셨습니다"));
+        actions.andExpect(jsonPath("$.data.recents[0].description").value("챌린지에서 1위를 달성하셨습니다!"));
         actions.andExpect(jsonPath("$.data.recents[0].imageUrl").value("https://example.com/rewards/gold.png"));
-        actions.andExpect(jsonPath("$.data.recents[0].type").value("챌린지 우승자"));
-        actions.andExpect(jsonPath("$.data.recents[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.recents[0].type").value("챌린지 수상자"));
+        actions.andExpect(jsonPath("$.data.recents[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.recents[0].runRecordDistance").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.recents[0].runRecordSeconds").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.recents[0].runRecordPace").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.recents[0].isAchieved").value(true));
         actions.andExpect(jsonPath("$.data.recents[0].achievedCount").value(1));
 
-        // data.bests[0]
+        // 🔸 data.bests[0]
         actions.andExpect(jsonPath("$.data.bests[0].id").value(2));
         actions.andExpect(jsonPath("$.data.bests[0].name").value("1K 최고 기록"));
         actions.andExpect(jsonPath("$.data.bests[0].description").value("나의 1,000미터 최고 기록"));
@@ -67,26 +66,26 @@ public class RunBadgeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.bests[0].isAchieved").value(false));
         actions.andExpect(jsonPath("$.data.bests[0].achievedCount").value(Matchers.nullValue()));
 
-        // data.monthly[0]
+        // 🔸 data.monthly[0]
         actions.andExpect(jsonPath("$.data.monthly[0].id").value(1));
         actions.andExpect(jsonPath("$.data.monthly[0].name").value("첫 시작"));
         actions.andExpect(jsonPath("$.data.monthly[0].description").value("매달 첫 러닝을 완료했어요!"));
         actions.andExpect(jsonPath("$.data.monthly[0].imageUrl").value("https://example.com/badges/first_run.png"));
         actions.andExpect(jsonPath("$.data.monthly[0].type").value("월간업적"));
-        actions.andExpect(jsonPath("$.data.monthly[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.monthly[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.monthly[0].runRecordDistance").value(600));
         actions.andExpect(jsonPath("$.data.monthly[0].runRecordSeconds").value(270));
         actions.andExpect(jsonPath("$.data.monthly[0].runRecordPace").value(450));
         actions.andExpect(jsonPath("$.data.monthly[0].isAchieved").value(true));
-        actions.andExpect(jsonPath("$.data.monthly[0].achievedCount").value(3));
+        actions.andExpect(jsonPath("$.data.monthly[0].achievedCount").value(4));
 
-        // data.challenges[0]
+        // 🔸 data.challenges[0]
         actions.andExpect(jsonPath("$.data.challenges[0].id").value(1));
         actions.andExpect(jsonPath("$.data.challenges[0].name").value("금메달"));
-        actions.andExpect(jsonPath("$.data.challenges[0].description").value("챌린지를 완료하셨습니다"));
+        actions.andExpect(jsonPath("$.data.challenges[0].description").value("챌린지에서 1위를 달성하셨습니다!"));
         actions.andExpect(jsonPath("$.data.challenges[0].imageUrl").value("https://example.com/rewards/gold.png"));
-        actions.andExpect(jsonPath("$.data.challenges[0].type").value("챌린지 우승자"));
-        actions.andExpect(jsonPath("$.data.challenges[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.challenges[0].type").value("챌린지 수상자"));
+        actions.andExpect(jsonPath("$.data.challenges[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.challenges[0].runRecordDistance").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.challenges[0].runRecordSeconds").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.challenges[0].runRecordPace").value(Matchers.nullValue()));

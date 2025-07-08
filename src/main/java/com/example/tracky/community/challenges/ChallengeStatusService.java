@@ -142,7 +142,7 @@ public class ChallengeStatusService {
 
         // 2. 조회된 챌린지가 있다면, DB에서 삭제
         if (emptyChallenges != null && !emptyChallenges.isEmpty()) {
-            challengeRepository.deleteAllInBatchCustom(emptyChallenges);
+            challengeRepository.deleteAllEmptyChallenge(emptyChallenges);
         }
     }
 }

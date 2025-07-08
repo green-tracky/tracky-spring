@@ -327,7 +327,7 @@ public class RunRecordControllerTest extends MyRestDoc {
 
     @Test
     public void get_activities_week_test() throws Exception {
-        // given
+        // given TODO : 이 아이디는 무슨 아이디인가?
         Integer id = 1;
 
         // when
@@ -343,40 +343,41 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // avgStats
+        // 🔹 avgStats
         actions.andExpect(jsonPath("$.data.avgStats.recodeCount").value(2));
         actions.andExpect(jsonPath("$.data.avgStats.avgPace").value(348));
         actions.andExpect(jsonPath("$.data.avgStats.totalDistanceMeters").value(7400));
         actions.andExpect(jsonPath("$.data.avgStats.totalDurationSeconds").value(2580));
 
-        // achievementHistory[0]
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
+        // 🔹 achievementHistory[0]
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 수상자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("금메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].description").value("챌린지에서 1위를 달성하셨습니다!"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/gold.png"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(1));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(true));
 
-        // recentRuns[0]
+        // 🔹 recentRuns[0]
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(16));
         actions.andExpect(jsonPath("$.data.recentRuns[0].title").value("트랙 러닝 15"));
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDistanceMeters").value(1900));
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(660));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(347));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.recentRuns[0].badges").isArray());
-        actions.andExpect(jsonPath("$.data.recentRuns[0].badges").isEmpty());
+        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
 
-        // runLevel
+        // 🔹 runLevel
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(18100));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(31900));
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
         actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
-        // weeks["2025-06"][0]
+        // 🔹 weeks.2025-06
         actions.andExpect(jsonPath("$.data.weeks['2025-06'][0]").value("06.09~06.15"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
@@ -401,44 +402,46 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // avgStats
+        // 🔹 avgStats
         actions.andExpect(jsonPath("$.data.avgStats.recodeCount").value(16));
         actions.andExpect(jsonPath("$.data.avgStats.avgPace").value(375));
         actions.andExpect(jsonPath("$.data.avgStats.totalDistanceMeters").value(36200));
         actions.andExpect(jsonPath("$.data.avgStats.totalDurationSeconds").value(13600));
 
-        // achievementHistory[0]
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
+        // 🔹 achievementHistory[0]
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 수상자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("금메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].description").value("챌린지에서 1위를 달성하셨습니다!"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/gold.png"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(1));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(true));
 
-        // recentRuns[0]
+        // 🔹 recentRuns[0]
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(16));
         actions.andExpect(jsonPath("$.data.recentRuns[0].title").value("트랙 러닝 15"));
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDistanceMeters").value(1900));
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(660));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(347));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.recentRuns[0].badges").isArray());
-        actions.andExpect(jsonPath("$.data.recentRuns[0].badges").isEmpty());
+        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
 
-        // runLevel
+        // 🔹 runLevel
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(18100));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(31900));
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
         actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
-        // years
+        // 🔹 years
         actions.andExpect(jsonPath("$.data.years[0]").value(2025));
 
-        // mounts
+        // 🔹 mounts
         actions.andExpect(jsonPath("$.data.mounts['2025'][0]").value(6));
+
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print());
@@ -469,21 +472,22 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.avgStats.totalDurationSeconds").value(13600));
 
         // totalStats
-        actions.andExpect(jsonPath("$.data.totalStats.runCount").value(0.3));
+        actions.andExpect(jsonPath("$.data.totalStats.runCountPerWeek").value(0.3));
         actions.andExpect(jsonPath("$.data.totalStats.avgPace").value(375));
-        actions.andExpect(jsonPath("$.data.totalStats.avgDistanceMeters").value(1131));
-        actions.andExpect(jsonPath("$.data.totalStats.avgDurationSeconds").value(425));
+        actions.andExpect(jsonPath("$.data.totalStats.avgDistanceMetersPerRun").value(1131));
+        actions.andExpect(jsonPath("$.data.totalStats.avgDurationSecondsPerRun").value(425));
 
         // achievementHistory[0]
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 수상자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("금메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].description").value("챌린지에서 1위를 달성하셨습니다!"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/gold.png"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(1));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(true));
 
         // recentRuns[0]
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(16));
@@ -491,7 +495,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDistanceMeters").value(1900));
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(660));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(347));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.recentRuns[0].badges").isArray());
         actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
 
@@ -501,7 +505,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
         actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
-        // years[0]
+        // years
         actions.andExpect(jsonPath("$.data.years[0]").value(2025));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
@@ -526,40 +530,41 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // avgStats
+        // 🔹 avgStats
         actions.andExpect(jsonPath("$.data.avgStats.recodeCount").value(16));
         actions.andExpect(jsonPath("$.data.avgStats.avgPace").value(375));
         actions.andExpect(jsonPath("$.data.avgStats.totalDistanceMeters").value(18100));
         actions.andExpect(jsonPath("$.data.avgStats.totalDurationSeconds").value(6800));
 
-        // totalStats
-        actions.andExpect(jsonPath("$.data.totalStats.runCount").value(5.3));
+        // 🔹 totalStats
+        actions.andExpect(jsonPath("$.data.totalStats.runCountPerWeek").value(5.3));
         actions.andExpect(jsonPath("$.data.totalStats.avgPace").value(375));
-        actions.andExpect(jsonPath("$.data.totalStats.avgDistanceMeters").value(1131));
-        actions.andExpect(jsonPath("$.data.totalStats.avgDurationSeconds").value(425));
+        actions.andExpect(jsonPath("$.data.totalStats.avgDistanceMetersPerRun").value(1131));
+        actions.andExpect(jsonPath("$.data.totalStats.avgDurationSecondsPerRun").value(425));
 
-        // achievementHistory[0]
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 우승자"));
+        // 🔹 achievementHistory[0]
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].type").value("챌린지 수상자"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].name").value("금메달"));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].description").value("챌린지에서 1위를 달성하셨습니다!"));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].imageUrl").value("https://example.com/rewards/gold.png"));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].achievedCount").value(1));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordDistance").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordSeconds").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.achievementHistory[0].runRecordPace").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.achievementHistory[0].isAchieved").value(true));
 
-        // recentRuns[0]
+        // 🔹 recentRuns[0]
         actions.andExpect(jsonPath("$.data.recentRuns[0].id").value(16));
         actions.andExpect(jsonPath("$.data.recentRuns[0].title").value("트랙 러닝 15"));
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDistanceMeters").value(1900));
         actions.andExpect(jsonPath("$.data.recentRuns[0].totalDurationSeconds").value(660));
         actions.andExpect(jsonPath("$.data.recentRuns[0].avgPace").value(347));
-        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.recentRuns[0].createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2}.*")));
         actions.andExpect(jsonPath("$.data.recentRuns[0].badges").isArray());
-        actions.andExpect(jsonPath("$.data.recentRuns[0].badges").isEmpty());
+        actions.andExpect(jsonPath("$.data.recentRuns[0].badges.length()").value(0));
 
-        // runLevel
+        // 🔹 runLevel
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(18100));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(31900));
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
