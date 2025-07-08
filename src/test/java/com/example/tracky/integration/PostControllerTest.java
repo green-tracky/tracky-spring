@@ -3,6 +3,7 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.example.tracky.community.posts.PostRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,6 +25,9 @@ class PostControllerTest extends MyRestDoc {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private EntityManager em;
 
     @Test
     @DisplayName("포스트 목록 조회 성공")
@@ -142,6 +147,24 @@ class PostControllerTest extends MyRestDoc {
     }
 
     @Test
+    @DisplayName("삭제 성공 테스트")
+    void delete_test() throws Exception {
+        // given
+        int postId = 1;
+
+        //when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/posts/" + postId));
+
+        // then
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
+    }
+
+    @Test
     @DisplayName("포스트 상세 조회 성공")
     void get_detail_test() throws Exception {
         // given
@@ -157,6 +180,9 @@ class PostControllerTest extends MyRestDoc {
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
 
-        // then -> 댓글 완료 후 GPT 써서 작성
+        // then 댓글까지 끝나면 나중에 작성
     }
+
 }
+
+
