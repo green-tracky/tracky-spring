@@ -128,8 +128,10 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
-        if (post.getUser().getId() == user.getId())
-            postRepository.delete(post);
+        if (!post.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+        postRepository.delete(post);
     }
 
 
