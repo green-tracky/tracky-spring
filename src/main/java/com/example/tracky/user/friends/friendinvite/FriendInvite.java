@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,7 @@ public class FriendInvite {
 
     // 친구 요청 보낸 유저
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private User fromUser;
 
     // 친구 요청 받은 유저
@@ -32,11 +34,11 @@ public class FriendInvite {
     private User toUser;
 
     @CreationTimestamp
-    @JoinColumn(nullable = false)
     private LocalDateTime createdAt;
 
     private InviteStatusEnum status = InviteStatusEnum.PENDING;
 
+    @UpdateTimestamp
     private LocalDateTime responsedAt;
 
     @Builder
@@ -56,7 +58,6 @@ public class FriendInvite {
             throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
         this.status = InviteStatusEnum.ACCEPTED;
-        this.responsedAt = LocalDateTime.now();
     }
 
     public void reject() {
@@ -64,6 +65,5 @@ public class FriendInvite {
             throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
         this.status = InviteStatusEnum.REJECTED;
-        this.responsedAt = LocalDateTime.now();
     }
 }

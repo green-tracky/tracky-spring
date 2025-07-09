@@ -3,6 +3,7 @@ package com.example.tracky.user.friends.friendinvite;
 import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.enums.InviteStatusEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
+import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.user.User;
 import com.example.tracky.user.friends.Friend;
@@ -30,7 +31,7 @@ public class FriendInviteService {
      * @return SaveDTO
      */
     @Transactional
-    public FriendInviteRequest.SaveDTO friendInvite(User fromUser, User toUser) {
+    public FriendInviteResponse.SaveDTO friendInvite(User fromUser, User toUser) {
         // 본인에게 하는 요청 방지
         if (fromUser.getId().equals(toUser.getId())) {
             throw new ExceptionApi400(ErrorCodeEnum.INVALID_SELF_REQUEST);
@@ -49,23 +50,24 @@ public class FriendInviteService {
                 .build(); // 응답시간은 요청 받으면 넣어주기 / status 기본 값은 WAITING
 
         FriendInvite savePS = friendInviteRepository.save(invite);
-        return new FriendInviteRequest.SaveDTO(savePS);
+
+        return new FriendInviteResponse.SaveDTO(savePS);
     }
 
     /**
-     * 내가 받은 요청 모두 조회
+     * 내가 받은 친구 요청 모두 조회
      *
      * @param user
      * @return DTO
      */
-    public FriendInviteResponse.DTO getFriendInvite(User user) {
+    public List<FriendInviteResponse.InvitesDTO> getFriendInvite(User user) {
         List<FriendInvite> invites = friendInviteRepository.findAllByUserId(user.getId());
         List<FriendInviteResponse.InvitesDTO> inviteList = new ArrayList<>();
         for (FriendInvite invite : invites) {
             inviteList.add(new FriendInviteResponse.InvitesDTO(invite));
         }
 
-        return new FriendInviteResponse.DTO(inviteList);
+        return inviteList;
     }
 
     /**
@@ -77,7 +79,8 @@ public class FriendInviteService {
      */
     @Transactional
     public FriendInviteResponse.ResponseDTO friendInviteAccept(Integer inviteId, User user) {
-        FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
+        FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId())
+                .orElseThrow(() -> new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED));
 
         // 권한 체크
         checkInviteRecipient(invite, user);
@@ -102,7 +105,8 @@ public class FriendInviteService {
      */
     @Transactional
     public FriendInviteResponse.ResponseDTO friendInviteReject(Integer inviteId, User user) {
-        FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
+        FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId())
+                .orElseThrow(() -> new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED));
 
         // 권한 체크
         checkInviteRecipient(invite, user);
