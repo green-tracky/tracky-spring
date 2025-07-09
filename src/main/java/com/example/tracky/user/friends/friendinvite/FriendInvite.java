@@ -4,8 +4,8 @@ import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky.user.User;
 import com.example.tracky.user.friends.friendinvite.enums.InviteStatusType;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,6 @@ import static com.example.tracky._core.enums.ErrorCodeEnum.INVALID_INVITE_RESPON
 
 
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name = "friend_invite_tb")
 public class FriendInvite {
@@ -29,9 +28,11 @@ public class FriendInvite {
 
     // 친구 요청 받은 유저
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private User toUser;
 
     @CreationTimestamp
+    @JoinColumn(nullable = false)
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
@@ -39,12 +40,16 @@ public class FriendInvite {
 
     private LocalDateTime responsedAt;
 
+    @Builder
     public FriendInvite(User fromUser, User toUser, LocalDateTime createdAt, InviteStatusType status, LocalDateTime responsedAt) {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.createdAt = createdAt;
         this.status = status;
         this.responsedAt = responsedAt;
+    }
+
+    protected FriendInvite() {
     }
 
     public void accept() {
