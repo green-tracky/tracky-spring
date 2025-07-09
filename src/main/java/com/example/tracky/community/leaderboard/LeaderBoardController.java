@@ -1,7 +1,8 @@
 package com.example.tracky.community.leaderboard;
 
+import com.example.tracky._core.enums.DateRangeType;
 import com.example.tracky._core.utils.Resp;
-import com.example.tracky.community.leaderboard.enums.DateRangeType;
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,7 @@ public class LeaderBoardController {
             before = 0;
         }
 
-        // TODO : 전역변수로 나중에 설정
-//        LocalDate baseDate = LocalDate.now();
-        LocalDate baseDate = LocalDate.of(2025, 06, 05);
+        LocalDate baseDate = TimeValue.getServerTime().toLocalDate();
 
         LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLeaderBoards(user, baseDate, before, DateRangeType.WEEK);
         return Resp.ok(respDTO);
@@ -53,8 +52,7 @@ public class LeaderBoardController {
             before = 0;
         }
 
-        // TODO : 전역변수로 나중에 설정
-        LocalDate baseDate = LocalDate.now();
+        LocalDate baseDate = TimeValue.getServerTime().toLocalDate();
 
         LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLeaderBoards(user, baseDate, before, DateRangeType.MONTH);
         return Resp.ok(respDTO);
@@ -71,8 +69,7 @@ public class LeaderBoardController {
         // before가 0 밖에 없음
         Integer before = 0;
 
-        // TODO : 전역변수로 나중에 설정
-        LocalDate baseDate = LocalDate.now();
+        LocalDate baseDate = TimeValue.getServerTime().toLocalDate();
 
         LeaderBoardsResponse.LeaderBoardDTO respDTO = leaderBoardService.getLeaderBoards(user, baseDate, before, DateRangeType.YEAR);
         return Resp.ok(respDTO);

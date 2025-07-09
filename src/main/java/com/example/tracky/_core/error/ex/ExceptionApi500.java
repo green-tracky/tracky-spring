@@ -1,6 +1,6 @@
 package com.example.tracky._core.error.ex;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 
 public class ExceptionApi500 extends RuntimeException {
     /**

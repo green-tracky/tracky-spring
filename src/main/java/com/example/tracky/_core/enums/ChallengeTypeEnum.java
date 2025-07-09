@@ -1,6 +1,5 @@
-package com.example.tracky.community.challenges.enums;
+package com.example.tracky._core.enums;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

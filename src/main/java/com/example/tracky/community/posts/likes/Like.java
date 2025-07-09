@@ -25,7 +25,7 @@ public class Like {
     private Post post;
 
     // 좋아요 누른 사용자
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
     private User user;
 

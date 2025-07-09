@@ -1,7 +1,7 @@
 package com.example.tracky.runrecord;
 
 import com.example.tracky._core.utils.Resp;
-import com.example.tracky._core.value.TimeValue;
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class RunRecordController {
         RunRecordResponse.WeekDTO respDTO = runRecordService.getActivitiesWeek(user, baseDate, before);
         return Resp.ok(respDTO);
     }
-    
+
     @GetMapping("/activities/month")
     public ResponseEntity<?> getActivitiesMonth(@RequestParam(value = "month", required = false) Integer month,
                                                 @RequestParam(value = "year", required = false) Integer year) {
