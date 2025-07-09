@@ -1,6 +1,6 @@
 package com.example.tracky.community.challenges;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
@@ -26,7 +26,7 @@ public class ChallengeJoinService {
      * @return
      */
     @Transactional
-    public ChallengeJoinResponse.DTO save(Integer id, User user) {
+    public ChallengeJoinResponse.DTO join(Integer id, User user) {
         // 챌린지 조회
         Challenge challengePS = challengeRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
@@ -45,8 +45,8 @@ public class ChallengeJoinService {
     }
 
     @Transactional
-    public void delete(Integer id, User user) {
-        // 챌린지 참여 조회
+    public void leave(Integer id, User user) {
+        // 내가 참여한 챌린지 조회
         ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND));
 

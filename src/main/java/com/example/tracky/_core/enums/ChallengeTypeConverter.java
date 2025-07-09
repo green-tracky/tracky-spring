@@ -1,4 +1,4 @@
-package com.example.tracky.community.challenges.enums;
+package com.example.tracky._core.enums;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

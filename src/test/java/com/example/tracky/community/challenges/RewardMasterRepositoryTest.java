@@ -1,7 +1,7 @@
 package com.example.tracky.community.challenges;
 
+import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.domain.RewardMaster;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,7 @@
 package com.example.tracky.community.challenges.utils;
 
+import com.example.tracky._core.values.TimeValue;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -12,7 +14,7 @@ public class ChallengeUtil {
      * @return
      */
     public static Integer calculateRemainingSeconds(LocalDateTime endDate) {
-        Duration duration = Duration.between(LocalDateTime.now(), endDate);
+        Duration duration = Duration.between(TimeValue.getServerTime(), endDate);
         return duration.isNegative() ? 0 : (int) duration.getSeconds();
     }
 }

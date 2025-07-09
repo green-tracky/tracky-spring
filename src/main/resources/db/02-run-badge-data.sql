@@ -1,5 +1,3 @@
--- badge_tb 테이블에 데이터 INSERT (type을 한글로 변경)
--- 주의: 이 스크립트를 실행하기 전에 badge_tb 테이블에 type VARCHAR(255) 컬럼이 있어야 합니다.
 INSERT INTO run_badge_tb (name, description, image_url, type)
 VALUES ('첫 시작', '매달 첫 러닝을 완료했어요!', 'https://example.com/badges/first_run.png', 'MONTHLY_ACHIEVEMENT'),
        ('1K 최고 기록', '나의 1,000미터 최고 기록', 'https://example.com/badges/1k_best.png', 'RECORD'),

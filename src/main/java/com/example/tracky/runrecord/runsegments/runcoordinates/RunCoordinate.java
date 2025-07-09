@@ -17,6 +17,7 @@ public class RunCoordinate {
     @Column(name = "run_segment_id")
     private Integer id;
 
+    // TODO : 좌표엔티티 원복하고 db 에 넣을때만 문자열로 변환 AttributeConverter 사용
     @Lob
     private String coordinate; //[{"lat": 37.123, "lon": 127.456, "recordedAt": "2025-07-03 09:00:00"}]
 
