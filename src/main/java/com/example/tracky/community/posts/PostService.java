@@ -147,7 +147,7 @@ public class PostService {
         List<PostPicture> pictures = post.getPostPictures();
 
         // ✅ 댓글 + 대댓글 조회
-        List<CommentResponse.ParentDTO> commentParentDTOS = commentService.getCommentsWithReplies(postId, 0);
+        CommentResponse.CommentsList commentsList = commentService.getCommentsWithReplies(postId, 0);
 
         return new PostResponse.DetailDTO(post, null, pictures, likeCount, commentCount, isLiked);
     }

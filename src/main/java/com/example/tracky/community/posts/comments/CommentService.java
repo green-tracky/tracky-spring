@@ -20,7 +20,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public List<CommentResponse.ParentDTO> getCommentsWithReplies(Integer postId, Integer page) {
+    public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
         //한 페이지의 부모댓글과 자식댓글 수 합계
         Integer totalCount = commentRepository.countTotalCommentsInPage(postId, page);
@@ -44,9 +44,11 @@ public class CommentService {
                 .collect(Collectors.groupingBy(c -> c.getParent().getId()));
 
         // 5. DTO로 변환
-        return parentComments.stream()
-                .map(parent -> new CommentResponse.ParentDTO(parent, replyMap.getOrDefault(parent.getId(), new ArrayList<>()), page, totalCount, parentCount))
+        List<CommentResponse.ParentDTO> parentDTOS = parentComments.stream()
+                .map(parent -> new CommentResponse.ParentDTO(parent, replyMap.getOrDefault(parent.getId(), new ArrayList<>())))
                 .toList();
+
+        return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOS);
     }
 
     public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, User user) {

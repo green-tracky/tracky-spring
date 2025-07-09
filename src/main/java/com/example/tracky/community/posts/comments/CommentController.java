@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
@@ -25,8 +23,8 @@ public class CommentController {
             page = 1;
         }
 
-        List<CommentResponse.ParentDTO> respParentDTO = commentService.getCommentsWithReplies(postId, page);
-        return Resp.ok(respParentDTO);
+        CommentResponse.CommentsList respDTO = commentService.getCommentsWithReplies(postId, page);
+        return Resp.ok(respDTO);
     }
 
     @PostMapping("/community/posts/comments")

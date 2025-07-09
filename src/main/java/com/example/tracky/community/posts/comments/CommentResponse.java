@@ -8,6 +8,30 @@ import java.util.List;
 public class CommentResponse {
 
     @Data
+    public static class CommentsList {
+        private Integer next;
+        private Integer current;
+        private Integer totalCount;
+        private Integer totalPage;
+        private Boolean isLast;
+        List<ParentDTO> comments;
+
+        public CommentsList(Integer current, Integer totalCount, Integer parentCount, List<CommentResponse.ParentDTO> parentDTOS) {
+            this.next = current + 1;
+            this.current = current;
+            this.totalCount = totalCount; // given
+            this.totalPage = makeTotalPage(parentCount); // 2
+            this.isLast = totalPage == current;
+            this.comments = parentDTOS;
+        }
+
+        private Integer makeTotalPage(int parentCount) {
+            int rest = parentCount % 5 > 0 ? 1 : 0; // 6 -> 0, 7 -> 1, 8 -> 2
+            return parentCount / 5 + rest;
+        }
+    }
+
+    @Data
     public static class ParentDTO {
 
         private final Integer id;
@@ -19,15 +43,9 @@ public class CommentResponse {
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
         private final List<ChildDTO> children;
-        private Integer prev;
-        private Integer next;
-        private Integer current;
-        private Integer totalCount;
-        private Integer totalPage;
-        private Boolean isFirst; // current == 0
-        private Boolean isLast; // totalCount, size=3, totalPage == current
 
-        public ParentDTO(Comment comment, List<Comment> reply, Integer current, Integer totalCount, Integer parentCount) {
+
+        public ParentDTO(Comment comment, List<Comment> reply) {
             this.id = comment.getId();
             this.postId = comment.getPost().getId();
             this.userId = comment.getUser().getId();
@@ -39,18 +57,6 @@ public class CommentResponse {
             this.children = comment.getChildren().stream()
                     .map(child -> new ChildDTO(child))
                     .toList();
-            this.prev = current - 1;
-            this.next = current + 1;
-            this.current = current;
-            this.totalCount = totalCount; // given
-            this.totalPage = makeTotalPage(parentCount); // 2
-            this.isFirst = current == 1;
-            this.isLast = totalPage == current;
-        }
-
-        private Integer makeTotalPage(int parentCount) {
-            int rest = parentCount % 5 > 0 ? 1 : 0; // 6 -> 0, 7 -> 1, 8 -> 2
-            return parentCount / 5 + rest;
         }
 
         @Data

@@ -1,7 +1,11 @@
 package com.example.tracky.community.posts.comments;
 
 
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.community.posts.Post;
 import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -12,12 +16,15 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 
 @Slf4j
-@Import(CommentRepository.class)
+@Import({CommentRepository.class, UserRepository.class})
 @DataJpaTest
 public class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private EntityManager em;
@@ -68,10 +75,16 @@ public class CommentRepositoryTest {
 
     @Test
     void save_test() {
-        User user = User.builder().build();
-        em.persist(user);
+        User user = userRepository.findById(1).
+                orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Comment comment = Comment.builder().build();
+        Post post = Post.builder().build();
+        em.persist(post);
+
+        Comment comment = Comment.builder()
+                .user(user)
+                .post(post)
+                .build();
 
         commentRepository.save(comment);
 
