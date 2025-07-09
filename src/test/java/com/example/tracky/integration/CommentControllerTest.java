@@ -26,7 +26,7 @@ public class CommentControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/community/posts/{postId}/comments", postId)
+                        .get("/s/api/community/posts/{postId}/comments", postId)
         );
 
         // eye
