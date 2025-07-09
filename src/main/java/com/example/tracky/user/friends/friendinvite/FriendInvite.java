@@ -1,5 +1,6 @@
 package com.example.tracky.user.friends.friendinvite;
 
+import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky.user.User;
 import com.example.tracky.user.friends.friendinvite.enums.InviteStatusType;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+
+import static com.example.tracky._core.error.enums.ErrorCodeEnum.INVALID_INVITE_RESPONSE_STATE;
 
 @Getter
 @NoArgsConstructor
@@ -45,7 +48,7 @@ public class FriendInvite {
 
     public void accept() {
         if (this.status != InviteStatusType.WAITING) {
-            throw new IllegalStateException("이미 응답된 요청입니다.");
+            throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
         this.status = InviteStatusType.ACCEPTED;
         this.responsedAt = LocalDateTime.now();
@@ -53,7 +56,7 @@ public class FriendInvite {
 
     public void reject() {
         if (this.status != InviteStatusType.WAITING) {
-            throw new IllegalStateException("이미 응답된 요청입니다.");
+            throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
         this.status = InviteStatusType.REJECTED;
         this.responsedAt = LocalDateTime.now();

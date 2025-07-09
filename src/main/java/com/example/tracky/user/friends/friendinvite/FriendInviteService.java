@@ -1,6 +1,7 @@
 package com.example.tracky.user.friends.friendinvite;
 
 import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.user.User;
 import com.example.tracky.user.friends.Friend;
@@ -32,12 +33,12 @@ public class FriendInviteService {
     public FriendInviteRequest.SaveDTO sendInvite(User fromUser, User toUser) {
         // TODO : Enum 추가
         if (fromUser.getId().equals(toUser.getId())) {
-            throw new RuntimeException("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+            throw new ExceptionApi400(ErrorCodeEnum.INVALID_SELF_REQUEST);
         }
 
         // TODO : Enum 추가
         if (friendInviteRepository.existsWaitingInvite(fromUser, toUser)) {
-            throw new RuntimeException("이미 친구 요청을 보냈습니다.");
+            throw new ExceptionApi400(ErrorCodeEnum.DUPLICATE_FRIEND_INVITE);
         }
 
         FriendInvite invite = new FriendInvite(fromUser, toUser, LocalDateTime.now(), WAITING, null); // 응답시간은 요청 받으면 넣어주기 / status 기본 값은 WAITING
