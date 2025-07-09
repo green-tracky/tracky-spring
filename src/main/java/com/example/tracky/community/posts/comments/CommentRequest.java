@@ -9,11 +9,10 @@ public class CommentRequest {
     @Data
     public static class SaveDTO {
 
-        private final Integer postId;
-        private final String username;
-        private final String content;
-        private final Integer parentId;
-
+        private Integer postId;
+        private String username;
+        private String content;
+        private Integer parentId;
 
         public Comment toEntity(User user, Post post, Comment parent) {
             Comment comment = Comment.builder()

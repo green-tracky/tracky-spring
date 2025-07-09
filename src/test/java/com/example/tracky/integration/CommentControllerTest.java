@@ -1,12 +1,16 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
+import com.example.tracky.community.posts.comments.CommentRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -18,6 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // MOCK -> 가짜 환경을 만들어 필요한 의존관계를 다 메모리에 올려서 테스트
 @Slf4j
 public class CommentControllerTest extends MyRestDoc {
+
+    @Autowired
+    private ObjectMapper om;
 
     @Test
     @DisplayName("댓글 조회 성공")
@@ -60,4 +67,30 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].isLast").value(false));
 
     }
+
+    @Test
+    @DisplayName("포스트 쓰기 성공")
+    void save_test() throws Exception {
+
+        // given
+        CommentRequest.SaveDTO reqDTO = new CommentRequest.SaveDTO();
+        reqDTO.setPostId(1);
+        reqDTO.setContent("내용입니다");
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/posts/comments")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+    }
+
 }

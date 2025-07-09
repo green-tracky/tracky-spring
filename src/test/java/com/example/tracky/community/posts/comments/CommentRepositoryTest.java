@@ -78,12 +78,15 @@ public class CommentRepositoryTest {
         User user = userRepository.findById(1).
                 orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Post post = Post.builder().build();
+        Post post = Post.builder()
+                .user(user)
+                .build();
         em.persist(post);
 
         Comment comment = Comment.builder()
                 .user(user)
                 .post(post)
+                .content("content")
                 .build();
 
         commentRepository.save(comment);
