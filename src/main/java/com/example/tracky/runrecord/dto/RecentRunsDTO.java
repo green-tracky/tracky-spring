@@ -15,7 +15,7 @@ public class RecentRunsDTO {
     private Integer totalDurationSeconds;
     private Integer avgPace;
     private LocalDateTime createdAt;
-    private List<RunBadgeResponse.DTO> badges; // TODO : 나중에 획득한 뱃지 들어넣기
+    private List<RunBadgeResponse.simpleDTO> badges;
 
     public RecentRunsDTO(RunRecord runRecord) {
         this.id = runRecord.getId();
@@ -25,7 +25,7 @@ public class RecentRunsDTO {
         this.avgPace = runRecord.getAvgPace();
         this.createdAt = runRecord.getCreatedAt();
         this.badges = runRecord.getRunBadgeAchvs().stream()
-                .map(runBadgeAchv -> new RunBadgeResponse.DTO(runBadgeAchv))
+                .map(runBadgeAchv -> new RunBadgeResponse.simpleDTO(runBadgeAchv))
                 .toList();
     }
 }

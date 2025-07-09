@@ -21,13 +21,16 @@ public class RunBadgeAchv {
     @CreationTimestamp
     private LocalDateTime achievedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private RunRecord runRecord; // 부모 러닝 기록
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private User user; // 뱃지 획득 유저
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private RunBadge runBadge; // 부모 러닝 뱃지
 
     @Builder

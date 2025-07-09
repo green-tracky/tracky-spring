@@ -1,11 +1,13 @@
 package com.example.tracky.community.challenges;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
 import com.example.tracky.community.challenges.domain.UserChallengeReward;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;
@@ -23,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,10 +45,12 @@ public class ChallengeStatusService {
      */
     @Transactional
     public void closeAndRewardChallenges() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = TimeValue.getServerTime();
+        log.debug("날짜" + now);
 
         // 1. 종료 대상 챌린지 조회 (진행중이고, 종료일이 현재보다 이전)
         List<Challenge> toCloseChallengesPS = challengeRepository.findAllByIsInProgressTrueAndEndDateBefore(now);
+        log.debug("테스트 챌린지 확인" + toCloseChallengesPS.getLast().getName());
 
         for (Challenge challenge : toCloseChallengesPS) {
             // 2. 챌린지 상태 변경
@@ -55,6 +58,7 @@ public class ChallengeStatusService {
 
             // 3. 사설 챌린지라면 메달 지급
             if (challenge.getType() == ChallengeTypeEnum.PRIVATE) {
+                log.debug("사설챌린지 확인 : " + challenge.getName());
                 rewardPrivateChallengeMedals(challenge);
             }
         }
@@ -68,37 +72,25 @@ public class ChallengeStatusService {
     private void rewardPrivateChallengeMedals(Challenge challenge) {
         // 현재 챌린지의 모든 참가자 조회
         List<ChallengeJoin> challengeJoinsPS = challengeJoinRepository.findAllByChallengeId(challenge.getId());
+        challengeJoinsPS.forEach(join -> {
+        });
 
-        // 비교 로직에 필요한 임시 데이터 클래스
-        class MedalInfo {
-            User user;
-            LocalDateTime startAt;   // 첫 러닝 기록 날짜
-            LocalDateTime endAt;     // 목표 달성한 러닝 기록 날짜
-            long durationSeconds;    // 달성까지 걸린 시간(초)
-
-            MedalInfo(User user, LocalDateTime startAt, LocalDateTime endAt, long durationSeconds) {
-                this.user = user;
-                this.startAt = startAt;
-                this.endAt = endAt;
-                this.durationSeconds = durationSeconds;
-            }
-        }
         // 등수 확인을 위한 리스트
         List<MedalInfo> achievers = new ArrayList<>();
 
         // 참가자의 챌린지 기간내의 모든 러닝 조회
         for (ChallengeJoin join : challengeJoinsPS) {
-            List<RunRecord> records = runRecordRepository.findAllByCreatedAtBetween(
+            List<RunRecord> recordsPS = runRecordRepository.findAllByCreatedAtBetween(
                     join.getUser().getId(), challenge.getStartDate(), challenge.getEndDate());
 
-            if (records.isEmpty()) continue; // 없으면 다음 참가자 계산
+            if (recordsPS.isEmpty()) continue; // 없으면 다음 참가자 계산
 
             // 챌린지 기간내의 첫 러닝 기록날짜
-            LocalDateTime startAt = records.get(0).getCreatedAt();
+            LocalDateTime startAt = recordsPS.get(0).getCreatedAt();
 
-            // 챌린지 목표달성 확인을 위한 합계변수
+            // 챌린지 목표달성 경과 시간 계산
             int sum = 0;
-            for (RunRecord record : records) {
+            for (RunRecord record : recordsPS) {
                 sum += record.getTotalDistanceMeters();
                 if (sum >= challenge.getTargetDistance()) {
                     LocalDateTime endAt = record.getCreatedAt();
@@ -118,19 +110,45 @@ public class ChallengeStatusService {
         // 금, 은, 동 으로 최대 3번 반복한다
         for (int i = 0; i < Math.min(3, achievers.size()); i++) {
             User user = achievers.get(i).user;
-            Optional<RewardMaster> medalReward = rewardMasterRepository.findByRewardName(medals[i]);
-            // 보상 메달이 없어도 예외처리하지 않는다
-            if (medalReward.isPresent()) {
-                UserChallengeReward reward = UserChallengeReward.builder()
-                        .user(user)
-                        .challenge(challenge)
-                        .rewardMaster(medalReward.get())
-                        .type(ChallengeTypeEnum.PRIVATE)
-                        .build();
-                userChallengeRewardRepository.save(reward);
-            } else {
-                log.warn(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND.getMessage());
-            }
+            RewardMaster medalRewardPS = rewardMasterRepository.findByRewardName(medals[i])
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND));
+
+            UserChallengeReward reward = UserChallengeReward.builder()
+                    .user(user)
+                    .challenge(challenge)
+                    .rewardMaster(medalRewardPS)
+                    .type(ChallengeTypeEnum.PRIVATE)
+                    .build();
+            userChallengeRewardRepository.save(reward);
+        }
+    }
+
+    /**
+     * 참가자가 없는 사설 챌린지 삭제
+     */
+    @Transactional
+    public void cleanupEmptyPrivateChallenges() {
+        // 1. 참가자가 0명인, '진행 중인' 모든 사설 챌린지를 조회
+        List<Challenge> emptyChallengesPS = challengeRepository.findOngoingEmptyPrivateChallenges();
+
+        // 2. 조회된 챌린지가 있다면, DB에서 삭제
+        if (emptyChallengesPS != null && !emptyChallengesPS.isEmpty()) {
+            challengeRepository.deleteAllEmptyChallenge(emptyChallengesPS);
+        }
+    }
+
+    // 비교 로직에 필요한 임시 데이터 클래스
+    class MedalInfo {
+        User user;
+        LocalDateTime startAt;   // 첫 러닝 기록 날짜
+        LocalDateTime endAt;     // 목표 달성한 러닝 기록 날짜
+        long durationSeconds;    // 달성까지 걸린 시간(초)
+
+        MedalInfo(User user, LocalDateTime startAt, LocalDateTime endAt, long durationSeconds) {
+            this.user = user;
+            this.startAt = startAt;
+            this.endAt = endAt;
+            this.durationSeconds = durationSeconds;
         }
     }
 }

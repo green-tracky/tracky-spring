@@ -1,9 +1,10 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.constant.Constant;
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.constants.Constant;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.ChallengeRewardService;
 import com.example.tracky.community.challenges.domain.UserChallengeReward;
 import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
@@ -579,8 +580,8 @@ public class RunRecordService {
             return new RunRecordResponse.AllDTO(stats, allStats, achievementHistorys, recentRunList, RunLevel);
         }
 
-        LocalDateTime start = runRecords.stream().map(RunRecord::getCreatedAt).min(Comparator.naturalOrder()).orElse(LocalDateTime.now());
-        LocalDateTime end = runRecords.stream().map(RunRecord::getCreatedAt).max(Comparator.naturalOrder()).orElse(LocalDateTime.now());
+        LocalDateTime start = runRecords.stream().map(RunRecord::getCreatedAt).min(Comparator.naturalOrder()).orElse(TimeValue.getServerTime());
+        LocalDateTime end = runRecords.stream().map(RunRecord::getCreatedAt).max(Comparator.naturalOrder()).orElse(TimeValue.getServerTime());
         LocalDateTime adjustedStart = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDateTime adjustedEnd = end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
         long weeks = ChronoUnit.WEEKS.between(adjustedStart, adjustedEnd) + 1;

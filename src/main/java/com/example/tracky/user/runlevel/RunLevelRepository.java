@@ -19,8 +19,8 @@ public class RunLevelRepository {
     }
 
     /**
-     * 모든 레벨 정보를 'sortOrder' 기준으로 내림차순 정렬하여 조회합니다.
-     * 레벨업 조건을 확인할 때, 가장 높은 레벨부터 검사하여 효율적으로 사용자의 현재 레벨을 찾기 위함입니다.
+     * 모든 레벨 정보를 'sortOrder' 기준으로 내림차순 정렬하여 조회
+     * 레벨업 조건을 확인할 때, 가장 높은 레벨부터 검사하여 효율적으로 사용자의 현재 레벨을 찾기 위함
      *
      * @return sortOrder 기준으로 내림차순 정렬된 RunLevel 리스트
      */
@@ -30,7 +30,7 @@ public class RunLevelRepository {
     }
 
     /**
-     * 모든 레벨 정보를 'sortOrder' 기준으로 오름차순 정렬하여 조회합니다.
+     * 모든 레벨 정보를 'sortOrder' 기준으로 오름차순 정렬하여 조회
      * 레벨 목록 순서대로 낮은 것부터 조회. 조회용
      *
      * @return sortOrder 기준으로 오름차순 정렬된 RunLevel 리스트

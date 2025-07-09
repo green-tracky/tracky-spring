@@ -1,5 +1,6 @@
 package com.example.tracky.user;
 
+import com.example.tracky._core.enums.UserTypeEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,27 @@ public class UserRepository {
         } catch (Exception e) {
             return Optional.ofNullable(null);
         }
+    }
+
+    /**
+     * <pre>
+     * 관리자 계정 찾기
+     * 관리자 계정이 2개 이상이면 null 응답함
+     * </pre>
+     *
+     * @return
+     */
+    public Optional<User> findAdmin() {
+        Query query = em.createQuery("select u from User u where u.userType = :userType", User.class);
+        query.setParameter("userType", UserTypeEnum.ADMIN);
+        try {
+            return Optional.of((User) query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
+    }
+
+    public Optional<User> findById(Integer userId) {
+        return Optional.ofNullable(em.find(User.class, userId));
     }
 }

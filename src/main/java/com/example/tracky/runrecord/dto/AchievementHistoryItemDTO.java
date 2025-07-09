@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 
 @Data
 public class AchievementHistoryItemDTO {
-    private String type; // "badge" or "medal"
+    private String type;
     private String name;
+    private String description;
     private String imageUrl;
     private LocalDateTime achievedAt;
     private Integer achievedCount;
@@ -23,6 +24,7 @@ public class AchievementHistoryItemDTO {
     public AchievementHistoryItemDTO(RunBadgeAchv runBadgeAchv, Integer achievedCount) {
         this.type = runBadgeAchv.getRunBadge().getType().getDisplayName();
         this.name = runBadgeAchv.getRunBadge().getName();
+        this.description = runBadgeAchv.getRunBadge().getDescription();
         this.imageUrl = runBadgeAchv.getRunBadge().getImageUrl();
         this.achievedAt = runBadgeAchv.getAchievedAt();
         this.achievedCount = achievedCount;
@@ -35,8 +37,9 @@ public class AchievementHistoryItemDTO {
 
     // 메달 기반 생성자
     public AchievementHistoryItemDTO(UserChallengeReward userChallengeReward, Integer achievedCount) {
-        this.type = "챌린지 우승자";
+        this.type = userChallengeReward.getRewardMaster().getRewardType().getDisplayName();
         this.name = userChallengeReward.getRewardMaster().getRewardName();
+        this.description = userChallengeReward.getRewardMaster().getDescription();
         this.imageUrl = userChallengeReward.getRewardMaster().getRewardImageUrl();
         this.achievedAt = userChallengeReward.getReceivedAt();
         this.achievedCount = achievedCount;
@@ -44,6 +47,6 @@ public class AchievementHistoryItemDTO {
         this.runRecordDistance = null;
         this.runRecordSeconds = null;
         this.runRecordPace = null;
-        this.isAchieved = null;
+        this.isAchieved = true;
     }
 }

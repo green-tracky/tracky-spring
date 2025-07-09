@@ -1,12 +1,14 @@
 package com.example.tracky.community.challenges;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
+import com.example.tracky.community.challenges.dto.ChallengeRequest;
 import com.example.tracky.community.challenges.dto.ChallengeResponse;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;
@@ -14,6 +16,7 @@ import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +41,7 @@ public class ChallengeService {
      */
     public ChallengeResponse.MainDTO getChallenges(User user) {
         Integer userId = user.getId();
-        LocalDateTime now = LocalDateTime.now(); // 조회 시점
+        LocalDateTime now = TimeValue.getServerTime(); // 조회 시점
 
         // 1. 사용자가 참가한 챌린지 엔티티 목록 조회
         // ChallengeJoin 테이블을 통해, 현재 유저가 참가한 Challenge 엔티티들을 가져온다
@@ -131,5 +134,22 @@ public class ChallengeService {
                 isJoined,
                 rewardMasters
         );
+    }
+
+    @Transactional
+    public ChallengeResponse.SaveDTO save(User user, ChallengeRequest.SaveDTO reqDTO) {
+        // 1. DTO를 사용하여 챌린지 엔티티를 생성
+        Challenge challenge = reqDTO.toEntity(user);
+        Challenge challengePS = challengeRepository.save(challenge);
+
+        // 2. 생성자를 챌린지에 바로 참여
+        ChallengeJoin join = ChallengeJoin.builder()
+                .user(user)
+                .challenge(challengePS)
+                .build();
+        challengeJoinRepository.save(join);
+
+        // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환합니다.
+        return new ChallengeResponse.SaveDTO(challengePS);
     }
 }

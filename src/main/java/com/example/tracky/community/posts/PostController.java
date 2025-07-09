@@ -35,6 +35,15 @@ public class PostController {
         return Resp.ok(respDTO);
     }
 
+    @DeleteMapping("/community/posts/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        Integer userId = 1;
+        User user = User.builder().id(userId).build();
+
+        postService.delete(id, user);
+        return Resp.ok(null);
+    }
+
     @PutMapping("/community/posts/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PostRequest.UpdateDTO reqDTO) {
         Integer userId = 1;
@@ -42,6 +51,17 @@ public class PostController {
 
         PostResponse.UpdateDTO respDTO = postService.update(reqDTO, id, user);
 
+        return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/community/posts/{id}")
+    public ResponseEntity<?> getPostDetail(@PathVariable int id) {
+
+        Integer userId = 1;
+
+        User user = User.builder().id(userId).build();
+
+        PostResponse.DetailDTO respDTO = postService.getPostDetail(id, user);
         return Resp.ok(respDTO);
     }
 }

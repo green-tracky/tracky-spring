@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord.runbadges;
 
-import com.example.tracky.runrecord.runbadges.enums.RunBadgeTypeEnum;
+import com.example.tracky._core.enums.RunBadgeTypeEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class RunBadge {
     private String name; // 뱃지 이름
     private String description; // 뱃지 조건 설명
     private String imageUrl; // 뱃지 이미지
-    private RunBadgeTypeEnum type; // 뱃지 타입 필드 추가. RunBadgeType 타입 확인 바람
+    private RunBadgeTypeEnum type; // 최고기록 or 월간업적
 
     @CreationTimestamp
     private LocalDateTime createdAt;
