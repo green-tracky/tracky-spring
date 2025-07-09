@@ -30,4 +30,23 @@ public class FriendInviteController {
         FriendInviteRequest.SaveDTO response = friendInviteService.sendInvite(fromUser, toUser);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/friend-invite/{id}/accept")
+    public ResponseEntity<?> friendInviteAccept(@PathVariable("id") Integer inviteId) {
+        // TODO: 로그인 유저로 교체
+        User user = User.builder().id(1).build();
+
+        FriendInviteResponse.ResponseDTO response = friendInviteService.acceptInvite(inviteId, user);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/friend-invite/{id}/reject")
+    public ResponseEntity<?> friendInviteReject(@PathVariable("id") Integer inviteId) {
+        // TODO: 로그인 유저로 교체
+        User user = User.builder().id(1).build();
+
+
+        FriendInviteResponse.ResponseDTO response = friendInviteService.rejectInvite(inviteId, user);
+        return ResponseEntity.ok(response);
+    }
 }
