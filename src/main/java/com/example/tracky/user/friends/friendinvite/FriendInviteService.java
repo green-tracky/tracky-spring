@@ -1,6 +1,10 @@
 package com.example.tracky.user.friends.friendinvite;
 
+import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.user.User;
+import com.example.tracky.user.friends.Friend;
+import com.example.tracky.user.friends.FriendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +19,38 @@ import static com.example.tracky.user.friends.friendinvite.enums.InviteStatusTyp
 @RequiredArgsConstructor
 public class FriendInviteService {
     private final FriendInviteRepository friendInviteRepository;
+    private final FriendRepository friendRepository;
 
+    /**
+     * 친구 요청 보내기
+     *
+     * @param fromUser 로그인 한 유저
+     * @param toUser   친구 요청을 받을 유저
+     * @return SaveDTO
+     */
     @Transactional
     public FriendInviteRequest.SaveDTO sendInvite(User fromUser, User toUser) {
+        // TODO : Enum 추가
+        if (fromUser.getId().equals(toUser.getId())) {
+            throw new RuntimeException("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+        }
+
+        // TODO : Enum 추가
+        if (friendInviteRepository.existsWaitingInvite(fromUser, toUser)) {
+            throw new RuntimeException("이미 친구 요청을 보냈습니다.");
+        }
+
         FriendInvite invite = new FriendInvite(fromUser, toUser, LocalDateTime.now(), WAITING, null); // 응답시간은 요청 받으면 넣어주기 / status 기본 값은 WAITING
         FriendInvite saved = friendInviteRepository.save(invite);
         return new FriendInviteRequest.SaveDTO(saved);
     }
 
+    /**
+     * 내가 받은 요청 모두 조회
+     *
+     * @param user
+     * @return DTO
+     */
     public FriendInviteResponse.DTO findAll(User user) {
         List<FriendInvite> invites = friendInviteRepository.findAllByUserId(user.getId());
         List<FriendInviteResponse.InvitesDTO> inviteList = new ArrayList<>();
@@ -36,5 +64,45 @@ public class FriendInviteService {
         }
 
         return new FriendInviteResponse.DTO(inviteList);
+    }
+
+    /**
+     * 친구 수락
+     *
+     * @param inviteId 친구 요청 ID
+     * @param user     로그인 한 유저
+     * @return ResponseDTO
+     */
+    @Transactional
+    public FriendInviteResponse.ResponseDTO acceptInvite(Integer inviteId, User user) {
+        FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
+        // 권한 체크
+        if (!invite.getToUser().getId().equals(user.getId())) {
+            throw new ExceptionApi404(ErrorCodeEnum.ACCESS_DENIED);
+        }
+        // DB 상태 변경
+        invite.accept();
+
+        // 친구 테이블에 추가 (중복 방지)
+        if (!friendRepository.existsFriend(invite.getFromUser(), invite.getToUser())) {
+            friendRepository.save(new Friend(invite.getFromUser(), invite.getToUser()));
+        }
+
+        return new FriendInviteResponse.ResponseDTO(invite);
+    }
+
+    /**
+     * 친구 거절
+     *
+     * @param inviteId 친구 요청 ID
+     * @param user     로그인 한 유저
+     * @return ResponseDTO
+     */
+    @Transactional
+    public FriendInviteResponse.ResponseDTO rejectInvite(Integer inviteId, User user) {
+        FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
+        // DB 상태 변경
+        invite.reject();
+        return new FriendInviteResponse.ResponseDTO(invite);
     }
 }

@@ -42,4 +42,20 @@ public class FriendInvite {
         this.status = status;
         this.responsedAt = responsedAt;
     }
+
+    public void accept() {
+        if (this.status != InviteStatusType.WAITING) {
+            throw new IllegalStateException("이미 응답된 요청입니다.");
+        }
+        this.status = InviteStatusType.ACCEPTED;
+        this.responsedAt = LocalDateTime.now();
+    }
+
+    public void reject() {
+        if (this.status != InviteStatusType.WAITING) {
+            throw new IllegalStateException("이미 응답된 요청입니다.");
+        }
+        this.status = InviteStatusType.REJECTED;
+        this.responsedAt = LocalDateTime.now();
+    }
 }
