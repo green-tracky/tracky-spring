@@ -1,4 +1,4 @@
-package com.example.tracky._core.constant;
+package com.example.tracky._core.constants;
 
 // 상수를 도메인 별로 따로 만들어야 하나?
 public class Constant {

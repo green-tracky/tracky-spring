@@ -1,4 +1,4 @@
-package com.example.tracky.community.leaderboard.enums;
+package com.example.tracky._core.enums;
 
 public enum DateRangeType {
     WEEK,

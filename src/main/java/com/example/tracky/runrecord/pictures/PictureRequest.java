@@ -12,14 +12,14 @@ public class PictureRequest {
         private String imgBase64;
         private Double lat;
         private Double lon;
-        private LocalDateTime createdAt;
+        private LocalDateTime savedAt;
 
         public Picture toEntity(RunRecord runRecord) {
             return Picture.builder()
                     .fileUrl("") // 차후 나중에 url 로 변환 해야함
                     .lat(lat)
                     .lon(lon)
-                    .createdAt(createdAt)
+                    .savedAt(savedAt)
                     .runRecord(runRecord)
                     .build();
         }

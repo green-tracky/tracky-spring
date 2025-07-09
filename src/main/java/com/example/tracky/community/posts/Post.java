@@ -7,7 +7,6 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,7 +17,6 @@ import java.util.List;
 @Entity
 @Table(name = "post_tb")
 @Getter
-@NoArgsConstructor
 public class Post {
 
     @Id
@@ -26,7 +24,7 @@ public class Post {
     private Integer id;
 
     // 작성자
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
     private User user;
 
@@ -77,6 +75,9 @@ public class Post {
                 this.postPictures.add(postPicture);
             }
         }
+    }
+
+    protected Post() {
     }
 
 }

@@ -1,9 +1,9 @@
 package com.example.tracky.community.challenges.dto;
 
+import com.example.tracky._core.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.PeriodTypeEnum;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.RewardMaster;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
-import com.example.tracky.community.challenges.enums.PeriodTypeEnum;
 import com.example.tracky.community.challenges.utils.ChallengeUtil;
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.example.tracky._core.value;
+package com.example.tracky._core.values;
 
 import java.time.LocalDateTime;
 
