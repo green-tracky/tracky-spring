@@ -13,11 +13,8 @@ public class InviteStatusTypeConverter implements AttributeConverter<InviteStatu
 
     @Override
     public InviteStatusType convertToEntityAttribute(String dbData) {
-        if (dbData == null) return null;
-        try {
-            return InviteStatusType.valueOf(dbData);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("DB에 저장된 친구 요청 상태 값이 올바르지 않습니다: " + dbData);
-        }
+        if (dbData == null || dbData.isEmpty()) return null;
+        return InviteStatusType.valueOf(dbData);
     }
+
 }
