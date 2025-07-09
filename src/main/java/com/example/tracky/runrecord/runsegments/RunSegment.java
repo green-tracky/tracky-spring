@@ -21,7 +21,8 @@ public class RunSegment {
     private LocalDateTime endDate; // 구간 종료 시간. 프론트에서 받아야 한다
     private Integer pace; // 페이스. 초 단위. km 단위
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private RunRecord runRecord; // 부모 러닝 기록
 
     @OneToOne(mappedBy = "runSegment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)

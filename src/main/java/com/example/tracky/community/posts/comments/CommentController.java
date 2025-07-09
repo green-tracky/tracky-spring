@@ -25,7 +25,6 @@ public class CommentController {
             page = 1;
         }
 
-
         List<CommentResponse.ParentDTO> respParentDTO = commentService.getCommentsWithReplies(postId, page);
         return Resp.ok(respParentDTO);
     }

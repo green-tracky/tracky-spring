@@ -1,6 +1,6 @@
 package com.example.tracky.community.posts.comments;
 
-import com.example.tracky._core.constant.Constant;
+import com.example.tracky._core.constants.Constant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,13 @@ public class CommentRepository {
         return count.intValue();
     }
 
+
     /**
      * @param postId
      * @param page   기본값 1
      * @return
      */
+
     public List<Comment> findParentComments(Integer postId, Integer page) {
 
         return em.createQuery(

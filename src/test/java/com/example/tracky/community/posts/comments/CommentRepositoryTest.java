@@ -1,5 +1,6 @@
 package com.example.tracky.community.posts.comments;
 
+
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
@@ -48,6 +49,7 @@ public class CommentRepositoryTest {
         }
     }
 
+
     @Test
     void count_total_comments_in_page_test() {
         Integer postId = 1;
@@ -83,4 +85,5 @@ public class CommentRepositoryTest {
         log.debug("user.id: {}", post.getUser().getId());
         log.debug("runRecord.id: {}", post.getRunRecord().getId());
     }
+
 }

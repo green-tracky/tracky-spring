@@ -1,8 +1,8 @@
 package com.example.tracky.community.challenges.repository;
 
+import com.example.tracky._core.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.PeriodTypeEnum;
 import com.example.tracky.community.challenges.domain.Challenge;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
-import com.example.tracky.community.challenges.enums.PeriodTypeEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +32,13 @@ public class ChallengeRepository {
     public List<Challenge> findUnjoinedPublicChallenges(Set<Integer> joinedChallengeIds, LocalDateTime now) {
         // 참가한 챌린지가 없을 경우 NOT IN 절에서 에러가 날 수 있으므로 분기 처리합니다.
         if (joinedChallengeIds == null || joinedChallengeIds.isEmpty()) {
-            Query query = em.createQuery("select c from Challenge c where c.endDate > :now and c.type = :type", Challenge.class);
+            Query query = em.createQuery("select c from Challenge c where c.endDate > :now and c.type = :type order by c.createdAt", Challenge.class);
             query.setParameter("now", now);
             query.setParameter("type", ChallengeTypeEnum.PUBLIC);
             return query.getResultList();
         }
 
-        Query query = em.createQuery("select c from Challenge c where c.id not in :joinedChallengeIds and c.endDate > :now and c.type = :type", Challenge.class);
+        Query query = em.createQuery("select c from Challenge c where c.id not in :joinedChallengeIds and c.endDate > :now and c.type = :type order by c.createdAt", Challenge.class);
         query.setParameter("joinedChallengeIds", joinedChallengeIds);
         query.setParameter("now", now);
         query.setParameter("type", ChallengeTypeEnum.PUBLIC);
@@ -79,7 +79,7 @@ public class ChallengeRepository {
      * @param periodType
      * @return
      */
-    public boolean existsByYearAndMonthAndWeekAndPeriod(int year, int month, int week, int distance, PeriodTypeEnum periodType) {
+    public Boolean existsByYearAndMonthAndWeekAndPeriod(int year, int month, int week, int distance, PeriodTypeEnum periodType) {
         Long count = em.createQuery("select count(c) from Challenge c where c.challengeYear = :year and c.challengeMonth = :month and c.weekOfMonth = :week and c.targetDistance = :distance and c.periodType = :periodType", Long.class)
                 .setParameter("year", year)
                 .setParameter("month", month)
@@ -108,7 +108,7 @@ public class ChallengeRepository {
      * @param periodType
      * @return
      */
-    public boolean existsByYearAndMonthAndPeriod(int year, int month, int distance, PeriodTypeEnum periodType) {
+    public Boolean existsByYearAndMonthAndPeriod(int year, int month, int distance, PeriodTypeEnum periodType) {
         Long count = em.createQuery("select count (c) from Challenge c where c.challengeYear = :year and c.challengeMonth = :month and c.targetDistance = :distance and c.periodType = :periodType", Long.class)
                 .setParameter("year", year)
                 .setParameter("month", month)
@@ -156,9 +156,7 @@ public class ChallengeRepository {
     // 주간 챌린지 조회
     public List<Challenge> findByYearAndMonthAndWeekOfMonthAndPeriodType(
             int year, int month, int weekOfMonth, PeriodTypeEnum periodType) {
-        String jpql = "SELECT c FROM Challenge c WHERE c.challengeYear = :year AND c.challengeMonth = :month " +
-                "AND c.weekOfMonth = :weekOfMonth AND c.periodType = :periodType";
-        return em.createQuery(jpql, Challenge.class)
+        return em.createQuery("select c from Challenge c where c.challengeYear = :year and c.challengeMonth = :month and c.weekOfMonth = :weekOfMonth and c.periodType = :periodType order by c.createdAt", Challenge.class)
                 .setParameter("year", year)
                 .setParameter("month", month)
                 .setParameter("weekOfMonth", weekOfMonth)
@@ -169,9 +167,7 @@ public class ChallengeRepository {
     // 월간 챌린지 조회 (weekOfMonth 조건 없음)
     public List<Challenge> findByYearAndMonthAndPeriodType(
             int year, int month, PeriodTypeEnum periodType) {
-        String jpql = "SELECT c FROM Challenge c WHERE c.challengeYear = :year AND c.challengeMonth = :month " +
-                "AND c.periodType = :periodType";
-        return em.createQuery(jpql, Challenge.class)
+        return em.createQuery("select c from Challenge c where c.challengeYear = :year and c.challengeMonth = :month and c.periodType = :periodType order by c.createdAt", Challenge.class)
                 .setParameter("year", year)
                 .setParameter("month", month)
                 .setParameter("periodType", periodType)

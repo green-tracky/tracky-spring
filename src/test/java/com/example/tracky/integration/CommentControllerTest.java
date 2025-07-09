@@ -36,6 +36,7 @@ public class CommentControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then -> 댓글 완료 후 GPT 써서 작성
+
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
@@ -57,5 +58,6 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].totalPage").value(5));
         actions.andExpect(jsonPath("$.data[0].isFirst").value(true));
         actions.andExpect(jsonPath("$.data[0].isLast").value(false));
+
     }
 }

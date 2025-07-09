@@ -1,10 +1,10 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.constant.Constant;
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.constants.Constant;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky._core.value.TimeValue;
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.ChallengeRewardService;
 import com.example.tracky.community.challenges.domain.UserChallengeReward;
 import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
@@ -83,20 +83,20 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 2. 주간 기록 조회
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecordListPS = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
         Integer totalDistanceMeters = 0;
         Integer totalDurationSeconds = 0;
-        for (RunRecord record : runRecordList) {
+        for (RunRecord record : runRecordListPS) {
             totalDistanceMeters += record.getTotalDistanceMeters();
             totalDurationSeconds += record.getTotalDurationSeconds();
         }
 
         // 3. 거리/시간 합산 및 DTO 생성
-        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordListPS, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 뱃지 조회
-        List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
-        List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
+        List<RunBadgeAchv> runBadgesPS = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<AchievementHistoryItemDTO> runBadgeList = runBadgesPS.stream()
                 .collect(Collectors.groupingBy(
                         b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
                         () -> new LinkedHashMap<>(),
@@ -112,11 +112,11 @@ public class RunRecordService {
                 })
                 .collect(Collectors.toList());
 
-        //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
-        List<AchievementHistoryItemDTO> medalList = medals.stream()
+        //  챌린지 보상 조회
+        List<UserChallengeReward> challengeRewardsPS = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<AchievementHistoryItemDTO> rewardList = challengeRewardsPS.stream()
                 .collect(Collectors.groupingBy(
-                        m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
+                        r -> r.getRewardMaster() != null ? r.getRewardMaster().getId() : r.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
                         LinkedHashMap::new,
                         Collectors.toList()
                 ))
@@ -134,7 +134,7 @@ public class RunRecordService {
         // 통합 DTO로 변환
         List<AchievementHistoryItemDTO> achievementHistorys = new ArrayList<>();
         achievementHistorys.addAll(runBadgeList);
-        achievementHistorys.addAll(medalList);
+        achievementHistorys.addAll(rewardList);
 
         // 시간순으로 정렬
         achievementHistorys = achievementHistorys.stream()
@@ -154,10 +154,9 @@ public class RunRecordService {
 
 
         // 5. 최근 3개 러닝 기록 + DTO 변환
-        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
-        List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
+        List<RunRecord> recentRunRecordsPS = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
+        List<RecentRunsDTO> recentRunList = recentRunRecordsPS.stream()
                 .map(r -> new RecentRunsDTO(r))
-                .limit(3)
                 .toList();
 
         // 6. 주차 라벨 생성 (기준 baseDate가 속한 '년-월'에 해당하는 주차만 필터링)
@@ -230,20 +229,20 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 2. 해당 기간의 기록 조회 및 거리/시간 합산
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecordListPS = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
         int totalDistanceMeters = 0;
         int totalDurationSeconds = 0;
-        for (RunRecord record : runRecordList) {
+        for (RunRecord record : runRecordListPS) {
             totalDistanceMeters += record.getTotalDistanceMeters();
             totalDurationSeconds += record.getTotalDurationSeconds();
         }
 
         // 3. 누적 통계 DTO 생성
-        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
+        AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordListPS, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 뱃지 조회
-        List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
-        List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
+        List<RunBadgeAchv> runBadgesPS = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<AchievementHistoryItemDTO> runBadgeList = runBadgesPS.stream()
                 .collect(Collectors.groupingBy(
                         b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
                         () -> new LinkedHashMap<>(),

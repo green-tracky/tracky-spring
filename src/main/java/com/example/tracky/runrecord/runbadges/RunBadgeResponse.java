@@ -1,9 +1,9 @@
 package com.example.tracky.runrecord.runbadges;
 
+import com.example.tracky._core.enums.RunBadgeTypeEnum;
 import com.example.tracky.community.challenges.domain.RewardMaster;
 import com.example.tracky.community.challenges.domain.UserChallengeReward;
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.runrecord.runbadges.enums.RunBadgeTypeEnum;
 import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
 import lombok.Data;
 

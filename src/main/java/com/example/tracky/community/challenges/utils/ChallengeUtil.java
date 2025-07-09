@@ -1,6 +1,6 @@
 package com.example.tracky.community.challenges.utils;
 
-import com.example.tracky._core.value.TimeValue;
+import com.example.tracky._core.values.TimeValue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

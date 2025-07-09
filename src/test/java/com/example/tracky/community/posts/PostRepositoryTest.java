@@ -1,8 +1,12 @@
 package com.example.tracky.community.posts;
 
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.comments.Comment;
 import com.example.tracky.runrecord.RunRecord;
+import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +18,18 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 
 @Slf4j
-@Import(PostRepository.class)
+@Import({PostRepository.class, UserRepository.class, RunRecordRepository.class})
 @DataJpaTest
 public class PostRepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RunRecordRepository runRecordRepository;
 
     @Autowired
     private EntityManager em;
@@ -46,11 +56,11 @@ public class PostRepositoryTest {
 
     @Test
     void save_test() {
-        User user = User.builder().build();
-        em.persist(user);
+        User user = userRepository.findById(1).
+                orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        RunRecord runRecord = RunRecord.builder().build();
-        em.persist(runRecord);
+        RunRecord runRecord = runRecordRepository.findById(1)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         Post post = Post.builder()
                 .user(user)

@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
+import com.example.tracky._core.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.pictures.Picture;
 import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
 import com.example.tracky.runrecord.runsegments.RunSegment;
@@ -39,7 +39,8 @@ public class RunRecord {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 추가함
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
