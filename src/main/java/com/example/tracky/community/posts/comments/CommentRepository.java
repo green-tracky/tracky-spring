@@ -22,7 +22,7 @@ public class CommentRepository {
         return count.intValue();
     }
 
-    public List<Comment> findParentComments(Integer postId, int page) {
+    public List<Comment> findParentComments(Integer postId, Integer page) {
 
         return em.createQuery(
                         "select c from Comment c where c.post.id = :postId and c.parent is null order by c.id desc",

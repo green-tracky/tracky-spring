@@ -20,7 +20,7 @@ public class CommentController {
     @GetMapping("/community/posts/{postId}/comments")
     public ResponseEntity<?> getComments(
             @PathVariable Integer postId,
-            @RequestParam(defaultValue = "1") int page // page 파라미터 없으면 기본값 1
+            @RequestParam(defaultValue = "1") Integer page // page 파라미터 없으면 기본값 1
     ) {
         List<CommentResponse.DTO> respDTO = commentService.getCommentsWithReplies(postId, page);
         return Resp.ok(respDTO);

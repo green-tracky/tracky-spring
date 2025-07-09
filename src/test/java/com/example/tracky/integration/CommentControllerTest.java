@@ -19,7 +19,7 @@ public class CommentControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("댓글 조회 성공")
-    void get_comment_test() throws Exception {
+    void get_comments_test() throws Exception {
         // given
         int postId = 1;
 

@@ -21,7 +21,7 @@ public class CommentRepositoryTest {
     private EntityManager em;
 
     @Test
-    void findParentComments_test() {
+    void find_parent_comments_test() {
         Integer postId = 1;
         int page = 1;
 
@@ -32,7 +32,7 @@ public class CommentRepositoryTest {
     }
 
     @Test
-    void findChildCommentsByParentIds_test() {
+    void find_child_comments_by_parent_ids_test() {
 
         // given
         List<Integer> parentIds = List.of(1, 2, 3); // 테스트용 부모 댓글 ID 목록
