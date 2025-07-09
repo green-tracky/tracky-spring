@@ -1,6 +1,6 @@
 package com.example.tracky.user.friends.friendinvite;
 
-import com.example.tracky.user.friends.friendinvite.enums.InviteStatusType;
+import com.example.tracky._core.enums.InviteStatusEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ public class FriendInviteResponse {
         private Integer id;
         private String profileUrl; // 프로필 이미지 주소
         private String name;
-        private InviteStatusType status;
+        private InviteStatusEnum status;
         private LocalDateTime createdAt;
 
         public InvitesDTO(FriendInvite friendInvite) {
@@ -45,7 +45,7 @@ public class FriendInviteResponse {
     @Data
     public static class ResponseDTO {
         private Integer id;
-        private InviteStatusType status;
+        private InviteStatusEnum status;
         private LocalDateTime responsedAt;
 
         public ResponseDTO(FriendInvite invite) {

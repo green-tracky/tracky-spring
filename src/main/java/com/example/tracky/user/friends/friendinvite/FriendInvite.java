@@ -1,8 +1,8 @@
 package com.example.tracky.user.friends.friendinvite;
 
+import com.example.tracky._core.enums.InviteStatusEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky.user.User;
-import com.example.tracky.user.friends.friendinvite.enums.InviteStatusType;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,12 +35,12 @@ public class FriendInvite {
     @JoinColumn(nullable = false)
     private LocalDateTime createdAt;
 
-    private InviteStatusType status = InviteStatusType.WAITING;
+    private InviteStatusEnum status = InviteStatusEnum.PENDING;
 
     private LocalDateTime responsedAt;
 
     @Builder
-    public FriendInvite(User fromUser, User toUser, LocalDateTime createdAt, InviteStatusType status, LocalDateTime responsedAt) {
+    public FriendInvite(User fromUser, User toUser, LocalDateTime createdAt, InviteStatusEnum status, LocalDateTime responsedAt) {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.createdAt = createdAt;
@@ -52,18 +52,18 @@ public class FriendInvite {
     }
 
     public void accept() {
-        if (this.status != InviteStatusType.WAITING) {
+        if (this.status != InviteStatusEnum.PENDING) {
             throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
-        this.status = InviteStatusType.ACCEPTED;
+        this.status = InviteStatusEnum.ACCEPTED;
         this.responsedAt = LocalDateTime.now();
     }
 
     public void reject() {
-        if (this.status != InviteStatusType.WAITING) {
+        if (this.status != InviteStatusEnum.PENDING) {
             throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
-        this.status = InviteStatusType.REJECTED;
+        this.status = InviteStatusEnum.REJECTED;
         this.responsedAt = LocalDateTime.now();
     }
 }

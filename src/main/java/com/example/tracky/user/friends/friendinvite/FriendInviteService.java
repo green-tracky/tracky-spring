@@ -1,11 +1,12 @@
 package com.example.tracky.user.friends.friendinvite;
 
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.InviteStatusEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.user.User;
 import com.example.tracky.user.friends.Friend;
 import com.example.tracky.user.friends.FriendRepository;
-import com.example.tracky.user.friends.friendinvite.utils.FriendInviteUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.tracky.user.friends.friendinvite.enums.InviteStatusType.WAITING;
 
 @Service
 @RequiredArgsConstructor
@@ -31,10 +31,12 @@ public class FriendInviteService {
      */
     @Transactional
     public FriendInviteRequest.SaveDTO friendInvite(User fromUser, User toUser) {
+        // 본인에게 하는 요청 방지
         if (fromUser.getId().equals(toUser.getId())) {
             throw new ExceptionApi400(ErrorCodeEnum.INVALID_SELF_REQUEST);
         }
 
+        // 중복 요청 방지
         if (friendInviteRepository.existsWaitingInvite(fromUser, toUser)) {
             throw new ExceptionApi400(ErrorCodeEnum.DUPLICATE_FRIEND_INVITE);
         }
@@ -43,7 +45,7 @@ public class FriendInviteService {
                 .fromUser(fromUser)
                 .toUser(toUser)
                 .createdAt(LocalDateTime.now())
-                .status(WAITING)
+                .status(InviteStatusEnum.PENDING)
                 .build(); // 응답시간은 요청 받으면 넣어주기 / status 기본 값은 WAITING
 
         FriendInvite savePS = friendInviteRepository.save(invite);
@@ -78,7 +80,7 @@ public class FriendInviteService {
         FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
 
         // 권한 체크
-        FriendInviteUtil.FriendInviteResult(invite, user);
+        checkInviteRecipient(invite, user);
 
         // DB 상태 변경
         invite.accept();
@@ -103,10 +105,23 @@ public class FriendInviteService {
         FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
 
         // 권한 체크
-        FriendInviteUtil.FriendInviteResult(invite, user);
+        checkInviteRecipient(invite, user);
 
         // DB 상태 변경
         invite.reject();
         return new FriendInviteResponse.ResponseDTO(invite);
     }
+
+    /**
+     * 권한 체크
+     *
+     * @param invite
+     * @param user
+     */
+    private void checkInviteRecipient(FriendInvite invite, User user) {
+        if (!invite.getToUser().getId().equals(user.getId())) {
+            throw new ExceptionApi404(ErrorCodeEnum.ACCESS_DENIED);
+        }
+    }
+
 }
