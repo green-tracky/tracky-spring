@@ -2,4 +2,24 @@
 -- 2. ssar가 대댓글 작성 (parent_id = 1)
 INSERT INTO comment_tb (user_id, post_id, content, parent_id, created_at, updated_at)
 VALUES (3, 1, '멋진 기록이에요!', NULL, NOW(), NOW()),
-       (1, 1, '감사합니다 :)', 1, NOW(), NOW());
+       (1, 1, '감사합니다 :)', 1, NOW(), NOW()),
+       (1, 1, '정말 멋진 기록이네요!', NULL, NOW(), NOW()),
+       (2, 1, '대단해요! 저도 자극받고 갑니다.', NULL, NOW(), NOW()),
+       (3, 1, '이런 글 너무 좋아요!', NULL, NOW(), NOW()),
+       (1, 1, '기록 공유 감사합니다!', NULL, NOW(), NOW()),
+       (2, 1, '자세한 설명이 인상 깊어요.', NULL, NOW(), NOW()),
+       (3, 1, '다음 글도 기대됩니다.', NULL, NOW(), NOW()),
+       (1, 1, '멋져요. 응원합니다!', NULL, NOW(), NOW()),
+       (2, 1, '꾸준함이 대단하네요.', NULL, NOW(), NOW()),
+       (3, 1, '공감하고 갑니다!', NULL, NOW(), NOW()),
+       (1, 1, '진짜 대단해요!!', NULL, NOW(), NOW()),
+       (2, 1, '매번 좋은 글 감사합니다.', NULL, NOW(), NOW()),
+       (3, 1, '이런 기록 보면 저도 힘나요.', NULL, NOW(), NOW()),
+       (1, 1, '한 수 배워갑니다.', NULL, NOW(), NOW()),
+       (2, 1, '기록 방식이 인상적이네요.', NULL, NOW(), NOW()),
+       (3, 1, '저도 이런 식으로 해봐야겠어요.', NULL, NOW(), NOW()),
+       (1, 1, '열정이 느껴져요.', NULL, NOW(), NOW()),
+       (2, 1, '댓글 안 달 수가 없네요.', NULL, NOW(), NOW()),
+       (3, 1, '정성 가득한 포스팅이에요.', NULL, NOW(), NOW()),
+       (1, 1, '앞으로도 잘 부탁드려요.', NULL, NOW(), NOW()),
+       (2, 1, '감동적인 글이었습니다.', NULL, NOW(), NOW());
