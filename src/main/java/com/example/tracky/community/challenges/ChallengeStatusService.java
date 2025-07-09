@@ -80,17 +80,17 @@ public class ChallengeStatusService {
 
         // 참가자의 챌린지 기간내의 모든 러닝 조회
         for (ChallengeJoin join : challengeJoinsPS) {
-            List<RunRecord> records = runRecordRepository.findAllByCreatedAtBetween(
+            List<RunRecord> recordsPS = runRecordRepository.findAllByCreatedAtBetween(
                     join.getUser().getId(), challenge.getStartDate(), challenge.getEndDate());
 
-            if (records.isEmpty()) continue; // 없으면 다음 참가자 계산
+            if (recordsPS.isEmpty()) continue; // 없으면 다음 참가자 계산
 
             // 챌린지 기간내의 첫 러닝 기록날짜
-            LocalDateTime startAt = records.get(0).getCreatedAt();
+            LocalDateTime startAt = recordsPS.get(0).getCreatedAt();
 
             // 챌린지 목표달성 경과 시간 계산
             int sum = 0;
-            for (RunRecord record : records) {
+            for (RunRecord record : recordsPS) {
                 sum += record.getTotalDistanceMeters();
                 if (sum >= challenge.getTargetDistance()) {
                     LocalDateTime endAt = record.getCreatedAt();
@@ -110,13 +110,13 @@ public class ChallengeStatusService {
         // 금, 은, 동 으로 최대 3번 반복한다
         for (int i = 0; i < Math.min(3, achievers.size()); i++) {
             User user = achievers.get(i).user;
-            RewardMaster medalReward = rewardMasterRepository.findByRewardName(medals[i])
+            RewardMaster medalRewardPS = rewardMasterRepository.findByRewardName(medals[i])
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.REWARD_MASTER_NOT_FOUND));
 
             UserChallengeReward reward = UserChallengeReward.builder()
                     .user(user)
                     .challenge(challenge)
-                    .rewardMaster(medalReward)
+                    .rewardMaster(medalRewardPS)
                     .type(ChallengeTypeEnum.PRIVATE)
                     .build();
             userChallengeRewardRepository.save(reward);
@@ -129,11 +129,11 @@ public class ChallengeStatusService {
     @Transactional
     public void cleanupEmptyPrivateChallenges() {
         // 1. 참가자가 0명인, '진행 중인' 모든 사설 챌린지를 조회
-        List<Challenge> emptyChallenges = challengeRepository.findOngoingEmptyPrivateChallenges();
+        List<Challenge> emptyChallengesPS = challengeRepository.findOngoingEmptyPrivateChallenges();
 
         // 2. 조회된 챌린지가 있다면, DB에서 삭제
-        if (emptyChallenges != null && !emptyChallenges.isEmpty()) {
-            challengeRepository.deleteAllEmptyChallenge(emptyChallenges);
+        if (emptyChallengesPS != null && !emptyChallengesPS.isEmpty()) {
+            challengeRepository.deleteAllEmptyChallenge(emptyChallengesPS);
         }
     }
 

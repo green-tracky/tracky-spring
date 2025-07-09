@@ -152,7 +152,7 @@ public class RunRecordRepository {
      * @return
      */
     public List<RunRecord> findAllByUserId(Integer userId) {
-        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId", RunRecord.class);
+        Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt", RunRecord.class);
         query.setParameter("userId", userId);
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
@@ -182,7 +182,7 @@ public class RunRecordRepository {
      */
     public List<RunRecord> findAllByCreatedAtBetween(Integer userId, LocalDateTime start, LocalDateTime end) {
         Query query = em.createQuery(
-                "select r from RunRecord r where r.user.id = :userId and r.createdAt between :start and :end",
+                "select r from RunRecord r where r.user.id = :userId and r.createdAt between :start and :end order by r.createdAt",
                 RunRecord.class);
         query.setParameter("userId", userId);
         query.setParameter("start", start);
@@ -195,7 +195,7 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByCreatedAtBetween(List<Integer> userIds, LocalDateTime start, LocalDateTime end) {
         if (userIds == null || userIds.isEmpty()) return List.of(); // 빈 목록 처리
         Query query = em.createQuery(
-                "select r from RunRecord r where r.user.id in :userIds and r.createdAt between :start and :end",
+                "select r from RunRecord r where r.user.id in :userIds and r.createdAt between :start and :end order by r.createdAt",
                 RunRecord.class);
         query.setParameter("userIds", userIds);
         query.setParameter("start", start);
