@@ -46,7 +46,7 @@ public class ChallengeJoinService {
 
     @Transactional
     public void leave(Integer id, User user) {
-        // 챌린지 참여 조회
+        // 내가 참여한 챌린지 조회
         ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND));
 
