@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/s/api")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/oauth/login")
-    public ResponseEntity<?> login(@RequestBody String idToken) {
-        userService.카카오로그인(idToken);
+    public ResponseEntity<?> kakaoLogin(@RequestBody String idToken) {
+        userService.kakaoLogin(idToken);
         return Resp.ok(idToken);
     }
 

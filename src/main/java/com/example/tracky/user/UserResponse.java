@@ -22,16 +22,20 @@ public class UserResponse {
     @Data
     public static class IdTokenDTO {
         private String idToken;
-        private Integer id; // 유저 아이디
-        private String username; // 유저 이름
-        private ProviderTypeEnum provider;
+        private Integer id; // 유저 db 아이디
+        private String username; // 유저 이름 토큰에서 가져옴
+        private String profileUrl; // 유저 프로필 이미지 토큰에서 가져옴
+        private String loginId; // 로그인시 식별할 아이디 토큰의 정보로 만듦
+        private ProviderTypeEnum provider; // OIDC 제공회사
 
         public IdTokenDTO(User user, String idToken) {
             this.idToken = idToken;
             this.id = user.getId();
             this.username = user.getUsername();
+            this.profileUrl = user.getProfileUrl();
+            this.loginId = user.getLoginId();
+            this.provider = user.getProvider();
         }
-
     }
 
 }

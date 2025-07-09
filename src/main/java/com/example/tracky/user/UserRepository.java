@@ -54,4 +54,20 @@ public class UserRepository {
     public Optional<User> findById(Integer userId) {
         return Optional.ofNullable(em.find(User.class, userId));
     }
+
+    /**
+     * 토큰으로 db 에서 user 조회할 때 사용
+     *
+     * @param loginId
+     * @return
+     */
+    public Optional<User> findByLoginId(String loginId) {
+        Query query = em.createQuery("select u from User u where u.loginId = :loginId", User.class);
+        query.setParameter("loginId", loginId);
+        try {
+            return Optional.of((User) query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
+    }
 }
