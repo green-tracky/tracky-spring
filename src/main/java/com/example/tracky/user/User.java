@@ -1,6 +1,7 @@
 package com.example.tracky.user;
 
 import com.example.tracky._core.enums.GenderEnum;
+import com.example.tracky._core.enums.ProviderTypeEnum;
 import com.example.tracky._core.enums.UserTypeEnum;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.user.runlevel.RunLevel;
@@ -20,7 +21,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
     @Column(nullable = false)
     private String username; // 유저 이름
     private String email; // 유저 이메일
@@ -28,10 +29,14 @@ public class User {
     private Double height; // 177.5(cm)
     private Double weight; // 75.5(kg)
     private GenderEnum gender; // (남 | 여)
+    private String location; // 활동지
+    private String letter; // 자기소개
 
     @Column(nullable = false)
     private UserTypeEnum userType; // (일반 | 관리자)
-    private String provider; // oauth 제공자 (kakao, google)
+
+    @Enumerated(EnumType.STRING) // 이넘 영어 그대로 사용함
+    private ProviderTypeEnum provider; // oauth 제공자 (kakao, google)
     private String userTag; // #UUID 6자리
     private String flutterTokenId; // 기기 식별 아이디 // 알림서비스용
 
@@ -46,7 +51,7 @@ public class User {
     private List<RunRecord> runRecords = new ArrayList<>(); // 자식 러닝들
 
     @Builder
-    public User(Integer id, String username, String email, String profileUrl, Double height, Double weight, GenderEnum gender, UserTypeEnum userType, String provider, String userTag, String flutterTokenId, RunLevel runLevel, List<RunRecord> runRecords) {
+    public User(Integer id, String username, String email, String profileUrl, Double height, Double weight, GenderEnum gender, UserTypeEnum userType, ProviderTypeEnum provider, String userTag, String flutterTokenId, RunLevel runLevel, List<RunRecord> runRecords) {
         this.id = id;
         this.username = username;
         this.email = email;
