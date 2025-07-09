@@ -1,7 +1,7 @@
 package com.example.tracky.community.challenges.repository;
 
+import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.domain.RewardMaster;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class RewardMasterRepository {
      */
     public List<RewardMaster> findAllByType(ChallengeTypeEnum type) {
         Query query = em.createQuery(
-                "select r from RewardMaster r where r.challengeType = :type", RewardMaster.class);
+                "select r from RewardMaster r where r.challengeType = :type order by r.createdAt", RewardMaster.class);
         query.setParameter("type", type);
         return query.getResultList();
     }

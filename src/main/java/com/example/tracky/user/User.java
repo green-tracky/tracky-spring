@@ -1,8 +1,8 @@
 package com.example.tracky.user;
 
+import com.example.tracky._core.enums.GenderEnum;
+import com.example.tracky._core.enums.UserTypeEnum;
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.user.enums.GenderEnum;
-import com.example.tracky.user.enums.UserTypeEnum;
 import com.example.tracky.user.runlevel.RunLevel;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -20,18 +20,23 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
+    @Column(nullable = false)
     private String username; // 유저 이름
     private String email; // 유저 이메일
     private String profileUrl; // 프로필 이미지 주소
     private Double height; // 177.5(cm)
     private Double weight; // 75.5(kg)
     private GenderEnum gender; // (남 | 여)
+
+    @Column(nullable = false)
     private UserTypeEnum userType; // (일반 | 관리자)
     private String provider; // oauth 제공자 (kakao, google)
     private String userTag; // #UUID 6자리
     private String flutterTokenId; // 기기 식별 아이디 // 알림서비스용
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private RunLevel runLevel; // 유저 생성할때 기본적으로 1이 들어가야함
 
     @CreationTimestamp

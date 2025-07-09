@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord.runbadges;
 
-import com.example.tracky.runrecord.runbadges.enums.RunBadgeTypeEnum;
+import com.example.tracky._core.enums.RunBadgeTypeEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

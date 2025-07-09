@@ -1,14 +1,14 @@
 package com.example.tracky.community.challenges;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
-import com.example.tracky._core.value.TimeValue;
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
 import com.example.tracky.community.challenges.dto.ChallengeRequest;
 import com.example.tracky.community.challenges.dto.ChallengeResponse;
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;

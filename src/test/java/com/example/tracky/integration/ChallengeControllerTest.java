@@ -164,7 +164,7 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.status().isOk());
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
-        
+
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(7));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("달리기 초보 모여라!"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
