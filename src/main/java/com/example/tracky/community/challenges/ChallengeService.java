@@ -93,8 +93,8 @@ public class ChallengeService {
      * @return
      */
     public ChallengeResponse.DetailDTO getChallenge(Integer id, User user) {
-        // 1. 챌린지 엔티티 조회 (공식/사설 구분)
-        Challenge challenge = challengeRepository.findById(id)
+        // 1. 챌린지 엔티티 조회
+        Challenge challengePS = challengeRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
 
         // 2. 참가자 수 조회
@@ -109,25 +109,25 @@ public class ChallengeService {
         if (isJoined) {
             myDistance = runRecordRepository.findTotalDistanceByUserIdAndDateRange(
                     user.getId(),
-                    challenge.getStartDate(),
-                    challenge.getEndDate()
+                    challengePS.getStartDate(),
+                    challengePS.getEndDate()
             );
             myRank = challengeJoinRepository.findRankByChallengeIdAndUserId(id, user.getId());
         }
 
-        // 5. 리워드 정보 (공식/사설 모두 RewardMaster에서 조회)
+        // 5. 리워드 정보 (공식/사설 모두 리스트로 조회)
         List<RewardMaster> rewardMasters;
-        if (challenge.getType() == ChallengeTypeEnum.PRIVATE) {
+        if (challengePS.getType() == ChallengeTypeEnum.PRIVATE) {
             // 사설 챌린지: type이 사설인 모든 리워드
             rewardMasters = rewardMasterRepository.findAllByType(ChallengeTypeEnum.PRIVATE);
         } else {
             // 공개 챌린지: 챌린지 이름과 rewardName이 동일한 리워드
-            rewardMasters = rewardMasterRepository.findAllByRewardName(challenge.getName());
+            rewardMasters = rewardMasterRepository.findAllByRewardName(challengePS.getName());
         }
 
         // 6. DTO 조립
         return new ChallengeResponse.DetailDTO(
-                challenge,
+                challengePS,
                 participantCount,
                 myDistance,
                 myRank,
@@ -149,7 +149,7 @@ public class ChallengeService {
                 .build();
         challengeJoinRepository.save(join);
 
-        // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환합니다.
+        // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환
         return new ChallengeResponse.SaveDTO(challengePS);
     }
 }
