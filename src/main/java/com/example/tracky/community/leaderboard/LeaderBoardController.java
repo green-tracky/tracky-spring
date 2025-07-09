@@ -3,7 +3,6 @@ package com.example.tracky.community.leaderboard;
 import com.example.tracky._core.enums.DateRangeType;
 import com.example.tracky._core.utils.Resp;
 import com.example.tracky._core.values.TimeValue;
-import com.example.tracky.community.leaderboard.enums.DateRangeType;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -10,7 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-import static com.example.tracky._core.error.enums.ErrorCodeEnum.INVALID_INVITE_RESPONSE_STATE;
+import static com.example.tracky._core.enums.ErrorCodeEnum.INVALID_INVITE_RESPONSE_STATE;
+
 
 @Getter
 @NoArgsConstructor
