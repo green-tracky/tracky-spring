@@ -30,7 +30,7 @@ public class FriendInviteService {
      * @return SaveDTO
      */
     @Transactional
-    public FriendInviteRequest.SaveDTO sendInvite(User fromUser, User toUser) {
+    public FriendInviteRequest.SaveDTO friendInvite(User fromUser, User toUser) {
         if (fromUser.getId().equals(toUser.getId())) {
             throw new ExceptionApi400(ErrorCodeEnum.INVALID_SELF_REQUEST);
         }
@@ -56,7 +56,7 @@ public class FriendInviteService {
      * @param user
      * @return DTO
      */
-    public FriendInviteResponse.DTO findAll(User user) {
+    public FriendInviteResponse.DTO getFriendInvite(User user) {
         List<FriendInvite> invites = friendInviteRepository.findAllByUserId(user.getId());
         List<FriendInviteResponse.InvitesDTO> inviteList = new ArrayList<>();
         for (FriendInvite invite : invites) {
@@ -74,7 +74,7 @@ public class FriendInviteService {
      * @return ResponseDTO
      */
     @Transactional
-    public FriendInviteResponse.ResponseDTO acceptInvite(Integer inviteId, User user) {
+    public FriendInviteResponse.ResponseDTO friendInviteAccept(Integer inviteId, User user) {
         FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
 
         // 권한 체크
@@ -99,9 +99,9 @@ public class FriendInviteService {
      * @return ResponseDTO
      */
     @Transactional
-    public FriendInviteResponse.ResponseDTO rejectInvite(Integer inviteId, User user) {
+    public FriendInviteResponse.ResponseDTO friendInviteReject(Integer inviteId, User user) {
         FriendInvite invite = friendInviteRepository.findValidateByInviteId(inviteId, user.getId());
-        
+
         // 권한 체크
         FriendInviteUtil.FriendInviteResult(invite, user);
 

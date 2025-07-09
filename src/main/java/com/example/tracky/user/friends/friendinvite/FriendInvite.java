@@ -35,8 +35,7 @@ public class FriendInvite {
     @JoinColumn(nullable = false)
     private LocalDateTime createdAt;
 
-    @Enumerated(EnumType.STRING)
-    InviteStatusType status = InviteStatusType.WAITING;
+    private InviteStatusType status = InviteStatusType.WAITING;
 
     private LocalDateTime responsedAt;
 
