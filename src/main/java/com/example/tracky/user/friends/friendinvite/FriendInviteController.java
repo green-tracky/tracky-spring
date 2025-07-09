@@ -3,16 +3,21 @@ package com.example.tracky.user.friends.friendinvite;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
 public class FriendInviteController {
     private final FriendInviteService friendInviteService;
+
+    @GetMapping("/friend-invite")
+    public ResponseEntity<?> getFriendInvite() {
+        User user = User.builder().id(1).build();
+
+        FriendInviteResponse.DTO respDTO = friendInviteService.findAll(user);
+        return ResponseEntity.ok(respDTO);
+    }
 
     @PostMapping("/friend-invite")
     public ResponseEntity<?> friendInvite(@RequestParam Integer toUserId) {
