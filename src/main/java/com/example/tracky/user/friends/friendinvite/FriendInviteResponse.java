@@ -27,14 +27,14 @@ public class FriendInviteResponse {
         private Integer id;
         private String profileUrl; // 프로필 이미지 주소
         private String name;
-        private InviteStatusType status;
+        private String status;
         private LocalDateTime createdAt;
 
         public InvitesDTO(FriendInvite friendInvite) {
             this.id = friendInvite.getId();
             this.profileUrl = friendInvite.getToUser().getProfileUrl();
             this.name = friendInvite.getToUser().getUsername();
-            this.status = friendInvite.getStatus();
+            this.status = friendInvite.getStatus().getDisplayName();
             this.createdAt = friendInvite.getCreatedAt();
         }
     }
