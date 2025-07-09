@@ -31,12 +31,10 @@ public class FriendInviteService {
      */
     @Transactional
     public FriendInviteRequest.SaveDTO sendInvite(User fromUser, User toUser) {
-        // TODO : Enum 추가
         if (fromUser.getId().equals(toUser.getId())) {
             throw new ExceptionApi400(ErrorCodeEnum.INVALID_SELF_REQUEST);
         }
 
-        // TODO : Enum 추가
         if (friendInviteRepository.existsWaitingInvite(fromUser, toUser)) {
             throw new ExceptionApi400(ErrorCodeEnum.DUPLICATE_FRIEND_INVITE);
         }

@@ -13,6 +13,7 @@ public class FriendInviteController {
 
     @GetMapping("/friend-invite")
     public ResponseEntity<?> getFriendInvite() {
+        // TODO: 로그인 유저로 교체
         User user = User.builder().id(1).build();
 
         FriendInviteResponse.DTO respDTO = friendInviteService.findAll(user);
