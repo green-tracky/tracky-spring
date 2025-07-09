@@ -1,5 +1,6 @@
 package com.example.tracky.community.posts.comments;
 
+import com.example.tracky._core.constant.Constant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -22,14 +24,19 @@ public class CommentRepository {
         return count.intValue();
     }
 
+    /**
+     * @param postId
+     * @param page   기본값 1
+     * @return
+     */
     public List<Comment> findParentComments(Integer postId, Integer page) {
 
         return em.createQuery(
                         "select c from Comment c where c.post.id = :postId and c.parent is null order by c.id desc",
                         Comment.class)
                 .setParameter("postId", postId)
-                .setFirstResult((page - 1) * 5)
-                .setMaxResults(5)
+                .setFirstResult((page - 1) * Constant.PAGE_SIZE)
+                .setMaxResults(Constant.PAGE_SIZE)
                 .getResultList();
     }
 
@@ -44,4 +51,65 @@ public class CommentRepository {
                 .setParameter("ids", parentIds)
                 .getResultList();
     }
+
+    public Comment save(Comment comment) {
+        em.persist(comment);
+        return comment;
+    }
+
+    public Optional<Comment> findById(Integer parentId) {
+        return Optional.ofNullable(em.find(Comment.class, parentId));
+    }
+
+    public Integer countParentComments(Integer postId) {
+        String jpql = """
+                    SELECT COUNT(c)
+                    FROM Comment c
+                    WHERE c.post.id = :postId AND c.parent IS NULL
+                """;
+
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("postId", postId)
+                .getSingleResult();
+
+        Integer parentCount = count.intValue();
+        return parentCount;
+    }
+
+
+    public Integer countTotalCommentsInPage(Integer postId, Integer page) {
+        // 1. 부모 댓글 조회 (페이징)
+        String jpql = """
+                    SELECT c.id
+                    FROM Comment c
+                    WHERE c.post.id = :postId AND c.parent IS NULL
+                    ORDER BY c.id DESC
+                """;
+
+        List<Integer> parentIds = em.createQuery(jpql, Integer.class)
+                .setParameter("postId", postId)
+                .setFirstResult((page - 1) * Constant.PAGE_SIZE)
+                .setMaxResults(Constant.PAGE_SIZE)
+                .getResultList();
+
+        if (parentIds.isEmpty()) {
+            return 0;
+        }
+
+        // 2. 대댓글 개수 조회
+
+        String childCountJpql = """
+                    SELECT COUNT(c)
+                    FROM Comment c
+                    WHERE c.parent.id IN :parentIds
+                """;
+
+        Long childCount = em.createQuery(childCountJpql, Long.class)
+                .setParameter("parentIds", parentIds)
+                .getSingleResult();
+
+        // 3. 전체 수 = 부모 + 자식
+        return parentIds.size() + childCount.intValue();
+    }
+
 }

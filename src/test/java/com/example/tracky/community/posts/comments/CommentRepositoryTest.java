@@ -45,4 +45,20 @@ public class CommentRepositoryTest {
             log.debug("child comment = {}", c.getContent());
         }
     }
+
+    @Test
+    void count_total_comments_in_page_test() {
+        Integer postId = 1;
+        Integer page = 1;
+
+        Integer totalCount = commentRepository.countTotalCommentsInPage(postId, page);
+        log.debug(String.valueOf(totalCount));
+    }
+
+    @Test
+    void countParentComments() {
+        Integer postId = 1;
+        Integer parentCount = commentRepository.countParentComments(postId);
+        log.debug(String.valueOf(parentCount));
+    }
 }

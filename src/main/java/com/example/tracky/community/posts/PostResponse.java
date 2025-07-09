@@ -67,14 +67,14 @@ public class PostResponse {
         private final UserResponse.PostUserDTO user; // User 엔티티를 -> DTO 로
         private final RunRecordResponse.PostRunRecordDTO runRecord;
         private final List<PictureResponse.DTO> pictures;
-        private final List<CommentResponse.DTO> comments;
+        private final List<CommentResponse.ParentDTO> comments;
         private final Integer likeCount;
         private final Integer commentCount;
         private final Boolean isLiked;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
 
-        public DetailDTO(Post post, List<CommentResponse.DTO> comments, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked) {
+        public DetailDTO(Post post, List<CommentResponse.ParentDTO> comments, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked) {
             this.id = post.getId();
             this.content = post.getContent();
             this.user = new UserResponse.PostUserDTO(post.getUser());
