@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -48,16 +49,16 @@ public class FriendInviteRepository {
      * @param userId   로그인한 유저 ID
      * @return 친구 요청 객체
      */
-    public FriendInvite findValidateByInviteId(Integer inviteId, Integer userId) {
+    public Optional<FriendInvite> findValidateByInviteId(Integer inviteId, Integer userId) {
         try {
-            return em.createQuery("select f from FriendInvite f where f.id = :inviteId and f.toUser.id = :userId ", FriendInvite.class)
+            return Optional.ofNullable(em.createQuery("select f from FriendInvite f where f.id = :inviteId and f.toUser.id = :userId ", FriendInvite.class)
                     .setParameter("inviteId", inviteId)
                     .setParameter("userId", userId)
-                    .getSingleResult();
-
+                    .getSingleResult());
         } catch (RuntimeException e) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
+
     }
 
     /**
@@ -67,7 +68,7 @@ public class FriendInviteRepository {
      * @param toUser   요청 받은 유저
      * @return 존재 여부
      */
-    public boolean existsWaitingInvite(User fromUser, User toUser) {
+    public Boolean existsWaitingInvite(User fromUser, User toUser) {
         Long count = em.createQuery("""
                             select count(f) from FriendInvite f
                             where f.fromUser.id = :fromId

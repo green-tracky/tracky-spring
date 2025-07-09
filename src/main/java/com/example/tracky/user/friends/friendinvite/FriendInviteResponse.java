@@ -46,12 +46,25 @@ public class FriendInviteResponse {
     public static class ResponseDTO {
         private Integer id;
         private InviteStatusEnum status;
-        private LocalDateTime responsedAt;
 
         public ResponseDTO(FriendInvite invite) {
             this.id = invite.getId();
             this.status = invite.getStatus();
-            this.responsedAt = invite.getResponsedAt();
+        }
+    }
+
+    @Data
+    public static class SaveDTO {
+        private Integer id;
+        private Integer fromUser;
+        private Integer toUser;
+        private InviteStatusEnum status;
+
+        public SaveDTO(FriendInvite invite) {
+            this.id = invite.getId();
+            this.fromUser = invite.getFromUser().getId();
+            this.toUser = invite.getToUser().getId();
+            this.status = invite.getStatus();
         }
     }
 }
