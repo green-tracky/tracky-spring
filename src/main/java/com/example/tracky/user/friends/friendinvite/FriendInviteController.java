@@ -16,7 +16,7 @@ public class FriendInviteController {
         // TODO: 로그인 유저로 교체
         User user = User.builder().id(1).build();
 
-        FriendInviteResponse.DTO respDTO = friendInviteService.findAll(user);
+        FriendInviteResponse.DTO respDTO = friendInviteService.getFriendInvite(user);
         return ResponseEntity.ok(respDTO);
     }
 
@@ -28,7 +28,7 @@ public class FriendInviteController {
         // 신청을 보내는 유저
         User toUser = User.builder().id(toUserId).build();
 
-        FriendInviteRequest.SaveDTO response = friendInviteService.sendInvite(fromUser, toUser);
+        FriendInviteRequest.SaveDTO response = friendInviteService.friendInvite(fromUser, toUser);
         return ResponseEntity.ok(response);
     }
 
@@ -37,7 +37,7 @@ public class FriendInviteController {
         // TODO: 로그인 유저로 교체
         User user = User.builder().id(1).build();
 
-        FriendInviteResponse.ResponseDTO response = friendInviteService.acceptInvite(inviteId, user);
+        FriendInviteResponse.ResponseDTO response = friendInviteService.friendInviteAccept(inviteId, user);
         return ResponseEntity.ok(response);
     }
 
@@ -47,7 +47,7 @@ public class FriendInviteController {
         User user = User.builder().id(1).build();
 
 
-        FriendInviteResponse.ResponseDTO response = friendInviteService.rejectInvite(inviteId, user);
+        FriendInviteResponse.ResponseDTO response = friendInviteService.friendInviteReject(inviteId, user);
         return ResponseEntity.ok(response);
     }
 }

@@ -14,7 +14,6 @@ public class InviteStatusTypeConverter implements AttributeConverter<InviteStatu
     @Override
     public InviteStatusType convertToEntityAttribute(String dbData) {
         if (dbData == null || dbData.isEmpty()) return null;
-        return InviteStatusType.valueOf(dbData);
+        return InviteStatusType.fromValue(dbData);
     }
-
 }
