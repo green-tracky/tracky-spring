@@ -14,28 +14,28 @@ import org.springframework.web.bind.annotation.*;
 public class ChallengeJoinController {
     private final ChallengeJoinService challengeJoinService;
 
-    @PostMapping("/community/challenges/{id}/joins")
-    public ResponseEntity<?> save(@PathVariable Integer id) {
+    @PostMapping("/community/challenges/{id}/join")
+    public ResponseEntity<?> join(@PathVariable Integer id) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        ChallengeJoinResponse.DTO respDTO = challengeJoinService.save(id, user);
+        ChallengeJoinResponse.DTO respDTO = challengeJoinService.join(id, user);
         return Resp.ok(respDTO);
     }
 
 
-    @DeleteMapping("/community/challenges/{id}/joins")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    @DeleteMapping("/community/challenges/{id}/join")
+    public ResponseEntity<?> leave(@PathVariable Integer id) {
         // 유저 아이디를 임시로 1 로 함
         Integer userId = 1;
 
         // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
         User user = User.builder().id(userId).build();
 
-        challengeJoinService.delete(id, user);
+        challengeJoinService.leave(id, user);
         return Resp.ok(null);
     }
 
