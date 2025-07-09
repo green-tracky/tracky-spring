@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
@@ -27,20 +28,25 @@ public class ChallengeJoinService {
      */
     @Transactional
     public ChallengeJoinResponse.DTO join(Integer id, User user) {
-        // 챌린지 조회
+        // 1. 챌린지 조회
         Challenge challengePS = challengeRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
 
-        // 챌린지참가 엔티티 생성
+        // 2. 진행중인지 확인
+        if (!challengePS.getIsInProgress()) {
+            throw new ExceptionApi400(ErrorCodeEnum.CHALLENGE_ALREADY_ENDED);
+        }
+
+        // 3. 챌린지참가 엔티티 생성
         ChallengeJoin challengeJoin = ChallengeJoin.builder()
                 .challenge(challengePS)
                 .user(user)
                 .build();
 
-        // 챌린지 참가 엔티티 저장
+        // 4. 챌린지 참가 엔티티 저장
         ChallengeJoin challengeJoinPS = challengeJoinRepository.save(challengeJoin);
 
-        // 챌린지 참가 엔티티 응답
+        // 5. 챌린지 참가 엔티티 응답
         return new ChallengeJoinResponse.DTO(challengeJoinPS);
     }
 
