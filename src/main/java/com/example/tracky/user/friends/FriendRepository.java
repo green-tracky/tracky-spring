@@ -21,7 +21,7 @@ public class FriendRepository {
      * @return List<친구>
      */
     public List<Friend> findfriendByUserIdJoinFriend(Integer userId) {
-        Query query = em.createQuery("select f from Friend f join fetch User uf on f.fromUser.id = uf.id join fetch User ut on f.toUser.id = ut.id where f.fromUser.id = :id or f.toUser.id = :id", Friend.class);
+        Query query = em.createQuery("select f from Friend f join fetch f.fromUser join fetch f.toUser where f.fromUser.id = :id or f.toUser.id = :id", Friend.class);
         query.setParameter("id", userId);
         List<Friend> friends = query.getResultList();
         return friends;
@@ -45,7 +45,7 @@ public class FriendRepository {
      * @param userB 유저 B
      * @return 친구 관계 여부 (ture or false)
      */
-    public boolean existsFriend(User userA, User userB) {
+    public Boolean existsFriend(User userA, User userB) {
         Long count = em.createQuery("""
                             select count(f) from Friend f
                             where (f.fromUser.id = :userA and f.toUser.id = :userB)

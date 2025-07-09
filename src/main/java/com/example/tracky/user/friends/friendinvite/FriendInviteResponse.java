@@ -1,6 +1,5 @@
 package com.example.tracky.user.friends.friendinvite;
 
-import com.example.tracky.user.User;
 import com.example.tracky.user.friends.friendinvite.enums.InviteStatusType;
 import lombok.Data;
 
@@ -31,12 +30,12 @@ public class FriendInviteResponse {
         private InviteStatusType status;
         private LocalDateTime createdAt;
 
-        public InvitesDTO(Integer id, User user, InviteStatusType status, LocalDateTime createdAt) {
-            this.id = id;
-            this.profileUrl = user.getProfileUrl();
-            this.name = user.getUsername();
-            this.status = status;
-            this.createdAt = createdAt;
+        public InvitesDTO(FriendInvite friendInvite) {
+            this.id = friendInvite.getId();
+            this.profileUrl = friendInvite.getToUser().getProfileUrl();
+            this.name = friendInvite.getToUser().getUsername();
+            this.status = friendInvite.getStatus();
+            this.createdAt = friendInvite.getCreatedAt();
         }
     }
 
@@ -45,9 +44,9 @@ public class FriendInviteResponse {
      */
     @Data
     public static class ResponseDTO {
-        private final Integer id;
-        private final InviteStatusType status;
-        private final LocalDateTime responsedAt;
+        private Integer id;
+        private InviteStatusType status;
+        private LocalDateTime responsedAt;
 
         public ResponseDTO(FriendInvite invite) {
             this.id = invite.getId();
