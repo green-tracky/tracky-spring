@@ -1,5 +1,7 @@
 package com.example.tracky.community.posts.comments;
 
+import com.example.tracky.runrecord.RunRecord;
+import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -58,7 +60,27 @@ public class CommentRepositoryTest {
     @Test
     void countParentComments() {
         Integer postId = 1;
+
         Integer parentCount = commentRepository.countParentComments(postId);
         log.debug(String.valueOf(parentCount));
+    }
+
+    @Test
+    void save_test() {
+        User user = User.builder().build();
+        em.persist(user);
+
+        RunRecord runRecord = RunRecord.builder().build();
+        em.persist(runRecord);
+
+        Comment comment = Comment.builder().build();
+
+        commentRepository.save(comment);
+
+        log.debug("결과확인===================");
+        log.debug("post.id: {}", post.getId());
+        log.debug("post.content: {}", post.getContent());
+        log.debug("user.id: {}", post.getUser().getId());
+        log.debug("runRecord.id: {}", post.getRunRecord().getId());
     }
 }
