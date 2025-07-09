@@ -63,9 +63,9 @@ public class CommentRepository {
 
     public Integer countParentComments(Integer postId) {
         String jpql = """
-                    SELECT COUNT(c)
-                    FROM Comment c
-                    WHERE c.post.id = :postId AND c.parent IS NULL
+                    select count(c)
+                    from Comment c
+                    where c.post.id = :postId and c.parent is null
                 """;
 
         Long count = em.createQuery(jpql, Long.class)
@@ -80,10 +80,10 @@ public class CommentRepository {
     public Integer countTotalCommentsInPage(Integer postId, Integer page) {
         // 1. 부모 댓글 조회 (페이징)
         String jpql = """
-                    SELECT c.id
-                    FROM Comment c
-                    WHERE c.post.id = :postId AND c.parent IS NULL
-                    ORDER BY c.id DESC
+                    select c.id
+                    from Comment c
+                    where c.post.id = :postId and c.parent is null
+                    order by c.id desc
                 """;
 
         List<Integer> parentIds = em.createQuery(jpql, Integer.class)
@@ -99,9 +99,9 @@ public class CommentRepository {
         // 2. 대댓글 개수 조회
 
         String childCountJpql = """
-                    SELECT COUNT(c)
-                    FROM Comment c
-                    WHERE c.parent.id IN :parentIds
+                    select count(c)
+                    from Comment c
+                    where c.parent.id in :parentIds
                 """;
 
         Long childCount = em.createQuery(childCountJpql, Long.class)
