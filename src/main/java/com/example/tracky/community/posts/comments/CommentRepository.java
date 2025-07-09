@@ -28,7 +28,7 @@ public class CommentRepository {
                         "select c from Comment c where c.post.id = :postId and c.parent is null order by c.id desc",
                         Comment.class)
                 .setParameter("postId", postId)
-                .setFirstResult(page * 5)
+                .setFirstResult((page - 1) * 5)
                 .setMaxResults(5)
                 .getResultList();
     }

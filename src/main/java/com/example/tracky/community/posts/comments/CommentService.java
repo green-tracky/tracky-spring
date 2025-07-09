@@ -19,7 +19,7 @@ public class CommentService {
         if (page < 0) page = 0;
 
         // 1. 댓글(부모) 페이징 조회
-        List<Comment> parentComments = commentRepository.findParentComments(postId, page - 1);
+        List<Comment> parentComments = commentRepository.findParentComments(postId, page);
 
         // 2. 부모 ID 목록 추출
         List<Integer> parentIds = parentComments.stream()
