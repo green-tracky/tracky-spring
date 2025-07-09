@@ -47,9 +47,9 @@ public class FriendInviteRepository {
      * @return 친구 요청 객체
      */
     public FriendInvite findValidateByInviteId(Integer inviteId, Integer userId) {
-        return em.createQuery("select f from FriendInvite f where f.id = :id and f.toUser.id = :userId ", FriendInvite.class)
-                .setParameter("id", inviteId)
-                .setParameter("id", userId)
+        return em.createQuery("select f from FriendInvite f where f.id = :inviteId and f.toUser.id = :userId ", FriendInvite.class)
+                .setParameter("inviteId", inviteId)
+                .setParameter("userId", userId)
                 .getSingleResult();
     }
 
