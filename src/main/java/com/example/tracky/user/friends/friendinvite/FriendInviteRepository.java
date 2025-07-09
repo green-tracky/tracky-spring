@@ -1,5 +1,7 @@
 package com.example.tracky.user.friends.friendinvite;
 
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -40,17 +42,22 @@ public class FriendInviteRepository {
     }
 
     /**
-     * 친구 요청 단건 조회 + 유효성 검사 (toUser.id가 일치해야 함)
+     * 본인에게 들어온 친구 요청인지 확인
      *
      * @param inviteId 친구 요청 ID
      * @param userId   로그인한 유저 ID
      * @return 친구 요청 객체
      */
     public FriendInvite findValidateByInviteId(Integer inviteId, Integer userId) {
-        return em.createQuery("select f from FriendInvite f where f.id = :inviteId and f.toUser.id = :userId ", FriendInvite.class)
-                .setParameter("inviteId", inviteId)
-                .setParameter("userId", userId)
-                .getSingleResult();
+        try {
+            return em.createQuery("select f from FriendInvite f where f.id = :inviteId and f.toUser.id = :userId ", FriendInvite.class)
+                    .setParameter("inviteId", inviteId)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+
+        } catch (RuntimeException e) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
     }
 
     /**

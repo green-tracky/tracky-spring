@@ -1,6 +1,6 @@
 package com.example.tracky.user.friends.friendinvite;
 
-import com.example.tracky._core.error.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.user.User;
