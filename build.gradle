@@ -68,6 +68,9 @@ dependencies {
     // --- 기타 ---
     // 개발 편의성 도구 (자동 재시작 등)
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // JWT (JSON Web Token) 및 JOSE (JSON Object Signing and Encryption) 관련 기능을 제공하는 Java 라이브러리
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
 }
 
 

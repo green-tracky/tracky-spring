@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -53,5 +54,31 @@ public class UserRepository {
 
     public Optional<User> findById(Integer userId) {
         return Optional.ofNullable(em.find(User.class, userId));
+    }
+
+    /**
+     * 토큰으로 db 에서 user 조회할 때 사용
+     *
+     * @param loginId
+     * @return
+     */
+    public Optional<User> findByLoginId(String loginId) {
+        Query query = em.createQuery("select u from User u where u.loginId = :loginId", User.class);
+        query.setParameter("loginId", loginId);
+        try {
+            return Optional.of((User) query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
+    }
+
+    public List<String> findAllUserTag() {
+        Query query = em.createQuery("select u.userTag from User u", String.class);
+        return query.getResultList();
+    }
+
+    public User save(User user) {
+        em.persist(user);
+        return user;
     }
 }

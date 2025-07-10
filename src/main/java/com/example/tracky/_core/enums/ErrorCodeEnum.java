@@ -52,7 +52,7 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 유효하지 않은 토큰입니다.
      */
-    INVALID_TOKEN(400, "유효하지 않는 토큰입니다"),
+    INVALID_TOKEN(401, "유효하지 않는 토큰입니다"),
 
     /**
      * 400 Bad Request - 본인에게 친구 요청을 보낼 수 없습니다.
@@ -103,6 +103,11 @@ public enum ErrorCodeEnum {
      * 403 Forbidden - 접근 권한이 없습니다.
      */
     ACCESS_DENIED(403, "접근 권한이 없습니다."),
+
+    /**
+     * 404 Not Found - 해당 사용자를 찾을 수 없습니다.
+     */
+    RUN_LEVEL_NOT_FOUND(404, "해당 러닝 레벨을 찾을 수 없습니다"),
 
     /**
      * 404 Not Found - 해당 사용자를 찾을 수 없습니다.
