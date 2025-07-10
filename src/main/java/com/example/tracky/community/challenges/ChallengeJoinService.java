@@ -9,6 +9,9 @@ import com.example.tracky.community.challenges.dto.ChallengeJoinResponse;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChallengeJoinService {
     private final ChallengeJoinRepository challengeJoinRepository;
     private final ChallengeRepository challengeRepository;
+    private final UserRepository userRepository;
 
     /**
      * 챌린지 참여
@@ -27,7 +31,11 @@ public class ChallengeJoinService {
      * @return
      */
     @Transactional
-    public ChallengeJoinResponse.DTO join(Integer id, User user) {
+    public ChallengeJoinResponse.DTO join(Integer id, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 챌린지 조회
         Challenge challengePS = challengeRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
@@ -40,7 +48,7 @@ public class ChallengeJoinService {
         // 3. 챌린지참가 엔티티 생성
         ChallengeJoin challengeJoin = ChallengeJoin.builder()
                 .challenge(challengePS)
-                .user(user)
+                .user(userPS)
                 .build();
 
         // 4. 챌린지 참가 엔티티 저장
@@ -51,9 +59,13 @@ public class ChallengeJoinService {
     }
 
     @Transactional
-    public void leave(Integer id, User user) {
+    public void leave(Integer id, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 내가 참여한 챌린지 조회
-        ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, user.getId())
+        ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, userPS.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND));
 
         // 삭제
