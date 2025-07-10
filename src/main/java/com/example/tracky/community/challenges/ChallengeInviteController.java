@@ -1,30 +1,36 @@
 package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.utils.Resp;
+import com.example.tracky.community.challenges.dto.ChallengeInviteRequest;
 import com.example.tracky.community.challenges.dto.ChallengeInviteResponse;
-import com.example.tracky.community.leaderboard.LeaderBoardService;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
 public class ChallengeInviteController {
 
-    private final ChallengeInviteService challengeService;
-    private final LeaderBoardService leaderBoardService;
+    private final ChallengeInviteService challengeInviteService;
 
-    @PostMapping("/community/challenges/{id}/invite/{userId}")
-    public ResponseEntity<?> challengesInvite(@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
+    @PostMapping("/community/challenges/{id}/invite")
+    public ResponseEntity<?> challengesInvite(@PathVariable("id") Integer id, @RequestBody ChallengeInviteRequest.InviteRequestDTO req) {
         Integer myuserId = 1;
         User user = User.builder().id(myuserId).build();
 
-        ChallengeInviteResponse.saveDTO respDTO = challengeService.challengesInvite(id, userId, user);
+        List<ChallengeInviteResponse.saveDTO> respDTO = challengeInviteService.challengesInvite(id, req, user);
+        return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/community/challenges/{id}/friend")
+    public ResponseEntity<?> getFriend(@PathVariable("id") Integer id) {
+        User user = User.builder().id(1).build();
+
+        List<ChallengeInviteResponse.friendDTO> respDTO = challengeInviteService.getFriend(id, user);
         return Resp.ok(respDTO);
     }
 }
