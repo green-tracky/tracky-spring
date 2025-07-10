@@ -152,4 +152,5 @@ public class ChallengeService {
         // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환
         return new ChallengeResponse.SaveDTO(challengePS);
     }
+    
 }
