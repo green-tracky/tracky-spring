@@ -4,7 +4,7 @@
 INSERT INTO user_tb (username, email, profile_url, height, weight, gender, user_type, provider, user_tag,
                      flutter_token_id, created_at, run_level_id)
 VALUES ('ssar', 'ssar@example.com', 'http://example.com/profiles/ssar.jpg', 175.0, 70.0, 'MALE', 'GENERAL', 'kakao',
-        '#A1B2C3', 'token_ssar_123', NOW(), 1);
+        '#11B2C3', 'token_ssar_123', NOW(), 1);
 
 -- 2. 사용자 'cos' (ADMIN, FEMALE)
 INSERT INTO user_tb (username, email, profile_url, height, weight, gender, user_type, provider, user_tag,
@@ -37,5 +37,5 @@ VALUES ('green', 'green@example.com', 'http://example.com/profiles/green.jpg', 1
 INSERT INTO user_tb (username, email, profile_url, height, weight, gender, user_type, provider, user_tag,
                      flutter_token_id, created_at, run_level_id)
 VALUES ('leo', 'leo@example.com', 'http://example.com/profiles/leo.jpg', 172.0, 68.0, 'MALE', 'GENERAL', 'kakao',
-        '#321JKL',
+        '#121JKL',
         'token_leo_303', NOW(), 1);

@@ -59,8 +59,8 @@ public class FriendRepository {
     }
 
     public List<Friend> findByUserTag(String tag) {
-        Query query = em.createQuery("select f from Friend f where f.toUser.userTag = :tag");
-        query.setParameter("tag", tag);
+        Query query = em.createQuery("select f from Friend f where f.toUser.userTag like :tag");
+        query.setParameter("tag", tag + "%");
         List<Friend> friends = query.getResultList();
         return friends;
     }

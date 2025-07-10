@@ -18,12 +18,12 @@ public class FriendService {
         String tag = "#" + userTag;
 
         List<Friend> friends = friendRepository.findByUserTag(tag);
-        List<FriendResponse.SearchDTO> searchDTOs = new ArrayList<>();
-        for (User friendList : friends) {
-
+        List<FriendResponse.SearchDTO> searchDTO = new ArrayList<>();
+        for (Friend friendList : friends) {
+            User friendUser = friendList.getToUser();
+            searchDTO.add(new FriendResponse.SearchDTO(friendUser));
         }
-
-
-        return null;
+        
+        return searchDTO;
     }
 }
