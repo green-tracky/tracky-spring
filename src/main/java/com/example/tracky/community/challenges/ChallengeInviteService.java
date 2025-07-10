@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -53,16 +55,36 @@ public class ChallengeInviteService {
             throw new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND); // 참여하지 않은 챌린지엔 초대 불가
         }
 
+        List<Friend> myFriends = friendRepository.findfriendByUserIdJoinFriend(user.getId());
+        Set<Integer> myFriendIds = new HashSet<>();
+        for (Friend f : myFriends) {
+            Integer fromId = f.getFromUser().getId();
+            Integer toId = f.getToUser().getId();
+
+            // 내가 fromUser면 친구는 toUser고, 반대면 친구는 fromUser
+            if (fromId.equals(user.getId())) {
+                myFriendIds.add(toId);
+            } else {
+                myFriendIds.add(fromId);
+            }
+        }
+
         List<ChallengeInviteResponse.saveDTO> saveDTO = new ArrayList<>();
+
         for (Integer frinedId : reqDTO.getFriendIds()) {
+            // 내 친구가 아닌 사람은 초대 불가
+            if (!myFriendIds.contains(frinedId)) {
+                throw new ExceptionApi404(ErrorCodeEnum.NOT_MY_FRIEND);
+            }
             User toUserPS = userRepository.findById(frinedId)
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
             // 3-2. 이미 초대한 기록 있는지 확인 (중복 방지)
             boolean alreadyInvited = challengeInviteRepository.existsByFromUserIdAndToUserIdAndChallengeId(
                     user.getId(), toUserPS.getId(), challengePS.getId());
-            if (alreadyInvited) continue;
-
+            if (alreadyInvited) {
+                throw new ExceptionApi404(ErrorCodeEnum.DUPLICATE_INVITE); // 참여하지 않은 챌린지엔 초대 불가
+            }
             ChallengeInvite invite = ChallengeInvite.builder()
                     .fromUser(user)
                     .toUser(toUserPS)

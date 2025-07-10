@@ -39,7 +39,7 @@ public class FriendInviteService {
 
         // 중복 요청 방지
         if (friendInviteRepository.existsWaitingInvite(fromUser, toUser)) {
-            throw new ExceptionApi400(ErrorCodeEnum.DUPLICATE_FRIEND_INVITE);
+            throw new ExceptionApi400(ErrorCodeEnum.DUPLICATE_INVITE);
         }
 
         FriendInvite invite = FriendInvite.builder()

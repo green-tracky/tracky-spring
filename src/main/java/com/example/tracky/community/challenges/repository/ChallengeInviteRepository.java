@@ -21,7 +21,7 @@ public class ChallengeInviteRepository {
     }
 
     /**
-     * 본인에게 들어온 친구 요청인지 확인
+     * 본인에게 들어온 챌린지 요청인지 확인
      *
      * @param inviteId 친구 요청 ID
      * @param userId   로그인한 유저 ID
@@ -29,7 +29,7 @@ public class ChallengeInviteRepository {
      */
     public Optional<ChallengeInvite> findValidateByInviteId(Integer inviteId, Integer userId) {
         try {
-            return Optional.ofNullable(em.createQuery("select f from FriendInvite f where f.id = :inviteId and f.toUser.id = :userId ", ChallengeInvite.class)
+            return Optional.ofNullable(em.createQuery("select c from ChallengeInvite c where c.id = :inviteId and c.toUser.id = :userId ", ChallengeInvite.class)
                     .setParameter("inviteId", inviteId)
                     .setParameter("userId", userId)
                     .getSingleResult());
@@ -38,7 +38,7 @@ public class ChallengeInviteRepository {
         }
     }
 
-    public boolean existsByFromUserIdAndToUserIdAndChallengeId(Integer challengeId, Integer fromUserId, Integer toUserId) {
+    public boolean existsByFromUserIdAndToUserIdAndChallengeId(Integer fromUserId, Integer toUserId, Integer challengeId) {
         Long count = em.createQuery("""
                             select count(ci) from ChallengeInvite ci
                             where ci.fromUser.id = :fromUserId
