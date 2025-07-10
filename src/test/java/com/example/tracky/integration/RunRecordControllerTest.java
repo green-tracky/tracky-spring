@@ -327,13 +327,12 @@ public class RunRecordControllerTest extends MyRestDoc {
 
     @Test
     public void get_activities_week_test() throws Exception {
-        // given TODO : 이 아이디는 무슨 아이디인가?
-        Integer id = 1;
+        // given
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/week", id));
+                        .get("/s/api/activities/week"));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -387,12 +386,11 @@ public class RunRecordControllerTest extends MyRestDoc {
     @Test
     public void get_activities_month_test() throws Exception {
         // given
-        Integer id = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/month", id));
+                        .get("/s/api/activities/month"));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -450,12 +448,11 @@ public class RunRecordControllerTest extends MyRestDoc {
     @Test
     public void get_activities_year_test() throws Exception {
         // given
-        Integer id = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/year", id));
+                        .get("/s/api/activities/year"));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -515,12 +512,11 @@ public class RunRecordControllerTest extends MyRestDoc {
     @Test
     public void get_activities_all_test() throws Exception {
         // given
-        Integer id = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/all", id));
+                        .get("/s/api/activities/all"));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -577,12 +573,11 @@ public class RunRecordControllerTest extends MyRestDoc {
     @Test
     public void get_activities_recent_test() throws Exception {
         // given
-        Integer id = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/recent", id));
+                        .get("/s/api/activities/recent"));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
