@@ -19,7 +19,7 @@ public class ChallengeInviteController {
 
     @PostMapping("/community/challenges/{id}/invite")
     public ResponseEntity<?> challengesInvite(@PathVariable("id") Integer id, @RequestBody ChallengeInviteRequest.InviteRequestDTO reqDTO) {
-        User user = User.builder().id(6).build();
+        User user = User.builder().id(1).build();
 
         List<ChallengeInviteResponse.saveDTO> respDTO = challengeInviteService.challengesInvite(id, reqDTO, user);
         return Resp.ok(respDTO);

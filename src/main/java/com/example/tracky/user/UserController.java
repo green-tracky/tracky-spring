@@ -15,7 +15,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/oauth/login")
+    @PostMapping("/oauth/kakao/login")
     public ResponseEntity<?> kakaoLogin(@RequestBody String idToken) {
         UserResponse.IdTokenDTO respDTO = userService.kakaoLogin(idToken);
         return Resp.ok(respDTO);

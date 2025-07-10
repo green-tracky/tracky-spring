@@ -1,6 +1,6 @@
 package com.example.tracky.community.challenges;
 
-import com.example.tracky._core.constants.Constant;
+import com.example.tracky._core.constants.ChallengeDescs;
 import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.enums.PeriodTypeEnum;
@@ -65,7 +65,7 @@ public class ChallengeCreationService {
             Challenge newChallenge = Challenge.builder()
                     .name(challengeName)
                     .sub(String.format("이번 주 %dk를 달려보세요!", distance / 1000))
-                    .description(Constant.WEEKLY_CHALLENGE_DESC)
+                    .description(ChallengeDescs.WEEKLY_CHALLENGE_DESC)
                     .targetDistance(distance)
                     .startDate(startOfWeek)
                     .endDate(endOfWeek)
@@ -116,7 +116,7 @@ public class ChallengeCreationService {
             Challenge newChallenge = Challenge.builder()
                     .name(challengeName)
                     .sub(String.format("이번 달 %dk를 달려보세요!", distance / 1000))
-                    .description(Constant.MONTHLY_CHALLENGE_DESC)
+                    .description(ChallengeDescs.MONTHLY_CHALLENGE_DESC)
                     .targetDistance(distance)
                     .startDate(startOfMonth)
                     .endDate(endOfMonth)
