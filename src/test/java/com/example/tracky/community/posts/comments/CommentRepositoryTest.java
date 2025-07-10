@@ -1,5 +1,11 @@
 package com.example.tracky.community.posts.comments;
 
+
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.community.posts.Post;
+import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -10,12 +16,15 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 
 @Slf4j
-@Import(CommentRepository.class)
+@Import({CommentRepository.class, UserRepository.class})
 @DataJpaTest
 public class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private EntityManager em;
@@ -45,4 +54,47 @@ public class CommentRepositoryTest {
             log.debug("child comment = {}", c.getContent());
         }
     }
+
+
+    @Test
+    void count_total_comments_in_page_test() {
+        Integer postId = 1;
+        Integer page = 1;
+
+        Integer totalCount = commentRepository.countTotalCommentsInPage(postId, page);
+        log.debug(String.valueOf(totalCount));
+    }
+
+    @Test
+    void countParentComments() {
+        Integer postId = 1;
+
+        Integer parentCount = commentRepository.countParentComments(postId);
+        log.debug(String.valueOf(parentCount));
+    }
+
+    @Test
+    void save_test() {
+        User user = userRepository.findById(1).
+                orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Post post = Post.builder()
+                .user(user)
+                .build();
+        em.persist(post);
+
+        Comment comment = Comment.builder()
+                .user(user)
+                .post(post)
+                .content("content")
+                .build();
+
+        commentRepository.save(comment);
+
+        log.debug("결과확인===================");
+        log.debug("post.id: {}", comment.getId());
+        log.debug("post.content: {}", comment.getContent());
+        log.debug("user.id: {}", comment.getUser().getId());
+    }
+
 }

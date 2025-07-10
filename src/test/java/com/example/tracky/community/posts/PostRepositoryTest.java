@@ -132,6 +132,7 @@ public class PostRepositoryTest {
         }
     }
 
+    @Test
     void update_test() {
 
         // given

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,6 +39,22 @@ public class RunLevelRepository {
     public List<RunLevel> findAllByOrderBySortOrderAsc() {
         Query query = em.createQuery("select rl from RunLevel rl order by rl.sortOrder", RunLevel.class);
         return query.getResultList();
+    }
+
+    /**
+     * 유저 생성시 사용하려고 만듦
+     *
+     * @param order
+     * @return
+     */
+    public Optional<RunLevel> findBySortOrder(Integer order) {
+        Query query = em.createQuery("select rl from RunLevel rl where rl.sortOrder = :order", RunLevel.class);
+        query.setParameter("order", order);
+        try {
+            return Optional.of((RunLevel) query.getSingleResult());
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
     }
 
 }
