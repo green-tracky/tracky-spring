@@ -1,14 +1,14 @@
 package com.example.tracky.community.challenges.dto;
 
-import com.example.tracky._core.enums.InviteStatusEnum;
+import lombok.Data;
+
+import java.util.List;
 
 
 public class ChallengeInviteRequest {
 
-    public static class saveDTO {
-        private Integer id;
-        private Integer fromUser;
-        private Integer toUser;
-        private InviteStatusEnum status;
+    @Data
+    public static class InviteRequestDTO {
+        private List<Integer> friendIds;
     }
 }
