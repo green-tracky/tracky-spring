@@ -81,4 +81,11 @@ public class UserRepository {
         em.persist(user);
         return user;
     }
+
+    public List<User> findByUserTag(String tag) {
+        Query query = em.createQuery("select u from User u where upper(u.userTag) like upper(:tag) ");
+        query.setParameter("tag", tag + "%");
+        List<User> users = query.getResultList();
+        return users;
+    }
 }
