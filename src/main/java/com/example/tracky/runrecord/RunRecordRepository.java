@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.constants.Constant;
+import com.example.tracky._core.constants.Constants;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -211,8 +211,8 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdPage(Integer userId, Integer page) {
         Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId", RunRecord.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
-        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        query.setFirstResult((page - 1) * Constants.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constants.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
@@ -225,8 +225,8 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdOrderByCreatedAtDesc(Integer userId, Integer page) {
         Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId  order by r.createdAt desc", RunRecord.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
-        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        query.setFirstResult((page - 1) * Constants.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constants.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
@@ -239,8 +239,8 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdOrderByCreatedAtAsc(Integer userId, Integer page) {
         Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.createdAt asc", RunRecord.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
-        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        query.setFirstResult((page - 1) * Constants.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constants.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
@@ -253,8 +253,8 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdOrderByDistanceDesc(Integer userId, Integer page) {
         Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.totalDistanceMeters desc", RunRecord.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
-        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        query.setFirstResult((page - 1) * Constants.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constants.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
@@ -267,8 +267,8 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdOrderByDistanceAsc(Integer userId, Integer page) {
         Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.totalDistanceMeters asc", RunRecord.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
-        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        query.setFirstResult((page - 1) * Constants.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constants.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
@@ -281,8 +281,8 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdOrderByAvgPaceDesc(Integer userId, Integer page) {
         Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.avgPace desc", RunRecord.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
-        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        query.setFirstResult((page - 1) * Constants.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constants.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
@@ -295,8 +295,8 @@ public class RunRecordRepository {
     public List<RunRecord> findAllByUserIdOrderByAvgPaceAsc(Integer userId, Integer page) {
         Query query = em.createQuery("select r from RunRecord r where r.user.id = : userId order by r.avgPace asc", RunRecord.class);
         query.setParameter("userId", userId);
-        query.setFirstResult((page - 1) * Constant.RUN_LIST_FETCH_SIZE); // 시작 인덱스
-        query.setMaxResults(Constant.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
+        query.setFirstResult((page - 1) * Constants.RUN_LIST_FETCH_SIZE); // 시작 인덱스
+        query.setMaxResults(Constants.RUN_LIST_FETCH_SIZE);         // 페이지당 개수
         List<RunRecord> runRecords = query.getResultList();
         return runRecords;
     }
