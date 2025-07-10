@@ -1,15 +1,20 @@
 package com.example.tracky.user.kakaojwt;
 
+import com.example.tracky._core.constants.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @Slf4j
 public class JwtKeySetTest {
+
+    @Autowired
+    private RSAUtil rsaUtil;
 
     /**
      * 공개키 다운받고 객체에 저장한 뒤 출력
@@ -33,10 +38,8 @@ public class JwtKeySetTest {
     @Test
     public void rsaVerify_test() {
         // idToken 값을 직접 변경해야함
-        String idToken = """
-                eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIwNDI5MTAsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIwODYxMTAsImlhdCI6MTc1MjA0MjkxMCwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.G_1v6XVF3GyyLEkSyaOo4oUCGn4PJV5x-3CoFcRCZB9PHQo6QfKqZfQQmjejoZ_ZuHUH-YTZsPu7yLa4evELzdOECgdT12NWpJnRJt9Zsvl5McXnWX02vGg6gH3QAM53vulmvDu9AHpXFna1wV6f5Cx5V76hz5UCAq1XX9w040zBRWak7CVKgkUZms8xwiOqaLX-SqmEey4plgwTAOtQnJtZnilaTeAoMtGZv-xngNhhqIfTiy4qEu4IFfgj7I2zcqymGxak6e35x0CeZ5suNWB6ENJ-7VnEcef7abEFu-Pms0yfJaw_Fhk4Wi3j_Wdid7X-FGTEHBpxfiZXToGB4w
-                """;
-        RSAUtil.verify(idToken);
+        String idToken = Constants.idTokenTest;
+        rsaUtil.verify(idToken);
     }
 
     /**

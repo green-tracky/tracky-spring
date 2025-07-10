@@ -122,7 +122,9 @@ public class RunRecordControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .post("/s/api/runs")
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -185,7 +187,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/runs/{id}", id));
+                        .get("/s/api/runs/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -242,7 +246,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/runs/{id}", id));
+                        .delete("/s/api/runs/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -277,7 +283,9 @@ public class RunRecordControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .put("/s/api/runs/{id}", id)
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -332,7 +340,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/week"));
+                        .get("/s/api/activities/week")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -390,7 +400,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/month"));
+                        .get("/s/api/activities/month")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -452,7 +464,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/year"));
+                        .get("/s/api/activities/year")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -516,7 +530,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/all"));
+                        .get("/s/api/activities/all")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -577,7 +593,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/activities/recent"));
+                        .get("/s/api/activities/recent")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();

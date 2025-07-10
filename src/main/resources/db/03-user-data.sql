@@ -5,7 +5,8 @@
 INSERT INTO user_tb (login_id, password, username, email, profile_url, height, weight, gender, location, letter,
                      user_type, provider, user_tag,
                      flutter_token_id, created_at, run_level_id)
-VALUES ('ssar', 'password123', 'ssar', 'ssar@example.com', 'http://example.com/profiles/ssar.jpg', 175.0, 70.0, 'MALE',
+VALUES ('KAKAO_123456789', 'password123', 'ssar', 'ssar@example.com', 'http://example.com/profiles/ssar.jpg', 175.0,
+        70.0, 'MALE',
         '부산광역시', '안녕하세요, 러닝을 사랑하는 ssar입니다.', 'GENERAL', 'KAKAO',
         '#A1B2C3', 'token_ssar_123', '2025-05-30 12:00:00', 1);
 

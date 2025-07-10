@@ -28,7 +28,9 @@ public class RunLevelControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/run-levels"));
+                        .get("/s/api/run-levels")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();

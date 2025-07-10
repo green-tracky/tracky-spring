@@ -50,24 +50,24 @@ public enum ErrorCodeEnum {
     CHALLENGE_ALREADY_ENDED(400, "이미 종료된 챌린지 입니다"),
 
     /**
-     * 400 Bad Request - 유효하지 않은 토큰입니다.
-     */
-    INVALID_TOKEN(401, "유효하지 않는 토큰입니다"),
-
-    /**
      * 400 Bad Request - 본인에게 친구 요청을 보낼 수 없습니다.
      */
-    INVALID_SELF_REQUEST(400, "본인에게 친구 요청을 보낼 수 없습니다."),
+    INVALID_SELF_REQUEST(400, "본인에게 친구 요청을 보낼 수 없습니다"),
 
     /**
      * 400 Bad Request - 이미 친구 요청을 보냈습니다.
      */
-    DUPLICATE_FRIEND_INVITE(400, "이미 친구 요청을 보냈습니다."),
+    DUPLICATE_FRIEND_INVITE(400, "이미 친구 요청을 보냈습니다"),
 
     /**
      * 400 Bad Request - 이미 응답된 요청입니다.
      */
-    INVALID_INVITE_RESPONSE_STATE(400, "이미 응답된 요청입니다."),
+    INVALID_INVITE_RESPONSE_STATE(400, "이미 응답된 요청입니다"),
+
+    /**
+     * 400 Bad Request - 잘못된 형식의 토큰으로 요청이 들어왔습니다.
+     */
+    INVALID_TOKEN_FORMAT(400, "잘못된 형식의 토큰으로 요청이 들어왔습니다"),
 
     /**
      * 401 Unauthorized - 로그인이 필요합니다.
@@ -85,12 +85,22 @@ public enum ErrorCodeEnum {
     TOKEN_EXPIRED(401, "토큰이 만료되었습니다"),
 
     /**
+     * 401 Bad Request - 유효하지 않은 토큰입니다.
+     */
+    INVALID_TOKEN(401, "유효하지 않는 토큰입니다"),
+
+    /**
+     * 401 Bad Request - Authorization 헤더에 'Bearer'가 누락되었습니다.
+     */
+    BEARER_PREFIX_MISSING(401, "Authorization 헤더에 'Bearer'가 누락되었습니다"),
+
+    /**
      * 401 Unauthorized - 토큰이 존재하지 않습니다.
      */
     TOKEN_NOT_FOUND(401, "토큰이 존재하지 않습니다"),
 
     /**
-     * 403 Forbidden - 관리자만 접근할 수 있습니다.
+     * 403 Forbidden - 해당 기능은 관리자만 접근할 수 있습니다.
      */
     ADMIN_ACCESS_ONLY(403, "해당 기능은 관리자만 접근할 수 있습니다"),
 
