@@ -36,6 +36,7 @@ public class CommentControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .get("/s/api/community/posts/{postId}/comments", postId)
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -44,27 +45,30 @@ public class CommentControllerTest extends MyRestDoc {
 
         // then -> 댓글 완료 후 GPT 써서 작성
 
-        actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        actions.andExpect(jsonPath("$.data[0].current").value(1));
-        actions.andExpect(jsonPath("$.data[0].totalCount").value(10));
-        actions.andExpect(jsonPath("$.data[0].id").value(22));
-        actions.andExpect(jsonPath("$.data[0].postId").value(1));
-        actions.andExpect(jsonPath("$.data[0].userId").value(2));
-        actions.andExpect(jsonPath("$.data[0].username").value("cos"));
-        actions.andExpect(jsonPath("$.data[0].content").value("감동적인 글이었습니다."));
-        actions.andExpect(jsonPath("$.data[0].parentId").value(Matchers.nullValue())); // 또는 .doesNotExist()
-        actions.andExpect(jsonPath("$.data[0].createdAt").isNotEmpty());
-        actions.andExpect(jsonPath("$.data[0].updatedAt").isNotEmpty());
-        actions.andExpect(jsonPath("$.data[0].children").isArray());
-        actions.andExpect(jsonPath("$.data[0].children").isEmpty());
-        actions.andExpect(jsonPath("$.data[0].prev").value(0));
-        actions.andExpect(jsonPath("$.data[0].next").value(2));
-        actions.andExpect(jsonPath("$.data[0].totalPage").value(5));
-        actions.andExpect(jsonPath("$.data[0].isFirst").value(true));
-        actions.andExpect(jsonPath("$.data[0].isLast").value(false));
+        actions.andExpect(jsonPath("$.data.current").value(1));
+        actions.andExpect(jsonPath("$.data.totalCount").value(10));
+        actions.andExpect(jsonPath("$.data.next").value(2));
+        actions.andExpect(jsonPath("$.data.totalPage").value(5));
+        actions.andExpect(jsonPath("$.data.isLast").value(false));
+
+// comments[0] 검증
+        actions.andExpect(jsonPath("$.data.comments[0].id").value(22));
+        actions.andExpect(jsonPath("$.data.comments[0].postId").value(1));
+        actions.andExpect(jsonPath("$.data.comments[0].userId").value(2));
+        actions.andExpect(jsonPath("$.data.comments[0].username").value("cos"));
+        actions.andExpect(jsonPath("$.data.comments[0].content").value("감동적인 글이었습니다."));
+        actions.andExpect(jsonPath("$.data.comments[0].parentId").value(Matchers.nullValue()));
+
+// 날짜 패턴 검증 (yyyy-MM-dd HH:mm:ss)
+        actions.andExpect(jsonPath("$.data.comments[0].createdAt", Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.comments[0].updatedAt", Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+// children 검증
+        actions.andExpect(jsonPath("$.data.comments[0].children").isArray());
+        actions.andExpect(jsonPath("$.data.comments[0].children").isEmpty());
 
     }
 
@@ -86,7 +90,9 @@ public class CommentControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .post("/s/api/community/posts/comments")
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -100,7 +106,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.id").value(28));
         actions.andExpect(jsonPath("$.data.postId").value(1));
         actions.andExpect(jsonPath("$.data.userId").value(1));
-        actions.andExpect(jsonPath("$.data.username").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.username").value("ssar"));
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
@@ -112,7 +118,7 @@ public class CommentControllerTest extends MyRestDoc {
 
         // given
         int postId = 1;
-        int commentId = 1;
+        int commentId = 3;
 
         CommentRequest.UpdateDTO reqDTO = new CommentRequest.UpdateDTO();
         reqDTO.setContent("수정된 내용입니다");
@@ -126,7 +132,9 @@ public class CommentControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .put("/s/api/community/posts/{postId}/comments/{commentId}", postId, commentId)
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -135,13 +143,12 @@ public class CommentControllerTest extends MyRestDoc {
         // then
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
-        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.id").value(3));
         actions.andExpect(jsonPath("$.data.postId").value(1));
-        actions.andExpect(jsonPath("$.data.userId").value(3));
-        actions.andExpect(jsonPath("$.data.username").value("love"));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.username").value("ssar"));
         actions.andExpect(jsonPath("$.data.content").value("수정된 내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value((Object) null));
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
     }
-
 }

@@ -37,6 +37,7 @@ class ChallengeControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .get("/s/api/community/challenges")
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -98,6 +99,7 @@ class ChallengeControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .get("/s/api/community/challenges/{id}", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -154,7 +156,8 @@ class ChallengeControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .post("/s/api/community/challenges")
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -173,7 +176,7 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.remainingTime").value(1987140));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isInProgress").value(true));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.participantCount").value(1));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.creatorName").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.creatorName").value("ssar"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.type").value("사설"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isJoined").value(true));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.imageUrl").value("https://example.com/images/new_challenge.png"));

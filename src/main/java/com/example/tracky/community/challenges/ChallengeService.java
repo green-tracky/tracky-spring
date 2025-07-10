@@ -14,6 +14,9 @@ import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,15 +35,20 @@ public class ChallengeService {
     private final ChallengeJoinRepository challengeJoinRepository;
     private final RunRecordRepository runRecordRepository;
     private final RewardMasterRepository rewardMasterRepository;
+    private final UserRepository userRepository;
 
     /**
      * 챌린지 목록 보기
      *
-     * @param user
+     * @param userPS
      * @return
      */
-    public ChallengeResponse.MainDTO getChallenges(User user) {
-        Integer userId = user.getId();
+    public ChallengeResponse.MainDTO getChallenges(OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Integer userId = userPS.getId();
         LocalDateTime now = TimeValue.getServerTime(); // 조회 시점
 
         // 1. 사용자가 참가한 챌린지 엔티티 목록 조회
@@ -88,11 +96,15 @@ public class ChallengeService {
     /**
      * 챌린지 상세보기
      *
-     * @param id   challengeId
-     * @param user
+     * @param id             challengeId
+     * @param sessionProfile
      * @return
      */
-    public ChallengeResponse.DetailDTO getChallenge(Integer id, User user) {
+    public ChallengeResponse.DetailDTO getChallenge(Integer id, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 챌린지 엔티티 조회
         Challenge challengePS = challengeRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
@@ -101,18 +113,18 @@ public class ChallengeService {
         int participantCount = challengeJoinRepository.countByChallengeId(id);
 
         // 3. 내 참가 여부
-        boolean isJoined = challengeJoinRepository.existsByUserIdAndChallengeId(user.getId(), id);
+        boolean isJoined = challengeJoinRepository.existsByUserIdAndChallengeId(userPS.getId(), id);
 
         // 4. 내 누적 거리, 내 순위 (참가자만)
         Integer myDistance = null;
         Integer myRank = null;
         if (isJoined) {
             myDistance = runRecordRepository.findTotalDistanceByUserIdAndDateRange(
-                    user.getId(),
+                    userPS.getId(),
                     challengePS.getStartDate(),
                     challengePS.getEndDate()
             );
-            myRank = challengeJoinRepository.findRankByChallengeIdAndUserId(id, user.getId());
+            myRank = challengeJoinRepository.findRankByChallengeIdAndUserId(id, userPS.getId());
         }
 
         // 5. 리워드 정보 (공식/사설 모두 리스트로 조회)
@@ -137,14 +149,18 @@ public class ChallengeService {
     }
 
     @Transactional
-    public ChallengeResponse.SaveDTO save(User user, ChallengeRequest.SaveDTO reqDTO) {
+    public ChallengeResponse.SaveDTO save(OAuthProfile sessionProfile, ChallengeRequest.SaveDTO reqDTO) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. DTO를 사용하여 챌린지 엔티티를 생성
-        Challenge challenge = reqDTO.toEntity(user);
+        Challenge challenge = reqDTO.toEntity(userPS);
         Challenge challengePS = challengeRepository.save(challenge);
 
         // 2. 생성자를 챌린지에 바로 참여
         ChallengeJoin join = ChallengeJoin.builder()
-                .user(user)
+                .user(userPS)
                 .challenge(challengePS)
                 .build();
         challengeJoinRepository.save(join);
@@ -152,4 +168,5 @@ public class ChallengeService {
         // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환
         return new ChallengeResponse.SaveDTO(challengePS);
     }
+    
 }
