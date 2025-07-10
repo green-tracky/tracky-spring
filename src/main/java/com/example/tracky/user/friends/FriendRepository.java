@@ -57,5 +57,5 @@ public class FriendRepository {
 
         return count > 0;
     }
-    
+
 }

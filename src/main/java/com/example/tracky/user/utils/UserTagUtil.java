@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public final class UserTagUtil { // 상속을 막기 위해 final 클래스로 선언
-
-    // 인스턴스화 방지
-    private UserTagUtil() {
-    }
+public class UserTagUtil {
 
     /**
      * 기존 태그 리스트와 비교하여 중복되지 않는 고유한 유저 태그를 생성합니다.
