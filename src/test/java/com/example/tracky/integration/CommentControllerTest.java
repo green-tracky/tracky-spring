@@ -1,10 +1,7 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
-import com.example.tracky.community.posts.PostRepository;
-import com.example.tracky.community.posts.comments.CommentRepository;
 import com.example.tracky.community.posts.comments.CommentRequest;
-import com.example.tracky.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +25,6 @@ public class CommentControllerTest extends MyRestDoc {
 
     @Autowired
     private ObjectMapper om;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private CommentRepository commentRepository;
 
     @Test
     @DisplayName("댓글 조회 성공")
