@@ -1,6 +1,7 @@
 package com.example.tracky.community.posts.comments;
 
 import com.example.tracky._core.utils.Resp;
+import com.example.tracky.community.posts.PostRequest;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,16 @@ public class CommentController {
         User user = User.builder().id(userId).build();
 
         CommentResponse.SaveDTO respDTO = commentService.save(reqDTO, user);
+        return Resp.ok(respDTO);
+    }
+
+    @PutMapping("/community/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<?> update(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId, @RequestBody PostRequest.UpdateDTO reqDTO) {
+        Integer userId = 3;
+        User user = User.builder().id(userId).build();
+
+        CommentResponse.UpdateDTO respDTO = commentService.update(reqDTO, commentId, user);
+
         return Resp.ok(respDTO);
     }
 

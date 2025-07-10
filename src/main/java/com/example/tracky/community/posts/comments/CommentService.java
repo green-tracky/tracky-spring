@@ -1,9 +1,11 @@
 package com.example.tracky.community.posts.comments;
 
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.PostRepository;
+import com.example.tracky.community.posts.PostRequest;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,4 +72,15 @@ public class CommentService {
 
     }
 
+    public CommentResponse.UpdateDTO update(PostRequest.UpdateDTO reqDTO, Integer commentId, User user) {
+        Comment commentPS = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
+
+        if (!commentPS.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        commentPS.update(reqDTO.getContent());
+        return new CommentResponse.UpdateDTO(commentPS);
+    }
 }

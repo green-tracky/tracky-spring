@@ -104,4 +104,26 @@ public class CommentResponse {
             this.createdAt = comment.getCreatedAt();
         }
     }
+
+    @Data
+    public static class UpdateDTO {
+
+        private final Integer id;
+        private final Integer postId;
+        private final Integer userId;
+        private final String username;
+        private final String content;
+        private final Integer parentId;
+        private final LocalDateTime updatedAt;
+
+        public UpdateDTO(Comment comment) {
+            this.id = comment.getId();
+            this.postId = comment.getPost().getId();
+            this.userId = comment.getUser().getId();
+            this.username = comment.getUser().getUsername();
+            this.content = comment.getContent();
+            this.parentId = comment.getParent() != null ? comment.getParent().getId() : null;
+            this.updatedAt = comment.getUpdatedAt();
+        }
+    }
 }

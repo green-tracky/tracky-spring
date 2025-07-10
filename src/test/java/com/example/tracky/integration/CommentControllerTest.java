@@ -1,7 +1,10 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
+import com.example.tracky.community.posts.PostRepository;
+import com.example.tracky.community.posts.comments.CommentRepository;
 import com.example.tracky.community.posts.comments.CommentRequest;
+import com.example.tracky.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,15 @@ public class CommentControllerTest extends MyRestDoc {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Test
     @DisplayName("댓글 조회 성공")
@@ -104,6 +116,44 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("댓글 수정 성공")
+    void update_test() throws Exception {
+
+        // given
+        int postId = 1;
+        int commentId = 1;
+
+        CommentRequest.UpdateDTO reqDTO = new CommentRequest.UpdateDTO();
+        reqDTO.setContent("수정된 내용입니다");
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/community/posts/{postId}/comments/{commentId}", postId, commentId)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.postId").value(1));
+        actions.andExpect(jsonPath("$.data.userId").value(3));
+        actions.andExpect(jsonPath("$.data.username").value("love"));
+        actions.andExpect(jsonPath("$.data.content").value("수정된 내용입니다"));
+        actions.andExpect(jsonPath("$.data.parentId").value((Object) null));
+        actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
     }
 
 }
