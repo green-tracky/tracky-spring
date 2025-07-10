@@ -5,7 +5,7 @@ import jakarta.persistence.Converter;
 
 /**
  * [핵심] @Converter(autoApply = true)
- * 이 설정을 통해 JPA는 코드에서 ChallengeTypeEnum 타입을 발견할 때마다
+ * 이 설정을 통해 JPA는 코드에서 InviteStatusEnum 타입을 발견할 때마다
  * 자동으로 이 컨버터를 사용하여 DB와 값을 변환합니다.
  */
 @Converter(autoApply = true)
