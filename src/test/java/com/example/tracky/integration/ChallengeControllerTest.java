@@ -176,7 +176,7 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.remainingTime").value(1987140));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isInProgress").value(true));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.participantCount").value(1));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.creatorName").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.creatorName").value("ssar"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.type").value("사설"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isJoined").value(true));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.imageUrl").value("https://example.com/images/new_challenge.png"));

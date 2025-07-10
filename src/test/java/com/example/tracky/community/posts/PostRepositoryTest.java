@@ -132,25 +132,18 @@ public class PostRepositoryTest {
         }
     }
 
+    @Test
     void update_test() {
 
         // given
-        User user = User.builder()
-                .build();
-        em.persist(user);
-
-        Post post = Post.builder()
-                .content("원래 내용")
-                .user(user)
-                .build();
-        postRepository.save(post);
+        Integer postId = 1;
 
         // when
-        Post postPS = postRepository.findById(post.getId()).orElseThrow();
+        Post postPS = postRepository.findById(postId).orElseThrow();
         postPS.update("수정된 내용", null, null);
 
         // then
-        Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
+        Post updatedPost = postRepository.findById(postId).orElseThrow();
         log.debug("✅ 내용: {}", updatedPost.getContent());
     }
 
