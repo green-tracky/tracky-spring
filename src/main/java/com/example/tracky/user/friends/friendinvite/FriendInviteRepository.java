@@ -73,7 +73,7 @@ public class FriendInviteRepository {
                             select count(f) from FriendInvite f
                             where f.fromUser.id = :fromId
                             and f.toUser.id = :toId
-                            and f.status = 'WAITING'
+                            and f.status = 'PENDING'
                         """, Long.class)
                 .setParameter("fromId", fromUser.getId())
                 .setParameter("toId", toUser.getId())
