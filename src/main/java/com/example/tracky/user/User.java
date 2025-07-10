@@ -41,8 +41,9 @@ public class User {
     @Enumerated(EnumType.STRING) // 이넘 영어 그대로 사용함
     @Column(nullable = false)
     private ProviderTypeEnum provider; // oauth 제공자 (kakao, google)
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String userTag; // #UUID 6자리
+    @Column(unique = true, nullable = false)
     private String flutterTokenId; // 기기 식별 아이디 // 알림서비스용
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
