@@ -182,4 +182,6 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.imageUrl").value("https://example.com/images/new_challenge.png"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.periodType").value("기타"));
     }
+
+
 }
