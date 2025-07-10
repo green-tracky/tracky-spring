@@ -69,6 +69,7 @@ public enum ErrorCodeEnum {
      */
     INVALID_INVITE_RESPONSE_STATE(400, "이미 응답된 요청입니다."),
 
+
     /**
      * 401 Unauthorized - 로그인이 필요합니다.
      */
