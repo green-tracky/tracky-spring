@@ -23,12 +23,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RunLevelRepository runLevelRepository;
+    private final RSAUtil rsaUtil;
 
     @Transactional
     public UserResponse.IdTokenDTO kakaoLogin(String idToken) { // application context에 저장
         // 1. 공개키 존재 확인 없으면 다운로드
         // 2. id Token 검증 (base64 디코딩, 서명검증)
-        OAuthProfile oAuthProfile = RSAUtil.verify(idToken);
+        OAuthProfile oAuthProfile = rsaUtil.verify(idToken);
 
         User user = null;
 

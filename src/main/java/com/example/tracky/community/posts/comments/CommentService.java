@@ -5,6 +5,9 @@ import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.PostRepository;
 import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
@@ -52,7 +56,10 @@ public class CommentService {
     }
 
 
-    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, User user) {
+    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         Post post = postRepository.findById(reqDTO.getPostId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
@@ -63,7 +70,7 @@ public class CommentService {
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
         }
 
-        Comment comment = reqDTO.toEntity(user, post, parent);
+        Comment comment = reqDTO.toEntity(userPS, post, parent);
         Comment commentPS = commentRepository.save(comment);
 
         return new CommentResponse.SaveDTO(commentPS);

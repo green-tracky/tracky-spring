@@ -1,6 +1,6 @@
 package com.example.tracky.community.posts.comments;
 
-import com.example.tracky._core.constants.Constant;
+import com.example.tracky._core.constants.Constants;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +37,8 @@ public class CommentRepository {
                         "select c from Comment c where c.post.id = :postId and c.parent is null order by c.id desc",
                         Comment.class)
                 .setParameter("postId", postId)
-                .setFirstResult((page - 1) * Constant.PAGE_SIZE)
-                .setMaxResults(Constant.PAGE_SIZE)
+                .setFirstResult((page - 1) * Constants.PAGE_SIZE)
+                .setMaxResults(Constants.PAGE_SIZE)
                 .getResultList();
     }
 
@@ -90,8 +90,8 @@ public class CommentRepository {
 
         List<Integer> parentIds = em.createQuery(jpql, Integer.class)
                 .setParameter("postId", postId)
-                .setFirstResult((page - 1) * Constant.PAGE_SIZE)
-                .setMaxResults(Constant.PAGE_SIZE)
+                .setFirstResult((page - 1) * Constants.PAGE_SIZE)
+                .setMaxResults(Constants.PAGE_SIZE)
                 .getResultList();
 
         if (parentIds.isEmpty()) {
