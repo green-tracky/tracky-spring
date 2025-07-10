@@ -91,6 +91,19 @@ public class CommentControllerTest extends MyRestDoc {
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(jsonPath("$.data.id").value(28));
+        actions.andExpect(jsonPath("$.data.postId").value(1));
+        actions.andExpect(jsonPath("$.data.userId").value(1));
+        actions.andExpect(jsonPath("$.data.username").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
+        actions.andExpect(jsonPath("$.data.parentId").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
     }
 
 }
