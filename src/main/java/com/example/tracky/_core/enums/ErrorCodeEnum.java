@@ -69,22 +69,6 @@ public enum ErrorCodeEnum {
      */
     INVALID_INVITE_RESPONSE_STATE(400, "이미 응답된 요청입니다."),
 
-
-    /**
-     * 400 Bad Request - 본인에게 친구 요청을 보낼 수 없습니다.
-     */
-    INVALID_SELF_REQUEST(400, "본인에게 친구 요청을 보낼 수 없습니다."),
-
-    /**
-     * 400 Bad Request - 이미 친구 요청을 보냈습니다.
-     */
-    DUPLICATE_FRIEND_INVITE(400, "이미 친구 요청을 보냈습니다."),
-
-    /**
-     * 400 Bad Request - 이미 응답된 요청입니다.
-     */
-    INVALID_INVITE_RESPONSE_STATE(400, "이미 응답된 요청입니다."),
-
     /**
      * 401 Unauthorized - 로그인이 필요합니다.
      */
