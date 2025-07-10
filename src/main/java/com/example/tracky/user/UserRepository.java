@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -53,5 +54,12 @@ public class UserRepository {
 
     public Optional<User> findById(Integer userId) {
         return Optional.ofNullable(em.find(User.class, userId));
+    }
+
+    public List<User> findByUserTag(String tag) {
+        Query query = em.createQuery("select u from User u where upper(u.userTag) like upper(:tag) ");
+        query.setParameter("tag", tag + "%");
+        List<User> users = query.getResultList();
+        return users;
     }
 }
