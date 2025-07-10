@@ -157,6 +157,10 @@ class PostControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .delete("/s/api/community/posts/" + postId));
 
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
         // then
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
@@ -181,6 +185,98 @@ class PostControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then 댓글까지 끝나면 나중에 작성
+        // 최상위 응답
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data.comments 정보
+        actions.andExpect(jsonPath("$.data.comments.current").value(1));
+        actions.andExpect(jsonPath("$.data.comments.totalCount").value(10));
+        actions.andExpect(jsonPath("$.data.comments.next").value(2));
+        actions.andExpect(jsonPath("$.data.comments.totalPage").value(5));
+        actions.andExpect(jsonPath("$.data.comments.isLast").value(false));
+
+        // data.comments.comments (댓글 + 대댓글)
+        actions.andExpect(jsonPath("$.data.comments.comments[0].id").value(22));
+        actions.andExpect(jsonPath("$.data.comments.comments[0].postId").value(1));
+        actions.andExpect(jsonPath("$.data.comments.comments[0].userId").value(2));
+        actions.andExpect(jsonPath("$.data.comments.comments[0].username").value("cos"));
+        actions.andExpect(jsonPath("$.data.comments.comments[0].content").value("감동적인 글이었습니다."));
+        actions.andExpect(jsonPath("$.data.comments.comments[0].parentId").doesNotExist());
+        actions.andExpect(jsonPath("$.data.comments.comments[0].children").isArray());
+
+        actions.andExpect(jsonPath("$.data.comments.comments[1].id").value(21));
+        actions.andExpect(jsonPath("$.data.comments.comments[1].children[0].id").value(26));
+        actions.andExpect(jsonPath("$.data.comments.comments[1].children[0].username").value("cos"));
+        actions.andExpect(jsonPath("$.data.comments.comments[1].children[0].content").value("앞으로 자주 뵈어요!"));
+        actions.andExpect(jsonPath("$.data.comments.comments[1].children[1].id").value(27));
+        actions.andExpect(jsonPath("$.data.comments.comments[1].children[1].username").value("love"));
+        actions.andExpect(jsonPath("$.data.comments.comments[1].children[1].content").value("저도 기대하고 있겠습니다."));
+
+        actions.andExpect(jsonPath("$.data.comments.comments[2].id").value(20));
+        actions.andExpect(jsonPath("$.data.comments.comments[2].children[0].id").value(25));
+        actions.andExpect(jsonPath("$.data.comments.comments[2].children[0].content").value("진짜 정성이 느껴졌어요."));
+
+        actions.andExpect(jsonPath("$.data.comments.comments[3].id").value(19));
+        actions.andExpect(jsonPath("$.data.comments.comments[3].children[0].id").value(23));
+        actions.andExpect(jsonPath("$.data.comments.comments[3].children[0].content").value("저도 같은 생각이에요!"));
+        actions.andExpect(jsonPath("$.data.comments.comments[3].children[1].id").value(24));
+        actions.andExpect(jsonPath("$.data.comments.comments[3].children[1].content").value("공감 백퍼입니다."));
+
+        actions.andExpect(jsonPath("$.data.comments.comments[4].id").value(18));
+        actions.andExpect(jsonPath("$.data.comments.comments[4].content").value("열정이 느껴져요."));
+        actions.andExpect(jsonPath("$.data.comments.comments[4].children").isArray());
+
+        // 좋아요 및 댓글 수
+        actions.andExpect(jsonPath("$.data.likeCount").value(1));
+        actions.andExpect(jsonPath("$.data.commentCount").value(27));
+        actions.andExpect(jsonPath("$.data.isLiked").value(false));
+
+        // 게시글 본문 정보
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.content").value("ssar의 러닝 기록을 공유합니다."));
+        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+        actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
+
+        // 작성자 정보
+        actions.andExpect(jsonPath("$.data.user.id").value(1));
+        actions.andExpect(jsonPath("$.data.user.username").value("ssar"));
+        actions.andExpect(jsonPath("$.data.user.profileUrl").value("http://example.com/profiles/ssar.jpg"));
+
+        // 러닝 기록
+        actions.andExpect(jsonPath("$.data.runRecord.id").value(1));
+        actions.andExpect(jsonPath("$.data.runRecord.title").value("부산 서면역 15번 출구 100m 러닝"));
+        actions.andExpect(jsonPath("$.data.runRecord.memo").value("서면역 15번 출구에서 NC백화점 방향으로 100m 직선 러닝"));
+        actions.andExpect(jsonPath("$.data.runRecord.calories").value(10));
+        actions.andExpect(jsonPath("$.data.runRecord.totalDistanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.runRecord.totalDurationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.runRecord.elapsedTimeInSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.runRecord.avgPace").value(500));
+        actions.andExpect(jsonPath("$.data.runRecord.bestPace").value(500));
+        actions.andExpect(jsonPath("$.data.runRecord.userId").value(1));
+        actions.andExpect(jsonPath("$.data.runRecord.createdAt").isNotEmpty());
+        actions.andExpect(jsonPath("$.data.runRecord.intensity").value(3));
+        actions.andExpect(jsonPath("$.data.runRecord.place").value("도로"));
+
+        // 러닝 segments + coordinates 예시
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].startDate").isNotEmpty());
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].endDate").isNotEmpty());
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].durationSeconds").value(50));
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].distanceMeters").value(100));
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].pace").value(500));
+
+        // 좌표 예시 (일부만)
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].coordinates[0].lat").value(35.1579));
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].coordinates[0].lon").value(129.0594));
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].coordinates[0].recordedAt").isNotEmpty());
+
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].coordinates[1].lon").value(129.05944545));
+        actions.andExpect(jsonPath("$.data.runRecord.segments[0].coordinates[25].lon").value(129.06053636));
+
+        // pictures (빈 배열)
+        actions.andExpect(jsonPath("$.data.pictures").isArray());
+        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
     }
 
 }
