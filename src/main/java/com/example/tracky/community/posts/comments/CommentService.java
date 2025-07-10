@@ -1,5 +1,10 @@
 package com.example.tracky.community.posts.comments;
 
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.community.posts.Post;
+import com.example.tracky.community.posts.PostRepository;
+import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +18,15 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
-    public List<CommentResponse.DTO> getCommentsWithReplies(Integer postId, Integer page) {
+    public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
-        if (page < 0) page = 0;
+        //한 페이지의 부모댓글과 자식댓글 수 합계
+        Integer totalCount = commentRepository.countTotalCommentsInPage(postId, page);
+
+        //부모댓글의 총 개수, 이걸로 totalPage 구함
+        Integer parentCount = commentRepository.countParentComments(postId);
 
         // 1. 댓글(부모) 페이징 조회
         List<Comment> parentComments = commentRepository.findParentComments(postId, page);
@@ -34,8 +44,30 @@ public class CommentService {
                 .collect(Collectors.groupingBy(c -> c.getParent().getId()));
 
         // 5. DTO로 변환
-        return parentComments.stream()
-                .map(parent -> new CommentResponse.DTO(parent, replyMap.getOrDefault(parent.getId(), new ArrayList<>())))
+        List<CommentResponse.ParentDTO> parentDTOs = parentComments.stream()
+                .map(parent -> new CommentResponse.ParentDTO(parent, replyMap.getOrDefault(parent.getId(), new ArrayList<>())))
                 .toList();
+
+        return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOs);
     }
+
+
+    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, User user) {
+
+        Post post = postRepository.findById(reqDTO.getPostId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        Comment parent = null;
+        if (reqDTO.getParentId() != null) {
+            parent = commentRepository.findById(reqDTO.getParentId())
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
+        }
+
+        Comment comment = reqDTO.toEntity(user, post, parent);
+        Comment commentPS = commentRepository.save(comment);
+
+        return new CommentResponse.SaveDTO(commentPS);
+
+    }
+
 }
