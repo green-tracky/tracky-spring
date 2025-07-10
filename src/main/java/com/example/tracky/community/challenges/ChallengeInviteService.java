@@ -35,32 +35,32 @@ public class ChallengeInviteService {
      * 챌린지 초대
      *
      * @param id
-     * @param frinedIds
+     * @param reqDTO
      * @param user
      * @return
      */
     @Transactional
-    public List<ChallengeInviteResponse.saveDTO> challengesInvite(Integer id, ChallengeInviteRequest.InviteRequestDTO frinedIds, User user) {
+    public List<ChallengeInviteResponse.saveDTO> challengesInvite(Integer id, ChallengeInviteRequest.InviteRequestDTO reqDTO, User user) {
 
         // 초대할 챌린지 조회
-        Challenge challenge = challengeRepository.findById(id)
+        Challenge challengePS = challengeRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
 
         List<ChallengeInviteResponse.saveDTO> saveDTO = new ArrayList<>();
-        for (Integer frinedId : frinedIds.getFriendIds()) {
-            User toUser = userRepository.findById(frinedId)
+        for (Integer frinedId : reqDTO.getFriendIds()) {
+            User toUserPS = userRepository.findById(frinedId)
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-            ChallengeInvite Invite = ChallengeInvite.builder()
+            ChallengeInvite invite = ChallengeInvite.builder()
                     .fromUser(user)
-                    .toUser(toUser)
-                    .challenge(challenge)
+                    .toUser(toUserPS)
+                    .challenge(challengePS)
                     .status(InviteStatusEnum.PENDING)
                     .build();
 
-            ChallengeInvite savePS = challengeInviteRepository.save(Invite);
+            ChallengeInvite invitePS = challengeInviteRepository.save(invite);
 
-            saveDTO.add(new ChallengeInviteResponse.saveDTO(savePS));
+            saveDTO.add(new ChallengeInviteResponse.saveDTO(invitePS));
         }
 
         return saveDTO;
@@ -75,25 +75,25 @@ public class ChallengeInviteService {
      */
     public List<ChallengeInviteResponse.friendDTO> getFriend(Integer id, User user) {
         // 챌린지의 참여한 유저 조회
-        List<User> joinUsers = challengeJoinRepository.findUserAllById(id);
+        List<User> joinUsersPS = challengeJoinRepository.findUserAllById(id);
 
         // 자신 조회
-        User me = userRepository.findById(user.getId())
+        User myUserPS = userRepository.findById(user.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 친구 조회
-        List<Friend> friends = friendRepository.findfriendByUserIdJoinFriend(user.getId());
+        List<Friend> friendsPS = friendRepository.findfriendByUserIdJoinFriend(user.getId());
 
         // 참여자 ID 목록 만들기 (검색 최적화용)
         List<Integer> joinedUserIds = new ArrayList<>();
-        for (User u : joinUsers) {
+        for (User u : joinUsersPS) {
             joinedUserIds.add(u.getId());
         }
 
         // DTO에 담을 배열 만들기
         List<ChallengeInviteResponse.friendDTO> friendDTO = new ArrayList<>();
-        for (Friend friend : friends) {
-            ChallengeInviteResponse.friendDTO DTO = new ChallengeInviteResponse.friendDTO(friend, me);
+        for (Friend friend : friendsPS) {
+            ChallengeInviteResponse.friendDTO DTO = new ChallengeInviteResponse.friendDTO(friend, myUserPS);
 
             // 6. 챌린지 참여자가 아니면 추가
             if (!joinedUserIds.contains(DTO.getId())) {
