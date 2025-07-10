@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public class UserService {
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_LEVEL_NOT_FOUND));
 
             // db 에 있는 유저들의 유저태그 목록 조회
-            // TODO
+            List<String> userTagsPS = userRepository.findAllUserTag();
 
             user = User.builder()
                     .loginId(ProviderTypeEnum.KAKAO + "_" + oAuthProfile.getSub())
@@ -52,9 +53,11 @@ public class UserService {
                     .profileUrl(oAuthProfile.getPicture())
                     .runLevel(runLevelPS)
                     .userType(UserTypeEnum.GENERAL)
-                    .userTag(UserTagUtil.generateUniqueUserTag())
                     .provider(ProviderTypeEnum.KAKAO)
+                    .userTag(UserTagUtil.generateUniqueUserTag(userTagsPS))
                     .build();
+
+            user = userRepository.save(user);
         } else {
             user = userOP.get();
         }

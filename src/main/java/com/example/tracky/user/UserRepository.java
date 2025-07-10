@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -69,5 +70,15 @@ public class UserRepository {
         } catch (Exception e) {
             return Optional.ofNullable(null);
         }
+    }
+
+    public List<String> findAllUserTag() {
+        Query query = em.createQuery("select u.userTag from User u", String.class);
+        return query.getResultList();
+    }
+
+    public User save(User user) {
+        em.persist(user);
+        return user;
     }
 }
