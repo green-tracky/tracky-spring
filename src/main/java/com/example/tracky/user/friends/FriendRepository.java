@@ -58,4 +58,10 @@ public class FriendRepository {
         return count > 0;
     }
 
+    public List<Friend> findByUserTag(String tag) {
+        Query query = em.createQuery("select f from Friend f where f.toUser.userTag = :tag");
+        query.setParameter("tag", tag);
+        List<Friend> friends = query.getResultList();
+        return friends;
+    }
 }
