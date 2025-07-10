@@ -43,7 +43,7 @@ public class User {
     private ProviderTypeEnum provider; // oauth 제공자 (kakao, google)
     @Column(unique = true, nullable = false)
     private String userTag; // #UUID 6자리
-    @Column(unique = true, nullable = false)
+    //    @Column(unique = true, nullable = false)
     private String flutterTokenId; // 기기 식별 아이디 // 알림서비스용
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

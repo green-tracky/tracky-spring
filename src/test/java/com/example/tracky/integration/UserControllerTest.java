@@ -3,6 +3,7 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -39,6 +41,26 @@ class UserControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+
+        // user.id
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.id").value(7));
+
+        // user.username
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.username").value("최재원"));
+
+        // user.loginId
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.loginId").value("KAKAO_4320402961"));
+
+        // idToken 패턴: JWT (header.payload.signature) 형태
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.idToken").value(Matchers.matchesPattern("^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$")));
+
+        // createdAt 날짜 포맷: yyyy-MM-dd HH:mm:ss
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.createdAt").value(Matchers.matchesPattern("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")));
+
+        // userTag: #XXXXXX (Hex 컬러코드 형태)
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.userTag").value(Matchers.matchesPattern("^#[A-Fa-f0-9]{6}$")));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
