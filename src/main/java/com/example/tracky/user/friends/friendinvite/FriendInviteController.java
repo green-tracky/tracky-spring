@@ -22,8 +22,8 @@ public class FriendInviteController {
         return ResponseEntity.ok(respDTO);
     }
 
-    @PostMapping("/friend/invite")
-    public ResponseEntity<?> friendInvite(@RequestParam Integer toUserId) {
+    @PostMapping("/friend/invite/{toUserId}")
+    public ResponseEntity<?> friendInvite(@PathVariable("toUserId") Integer toUserId) {
         // TODO: 로그인 유저로 교체
         User fromUser = User.builder().id(1).build();
 
