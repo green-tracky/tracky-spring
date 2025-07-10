@@ -18,11 +18,10 @@ public class ChallengeInviteController {
     private final ChallengeInviteService challengeInviteService;
 
     @PostMapping("/community/challenges/{id}/invite")
-    public ResponseEntity<?> challengesInvite(@PathVariable("id") Integer id, @RequestBody ChallengeInviteRequest.InviteRequestDTO req) {
-        Integer myuserId = 1;
-        User user = User.builder().id(myuserId).build();
+    public ResponseEntity<?> challengesInvite(@PathVariable("id") Integer id, @RequestBody ChallengeInviteRequest.InviteRequestDTO reqDTO) {
+        User user = User.builder().id(1).build();
 
-        List<ChallengeInviteResponse.saveDTO> respDTO = challengeInviteService.challengesInvite(id, req, user);
+        List<ChallengeInviteResponse.saveDTO> respDTO = challengeInviteService.challengesInvite(id, reqDTO, user);
         return Resp.ok(respDTO);
     }
 
