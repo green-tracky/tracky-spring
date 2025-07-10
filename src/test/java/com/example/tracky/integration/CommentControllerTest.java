@@ -69,7 +69,7 @@ public class CommentControllerTest extends MyRestDoc {
     }
 
     @Test
-    @DisplayName("포스트 쓰기 성공")
+    @DisplayName("댓글 쓰기 성공")
     void save_test() throws Exception {
 
         // given

@@ -19,7 +19,7 @@ public class CommentController {
             @PathVariable Integer postId,
             @RequestParam(defaultValue = "1") Integer page // page 파라미터 없으면 기본값 1
     ) {
-        if (page < 1) {
+        if (page == null || page < 1) {
             page = 1;
         }
 

@@ -10,7 +10,6 @@ public class CommentRequest {
     public static class SaveDTO {
 
         private Integer postId;
-        private String username;
         private String content;
         private Integer parentId;
 

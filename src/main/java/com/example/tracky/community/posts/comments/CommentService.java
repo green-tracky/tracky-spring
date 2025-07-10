@@ -1,9 +1,10 @@
 package com.example.tracky.community.posts.comments;
 
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.PostRepository;
 import com.example.tracky.user.User;
-import com.example.tracky.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,6 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
     public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
@@ -44,22 +44,23 @@ public class CommentService {
                 .collect(Collectors.groupingBy(c -> c.getParent().getId()));
 
         // 5. DTO로 변환
-        List<CommentResponse.ParentDTO> parentDTOS = parentComments.stream()
+        List<CommentResponse.ParentDTO> parentDTOs = parentComments.stream()
                 .map(parent -> new CommentResponse.ParentDTO(parent, replyMap.getOrDefault(parent.getId(), new ArrayList<>())))
                 .toList();
 
-        return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOS);
+        return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOs);
     }
+
 
     public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, User user) {
 
         Post post = postRepository.findById(reqDTO.getPostId())
-                .orElseThrow(() -> new RuntimeException("게시글 없음"));
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
         Comment parent = null;
         if (reqDTO.getParentId() != null) {
             parent = commentRepository.findById(reqDTO.getParentId())
-                    .orElseThrow(() -> new RuntimeException("부모 댓글 없음"));
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
         }
 
         Comment comment = reqDTO.toEntity(user, post, parent);
