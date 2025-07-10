@@ -26,14 +26,13 @@ class UserControllerTest extends MyRestDoc {
     @DisplayName("카카오 로그인")
     void kakao_login_test() throws Exception {
         // given
-        String idToken = "eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA";
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/api/oauth/login")
+                        .post("/api/oauth/kakao/login")
                         .contentType(MediaType.TEXT_PLAIN)
-                        .content(idToken)
+                        .content(fakeToken)
         );
 
         // eye
@@ -45,13 +44,13 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
 
         // user.id
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.id").value(7));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.id").value(1));
 
         // user.username
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.username").value("최재원"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.username").value("ssar"));
 
         // user.loginId
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.loginId").value("KAKAO_4320402961"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.user.loginId").value("KAKAO_123456789"));
 
         // idToken 패턴: JWT (header.payload.signature) 형태
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.idToken").value(Matchers.matchesPattern("^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$")));

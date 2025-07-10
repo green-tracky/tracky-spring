@@ -37,6 +37,7 @@ class ChallengeControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .get("/s/api/community/challenges")
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -98,6 +99,7 @@ class ChallengeControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .get("/s/api/community/challenges/{id}", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -154,7 +156,8 @@ class ChallengeControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .post("/s/api/community/challenges")
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken));
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
