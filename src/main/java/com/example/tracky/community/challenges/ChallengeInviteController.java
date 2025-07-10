@@ -32,4 +32,22 @@ public class ChallengeInviteController {
         List<ChallengeInviteResponse.friendDTO> respDTO = challengeInviteService.getFriend(id, user);
         return Resp.ok(respDTO);
     }
+
+    @PostMapping("/community/challenges/{id}/accept")
+    public ResponseEntity<?> friendInviteAccept(@PathVariable("id") Integer inviteId) {
+        // TODO: 로그인 유저로 교체
+        User user = User.builder().id(6).build();
+
+        ChallengeInviteResponse.ResponseDTO respDTO = challengeInviteService.challengesInviteAccept(inviteId, user);
+        return ResponseEntity.ok(respDTO);
+    }
+
+    @PostMapping("/community/challenges/{id}/reject")
+    public ResponseEntity<?> friendInviteReject(@PathVariable("id") Integer inviteId) {
+        // TODO: 로그인 유저로 교체
+        User user = User.builder().id(6).build();
+
+        ChallengeInviteResponse.ResponseDTO respDTO = challengeInviteService.challengesInviteReject(inviteId, user);
+        return ResponseEntity.ok(respDTO);
+    }
 }
