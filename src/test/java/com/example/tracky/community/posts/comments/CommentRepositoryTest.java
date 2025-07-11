@@ -99,13 +99,7 @@ public class CommentRepositoryTest {
 
     @Test
     void delete_test() {
-        Integer parentId = 1;
-
-        int deletedLikes = em.createQuery("DELETE FROM Like l WHERE l.comment.id = :commentId")
-                .setParameter("commentId", parentId)
-                .executeUpdate();
-        log.debug("✅ 댓글 좋아요 삭제 완료 ({}건)", deletedLikes);
-
+        Integer parentId = 2;
 
         // 대댓글 먼저 삭제
         em.createQuery("DELETE FROM Comment c WHERE c.parent.id = :parentId")
