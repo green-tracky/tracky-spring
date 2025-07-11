@@ -30,18 +30,18 @@ public class NotificationService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
 
-        List<NotificationResponse.NotificationbandleDTO> notificationDTO = new ArrayList<>();
+        List<NotificationResponse.NotificationBundleDTO> notificationDTO = new ArrayList<>();
 
         // 친구 요청 알람 조회
         List<FriendInvite> friendInvitesPS = friendInviteRepository.findAllByUserId(userPS.getId());
         for (FriendInvite friendDTO : friendInvitesPS) {
-            notificationDTO.add(new NotificationResponse.NotificationbandleDTO(friendDTO));
+            notificationDTO.add(new NotificationResponse.NotificationBundleDTO(friendDTO));
         }
 
         // 챌린지 요청 알람 조회
         List<ChallengeInvite> challengeInvitesPS = challengeInviteRepository.findAllByUserId(userPS.getId());
         for (ChallengeInvite challengeDTO : challengeInvitesPS) {
-            notificationDTO.add(new NotificationResponse.NotificationbandleDTO(challengeDTO));
+            notificationDTO.add(new NotificationResponse.NotificationBundleDTO(challengeDTO));
         }
 
         // 내림차 순 정렬
