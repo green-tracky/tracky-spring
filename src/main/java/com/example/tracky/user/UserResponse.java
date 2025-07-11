@@ -70,4 +70,39 @@ public class UserResponse {
         }
     }
 
+    @Data
+    public static class UpdateDTO {
+        private Integer id;
+        private String loginId;
+        private String username;
+        private String email;
+        private String profileUrl;
+        private Double height;
+        private Double weight;
+        private GenderEnum gender;
+        private String location;
+        private String letter;
+        private ProviderTypeEnum provider;
+        private String userTag;
+        private String flutterTokenId;
+        private LocalDateTime updatedAt;
+
+        public UpdateDTO(User user) {
+            this.id = user.getId();
+            this.loginId = user.getLoginId();
+            this.username = user.getUsername();
+            this.email = user.getEmail();
+            this.profileUrl = user.getProfileUrl();
+            this.height = user.getHeight();
+            this.weight = user.getWeight();
+            this.gender = user.getGender();
+            this.location = user.getLocation();
+            this.letter = user.getLetter();
+            this.provider = user.getProvider();
+            this.userTag = user.getUserTag();
+            this.flutterTokenId = user.getFlutterTokenId();
+            this.updatedAt = user.getUpdatedAt();
+        }
+    }
+
 }

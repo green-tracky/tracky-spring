@@ -88,4 +88,12 @@ public class UserRepository {
         List<User> users = query.getResultList();
         return users;
     }
+
+    public void flush() {
+        em.flush();
+    }
+
+    public void delete(User user) {
+        em.remove(user);
+    }
 }
