@@ -74,4 +74,22 @@ public class ChallengeInviteRepository {
         query.setParameter("userId", userId);
         return query.getResultList();
     }
+
+    /**
+     * <pre>
+     * 로그인한 유저가 받은 챌린지 초대 요청 목록 조회
+     * join fetch
+     * - challenge
+     * - fromUser
+     * </pre>
+     *
+     * @param userid 로그인한 유저의 ID
+     * @return 챌린지 초대 리스트
+     */
+    public List<ChallengeInvite> findAllByToUserIdJoin(Integer userid) {
+        Query query = em.createQuery("select c from ChallengeInvite c join fetch c.fromUser where c.toUser.id = :id");
+        query.setParameter("id", userid);
+        List<ChallengeInvite> inviteList = query.getResultList();
+        return inviteList;
+    }
 }
