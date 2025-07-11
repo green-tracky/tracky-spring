@@ -1,6 +1,10 @@
 package com.example.tracky.user.friends;
 
+import com.example.tracky._core.constants.SessionKeys;
+import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +19,7 @@ import java.util.List;
 @RequestMapping("/s/api")
 public class FriendController {
     private final FriendService friendService;
+    private final HttpSession session;
 
     @GetMapping("/friend/search")
     public ResponseEntity<?> getFriendSearch(@RequestParam("user-tag") String userTag) {
@@ -25,4 +30,12 @@ public class FriendController {
         return ResponseEntity.ok(respDTO);
     }
 
+    @GetMapping("/friend/list")
+    public ResponseEntity<?> getFriendList() {
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
+
+        List<FriendResponse.UserDTO> respDTO = friendService.getFriendList(sessionProfile);
+
+        return Resp.ok(respDTO);
+    }
 }
