@@ -151,4 +151,23 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.parentId").value((Object) null));
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
     }
+
+    @Test
+    @DisplayName("삭제 성공 테스트")
+    void delete_test() throws Exception {
+        // given
+        int postId = 1;
+        int commentId = 3;
+
+        //when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/posts/{postId}/comments/{commentId}", postId, commentId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+    }
 }

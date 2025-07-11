@@ -9,6 +9,7 @@ import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -111,6 +112,27 @@ public class CommentService {
 
         return new CommentResponse.SaveDTO(commentPS);
 
+    }
+
+    @Transactional
+    public void delete(Integer id, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        if (!comment.getUser().getId().equals(userPS.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        List<Comment> childComments = commentRepository.findByParentId(comment.getId());
+        if (!childComments.isEmpty()) {
+            commentRepository.deleteAll(childComments);
+        }
+
+        commentRepository.delete(comment);
     }
 
 }

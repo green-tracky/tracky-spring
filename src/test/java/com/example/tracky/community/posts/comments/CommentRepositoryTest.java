@@ -97,4 +97,27 @@ public class CommentRepositoryTest {
         log.debug("user.id: {}", comment.getUser().getId());
     }
 
+    @Test
+    void delete_test() {
+        Integer parentId = 1;
+
+        int deletedLikes = em.createQuery("DELETE FROM Like l WHERE l.comment.id = :commentId")
+                .setParameter("commentId", parentId)
+                .executeUpdate();
+        log.debug("✅ 댓글 좋아요 삭제 완료 ({}건)", deletedLikes);
+
+
+        // 대댓글 먼저 삭제
+        em.createQuery("DELETE FROM Comment c WHERE c.parent.id = :parentId")
+                .setParameter("parentId", parentId)
+                .executeUpdate();
+
+        // 부모 댓글 삭제
+        int deletedComment = em.createQuery("DELETE FROM Comment c WHERE c.id = :id")
+                .setParameter("id", parentId)
+                .executeUpdate();
+
+        log.debug("✅ 댓글 삭제 완료 ({}건)", deletedComment);
+    }
+
 }
