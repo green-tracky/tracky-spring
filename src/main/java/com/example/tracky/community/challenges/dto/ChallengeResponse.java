@@ -3,6 +3,7 @@ package com.example.tracky.community.challenges.dto;
 import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky._core.enums.PeriodTypeEnum;
 import com.example.tracky.community.challenges.domain.Challenge;
+import com.example.tracky.community.challenges.domain.ChallengeInvite;
 import com.example.tracky.community.challenges.domain.RewardMaster;
 import com.example.tracky.community.challenges.utils.ChallengeUtil;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class ChallengeResponse {
     @Data
     public static class MainDTO {
         private RecommendedDTO recommendedChallenge; // 추천 챌린지. 공개 챌린지 중 랜덤으로 하나
+        private List<ChallengeInviteItemDTO> inviteChallenges; // 초대온 챌린지 목록
         private List<ChallengeItemDTO> myChallenges; // 내가 참가하고 있는 챌린지 목록
         private List<ChallengeItemDTO> joinableChallenges; // 참가할 수 있는 공개 챌린지 목록
         private List<ChallengeItemDTO> pastChallenges; // 내가 참여했던 챌린지 목록
@@ -26,7 +28,8 @@ public class ChallengeResponse {
         public MainDTO(List<Challenge> joinedChallenges, // ChallengeJoin 에서 해당되는 Challenge를 가져온 것
                        List<Challenge> unjoinedChallenges,
                        Map<Integer, Integer> totalDistancesMap,
-                       Map<Integer, Integer> participantCountsMap) {
+                       Map<Integer, Integer> participantCountsMap,
+                       List<ChallengeInvite> inviteChallenges) {
 
             // 1. 내가 참여한 챌린지를 '진행 중'과 '지난 챌린지'로 분류하여 생성
             this.myChallenges = joinedChallenges.stream()
@@ -50,6 +53,11 @@ public class ChallengeResponse {
                 Integer participantCount = participantCountsMap.getOrDefault(recommended.getId(), 0);
                 this.recommendedChallenge = new RecommendedDTO(recommended, participantCount);
             }
+
+            // 4. 초대된 챌린지 목록
+            this.inviteChallenges = inviteChallenges.stream()
+                    .map(challengeInvite -> new ChallengeInviteItemDTO(challengeInvite))
+                    .toList();
         }
 
         // 추천 챌린지 DTO
@@ -123,6 +131,48 @@ public class ChallengeResponse {
                 this.isInProgress = challenge.getIsInProgress(); // 종료됐으므로 false
                 this.endDate = challenge.getEndDate();
                 this.type = challenge.getType();
+            }
+        }
+
+        @Data
+        class ChallengeInviteItemDTO {
+            private ChallengeInviteInfoDTO challengeInfo; // 챌린지 정보
+            private String fromUsername; // 초대 보낸 사람 이름
+            private Integer challengeInviteId; // 챌린지 초대 db 아이디
+
+            public ChallengeInviteItemDTO(ChallengeInvite invite) {
+                this.challengeInfo = new ChallengeInviteInfoDTO(invite.getChallenge());
+                this.fromUsername = invite.getFromUser().getUsername();
+                this.challengeInviteId = invite.getId();
+            }
+
+            @Data
+            class ChallengeInviteInfoDTO {
+                private Integer id;
+                private String imageUrl; // 챌린지 이미지
+                private String name; // 챌린지 이름
+                private String sub; // 챌린지 짧은 설명
+                private Integer remainingTime; // 챌린지 종료까지 남은 시간. 초단위
+                private Integer myDistance; // 챌린지 기간의 나의 누적 거리. m 단위
+                private Integer targetDistance; // 챌린지 목표거리. m 단위
+                private Boolean isInProgress; // 챌린지 진행 상태
+                private LocalDateTime startDate; // 챌린지 종료 날짜
+                private LocalDateTime endDate; // 챌린지 종료 날짜
+                private ChallengeTypeEnum type; // "공개" 또는 "사설"
+
+                public ChallengeInviteInfoDTO(Challenge challenge) {
+                    this.id = challenge.getId();
+                    this.imageUrl = challenge.getImageUrl();
+                    this.name = challenge.getName();
+                    this.sub = challenge.getSub();
+                    this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
+                    this.myDistance = null;
+                    this.targetDistance = challenge.getTargetDistance();
+                    this.isInProgress = challenge.getIsInProgress();
+                    this.startDate = challenge.getStartDate();
+                    this.endDate = challenge.getEndDate();
+                    this.type = challenge.getType();
+                }
             }
         }
     }
