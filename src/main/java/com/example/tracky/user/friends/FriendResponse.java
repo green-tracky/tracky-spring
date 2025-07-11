@@ -8,10 +8,14 @@ import java.util.List;
 public class FriendResponse {
     @Data
     public static class SearchDTO {
-        private User user;
+        private Integer id;
+        private String profileUrl;
+        private String username;
 
         public SearchDTO(User user) {
-            this.user = user;
+            this.id = user.getId();
+            this.profileUrl = user.getProfileUrl();
+            this.username = user.getUsername();
         }
     }
 

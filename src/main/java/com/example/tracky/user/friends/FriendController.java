@@ -27,7 +27,7 @@ public class FriendController {
         User user = User.builder().id(1).build();
 
         List<FriendResponse.SearchDTO> respDTO = friendService.getFriendSearch(userTag, user);
-        return ResponseEntity.ok(respDTO);
+        return Resp.ok(respDTO);
     }
 
     @GetMapping("/friend/list")
