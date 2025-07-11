@@ -58,7 +58,6 @@ public class FriendInviteRepository {
         } catch (RuntimeException e) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
-
     }
 
     /**
