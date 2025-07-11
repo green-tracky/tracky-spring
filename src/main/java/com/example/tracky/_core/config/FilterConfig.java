@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @RequiredArgsConstructor
@@ -14,6 +15,9 @@ public class FilterConfig {
     // bean 에서 관리해라. 스프링이 주입 해줘라
     private final AuthorizationFilter authorizationFilter;
 
+    // 주석: 프로필 이름을 'dev-noauth'로 변경했습니다.
+    // 이제 'dev-noauth' 프로필이 아닐 때만 이 Bean이 등록됩니다.
+    @Profile("!dev-noauth")
     @Bean
     public FilterRegistrationBean<AuthorizationFilter> authorizationFilterRegistration() {
         FilterRegistrationBean<AuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
