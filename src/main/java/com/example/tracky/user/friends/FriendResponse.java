@@ -11,11 +11,13 @@ public class FriendResponse {
         private Integer id;
         private String profileUrl;
         private String username;
+        private String userTag;
 
         public SearchDTO(User user) {
             this.id = user.getId();
             this.profileUrl = user.getProfileUrl();
             this.username = user.getUsername();
+            this.userTag = user.getUserTag();
         }
     }
 
