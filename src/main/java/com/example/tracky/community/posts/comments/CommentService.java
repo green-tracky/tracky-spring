@@ -127,11 +127,6 @@ public class CommentService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
 
-        List<Comment> childComments = commentRepository.findByParentId(comment.getId());
-        if (!childComments.isEmpty()) {
-            commentRepository.deleteAll(childComments);
-        }
-
         commentRepository.delete(comment);
     }
 
