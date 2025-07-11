@@ -14,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Table(name = "user_tb")
@@ -56,7 +57,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RunRecord> runRecords = new ArrayList<>(); // 자식 러닝들
 
     @Builder
@@ -80,9 +81,6 @@ public class User {
         this.runRecords = runRecords;
     }
 
-    @Builder
-
-
     // 기본 생성자 사용 금지
     protected User() {
     }
@@ -94,6 +92,17 @@ public class User {
      */
     public void updateRunLevel(RunLevel newRunLevel) {
         this.runLevel = newRunLevel;
+    }
+
+    public void updateInfo(UserRequest.UpdateDTO reqDTO) {
+        this.username = Objects.requireNonNullElse(reqDTO.getUsername(), this.username);
+        this.email = Objects.requireNonNullElse(reqDTO.getEmail(), this.email);
+        this.profileUrl = Objects.requireNonNullElse(reqDTO.getProfileUrl(), this.profileUrl);
+        this.height = Objects.requireNonNullElse(reqDTO.getHeight(), this.height);
+        this.weight = Objects.requireNonNullElse(reqDTO.getWeight(), this.weight);
+        this.gender = Objects.requireNonNullElse(reqDTO.getGender(), this.gender);
+        this.location = Objects.requireNonNullElse(reqDTO.getLocation(), this.location);
+        this.letter = Objects.requireNonNullElse(reqDTO.getLetter(), this.letter);
     }
 
 }
