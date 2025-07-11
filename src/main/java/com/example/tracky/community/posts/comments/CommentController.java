@@ -36,6 +36,16 @@ public class CommentController {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
         CommentResponse.SaveDTO respDTO = commentService.save(reqDTO, sessionProfile);
+
+        return Resp.ok(respDTO);
+    }
+
+    @PutMapping("/community/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<?> update(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId, @RequestBody CommentRequest.UpdateDTO reqDTO) {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
+
+        CommentResponse.UpdateDTO respDTO = commentService.update(reqDTO, commentId, sessionProfile);
         return Resp.ok(respDTO);
     }
 
