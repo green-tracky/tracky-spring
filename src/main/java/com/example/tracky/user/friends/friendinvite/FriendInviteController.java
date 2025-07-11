@@ -1,55 +1,49 @@
 package com.example.tracky.user.friends.friendinvite;
 
+import com.example.tracky._core.constants.SessionKeys;
+import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
 public class FriendInviteController {
     private final FriendInviteService friendInviteService;
-
-    @GetMapping("/friend/invite")
-    public ResponseEntity<?> getFriendInvite() {
-        // TODO: 로그인 유저로 교체
-        User user = User.builder().id(1).build();
-
-        List<FriendInviteResponse.InvitesDTO> respDTO = friendInviteService.getFriendInvite(user);
-        return ResponseEntity.ok(respDTO);
-    }
+    private final HttpSession session;
 
     @PostMapping("/friend/invite/{toUserId}")
     public ResponseEntity<?> friendInvite(@PathVariable("toUserId") Integer toUserId) {
-        // TODO: 로그인 유저로 교체
-        User fromUser = User.builder().id(1).build();
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
         // 신청을 보내는 유저
         User toUser = User.builder().id(toUserId).build();
 
-        FriendInviteResponse.SaveDTO respDTO = friendInviteService.friendInvite(fromUser, toUser);
-        return ResponseEntity.ok(respDTO);
+        FriendInviteResponse.SaveDTO respDTO = friendInviteService.friendInvite(sessionProfile, toUser);
+        return Resp.ok(respDTO);
     }
 
-    @PostMapping("/friend/invite/{id}/accept")
+    @PutMapping("/friend/invite/{id}/accept")
     public ResponseEntity<?> friendInviteAccept(@PathVariable("id") Integer inviteId) {
-        // TODO: 로그인 유저로 교체
-        User user = User.builder().id(1).build();
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        FriendInviteResponse.ResponseDTO respDTO = friendInviteService.friendInviteAccept(inviteId, user);
-        return ResponseEntity.ok(respDTO);
+        FriendInviteResponse.ResponseDTO respDTO = friendInviteService.friendInviteAccept(inviteId, sessionProfile);
+        return Resp.ok(respDTO);
     }
 
-    @PostMapping("/friend/invite/{id}/reject")
+    @PutMapping("/friend/invite/{id}/reject")
     public ResponseEntity<?> friendInviteReject(@PathVariable("id") Integer inviteId) {
-        // TODO: 로그인 유저로 교체
-        User user = User.builder().id(1).build();
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
 
-        FriendInviteResponse.ResponseDTO respDTO = friendInviteService.friendInviteReject(inviteId, user);
-        return ResponseEntity.ok(respDTO);
+        FriendInviteResponse.ResponseDTO respDTO = friendInviteService.friendInviteReject(inviteId, sessionProfile);
+        return Resp.ok(respDTO);
     }
 }
