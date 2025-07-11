@@ -66,7 +66,7 @@ public class CommentRepositoryTest {
     }
 
     @Test
-    void countParentComments() {
+    void count_parent_comments() {
         Integer postId = 1;
 
         Integer parentCount = commentRepository.countParentComments(postId);
