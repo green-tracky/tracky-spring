@@ -23,4 +23,14 @@ public class CommentRequest {
             return comment;
         }
     }
+
+    @Data
+    public static class UpdateDTO {
+
+        private Integer postId;
+        private String content;
+        private Integer parentId;
+
+    }
+
 }

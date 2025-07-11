@@ -173,6 +173,7 @@ public class PostService {
         CommentResponse.CommentsList commentsList = commentService.getCommentsWithReplies(postId, 1);
 
         return new PostResponse.DetailDTO(post, commentsList, pictures, likeCount, commentCount, isLiked, userPS);
+
     }
 
 }

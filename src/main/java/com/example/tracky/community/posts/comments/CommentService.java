@@ -1,6 +1,7 @@
 package com.example.tracky.community.posts.comments;
 
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.PostRepository;
@@ -53,6 +54,41 @@ public class CommentService {
                 .toList();
 
         return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOs);
+    }
+
+
+    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, User user) {
+
+        Post post = postRepository.findById(reqDTO.getPostId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        Comment parent = null;
+        if (reqDTO.getParentId() != null) {
+            parent = commentRepository.findById(reqDTO.getParentId())
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
+        }
+
+        Comment comment = reqDTO.toEntity(user, post, parent);
+        Comment commentPS = commentRepository.save(comment);
+
+        return new CommentResponse.SaveDTO(commentPS);
+
+    }
+
+    public CommentResponse.UpdateDTO update(CommentRequest.UpdateDTO reqDTO, Integer commentId, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Comment commentPS = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
+
+        if (!commentPS.getUser().getId().equals(userPS.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        commentPS.update(reqDTO.getContent());
+        return new CommentResponse.UpdateDTO(commentPS);
     }
 
 
