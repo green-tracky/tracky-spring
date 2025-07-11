@@ -115,7 +115,7 @@ public class ChallengeInviteService {
      * @param sessionProfile
      * @return
      */
-    public List<ChallengeInviteResponse.friendDTO> getFriend(Integer id, OAuthProfile sessionProfile) {
+    public List<ChallengeInviteResponse.friendDTO> getAvailableFriends(Integer id, OAuthProfile sessionProfile) {
         // 사용자 조회
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
@@ -164,7 +164,7 @@ public class ChallengeInviteService {
                 .orElseThrow(() -> new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED));
 
         // 권한 체크
-        checkInviteRecipient(invite, sessionProfile);
+        checkInviteRecipient(invite, userPS);
 
         // DB 상태 변경
         invite.accept();
@@ -194,7 +194,7 @@ public class ChallengeInviteService {
                 .orElseThrow(() -> new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED));
 
         // 권한 체크
-        checkInviteRecipient(invite, sessionProfile);
+        checkInviteRecipient(invite, userPS);
 
         // DB 상태 변경
         invite.reject();
@@ -205,14 +205,11 @@ public class ChallengeInviteService {
      * 권한 체크
      *
      * @param invite
-     * @param sessionProfile
+     * @param user
      */
-    private void checkInviteRecipient(ChallengeInvite invite, OAuthProfile sessionProfile) {
-        // 사용자 조회
-        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+    private void checkInviteRecipient(ChallengeInvite invite, User user) {
 
-        if (!invite.getToUser().getId().equals(userPS.getId())) {
+        if (!invite.getToUser().getId().equals(user.getId())) {
             throw new ExceptionApi404(ErrorCodeEnum.ACCESS_DENIED);
         }
     }

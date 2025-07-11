@@ -29,29 +29,27 @@ public class ChallengeInviteController {
         return Resp.ok(respDTO);
     }
 
-    @GetMapping("/community/challenges/{id}/friend")
-    public ResponseEntity<?> getFriend(@PathVariable("id") Integer id) {
+    @GetMapping("/community/challenges/{id}/invite/available-friends")
+    public ResponseEntity<?> getAvailableFriends(@PathVariable("id") Integer id) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        List<ChallengeInviteResponse.friendDTO> respDTO = challengeInviteService.getFriend(id, sessionProfile);
+        List<ChallengeInviteResponse.friendDTO> respDTO = challengeInviteService.getAvailableFriends(id, sessionProfile);
         return Resp.ok(respDTO);
     }
 
-    @PostMapping("/community/challenges/{id}/accept")
+    @PostMapping("/community/challenges/{id}/invite/accept")
     public ResponseEntity<?> friendInviteAccept(@PathVariable("id") Integer inviteId) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-
         ChallengeInviteResponse.ResponseDTO respDTO = challengeInviteService.challengesInviteAccept(inviteId, sessionProfile);
-        return ResponseEntity.ok(respDTO);
+        return Resp.ok(respDTO);
     }
 
-    @PostMapping("/community/challenges/{id}/reject")
+    @PostMapping("/community/challenges/{id}/invite/reject")
     public ResponseEntity<?> friendInviteReject(@PathVariable("id") Integer inviteId) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-
         ChallengeInviteResponse.ResponseDTO respDTO = challengeInviteService.challengesInviteReject(inviteId, sessionProfile);
-        return ResponseEntity.ok(respDTO);
+        return Resp.ok(respDTO);
     }
 }
