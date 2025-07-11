@@ -18,10 +18,10 @@ public class NotificationController {
     private final HttpSession session;
 
     @GetMapping("/notifications")
-    public ResponseEntity<?> getNotificationList() {
+    public ResponseEntity<?> getNotifications() {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        NotificationResponse.NotificationListDTO respDTO = notificationService.getNotificationList(sessionProfile);
+        NotificationResponse.NotificationListDTO respDTO = notificationService.getNotifications(sessionProfile);
         return Resp.ok(respDTO);
     }
 

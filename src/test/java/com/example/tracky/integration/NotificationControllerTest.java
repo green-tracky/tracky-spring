@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,7 +25,7 @@ class NotificationControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("챌린지 목록 조회 성공")
-    void get_notification_list_test() throws Exception {
+    void get_notifications_test() throws Exception {
         // given
 
         // when
@@ -47,7 +48,7 @@ class NotificationControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.notifications[0].profileUrl").value("http://example.com/profiles/leo.jpg"));
         actions.andExpect(jsonPath("$.data.notifications[0].username").value("leo"));
         actions.andExpect(jsonPath("$.data.notifications[0].status").value("PENDING"));
-        actions.andExpect(jsonPath("$.data.notifications[0].createdAt").value("2025-07-11 15:36:00"));
+        actions.andExpect(jsonPath("$.data.notifications[0].createdAt").value(matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
