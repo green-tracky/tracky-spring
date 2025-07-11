@@ -37,6 +37,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         reqDTO.setFriendIds(inviteIds);
 
         String requestBody = om.writeValueAsString(reqDTO);
+        log.debug("✅요청 바디: " + requestBody);
 
         // when
         ResultActions actions = mvc.perform(
