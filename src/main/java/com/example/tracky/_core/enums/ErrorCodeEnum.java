@@ -69,6 +69,7 @@ public enum ErrorCodeEnum {
      */
     INVALID_TOKEN_FORMAT(400, "잘못된 형식의 토큰으로 요청이 들어왔습니다"),
 
+
     /**
      * 401 Unauthorized - 로그인이 필요합니다.
      */
