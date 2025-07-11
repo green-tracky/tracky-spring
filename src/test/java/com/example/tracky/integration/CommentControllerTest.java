@@ -170,4 +170,5 @@ public class CommentControllerTest extends MyRestDoc {
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
     }
+
 }
