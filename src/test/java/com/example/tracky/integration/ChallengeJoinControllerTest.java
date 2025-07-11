@@ -33,6 +33,7 @@ class ChallengeJoinControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .post("/s/api/community/challenges/{id}/join", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -64,6 +65,7 @@ class ChallengeJoinControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .delete("/s/api/community/challenges/{id}/join", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye

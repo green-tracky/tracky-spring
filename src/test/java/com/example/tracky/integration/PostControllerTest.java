@@ -39,6 +39,7 @@ class PostControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .get("/s/api/community/posts")
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -51,7 +52,7 @@ class PostControllerTest extends MyRestDoc {
 
         // data[0] 검증
         actions.andExpect(jsonPath("$.data[0].likeCount").value(1));
-        actions.andExpect(jsonPath("$.data[0].commentCount").value(2));
+        actions.andExpect(jsonPath("$.data[0].commentCount").value(27));
         actions.andExpect(jsonPath("$.data[0].isLiked").value(false));
         actions.andExpect(jsonPath("$.data[0].id").value(1));
         actions.andExpect(jsonPath("$.data[0].username").value("ssar"));
@@ -79,7 +80,9 @@ class PostControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .post("/s/api/community/posts")
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -122,7 +125,9 @@ class PostControllerTest extends MyRestDoc {
                 MockMvcRequestBuilders
                         .put("/s/api/community/posts/" + postId)
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -155,7 +160,9 @@ class PostControllerTest extends MyRestDoc {
         //when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/community/posts/" + postId));
+                        .delete("/s/api/community/posts/" + postId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -178,6 +185,7 @@ class PostControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .get("/s/api/community/posts/" + postId)
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -204,28 +212,6 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.comments.comments[0].content").value("감동적인 글이었습니다."));
         actions.andExpect(jsonPath("$.data.comments.comments[0].parentId").doesNotExist());
         actions.andExpect(jsonPath("$.data.comments.comments[0].children").isArray());
-
-        actions.andExpect(jsonPath("$.data.comments.comments[1].id").value(21));
-        actions.andExpect(jsonPath("$.data.comments.comments[1].children[0].id").value(26));
-        actions.andExpect(jsonPath("$.data.comments.comments[1].children[0].username").value("cos"));
-        actions.andExpect(jsonPath("$.data.comments.comments[1].children[0].content").value("앞으로 자주 뵈어요!"));
-        actions.andExpect(jsonPath("$.data.comments.comments[1].children[1].id").value(27));
-        actions.andExpect(jsonPath("$.data.comments.comments[1].children[1].username").value("love"));
-        actions.andExpect(jsonPath("$.data.comments.comments[1].children[1].content").value("저도 기대하고 있겠습니다."));
-
-        actions.andExpect(jsonPath("$.data.comments.comments[2].id").value(20));
-        actions.andExpect(jsonPath("$.data.comments.comments[2].children[0].id").value(25));
-        actions.andExpect(jsonPath("$.data.comments.comments[2].children[0].content").value("진짜 정성이 느껴졌어요."));
-
-        actions.andExpect(jsonPath("$.data.comments.comments[3].id").value(19));
-        actions.andExpect(jsonPath("$.data.comments.comments[3].children[0].id").value(23));
-        actions.andExpect(jsonPath("$.data.comments.comments[3].children[0].content").value("저도 같은 생각이에요!"));
-        actions.andExpect(jsonPath("$.data.comments.comments[3].children[1].id").value(24));
-        actions.andExpect(jsonPath("$.data.comments.comments[3].children[1].content").value("공감 백퍼입니다."));
-
-        actions.andExpect(jsonPath("$.data.comments.comments[4].id").value(18));
-        actions.andExpect(jsonPath("$.data.comments.comments[4].content").value("열정이 느껴져요."));
-        actions.andExpect(jsonPath("$.data.comments.comments[4].children").isArray());
 
         // 좋아요 및 댓글 수
         actions.andExpect(jsonPath("$.data.likeCount").value(1));

@@ -36,7 +36,7 @@ public class FriendInvite {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    private InviteStatusEnum status = InviteStatusEnum.PENDING;
+    private InviteStatusEnum status;
 
     @UpdateTimestamp
     private LocalDateTime responsedAt;

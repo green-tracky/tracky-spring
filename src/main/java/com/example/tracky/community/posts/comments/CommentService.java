@@ -1,10 +1,14 @@
 package com.example.tracky.community.posts.comments;
 
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.PostRepository;
 import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
@@ -64,6 +69,44 @@ public class CommentService {
         }
 
         Comment comment = reqDTO.toEntity(user, post, parent);
+        Comment commentPS = commentRepository.save(comment);
+
+        return new CommentResponse.SaveDTO(commentPS);
+
+    }
+
+    public CommentResponse.UpdateDTO update(CommentRequest.UpdateDTO reqDTO, Integer commentId, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Comment commentPS = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
+
+        if (!commentPS.getUser().getId().equals(userPS.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        commentPS.update(reqDTO.getContent());
+        return new CommentResponse.UpdateDTO(commentPS);
+    }
+
+
+    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Post post = postRepository.findById(reqDTO.getPostId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        Comment parent = null;
+        if (reqDTO.getParentId() != null) {
+            parent = commentRepository.findById(reqDTO.getParentId())
+                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
+        }
+
+        Comment comment = reqDTO.toEntity(userPS, post, parent);
         Comment commentPS = commentRepository.save(comment);
 
         return new CommentResponse.SaveDTO(commentPS);

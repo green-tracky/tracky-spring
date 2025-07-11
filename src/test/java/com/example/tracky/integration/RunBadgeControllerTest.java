@@ -30,7 +30,9 @@ public class RunBadgeControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/run-badges"));
+                        .get("/s/api/run-badges")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
