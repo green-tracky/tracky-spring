@@ -1,4 +1,54 @@
 package com.example.tracky.community.posts.likes;
 
+import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi403;
+import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.user.User;
+import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import com.example.tracky.user.utils.LoginIdUtil;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
 public class LikeService {
+
+    private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
+
+    @Transactional
+    public LikeResponse.SaveDTO save(LikeRequest.SaveDTO reqDTO, OAuthProfile sessionProfile) {
+
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Like likePS = likeRepository.save(reqDTO.toEntity(userPS.getId()));
+        Long likeCount = likeRepository.findByPostId(reqDTO.getPostId());
+        return new LikeResponse.SaveDTO(likePS.getId(), likeCount.intValue());
+    }
+
+    @Transactional
+    public LikeResponse.DeleteDTO delete(Integer id, OAuthProfile sessionProfile) {
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Like likePS = likeRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.LIKE_NOT_FOUND));
+
+        if (!likePS.getUser().getId().equals(userPS.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        Integer postId = likePS.getPost().getId();
+
+        likeRepository.deleteById(id);
+
+        Long likeCount = likeRepository.findByPostId(postId);
+
+        return new LikeResponse.DeleteDTO(likeCount.intValue());
+    }
+
+
 }

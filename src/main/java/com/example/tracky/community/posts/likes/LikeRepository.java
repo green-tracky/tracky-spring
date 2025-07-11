@@ -32,4 +32,29 @@ public class LikeRepository {
             return Optional.ofNullable(null);
         }
     }
+
+    public Like save(Like like) {
+        em.persist(like);
+        return like;
+    }
+
+    public Long findByPostId(int postId) {
+        Query query = em.createQuery("select count(li) from Like li where li.post.id = :postId");
+        query.setParameter("postId", postId);
+
+        Long count = (Long) query.getSingleResult();
+        return count;
+    }
+
+    public Optional<Like> findById(Integer id) {
+        return Optional.ofNullable(em.find(Like.class, id));
+    }
+
+    public void deleteById(Integer id) {
+        Query query = em.createQuery("delete from Like li where li.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
+    }
+
+
 }
