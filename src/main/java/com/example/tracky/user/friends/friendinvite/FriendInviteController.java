@@ -9,23 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/s/api")
 public class FriendInviteController {
     private final FriendInviteService friendInviteService;
     private final HttpSession session;
-
-    @GetMapping("/friend/invite")
-    public ResponseEntity<?> getFriendInvite() {
-        // 세션에서 유저 정보 꺼내기
-        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
-
-        List<FriendInviteResponse.InvitesDTO> respDTO = friendInviteService.getFriendInvite(sessionProfile);
-        return Resp.ok(respDTO);
-    }
 
     @PostMapping("/friend/invite/{toUserId}")
     public ResponseEntity<?> friendInvite(@PathVariable("toUserId") Integer toUserId) {
@@ -39,7 +28,7 @@ public class FriendInviteController {
         return Resp.ok(respDTO);
     }
 
-    @PostMapping("/friend/invite/{id}/accept")
+    @PutMapping("/friend/invite/{id}/accept")
     public ResponseEntity<?> friendInviteAccept(@PathVariable("id") Integer inviteId) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
@@ -48,7 +37,7 @@ public class FriendInviteController {
         return Resp.ok(respDTO);
     }
 
-    @PostMapping("/friend/invite/{id}/reject")
+    @PutMapping("/friend/invite/{id}/reject")
     public ResponseEntity<?> friendInviteReject(@PathVariable("id") Integer inviteId) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
