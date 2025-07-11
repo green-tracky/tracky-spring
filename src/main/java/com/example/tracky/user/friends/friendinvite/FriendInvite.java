@@ -39,15 +39,15 @@ public class FriendInvite {
     private InviteStatusEnum status;
 
     @UpdateTimestamp
-    private LocalDateTime responsedAt;
+    private LocalDateTime respondedAt;
 
     @Builder
-    public FriendInvite(User fromUser, User toUser, LocalDateTime createdAt, InviteStatusEnum status, LocalDateTime responsedAt) {
+    public FriendInvite(User fromUser, User toUser, LocalDateTime createdAt, InviteStatusEnum status, LocalDateTime respondedAt) {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.createdAt = createdAt;
         this.status = status;
-        this.responsedAt = responsedAt;
+        this.respondedAt = respondedAt;
     }
 
     protected FriendInvite() {
