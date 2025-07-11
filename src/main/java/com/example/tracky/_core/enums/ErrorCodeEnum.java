@@ -57,7 +57,7 @@ public enum ErrorCodeEnum {
     /**
      * 400 Bad Request - 이미 친구 요청을 보냈습니다.
      */
-    DUPLICATE_FRIEND_INVITE(400, "이미 친구 요청을 보냈습니다"),
+    DUPLICATE_INVITE(400, "이미 요청을 보냈습니다."),
 
     /**
      * 400 Bad Request - 이미 응답된 요청입니다.
@@ -164,6 +164,11 @@ public enum ErrorCodeEnum {
      * 404 Not Found - 관리자가 존재하지 않습니다.
      */
     ADMIN_NOT_FOUND(404, "관리자가 존재하지 않습니다"),
+
+    /**
+     * 404 Not Found - 관리자가 존재하지 않습니다.
+     */
+    NOT_MY_FRIEND(404, "서로 친구가 아닙니다"),
 
     /**
      * 500 Internal Server Error - 알 수 없는 오류 발생 시 기본 메시지입니다.

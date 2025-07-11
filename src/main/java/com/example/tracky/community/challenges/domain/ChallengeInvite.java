@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges.domain;
 
 import com.example.tracky._core.enums.InviteStatusEnum;
+import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+
+import static com.example.tracky._core.enums.ErrorCodeEnum.INVALID_INVITE_RESPONSE_STATE;
 
 @Getter
 @Table(
@@ -24,6 +27,7 @@ public class ChallengeInvite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
     @Column(nullable = false)
     private InviteStatusEnum status; // 대기/수락/거절
 
@@ -55,5 +59,19 @@ public class ChallengeInvite {
     }
 
     protected ChallengeInvite() {
+    }
+
+    public void accept() {
+        if (this.status != InviteStatusEnum.PENDING) {
+            throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
+        }
+        this.status = InviteStatusEnum.ACCEPTED;
+    }
+
+    public void reject() {
+        if (this.status != InviteStatusEnum.PENDING) {
+            throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
+        }
+        this.status = InviteStatusEnum.REJECTED;
     }
 }
