@@ -20,12 +20,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private final NotificationRepository notificationRepository;
     private final FriendInviteRepository friendInviteRepository;
     private final ChallengeInviteRepository challengeInviteRepository;
     private final UserRepository userRepository;
 
-    public NotificationResponse.NotificationListDTO getNotificationList(OAuthProfile sessionProfile) {
+    public NotificationResponse.NotificationListDTO getNotifications(OAuthProfile sessionProfile) {
         // 사용자 조회
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
