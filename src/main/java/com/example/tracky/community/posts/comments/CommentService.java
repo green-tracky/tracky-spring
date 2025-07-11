@@ -9,6 +9,7 @@ import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -56,25 +57,6 @@ public class CommentService {
         return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOs);
     }
 
-
-    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, User user) {
-
-        Post post = postRepository.findById(reqDTO.getPostId())
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
-
-        Comment parent = null;
-        if (reqDTO.getParentId() != null) {
-            parent = commentRepository.findById(reqDTO.getParentId())
-                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
-        }
-
-        Comment comment = reqDTO.toEntity(user, post, parent);
-        Comment commentPS = commentRepository.save(comment);
-
-        return new CommentResponse.SaveDTO(commentPS);
-
-    }
-
     public CommentResponse.UpdateDTO update(CommentRequest.UpdateDTO reqDTO, Integer commentId, OAuthProfile sessionProfile) {
         // 사용자 조회
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
@@ -111,6 +93,23 @@ public class CommentService {
 
         return new CommentResponse.SaveDTO(commentPS);
 
+    }
+
+    @Transactional
+    public void delete(Integer id, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        if (!comment.getUser().getId().equals(userPS.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        // 본인 댓글 삭제
+        commentRepository.delete(comment);
     }
 
 }
