@@ -1,9 +1,9 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
+import com.example.tracky.community.challenges.dto.ChallengeInviteRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,14 +27,16 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     private ObjectMapper om;
 
     @Test
-    void challengesInvite_test() throws Exception {
+    void challengesInvite() throws Exception {
         // given
         Integer challengeid = 1;
-        String body = """
-                {
-                    "friendIds": [3, 4, 5]
-                }
-                """;
+
+        List<Integer> inviteIds = Arrays.asList(3, 4, 5);
+
+        ChallengeInviteRequest.InviteRequestDTO reqDTO = new ChallengeInviteRequest.InviteRequestDTO();
+        reqDTO.setFriendIds(inviteIds);
+
+        String requestBody = om.writeValueAsString(reqDTO);
 
         // when
         ResultActions actions = mvc.perform(
@@ -39,7 +44,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
                         .post("/s/api/community/challenges/{id}/invite", challengeid)
                         .header("Authorization", "Bearer " + fakeToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
+                        .content(requestBody)
         );
 
         // eye
@@ -50,7 +55,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        actions.andExpect(jsonPath("$.data[0].id").value(1));
+        actions.andExpect(jsonPath("$.data[0].id").value(3));
         actions.andExpect(jsonPath("$.data[0].fromUser").value(1));
         actions.andExpect(jsonPath("$.data[0].toUser").value(3));
         actions.andExpect(jsonPath("$.data[0].challengeId").value(1));
@@ -62,14 +67,14 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     }
 
     @Test
-    void getFriends_test() throws Exception {
+    void getAvailableFriends_test() throws Exception {
         // given
         Integer challengeid = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/community/challenges/{id}/friend", challengeid)
+                        .get("/s/api/community/challenges/{id}/invite/available-friends", challengeid)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -93,11 +98,12 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     @Test
     void friendInviteAccept_test() throws Exception {
         // given
+        Integer inviteId = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/community/challenges")
+                        .post("/s/api/community/challenges/{id}/invite/accept", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -109,55 +115,22 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // recommendedChallenge 존재 여부만 검증
-        actions.andExpect(jsonPath("$.data.recommendedChallenge").exists());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.id").isNumber());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.name").isString());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.imageUrl").isString());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.participantCount").isNumber());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.type").isString());
-
-        // myChallenges[0]
-        actions.andExpect(jsonPath("$.data.myChallenges[0].id").value(1));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].imageUrl").value("https://example.com/rewards/5km_badge.png"));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].name").value("6월 5k 챌린지"));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].sub").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].remainingTime").value(691199));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].myDistance").value(18100));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].targetDistance").value(5000));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].isInProgress").value(true));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].type").value("공개"));
-
-        // joinableChallenges[0]
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].id").value(2));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].imageUrl").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].name").value("6월 15k 챌린지"));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].sub").value("6월 한 달 동안 15km를 달성해보세요!"));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].remainingTime").value(691199));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].myDistance").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].targetDistance").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].isInProgress").value(true));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].type").value("공개"));
-
-        // pastChallenges는 빈 배열이므로 size = 0 검증
-        actions.andExpect(jsonPath("$.data.pastChallenges").isArray());
-        actions.andExpect(jsonPath("$.data.pastChallenges").isEmpty());
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.status").value("수락"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
-
     }
 
     @Test
     void friendInviteReject_test() throws Exception {
         // given
+        Integer inviteId = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/community/challenges")
+                        .post("/s/api/community/challenges/{id}/invite/reject", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -169,45 +142,11 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // recommendedChallenge 존재 여부만 검증
-        actions.andExpect(jsonPath("$.data.recommendedChallenge").exists());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.id").isNumber());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.name").isString());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.imageUrl").isString());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.participantCount").isNumber());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.type").isString());
-
-        // myChallenges[0]
-        actions.andExpect(jsonPath("$.data.myChallenges[0].id").value(1));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].imageUrl").value("https://example.com/rewards/5km_badge.png"));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].name").value("6월 5k 챌린지"));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].sub").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].remainingTime").value(691199));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].myDistance").value(18100));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].targetDistance").value(5000));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].isInProgress").value(true));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].type").value("공개"));
-
-        // joinableChallenges[0]
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].id").value(2));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].imageUrl").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].name").value("6월 15k 챌린지"));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].sub").value("6월 한 달 동안 15km를 달성해보세요!"));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].remainingTime").value(691199));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].myDistance").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].targetDistance").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].isInProgress").value(true));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].type").value("공개"));
-
-        // pastChallenges는 빈 배열이므로 size = 0 검증
-        actions.andExpect(jsonPath("$.data.pastChallenges").isArray());
-        actions.andExpect(jsonPath("$.data.pastChallenges").isEmpty());
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.status").value("거절"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
-
     }
 
 
