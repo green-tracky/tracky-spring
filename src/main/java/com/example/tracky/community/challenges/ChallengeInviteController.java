@@ -37,7 +37,7 @@ public class ChallengeInviteController {
         return Resp.ok(respDTO);
     }
 
-    @PostMapping("/community/challenges/{id}/invite/accept")
+    @PutMapping("/community/challenges/invite/{id}/accept")
     public ResponseEntity<?> friendInviteAccept(@PathVariable("id") Integer inviteId) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -45,7 +45,7 @@ public class ChallengeInviteController {
         return Resp.ok(respDTO);
     }
 
-    @PostMapping("/community/challenges/{id}/invite/reject")
+    @PutMapping("/community/challenges/invite/{id}/reject")
     public ResponseEntity<?> friendInviteReject(@PathVariable("id") Integer inviteId) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
