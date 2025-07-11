@@ -4,9 +4,11 @@ import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky.community.challenges.domain.ChallengeInvite;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -55,4 +57,19 @@ public class ChallengeInviteRepository {
         return count > 0;
 
     }
+
+    /**
+     * 로그인한 유저가 받은 챌린지 초대 요청 목록 조회
+     * - 요청 보낸 유저(fromUser)와 함께 fetch join
+     *
+     * @param userid 로그인한 유저의 ID
+     * @return 챌린지 초대 리스트
+     */
+    public List<ChallengeInvite> findAllByUserId(Integer userid) {
+        Query query = em.createQuery("select c from ChallengeInvite c join fetch c.fromUser where c.toUser.id = :id");
+        query.setParameter("id", userid);
+        List<ChallengeInvite> inviteList = query.getResultList();
+        return inviteList;
+    }
+
 }
