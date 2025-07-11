@@ -59,7 +59,7 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.type").value("공개"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].fromUsername").value("cos"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].fromUsername").value("leo"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInviteId").value(1));
 
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge").exists());

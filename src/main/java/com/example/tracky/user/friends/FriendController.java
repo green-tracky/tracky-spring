@@ -2,7 +2,6 @@ package com.example.tracky.user.friends;
 
 import com.example.tracky._core.constants.SessionKeys;
 import com.example.tracky._core.utils.Resp;
-import com.example.tracky.user.User;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +22,8 @@ public class FriendController {
 
     @GetMapping("/friend/search")
     public ResponseEntity<?> getFriendSearch(@RequestParam("user-tag") String userTag) {
-        // TODO: 로그인 유저로 교체
-        User user = User.builder().id(1).build();
 
-        List<FriendResponse.SearchDTO> respDTO = friendService.getFriendSearch(userTag, user);
+        List<FriendResponse.SearchDTO> respDTO = friendService.getFriendSearch(userTag);
         return Resp.ok(respDTO);
     }
 
