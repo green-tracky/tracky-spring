@@ -127,14 +127,6 @@ public class CommentService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
 
-        // 부모 댓글이면 자식 댓글도 삭제
-        if (comment.getParent() == null) {
-            List<Comment> childComments = commentRepository.findByParentId(comment.getId());
-            if (!childComments.isEmpty()) {
-                commentRepository.deleteAll(childComments);
-            }
-        }
-
         // 본인 댓글 삭제
         commentRepository.delete(comment);
     }
