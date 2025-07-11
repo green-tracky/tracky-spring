@@ -1,7 +1,6 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
-import com.example.tracky.community.posts.likes.LikeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -30,19 +28,10 @@ public class LikeControllerTest extends MyRestDoc {
         // given
         Integer id = 1;
 
-        LikeRequest.SaveDTO reqDTO = new LikeRequest.SaveDTO();
-        reqDTO.setPostId(1);
-
-        String requestBody = om.writeValueAsString(reqDTO);
-
-        log.debug("✅요청 바디: " + requestBody);
-
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .post("/s/api/community/posts/{id}/likes", id)
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
