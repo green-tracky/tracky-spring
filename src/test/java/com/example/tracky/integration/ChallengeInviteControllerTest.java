@@ -104,7 +104,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/challenges/{id}/invite/accept", inviteId)
+                        .put("/s/api/community/challenges/invite/{id}/accept", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -131,7 +131,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/challenges/{id}/invite/reject", inviteId)
+                        .put("/s/api/community/challenges/invite/{id}/reject", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
