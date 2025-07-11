@@ -38,13 +38,13 @@ public class LikeRepository {
         return like;
     }
 
-    public Long findByPostId(int postId) {
-        Query query = em.createQuery("select count(li) from Like li where li.post.id = :postId");
-        query.setParameter("postId", postId);
-
-        Long count = (Long) query.getSingleResult();
-        return count;
-    }
+//    public Integer findByPostId(int postId) {
+//        Query query = em.createQuery("select count(li) from Like li where li.post.id = :postId");
+//        query.setParameter("postId", postId);
+//
+//        Long count = (Long) query.getSingleResult();
+//        return count.intValue();
+//    }
 
     public Optional<Like> findById(Integer id) {
         return Optional.ofNullable(em.find(Like.class, id));

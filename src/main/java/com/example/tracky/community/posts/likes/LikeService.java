@@ -25,8 +25,8 @@ public class LikeService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         Like likePS = likeRepository.save(reqDTO.toEntity(userPS.getId()));
-        Long likeCount = likeRepository.findByPostId(reqDTO.getPostId());
-        return new LikeResponse.SaveDTO(likePS.getId(), likeCount.intValue());
+        Integer likeCount = likeRepository.countByPostId(reqDTO.getPostId());
+        return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
     }
 
     @Transactional
@@ -45,9 +45,9 @@ public class LikeService {
 
         likeRepository.deleteById(id);
 
-        Long likeCount = likeRepository.findByPostId(postId);
+        Integer likeCount = likeRepository.countByPostId(postId);
 
-        return new LikeResponse.DeleteDTO(likeCount.intValue());
+        return new LikeResponse.DeleteDTO(likeCount);
     }
 
 
