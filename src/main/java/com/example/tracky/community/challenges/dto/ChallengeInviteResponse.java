@@ -45,4 +45,18 @@ public class ChallengeInviteResponse {
             this.username = otherUser.getUsername();
         }
     }
+
+    /**
+     * 친구 요청 응답 결과 DTO (수락/거절 시 응답)
+     */
+    @Data
+    public static class ResponseDTO {
+        private Integer id;
+        private InviteStatusEnum status;
+
+        public ResponseDTO(ChallengeInvite invite) {
+            this.id = invite.getId();
+            this.status = invite.getStatus();
+        }
+    }
 }
