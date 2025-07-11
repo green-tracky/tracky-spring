@@ -38,12 +38,12 @@ public class FriendService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 나의 친구 전체 조회
-        List<Friend> friendPS = friendRepository.findfriendByUserIdJoinFriend(userPS.getId());
+        List<Friend> friendsPS = friendRepository.findfriendByUserIdJoinFriend(userPS.getId());
 
         // 상대방만 골라서 UserDTO로 변환
         List<FriendResponse.UserDTO> friendList = new ArrayList<>();
 
-        for (Friend friend : friendPS) {
+        for (Friend friend : friendsPS) {
             User other;
             if (friend.getFromUser().getId().equals(userPS.getId())) {
                 other = friend.getToUser(); // 내가 from → 상대는 to
