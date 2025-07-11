@@ -59,13 +59,18 @@ public class ChallengeInviteRepository {
     }
 
     /**
+     * <pre>
      * 초대받은 유저의 아이디로 모든 초대목록 조회. 내가 초대받은 모든 챌린지 조회
+     * join fetch
+     * - challenge
+     * - fromUser
+     * </pre>
      *
      * @param userId
      * @return
      */
-    public List<ChallengeInvite> findAllToUserId(Integer userId) {
-        Query query = em.createQuery("select c from ChallengeInvite c where c.toUser.id = :userId");
+    public List<ChallengeInvite> findAllToUserIdJoin(Integer userId) {
+        Query query = em.createQuery("select ci from ChallengeInvite ci join fetch ci.challenge c join fetch ci.fromUser fu where ci.toUser.id = :userId");
         query.setParameter("userId", userId);
         return query.getResultList();
     }

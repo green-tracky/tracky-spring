@@ -88,7 +88,7 @@ public class ChallengeService {
                 ));
 
         // 5. 초대받은 챌린지 목록 조회
-        List<ChallengeInvite> inviteChallengesPS = challengeInviteRepository.findAllToUserId(userPS.getId());
+        List<ChallengeInvite> inviteChallengesPS = challengeInviteRepository.findAllToUserIdJoin(userPS.getId());
 
         // 6. 모든 재료를 MainDTO 생성자에게 전달
         return new ChallengeResponse.MainDTO(
