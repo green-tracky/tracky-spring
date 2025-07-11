@@ -49,4 +49,13 @@ public class CommentController {
         return Resp.ok(respDTO);
     }
 
+    @DeleteMapping("/community/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<?> delete(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId) {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
+
+        commentService.delete(commentId, sessionProfile);
+        return Resp.ok(null);
+    }
+
 }

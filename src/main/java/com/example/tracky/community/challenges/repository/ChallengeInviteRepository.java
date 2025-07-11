@@ -40,7 +40,7 @@ public class ChallengeInviteRepository {
         }
     }
 
-    public boolean existsByFromUserIdAndToUserIdAndChallengeId(Integer fromUserId, Integer toUserId, Integer challengeId) {
+    public Boolean existsByFromUserIdAndToUserIdAndChallengeId(Integer fromUserId, Integer toUserId, Integer challengeId) {
         Long count = em.createQuery("""
                             select count(ci) from ChallengeInvite ci
                             where ci.fromUser.id = :fromUserId
@@ -59,17 +59,37 @@ public class ChallengeInviteRepository {
     }
 
     /**
+     * <pre>
+     * 초대받은 유저의 아이디로 모든 초대목록 조회. 내가 초대받은 모든 챌린지 조회
+     * join fetch
+     * - challenge
+     * - fromUser
+     * </pre>
+     *
+     * @param userId
+     * @return
+     */
+    public List<ChallengeInvite> findAllToUserIdJoin(Integer userId) {
+        Query query = em.createQuery("select ci from ChallengeInvite ci join fetch ci.challenge c join fetch ci.fromUser fu where ci.toUser.id = :userId");
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+
+    /**
+     * <pre>
      * 로그인한 유저가 받은 챌린지 초대 요청 목록 조회
-     * - 요청 보낸 유저(fromUser)와 함께 fetch join
+     * join fetch
+     * - challenge
+     * - fromUser
+     * </pre>
      *
      * @param userid 로그인한 유저의 ID
      * @return 챌린지 초대 리스트
      */
-    public List<ChallengeInvite> findAllByUserId(Integer userid) {
+    public List<ChallengeInvite> findAllByToUserIdJoin(Integer userid) {
         Query query = em.createQuery("select c from ChallengeInvite c join fetch c.fromUser where c.toUser.id = :id");
         query.setParameter("id", userid);
         List<ChallengeInvite> inviteList = query.getResultList();
         return inviteList;
     }
-
 }
