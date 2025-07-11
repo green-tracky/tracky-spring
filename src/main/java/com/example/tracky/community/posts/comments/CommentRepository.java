@@ -4,7 +4,6 @@ package com.example.tracky.community.posts.comments;
 import com.example.tracky._core.constants.Constants;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -118,20 +117,6 @@ public class CommentRepository {
 
     public void delete(Comment comment) {
         em.remove(comment);
-    }
-
-    public List<Comment> findByParentId(Integer parentId) {
-        String jpql = "SELECT c FROM Comment c WHERE c.parent.id = :parentId";
-        return em.createQuery(jpql, Comment.class)
-                .setParameter("parentId", parentId)
-                .getResultList();
-    }
-
-    @Transactional
-    public void deleteAll(List<Comment> comments) {
-        for (Comment comment : comments) {
-            em.remove(comment);
-        }
     }
 
 }

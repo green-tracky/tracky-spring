@@ -57,25 +57,6 @@ public class CommentService {
         return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOs);
     }
 
-
-    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, User user) {
-
-        Post post = postRepository.findById(reqDTO.getPostId())
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
-
-        Comment parent = null;
-        if (reqDTO.getParentId() != null) {
-            parent = commentRepository.findById(reqDTO.getParentId())
-                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
-        }
-
-        Comment comment = reqDTO.toEntity(user, post, parent);
-        Comment commentPS = commentRepository.save(comment);
-
-        return new CommentResponse.SaveDTO(commentPS);
-
-    }
-
     public CommentResponse.UpdateDTO update(CommentRequest.UpdateDTO reqDTO, Integer commentId, OAuthProfile sessionProfile) {
         // 사용자 조회
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
