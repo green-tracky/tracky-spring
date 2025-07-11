@@ -39,7 +39,7 @@ public class NotificationService {
         }
 
         // 챌린지 요청 알람 조회
-        List<ChallengeInvite> challengeInvitesPS = challengeInviteRepository.findAllByUserId(userPS.getId());
+        List<ChallengeInvite> challengeInvitesPS = challengeInviteRepository.findAllByToUserIdJoin(userPS.getId());
         for (ChallengeInvite challengeDTO : challengeInvitesPS) {
             notificationDTO.add(new NotificationResponse.NotificationBundleDTO(challengeDTO));
         }
