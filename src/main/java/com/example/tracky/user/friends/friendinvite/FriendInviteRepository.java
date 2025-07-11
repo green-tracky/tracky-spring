@@ -58,7 +58,6 @@ public class FriendInviteRepository {
         } catch (RuntimeException e) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
-
     }
 
     /**
@@ -73,7 +72,7 @@ public class FriendInviteRepository {
                             select count(f) from FriendInvite f
                             where f.fromUser.id = :fromId
                             and f.toUser.id = :toId
-                            and f.status = 'PENDING'
+                            and (f.status = 'PENDING' or f.status = 'ACCEPTED')
                         """, Long.class)
                 .setParameter("fromId", fromUser.getId())
                 .setParameter("toId", toUser.getId())
