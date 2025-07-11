@@ -115,4 +115,8 @@ public class CommentRepository {
         return parentIds.size() + childCount.intValue();
     }
 
+    public void delete(Comment comment) {
+        em.remove(comment);
+    }
+
 }
