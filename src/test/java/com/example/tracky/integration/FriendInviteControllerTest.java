@@ -23,38 +23,6 @@ class FriendInviteControllerTest extends MyRestDoc {
     private ObjectMapper om;
 
     @Test
-    @DisplayName("친구 요청 조회 성공")
-    void get_friend_invite_test() throws Exception {
-        // given
-
-        // when
-        ResultActions actions = mvc.perform(
-                MockMvcRequestBuilders
-                        .get("/s/api/friend/invite")
-                        .header("Authorization", "Bearer " + fakeToken)
-        );
-
-        // eye
-        String responseBody = actions.andReturn().getResponse().getContentAsString();
-        log.debug("✅응답 바디: " + responseBody);
-
-        // then
-        actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.msg").value("성공"));
-
-        actions.andExpect(jsonPath("$.data[0].id").value(2));
-        actions.andExpect(jsonPath("$.data[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
-        actions.andExpect(jsonPath("$.data[0].name").value("ssar"));
-        actions.andExpect(jsonPath("$.data[0].status").value("대기"));
-        actions.andExpect(jsonPath("$.data[0].createdAt").value("2025-06-12 00:00:00"));
-
-
-        // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
-
-    }
-
-    @Test
     @DisplayName("친구 요청 성공")
     void friend_invite_test() throws Exception {
         // given
@@ -95,7 +63,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/friend/invite/{id}/accept", inviteId)
+                        .put("/s/api/friend/invite/{id}/accept", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -123,7 +91,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/friend/invite/{id}/reject", inviteId)
+                        .put("/s/api/friend/invite/{id}/reject", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
