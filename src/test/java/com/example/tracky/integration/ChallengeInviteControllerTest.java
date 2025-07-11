@@ -27,7 +27,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     private ObjectMapper om;
 
     @Test
-    void challengesInvite() throws Exception {
+    void challenges_invite_test() throws Exception {
         // given
         Integer challengeid = 1;
 
@@ -67,7 +67,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     }
 
     @Test
-    void getAvailableFriends_test() throws Exception {
+    void get_available_friends_test() throws Exception {
         // given
         Integer challengeid = 1;
 
@@ -96,7 +96,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     }
 
     @Test
-    void friendInviteAccept_test() throws Exception {
+    void friend_inviteAccept_test() throws Exception {
         // given
         Integer inviteId = 1;
 
@@ -123,7 +123,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     }
 
     @Test
-    void friendInviteReject_test() throws Exception {
+    void friend_inviteReject_test() throws Exception {
         // given
         Integer inviteId = 1;
 
