@@ -47,7 +47,7 @@ class NotificationControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.notifications[0].type").value("challengeInvite"));
         actions.andExpect(jsonPath("$.data.notifications[0].profileUrl").value("http://example.com/profiles/leo.jpg"));
         actions.andExpect(jsonPath("$.data.notifications[0].username").value("leo"));
-        actions.andExpect(jsonPath("$.data.notifications[0].status").value("PENDING"));
+        actions.andExpect(jsonPath("$.data.notifications[0].status").value("대기"));
         actions.andExpect(jsonPath("$.data.notifications[0].createdAt").value(matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
 
