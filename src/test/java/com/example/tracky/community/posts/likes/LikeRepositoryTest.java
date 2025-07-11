@@ -6,7 +6,6 @@ import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.PostRepository;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,6 @@ public class LikeRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private EntityManager em;
     @Autowired
     private PostRepository postRepository;
 
