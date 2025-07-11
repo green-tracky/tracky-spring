@@ -139,6 +139,58 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.status().isOk());
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data").value(Matchers.nullValue()));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    @Test
+    @DisplayName("유저 상세 성공")
+    void get_user_test() throws Exception {
+        // given
+        Integer id = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/user/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isOk());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.loginId").value("KAKAO_123456789"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("ssar"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("ssar@example.com"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.height").value(175.0));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.weight").value(70.0));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.gender").value("남"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.location").value("부산광역시"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.letter").value("안녕하세요, 러닝을 사랑하는 ssar입니다."));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.userTag").value("#A1B2C3"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.flutterTokenId").value("token_ssar_123"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.id").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.name").value("옐로우"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.minDistance").value(0));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.maxDistance").value(49999));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.description").value("0~49.99킬로미터"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.sortOrder").value(0));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.updatedAt").value(Matchers.nullValue()));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isOwner").value(true));
         
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);

@@ -112,4 +112,11 @@ public class UserService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
     }
+
+    public UserResponse.DetailDTO getUser(Integer id, OAuthProfile sessionProfile) {
+        User userPS = userRepository.findByIdJoin(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        return new UserResponse.DetailDTO(userPS, LoginIdUtil.makeLoginId(sessionProfile));
+    }
 }

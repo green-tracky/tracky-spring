@@ -44,8 +44,8 @@ public class UserController {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        userService.delete(id, sessionProfile);
-        return Resp.ok(null);
+        UserResponse.DetailDTO respDTO = userService.getUser(id, sessionProfile);
+        return Resp.ok(respDTO);
     }
 
 }

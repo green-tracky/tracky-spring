@@ -2,6 +2,7 @@ package com.example.tracky.user;
 
 import com.example.tracky._core.enums.GenderEnum;
 import com.example.tracky._core.enums.ProviderTypeEnum;
+import com.example.tracky.user.runlevel.RunLevelResponse;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -103,6 +104,46 @@ public class UserResponse {
             this.flutterTokenId = user.getFlutterTokenId();
             this.updatedAt = user.getUpdatedAt();
         }
+    }
+
+    @Data
+    public static class DetailDTO {
+        private Integer id;
+        private String loginId;
+        private String username;
+        private String email;
+        private String profileUrl;
+        private Double height;
+        private Double weight;
+        private GenderEnum gender;
+        private String location;
+        private String letter;
+        private String userTag;
+        private String flutterTokenId;
+        private RunLevelResponse.DTO runLevel;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private Boolean isOwner;
+
+        public DetailDTO(User user, String loginId) {
+            this.id = user.getId();
+            this.loginId = user.getLoginId();
+            this.username = user.getUsername();
+            this.email = user.getEmail();
+            this.profileUrl = user.getProfileUrl();
+            this.height = user.getHeight();
+            this.weight = user.getWeight();
+            this.gender = user.getGender();
+            this.location = user.getLocation();
+            this.letter = user.getLetter();
+            this.userTag = user.getUserTag();
+            this.flutterTokenId = user.getFlutterTokenId();
+            this.runLevel = new RunLevelResponse.DTO(user.getRunLevel());
+            this.createdAt = user.getCreatedAt();
+            this.updatedAt = user.getUpdatedAt();
+            this.isOwner = user.getLoginId().equals(loginId);
+        }
+
     }
 
 }
