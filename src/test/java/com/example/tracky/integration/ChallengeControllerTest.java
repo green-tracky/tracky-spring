@@ -45,44 +45,56 @@ class ChallengeControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
-        actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.msg").value("성공"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
 
-        // recommendedChallenge 존재 여부만 검증
-        actions.andExpect(jsonPath("$.data.recommendedChallenge").exists());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.id").isNumber());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.name").isString());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.imageUrl").isString());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.participantCount").isNumber());
-        actions.andExpect(jsonPath("$.data.recommendedChallenge.type").isString());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.id").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.imageUrl").value("https://example.com/rewards/5km_badge.png"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.name").value("6월 5k 챌린지"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.sub").value("이번 주 5km를 달려보세요."));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.remainingTime").value(691199));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.myDistance").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.targetDistance").value(5000));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.isInProgress").value(true));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.type").value("공개"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].fromUsername").value("cos"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInviteId").value(1));
 
-        // myChallenges[0]
-        actions.andExpect(jsonPath("$.data.myChallenges[0].id").value(1));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].imageUrl").value("https://example.com/rewards/5km_badge.png"));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].name").value("6월 5k 챌린지"));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].sub").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].remainingTime").value(691199));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].myDistance").value(18100));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].targetDistance").value(5000));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].isInProgress").value(true));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].type").value("공개"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge").exists());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.id").isNumber());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.name").isString());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.imageUrl").isString());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.participantCount").isNumber());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.type").value(Matchers.anyOf(
+                Matchers.is("공개"), Matchers.is("사설")
+        )));
 
-        // joinableChallenges[0]
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].id").value(2));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].imageUrl").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].name").value("6월 15k 챌린지"));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].sub").value("6월 한 달 동안 15km를 달성해보세요!"));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].remainingTime").value(691199));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].myDistance").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].targetDistance").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].isInProgress").value(true));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(jsonPath("$.data.joinableChallenges[0].type").value("공개"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].id").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].imageUrl").value("https://example.com/rewards/5km_badge.png"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].name").value("6월 5k 챌린지"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].sub").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].remainingTime").value(691199));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].myDistance").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].targetDistance").value(5000));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].isInProgress").value(true));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].endDate").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].type").value("공개"));
 
-        // pastChallenges는 빈 배열이므로 size = 0 검증
-        actions.andExpect(jsonPath("$.data.pastChallenges").isArray());
-        actions.andExpect(jsonPath("$.data.pastChallenges").isEmpty());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].id").value(2));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].imageUrl").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].name").value("6월 15k 챌린지"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].sub").value("6월 한 달 동안 15km를 달성해보세요!"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].remainingTime").value(691199));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].myDistance").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].targetDistance").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].isInProgress").value(true));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].endDate").value(Matchers.nullValue()));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].type").value("공개"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.pastChallenges").isArray());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.pastChallenges").isEmpty());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);

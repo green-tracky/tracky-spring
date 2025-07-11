@@ -5,10 +5,12 @@ import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
+import com.example.tracky.community.challenges.domain.ChallengeInvite;
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.domain.RewardMaster;
 import com.example.tracky.community.challenges.dto.ChallengeRequest;
 import com.example.tracky.community.challenges.dto.ChallengeResponse;
+import com.example.tracky.community.challenges.repository.ChallengeInviteRepository;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;
@@ -33,6 +35,7 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final ChallengeJoinRepository challengeJoinRepository;
+    private final ChallengeInviteRepository challengeInviteRepository;
     private final RunRecordRepository runRecordRepository;
     private final RewardMasterRepository rewardMasterRepository;
     private final UserRepository userRepository;
@@ -84,12 +87,16 @@ public class ChallengeService {
                         challenge -> challengeJoinRepository.countByChallengeId(challenge.getId())
                 ));
 
-        // 5. 모든 재료를 MainDTO 생성자에게 전달
+        // 5. 초대받은 챌린지 목록 조회
+        List<ChallengeInvite> inviteChallengesPS = challengeInviteRepository.findAllToUserId(userPS.getId());
+
+        // 6. 모든 재료를 MainDTO 생성자에게 전달
         return new ChallengeResponse.MainDTO(
                 joinedChallengesPS,
                 unjoinedChallengesPS,
                 totalDistancesMap,
-                participantCountsMap
+                participantCountsMap,
+                inviteChallengesPS
         );
     }
 
@@ -168,5 +175,5 @@ public class ChallengeService {
         // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환
         return new ChallengeResponse.SaveDTO(challengePS);
     }
-    
+
 }

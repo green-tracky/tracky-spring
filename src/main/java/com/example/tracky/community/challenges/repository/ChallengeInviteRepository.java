@@ -4,9 +4,11 @@ import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky.community.challenges.domain.ChallengeInvite;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -38,7 +40,7 @@ public class ChallengeInviteRepository {
         }
     }
 
-    public boolean existsByFromUserIdAndToUserIdAndChallengeId(Integer fromUserId, Integer toUserId, Integer challengeId) {
+    public Boolean existsByFromUserIdAndToUserIdAndChallengeId(Integer fromUserId, Integer toUserId, Integer challengeId) {
         Long count = em.createQuery("""
                             select count(ci) from ChallengeInvite ci
                             where ci.fromUser.id = :fromUserId
@@ -54,5 +56,17 @@ public class ChallengeInviteRepository {
 
         return count > 0;
 
+    }
+
+    /**
+     * 초대받은 유저의 아이디로 모든 초대목록 조회. 내가 초대받은 모든 챌린지 조회
+     *
+     * @param userId
+     * @return
+     */
+    public List<ChallengeInvite> findAllToUserId(Integer userId) {
+        Query query = em.createQuery("select c from ChallengeInvite c where c.toUser.id = :userId");
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 }
