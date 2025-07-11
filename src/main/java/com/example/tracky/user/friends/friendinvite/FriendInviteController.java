@@ -1,5 +1,7 @@
 package com.example.tracky.user.friends.friendinvite;
 
+import com.example.tracky._core.constants.SessionKeys;
+import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.User;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +24,7 @@ public class FriendInviteController {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
         List<FriendInviteResponse.InvitesDTO> respDTO = friendInviteService.getFriendInvite(sessionProfile);
-        return ResponseEntity.ok(respDTO);
+        return Resp.ok(respDTO);
     }
 
     @PostMapping("/friend/invite/{toUserId}")
@@ -34,7 +36,7 @@ public class FriendInviteController {
         User toUser = User.builder().id(toUserId).build();
 
         FriendInviteResponse.SaveDTO respDTO = friendInviteService.friendInvite(sessionProfile, toUser);
-        return ResponseEntity.ok(respDTO);
+        return Resp.ok(respDTO);
     }
 
     @PostMapping("/friend/invite/{id}/accept")
@@ -43,7 +45,7 @@ public class FriendInviteController {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
         FriendInviteResponse.ResponseDTO respDTO = friendInviteService.friendInviteAccept(inviteId, sessionProfile);
-        return ResponseEntity.ok(respDTO);
+        return Resp.ok(respDTO);
     }
 
     @PostMapping("/friend/invite/{id}/reject")
@@ -53,6 +55,6 @@ public class FriendInviteController {
 
 
         FriendInviteResponse.ResponseDTO respDTO = friendInviteService.friendInviteReject(inviteId, sessionProfile);
-        return ResponseEntity.ok(respDTO);
+        return Resp.ok(respDTO);
     }
 }

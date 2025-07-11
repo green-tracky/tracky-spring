@@ -3,7 +3,6 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +23,15 @@ class FriendInviteControllerTest extends MyRestDoc {
     private ObjectMapper om;
 
     @Test
-    @DisplayName("챌린지 참여 성공")
+    @DisplayName("친구 요청 조회 성공")
     void get_friend_invite_test() throws Exception {
         // given
-        Integer challengeId = 2;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/friend/invite", challengeId)
+                        .get("/s/api/friend/invite")
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -43,10 +42,11 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-//        actions.andExpect(jsonPath("$.data.id").value(7)); -> 사설 챌린지 생성과 겹치기 때문에 처리하기 힘듬
-        actions.andExpect(jsonPath("$.data.challengeId").value(2));
-        actions.andExpect(jsonPath("$.data.userId").value(1));
-        actions.andExpect(jsonPath("$.data.joinDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data[0].id").value(2));
+        actions.andExpect(jsonPath("$.data[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(jsonPath("$.data[0].name").value("ssar"));
+        actions.andExpect(jsonPath("$.data[0].status").value("대기"));
+        actions.andExpect(jsonPath("$.data[0].createdAt").value("2025-06-12 00:00:00"));
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
@@ -55,15 +55,16 @@ class FriendInviteControllerTest extends MyRestDoc {
     }
 
     @Test
-    @DisplayName("챌린지 나가기 성공")
-    void leave_test() throws Exception {
+    @DisplayName("친구 요청 성공")
+    void friend_invite_test() throws Exception {
         // given
-        Integer challengeId = 1;
+        Integer toUserId = 3;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/community/challenges/{id}/join", challengeId)
+                        .post("/s/api/friend/invite/{toUserId}", toUserId)
+                        .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
@@ -73,7 +74,69 @@ class FriendInviteControllerTest extends MyRestDoc {
         // then
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
-        actions.andExpect(jsonPath("$.data").isEmpty());
+
+        actions.andExpect(jsonPath("$.data.id").value(6));
+        actions.andExpect(jsonPath("$.data.fromUser").value(1));
+        actions.andExpect(jsonPath("$.data.toUser").value(3));
+        actions.andExpect(jsonPath("$.data.status").value("대기"));
+
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    @Test
+    @DisplayName("친구 요청 수락 성공")
+    void friend_invite_accept_test() throws Exception {
+        // given
+        Integer inviteId = 2;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/friend/invite/{id}/accept", inviteId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(jsonPath("$.data.id").value(2));
+        actions.andExpect(jsonPath("$.data.status").value("수락"));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @Test
+    @DisplayName("친구 요청 거절 성공")
+    void friend_invite_reject_test() throws Exception {
+        // given
+        Integer inviteId = 2;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/friend/invite/{id}/reject", inviteId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(jsonPath("$.data.id").value(2));
+        actions.andExpect(jsonPath("$.data.status").value("거절"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
