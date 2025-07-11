@@ -1,7 +1,9 @@
 package com.example.tracky.community.posts;
 
+import com.example.tracky._core.constants.SessionKeys;
 import com.example.tracky._core.utils.Resp;
-import com.example.tracky.user.User;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,54 +16,51 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final HttpSession session;
 
     @GetMapping("/community/posts")
     public ResponseEntity<?> getPosts() {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        Integer userId = 1;
-
-        User user = User.builder().id(userId).build();
-
-        List<PostResponse.ListDTO> respDTOs = postService.getPosts(user);
+        List<PostResponse.ListDTO> respDTOs = postService.getPosts(sessionProfile);
         return Resp.ok(respDTOs);
     }
 
     @PostMapping("/community/posts")
     public ResponseEntity<?> save(@RequestBody PostRequest.SaveDTO reqDTO) {
-        Integer userId = 1;
-        User user = User.builder().id(userId).build();
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        PostResponse.SaveDTO respDTO = postService.save(reqDTO, user);
+        PostResponse.SaveDTO respDTO = postService.save(reqDTO, sessionProfile);
         return Resp.ok(respDTO);
     }
 
     @DeleteMapping("/community/posts/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
-        Integer userId = 1;
-        User user = User.builder().id(userId).build();
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        postService.delete(id, user);
+        postService.delete(id, sessionProfile);
         return Resp.ok(null);
     }
 
     @PutMapping("/community/posts/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PostRequest.UpdateDTO reqDTO) {
-        Integer userId = 1;
-        User user = User.builder().id(userId).build();
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        PostResponse.UpdateDTO respDTO = postService.update(reqDTO, id, user);
+        PostResponse.UpdateDTO respDTO = postService.update(reqDTO, id, sessionProfile);
 
         return Resp.ok(respDTO);
     }
 
     @GetMapping("/community/posts/{id}")
     public ResponseEntity<?> getPostDetail(@PathVariable int id) {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        Integer userId = 1;
-
-        User user = User.builder().id(userId).build();
-
-        PostResponse.DetailDTO respDTO = postService.getPostDetail(id, user);
+        PostResponse.DetailDTO respDTO = postService.getPostDetail(id, sessionProfile);
         return Resp.ok(respDTO);
     }
 }

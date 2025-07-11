@@ -4,14 +4,16 @@ import com.example.tracky._core.enums.DateRangeType;
 import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.challenges.domain.Challenge;
+import com.example.tracky.community.challenges.domain.ChallengeJoin;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
-import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.friends.Friend;
 import com.example.tracky.user.friends.FriendRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,13 +33,15 @@ public class LeaderBoardService {
     private final RunRecordRepository runRecordRepository;
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
-    private final ChallengeRepository challengeRepository;
     private final ChallengeJoinRepository challengeJoinRepository;
 
-
-    public LeaderBoardsResponse.LeaderBoardDTO getLeaderBoards(User user, LocalDate baseDate, Integer before, DateRangeType dateRangeType) {
+    public LeaderBoardsResponse.LeaderBoardDTO getLeaderBoards(OAuthProfile sessionProfile, LocalDate baseDate, Integer before, DateRangeType dateRangeType) {
         LocalDate start;
         LocalDate end;
+
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         switch (dateRangeType) {
             case MONTH -> {
@@ -64,21 +68,21 @@ public class LeaderBoardService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 2. 친구 목록 조회 및 친구 유저 리스트 추출
-        List<Friend> friendList = friendRepository.findfriendByUserIdJoinFriend(user.getId());
+        List<Friend> friendList = friendRepository.findfriendByUserIdJoinFriend(userPS.getId());
         List<User> friendUsers = new ArrayList<>();
         for (Friend friend : friendList) {
             // 내가 fromUser면 상대는 toUser
-            if (friend.getFromUser().getId().equals(user.getId())) {
+            if (friend.getFromUser().getId().equals(userPS.getId())) {
                 friendUsers.add(friend.getToUser());
             }
             // 내가 toUser면 상대는 fromUser
-            else if (friend.getToUser().getId().equals(user.getId())) {
+            else if (friend.getToUser().getId().equals(userPS.getId())) {
                 friendUsers.add(friend.getFromUser());
             }
         }
 
         // 4. 내 정보 조회
-        User me = userRepository.findByIdJoin(user.getId())
+        User me = userRepository.findByIdJoin(userPS.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 3. 전체 유저 리스트 (나 + 친구들)
@@ -149,10 +153,10 @@ public class LeaderBoardService {
         rankingList = newRankingList;
 
         // 10. 나의 랭킹 구하기
-        int myDistance = userDistanceMap.getOrDefault(user.getId(), 0);
+        int myDistance = userDistanceMap.getOrDefault(userPS.getId(), 0);
         int myRank = 0;
         for (LeaderBoardsResponse.RankingListDTO dto : rankingList) {
-            if (dto.getUserId() == user.getId()) {
+            if (dto.getUserId() == userPS.getId()) {
                 myRank = dto.getRank();
                 break;
             }
@@ -163,9 +167,18 @@ public class LeaderBoardService {
         return new LeaderBoardsResponse.LeaderBoardDTO(myRanking, rankingList);
     }
 
-    public LeaderBoardsResponse.ChallengeLeaderBoardDTO getChallengeLeaderBoards(Integer id, User user) {
+    public LeaderBoardsResponse.ChallengeLeaderBoardDTO getChallengeLeaderBoards(Integer id, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // 챌린지에 참가했으면 처리 가능
+        ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, userPS.getId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND));
+
+
         // 1. 챌린지 조회
-        Challenge challengeDate = challengeRepository.findById(id).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
+        Challenge challengeDate = challengeJoinPS.getChallenge();
 
         // 2. 해당 챌린지 날짜 조회
         LocalDateTime start = challengeDate.getStartDate();

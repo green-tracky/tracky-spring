@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky._core.constants.Constant;
+import com.example.tracky._core.constants.Constants;
 import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
@@ -15,10 +15,12 @@ import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchvService;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.runlevel.RunLevel;
 import com.example.tracky.user.runlevel.RunLevelRepository;
 import com.example.tracky.user.runlevel.RunLevelService;
 import com.example.tracky.user.runlevel.utils.RunLevelUtil;
+import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,18 +48,23 @@ public class RunRecordService {
     private final ChallengeRewardService challengeRewardService;
 
     /**
-     * 러닝 상세 조회
+     * 러닝 상세조회
      *
-     * @param id runRecordId
+     * @param sessionProfile
+     * @param id
      * @return
      */
-    public RunRecordResponse.DetailDTO getRunRecord(User user, Integer id) {
+    public RunRecordResponse.DetailDTO getRunRecord(OAuthProfile sessionProfile, Integer id) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 러닝 기록 조회
         RunRecord runRecordPS = runRecordRepository.findByIdJoin(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 2. 권한 체크
-        checkRunRecordAccess(user, runRecordPS);
+        checkRunRecordAccess(userPS, runRecordPS);
 
         // 3. 러닝 응답 DTO 로 변환
         return new RunRecordResponse.DetailDTO(runRecordPS);
@@ -69,12 +76,16 @@ public class RunRecordService {
      * - 기준일을 포함한 주(월~일) 단위로 거리, 시간, 획득 배지, 최근 기록 리스트 반환
      * <p>
      *
-     * @param user     현재 사용자 정보
-     * @param baseDate 기준 날짜
-     * @param before   기준일로부터 몇 주 전을 조회할 것인지 (0 = 이번 주, 1 = 저번 주 등)
+     * @param sessionProfile 현재 사용자 정보
+     * @param baseDate       기준 날짜
+     * @param before         기준일로부터 몇 주 전을 조회할 것인지 (0 = 이번 주, 1 = 저번 주 등)
      * @return WeekDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
      */
-    public RunRecordResponse.WeekDTO getActivitiesWeek(User user, LocalDate baseDate, Integer before) {
+    public RunRecordResponse.WeekDTO getActivitiesWeek(OAuthProfile sessionProfile, LocalDate baseDate, Integer before) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 기준 주 계산
         LocalDate targetDate = baseDate.minusWeeks(before);
         LocalDate start = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
@@ -83,7 +94,7 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 2. 주간 기록 조회
-        List<RunRecord> runRecordListPS = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecordListPS = runRecordsRepository.findAllByCreatedAtBetween(userPS.getId(), startTime, endTime);
         Integer totalDistanceMeters = 0;
         Integer totalDurationSeconds = 0;
         for (RunRecord record : runRecordListPS) {
@@ -95,7 +106,7 @@ public class RunRecordService {
         AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordListPS, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 뱃지 조회
-        List<RunBadgeAchv> runBadgesPS = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<RunBadgeAchv> runBadgesPS = runBadgeAchvRepository.findByUserIdJoin(userPS.getId());
         List<AchievementHistoryItemDTO> runBadgeList = runBadgesPS.stream()
                 .collect(Collectors.groupingBy(
                         b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
@@ -113,7 +124,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  챌린지 보상 조회
-        List<UserChallengeReward> challengeRewardsPS = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<UserChallengeReward> challengeRewardsPS = userChallengeRewardRepository.findAllByUserId(userPS.getId());
         List<AchievementHistoryItemDTO> rewardList = challengeRewardsPS.stream()
                 .collect(Collectors.groupingBy(
                         r -> r.getRewardMaster() != null ? r.getRewardMaster().getId() : r.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -154,7 +165,7 @@ public class RunRecordService {
 
 
         // 5. 최근 3개 러닝 기록 + DTO 변환
-        List<RunRecord> recentRunRecordsPS = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
+        List<RunRecord> recentRunRecordsPS = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(userPS.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecordsPS.stream()
                 .map(r -> new RecentRunsDTO(r))
                 .toList();
@@ -163,7 +174,7 @@ public class RunRecordService {
         String baseYearMonth = String.format("%04d-%02d", baseDate.getYear(), baseDate.getMonthValue());
         Map<String, Set<String>> weeksMap = new HashMap<>();
 
-        for (RunRecord record : runRecordsRepository.findAllByUserId(user.getId())) {
+        for (RunRecord record : runRecordsRepository.findAllByUserId(userPS.getId())) {
             LocalDate date = record.getCreatedAt().toLocalDate();
             LocalDate startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
             LocalDate endOfWeek = startOfWeek.plusDays(6);
@@ -198,9 +209,9 @@ public class RunRecordService {
         }
 
         // 7. 레벨 정보 조회
-        RunLevel currentLevelPS = userRepository.findByIdJoin(user.getId()).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND)).getRunLevel();
+        RunLevel currentLevelPS = userRepository.findByIdJoin(userPS.getId()).orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND)).getRunLevel();
         List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
-        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());
+        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(userPS.getId());
         Integer distanceToNextLevel = RunLevelUtil.getDistanceToNextLevel(currentLevelPS, runLevelsPS, totalDistance);
         RunLevelDTO runLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
@@ -216,12 +227,16 @@ public class RunRecordService {
      * - 특정 연/월 내 기록된 러닝 정보를 기반으로 누적 통계, 배지, 최근 기록 리스트 반환
      * <p>
      *
-     * @param user  현재 사용자 정보
-     * @param month 조회할 월 (1~12)
-     * @param year  조회할 연도
+     * @param sessionProfile 현재 사용자 정보
+     * @param month          조회할 월 (1~12)
+     * @param year           조회할 연도
      * @return MonthDTO - 누적 통계(AvgStatsDTO), 배지 목록, 최근 러닝 기록 목록 포함
      */
-    public RunRecordResponse.MonthDTO getActivitiesMonth(User user, Integer month, Integer year) {
+    public RunRecordResponse.MonthDTO getActivitiesMonth(OAuthProfile sessionProfile, Integer month, Integer year) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 해당 월의 시작/끝 날짜 및 시간 계산
         LocalDate start = LocalDate.of(year, month, 1);
         LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
@@ -229,7 +244,7 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 2. 해당 기간의 기록 조회 및 거리/시간 합산
-        List<RunRecord> runRecordListPS = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecordListPS = runRecordsRepository.findAllByCreatedAtBetween(userPS.getId(), startTime, endTime);
         int totalDistanceMeters = 0;
         int totalDurationSeconds = 0;
         for (RunRecord record : runRecordListPS) {
@@ -241,7 +256,7 @@ public class RunRecordService {
         AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordListPS, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 뱃지 조회
-        List<RunBadgeAchv> runBadgesPS = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<RunBadgeAchv> runBadgesPS = runBadgeAchvRepository.findByUserIdJoin(userPS.getId());
         List<AchievementHistoryItemDTO> runBadgeList = runBadgesPS.stream()
                 .collect(Collectors.groupingBy(
                         b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
@@ -259,7 +274,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(userPS.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -299,14 +314,14 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         // 5. 최근 러닝 3개 변환
-        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
+        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(userPS.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
                 .limit(3)
                 .toList();
 
         // 6. 기록이 있는 월/연도 목록 구성
-        List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserId(user.getId());
+        List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserId(userPS.getId());
         Set<Integer> yearSet = new HashSet<>();
         Map<Integer, Set<Integer>> monthsMap = new HashMap<>();
         for (RunRecord record : runRecordAll) {
@@ -318,11 +333,11 @@ public class RunRecordService {
         }
 
         // 7. 레벨 관련 정보 계산
-        RunLevel currentLevelPS = userRepository.findByIdJoin(user.getId())
+        RunLevel currentLevelPS = userRepository.findByIdJoin(userPS.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND))
                 .getRunLevel();
         List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
-        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());
+        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(userPS.getId());
         Integer distanceToNextLevel = RunLevelUtil.getDistanceToNextLevel(currentLevelPS, runLevelsPS, totalDistance);
         RunLevelDTO RunLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
@@ -345,11 +360,15 @@ public class RunRecordService {
      * - 전체 거리/시간 기반 누적 통계 + 주간 평균 활동(평균 러닝 수, 거리 등) 반환
      * <p>
      *
-     * @param user 현재 사용자 정보
-     * @param year 조회할 연도
+     * @param sessionProfile 현재 사용자 정보
+     * @param year           조회할 연도
      * @return YearDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 최근 기록 목록 포함
      */
-    public RunRecordResponse.YearDTO getActivitiesYear(User user, Integer year) {
+    public RunRecordResponse.YearDTO getActivitiesYear(OAuthProfile sessionProfile, Integer year) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 연도 시작/끝 날짜 계산
         LocalDate start = LocalDate.of(year, 1, 1);
         LocalDate end = LocalDate.of(year, 12, 31);
@@ -357,7 +376,7 @@ public class RunRecordService {
         LocalDateTime endTime = end.atTime(LocalTime.MAX);
 
         // 2. 해당 연도의 기록 조회 및 총 거리/시간 계산
-        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(user.getId(), startTime, endTime);
+        List<RunRecord> runRecordList = runRecordsRepository.findAllByCreatedAtBetween(userPS.getId(), startTime, endTime);
         int totalDistanceMeters = 0;
         int totalDurationSeconds = 0;
         for (RunRecord record : runRecordList) {
@@ -370,7 +389,7 @@ public class RunRecordService {
         AvgStatsDTO avgStats = RunRecordUtil.avgStats(runRecordList, totalDistanceMeters, totalDurationSeconds);
 
         // 4. 뱃지 조회
-        List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(userPS.getId());
         List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
                 .collect(Collectors.groupingBy(
                         b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
@@ -388,7 +407,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(userPS.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -428,7 +447,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회 및 DTO 변환
-        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
+        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(userPS.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
                 .limit(3)
@@ -447,18 +466,18 @@ public class RunRecordService {
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
         // 7. 기록이 있는 연도 목록 추출
-        List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserId(user.getId());
+        List<RunRecord> runRecordAll = runRecordsRepository.findAllByUserId(userPS.getId());
         Set<Integer> yearData = new HashSet<>();
         for (RunRecord record : runRecordAll) {
             yearData.add(record.getCreatedAt().getYear());
         }
 
         // 8. 현재 레벨 및 누적 거리, 다음 레벨까지 남은 거리 계산
-        RunLevel currentLevelPS = userRepository.findByIdJoin(user.getId())
+        RunLevel currentLevelPS = userRepository.findByIdJoin(userPS.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND))
                 .getRunLevel();
         List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
-        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());
+        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(userPS.getId());
         Integer distanceToNextLevel = RunLevelUtil.getDistanceToNextLevel(currentLevelPS, runLevelsPS, totalDistance);
         RunLevelDTO RunLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
@@ -475,12 +494,16 @@ public class RunRecordService {
      * - 모든 기록을 바탕으로 누적 통계 + 주당 평균 활동 정보 반환
      * <p>
      *
-     * @param user 현재 사용자 정보
+     * @param sessionProfile 현재 사용자 정보
      * @return AllDTO - 누적 통계(AvgStatsDTO), 평균 통계(TotalStatsDTO), 배지 목록, 전체 기록 목록 포함
      */
-    public RunRecordResponse.AllDTO getActivitiesAll(User user) {
+    public RunRecordResponse.AllDTO getActivitiesAll(OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 전체 러닝 기록 조회
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(userPS.getId());
 
         // 2. 총 거리와 총 소요 시간 계산
         int totalDistanceMeters = 0;
@@ -500,7 +523,7 @@ public class RunRecordService {
         AvgStatsDTO stats = new AvgStatsDTO(runRecord, statsCount, avgPace);
 
         // 4. 뱃지 조회
-        List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(user.getId());
+        List<RunBadgeAchv> runBadges = runBadgeAchvRepository.findByUserIdJoin(userPS.getId());
         List<AchievementHistoryItemDTO> runBadgeList = runBadges.stream()
                 .collect(Collectors.groupingBy(
                         b -> b.getRunBadge().getId(), // ID 기준으로 그룹핑
@@ -518,7 +541,7 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         //  메달 조회
-        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(user.getId());
+        List<UserChallengeReward> medals = userChallengeRewardRepository.findAllByUserId(userPS.getId());
         List<AchievementHistoryItemDTO> medalList = medals.stream()
                 .collect(Collectors.groupingBy(
                         m -> m.getRewardMaster() != null ? m.getRewardMaster().getId() : m.getRewardMaster().getRewardName(), // 사설 챌린지도 고려
@@ -558,18 +581,18 @@ public class RunRecordService {
                 .collect(Collectors.toList());
 
         // 5. 최근 3개의 러닝 기록 조회
-        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(user.getId());
+        List<RunRecord> recentRunRecords = runRecordsRepository.findTop3ByUserIdOrderByCreatedAtJoinBadgeAchv(userPS.getId());
         List<RecentRunsDTO> recentRunList = recentRunRecords.stream()
                 .map(r -> new RecentRunsDTO(r))
                 .limit(3)
                 .toList();
 
         // 6. 현재 레벨, 총 거리, 다음 레벨까지 거리 계산
-        RunLevel currentLevelPS = userRepository.findByIdJoin(user.getId())
+        RunLevel currentLevelPS = userRepository.findByIdJoin(userPS.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND))
                 .getRunLevel();
         List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
-        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());
+        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(userPS.getId());
         Integer distanceToNextLevel = RunLevelUtil.getDistanceToNextLevel(currentLevelPS, runLevelsPS, totalDistance);
         RunLevelDTO RunLevel = new RunLevelDTO(currentLevelPS, totalDistance, distanceToNextLevel);
 
@@ -609,13 +632,17 @@ public class RunRecordService {
      * - RecentOneDTO 리스트를 모아 GroupedRecentListDTO 로 반환
      * <p>
      *
-     * @param user  통계를 조회할 사용자 정보
-     * @param order 정렬 기준 (latest, oldest)
-     * @param year  기준 연도
+     * @param sessionProfile 통계를 조회할 사용자 정보
+     * @param order          정렬 기준 (latest, oldest)
+     * @param year           기준 연도
      * @return GroupedRecentListDTO - 연도/월별 러닝 통계 + 상세 기록 리스트 포함 DTO
      */
-    public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(User user, String order, Integer year, Integer page) {
-        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(user.getId());
+    public RunRecordResponse.GroupedRecentListDTO getGroupedActivities(OAuthProfile sessionProfile, String order, Integer year, Integer page) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        List<RunRecord> runRecords = runRecordsRepository.findAllByUserId(userPS.getId());
         List<RunRecord> filteredAndSorted = new ArrayList<>();
 
         if (year != null) {
@@ -653,7 +680,7 @@ public class RunRecordService {
         // ✅ 2. Entry 리스트로 변환 및 페이징 처리
         List<Map.Entry<YearMonth, List<RunRecord>>> groupedEntries = new ArrayList<>(groupedByMonth.entrySet());
         int totalCount = groupedEntries.size();
-        int size = Constant.RUN_LIST_FETCH_SIZE;
+        int size = Constants.RUN_LIST_FETCH_SIZE;
         int currentPage = Math.max(1, page);
         int fromIndex = (currentPage - 1) * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
@@ -708,22 +735,27 @@ public class RunRecordService {
      * <p>
      * - 그룹핑 없이 평면(flat) 리스트 형태로 반환
      *
-     * @param user  사용자 정보
-     * @param order 정렬 기준 (distance-asc, distance-desc, pace-asc, pace-desc)
-     * @param year  기준 연도
+     * @param sessionProfile 사용자 정보
+     * @param order          정렬 기준 (distance-asc, distance-desc, pace-asc, pace-desc)
+     * @param year           기준 연도
      * @return FlatRecentListDTO - 정렬된 러닝 기록 리스트 포함 DTO
      */
-    public RunRecordResponse.FlatRecentListDTO getFlatActivities(User user, String order, Integer year, Integer page) {
+    public RunRecordResponse.FlatRecentListDTO getFlatActivities(OAuthProfile sessionProfile, String order, Integer year, Integer page) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         List<RunRecord> runRecords;
         switch (order) {
             case "distance-desc" ->
-                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceDesc(user.getId(), page);
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceDesc(userPS.getId(), page);
             case "distance-asc" ->
-                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceAsc(user.getId(), page);
-            case "pace-desc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceDesc(user.getId(), page);
-            case "pace-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceAsc(user.getId(), page);
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByDistanceAsc(userPS.getId(), page);
+            case "pace-desc" ->
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceDesc(userPS.getId(), page);
+            case "pace-asc" -> runRecords = runRecordsRepository.findAllByUserIdOrderByAvgPaceAsc(userPS.getId(), page);
             default ->
-                    runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId(), page); // 기본: 최신순
+                    runRecords = runRecordsRepository.findAllByUserIdOrderByCreatedAtDesc(userPS.getId(), page); // 기본: 최신순
         }
 
         if (year != null) {
@@ -737,7 +769,7 @@ public class RunRecordService {
                 .toList();
 
         // 3. paging
-        Long totalcount = runRecordRepository.totalCount(user.getId());
+        Long totalcount = runRecordRepository.totalCount(userPS.getId());
 
         PageDTO pageing = new PageDTO(totalcount.intValue(), page);
 
@@ -748,13 +780,17 @@ public class RunRecordService {
     /**
      * 러닝 저장
      *
-     * @param user
+     * @param sessionProfile
      * @param reqDTO
      */
     @Transactional
-    public RunRecordResponse.SaveDTO save(User user, RunRecordRequest.SaveDTO reqDTO) {
+    public RunRecordResponse.SaveDTO save(OAuthProfile sessionProfile, RunRecordRequest.SaveDTO reqDTO) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. DTO를 엔티티로 변환합니다.
-        RunRecord runRecord = reqDTO.toEntity(user);
+        RunRecord runRecord = reqDTO.toEntity(userPS);
 
         // 2. 달리기 기록 엔티티를 데이터베이스에 저장합니다.
         RunRecord runRecordPS = runRecordRepository.save(runRecord);
@@ -764,10 +800,10 @@ public class RunRecordService {
         List<RunBadgeAchv> awardedBadgesPS = runBadgeAchvService.checkAndAwardRunBadges(runRecordPS);
 
         // 4. 레벨업 서비스를 호출하여 사용자의 레벨을 업데이트합니다.
-        runLevelService.updateUserLevelIfNeeded(user);
+        runLevelService.updateUserLevelIfNeeded(userPS);
 
         // 5. 러닝 저장시 챌린지 보상 획득(공개, 사설(완주자))
-        List<UserChallengeReward> awardedChallengeRewardsPS = challengeRewardService.checkAndAwardChallengeRewards(user);
+        List<UserChallengeReward> awardedChallengeRewardsPS = challengeRewardService.checkAndAwardChallengeRewards(userPS);
 
         // 6. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
         return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadgesPS);
@@ -777,31 +813,39 @@ public class RunRecordService {
     /**
      * 러닝 삭제
      *
-     * @param user
-     * @param id   runRecordId
+     * @param sessionProfile
+     * @param id             runRecordId
      * @return
      */
     @Transactional
-    public void delete(User user, Integer id) {
+    public void delete(OAuthProfile sessionProfile, Integer id) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 러닝 기록 조회
         RunRecord runRecordPS = runRecordRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크
-        checkRunRecordAccess(user, runRecordPS);
+        checkRunRecordAccess(userPS, runRecordPS);
 
         // 삭제
         runRecordRepository.delete(runRecordPS);
     }
 
     @Transactional
-    public RunRecordResponse.UpdateDTO update(User user, Integer id, RunRecordRequest.UpdateDTO reqDTO) {
+    public RunRecordResponse.UpdateDTO update(OAuthProfile sessionProfile, Integer id, RunRecordRequest.UpdateDTO reqDTO) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. 러닝 기록 조회
         RunRecord runRecordPS = runRecordRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 2. 권한 체크
-        checkRunRecordAccess(user, runRecordPS);
+        checkRunRecordAccess(userPS, runRecordPS);
 
         // 3. 러닝 내용 수정
         runRecordPS.update(reqDTO);
