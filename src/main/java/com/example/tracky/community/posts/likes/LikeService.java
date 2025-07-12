@@ -87,5 +87,11 @@ public class LikeService {
         return new LikeResponse.DeleteDTO(likeCount);
     }
 
+    @Transactional
+    public void delete(Integer id) {
+
+        likeRepository.deleteByPostId(id);
+
+    }
 
 }

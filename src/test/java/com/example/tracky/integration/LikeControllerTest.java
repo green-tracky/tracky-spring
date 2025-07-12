@@ -1,20 +1,20 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
-import com.example.tracky.community.posts.likes.LikeRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // MOCK -> 가짜 환경을 만들어 필요한 의존관계를 다 메모리에 올려서 테스트
@@ -23,6 +23,21 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private EntityManager em;
+
+    @BeforeEach
+    void setUp() {
+        em.createNativeQuery("TRUNCATE TABLE like_tb RESTART IDENTITY").executeUpdate();
+
+        em.createNativeQuery("""
+            INSERT INTO like_tb (user_id, post_id, comment_id, created_at)
+            VALUES (3, 1, NULL, NOW()),
+                   (1, NULL, 1, NOW()),
+                   (1, 2, NULL, NOW())
+        """).executeUpdate();
+    }
 
     @Test
     @DisplayName("게시글 좋아요 저장 성공")
@@ -48,6 +63,7 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data.likeId").value(4));
         actions.andExpect(jsonPath("$.data.likeCount").value(2));
+
     }
 
     @Test
@@ -76,7 +92,6 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.likeCount").value(2));
 
     }
-
 
     @Test
     @DisplayName("삭제 성공 테스트")

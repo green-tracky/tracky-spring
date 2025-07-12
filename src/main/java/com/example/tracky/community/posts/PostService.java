@@ -152,7 +152,7 @@ public class PostService {
         if (!post.getUser().getId().equals(userPS.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
-        likeService.delete(id, sessionProfile);
+        likeService.delete(id);
 
         postRepository.delete(post);
     }

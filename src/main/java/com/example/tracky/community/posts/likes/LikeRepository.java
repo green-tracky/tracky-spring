@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -62,6 +63,12 @@ public class LikeRepository {
         Query query = em.createQuery("delete from Like li where li.id = :id");
         query.setParameter("id", id);
         query.executeUpdate();
+    }
+
+    public void deleteByPostId(Integer postId) {
+        em.createQuery("DELETE FROM Like l WHERE l.post.id = :postId")
+                .setParameter("postId", postId)
+                .executeUpdate();
     }
 
 
