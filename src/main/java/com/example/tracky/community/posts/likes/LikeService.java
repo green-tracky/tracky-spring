@@ -33,16 +33,16 @@ public class LikeService {
         Post postPS = postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
-        Like likePS = likeRepository.save(toEntity(userPS, postPS));
+        Like like = Like.builder()
+                .user(userPS)
+                .post(postPS)
+                .comment(null)
+                .build();
+
+        Like likePS = likeRepository.save(like);
+
         Integer likeCount = likeRepository.countByPostId(postId);
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
-    }
-
-    private Like toEntity(User user, Post post) {
-        return Like.builder()
-                .user(user)
-                .post(post)
-                .build();
     }
 
     @Transactional
@@ -54,16 +54,16 @@ public class LikeService {
         Comment commentPS = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
 
-        Like likePS = likeRepository.save(toEntity(userPS, commentPS));
+        Like like = Like.builder()
+                .user(userPS)
+                .comment(commentPS)
+                .post(null)
+                .build();
+
+        Like likePS = likeRepository.save(like);
+
         Integer likeCount = likeRepository.countByCommentId(commentId);
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
-    }
-
-    private Like toEntity(User user, Comment comment) {
-        return Like.builder()
-                .user(user)
-                .comment(comment)
-                .build();
     }
 
     @Transactional
@@ -100,7 +100,5 @@ public class LikeService {
         likeRepository.deleteByCommentId(id);
 
     }
-
-
 
 }
