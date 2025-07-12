@@ -29,7 +29,7 @@ public class LikeRepositoryTest {
     private PostRepository postRepository;
 
     @Test
-    void count_by_post_id() {
+    void count_by_post_id_test() {
         Integer postId = 1;
 
         Integer count = likeRepository.countByPostId(postId);
@@ -37,7 +37,7 @@ public class LikeRepositoryTest {
     }
 
     @Test
-    void find_by_user_id_and_post_id() {
+    void find_by_user_id_and_post_id_test() {
         Integer userId = 3;
         Integer postId = 1;
         Optional<Like> like = likeRepository.findByUserIdAndPostId(userId, postId);
@@ -71,13 +71,13 @@ public class LikeRepositoryTest {
     }
 
     @Test
-    void find_by_post_id() {
+    void find_by_post_id_test() {
         Integer postId = 1;
         Integer count = likeRepository.countByPostId(postId);
     }
 
     @Test
-    void find_by_id() {
+    void find_by_id_test() {
         Integer likeId = 3;
 
         Optional<Like> like = likeRepository.findById(likeId);

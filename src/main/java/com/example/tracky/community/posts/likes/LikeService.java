@@ -3,6 +3,10 @@ package com.example.tracky.community.posts.likes;
 import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.community.posts.Post;
+import com.example.tracky.community.posts.PostRepository;
+import com.example.tracky.community.posts.comments.Comment;
+import com.example.tracky.community.posts.comments.CommentRepository;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
@@ -17,15 +21,34 @@ public class LikeService {
 
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
-    public LikeResponse.SaveDTO save(LikeRequest.SaveDTO reqDTO, OAuthProfile sessionProfile) {
+    public LikeResponse.SaveDTO save(LikeRequest.SavePostDTO reqDTO, OAuthProfile sessionProfile) {
 
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Like likePS = likeRepository.save(reqDTO.toEntity(userPS.getId()));
+        Post postPS = postRepository.findById(reqDTO.getPostId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
+        Like likePS = likeRepository.save(reqDTO.toEntity(userPS, postPS));
         Integer likeCount = likeRepository.countByPostId(reqDTO.getPostId());
+        return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
+    }
+
+    @Transactional
+    public LikeResponse.SaveDTO save(LikeRequest.SaveCommentDTO reqDTO, OAuthProfile sessionProfile) {
+
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Comment commentPS = commentRepository.findById(reqDTO.getCommentId())
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
+
+        Like likePS = likeRepository.save(reqDTO.toEntity(userPS, commentPS));
+        Integer likeCount = likeRepository.countByCommentId(reqDTO.getCommentId());
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
     }
 

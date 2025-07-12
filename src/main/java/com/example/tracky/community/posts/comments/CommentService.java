@@ -5,6 +5,7 @@ import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.community.posts.Post;
 import com.example.tracky.community.posts.PostRepository;
+import com.example.tracky.community.posts.likes.LikeService;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
@@ -25,6 +26,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final LikeService likeService;
 
     public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
@@ -102,11 +104,13 @@ public class CommentService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
 
         if (!comment.getUser().getId().equals(userPS.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
+
+        likeService.delete(id, sessionProfile);
 
         commentRepository.delete(comment);
     }

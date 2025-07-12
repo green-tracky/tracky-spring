@@ -21,6 +21,14 @@ public class LikeRepository {
         return count.intValue();
     }
 
+    public Integer countByCommentId(Integer commentId) {
+        Query query = em.createQuery("select count(li) from Like li where li.comment.id = :commentId");
+        query.setParameter("commentId", commentId);
+
+        Long count = (Long) query.getSingleResult();
+        return count.intValue();
+    }
+
     public Optional<Like> findByUserIdAndPostId(Integer userId, Integer postId) {
         Query query = em.createQuery("select li from Like li where li.user.id = :userId and li.post.id = :postId", Like.class);
         query.setParameter("userId", userId);

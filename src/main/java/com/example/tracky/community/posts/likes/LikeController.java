@@ -16,8 +16,18 @@ public class LikeController {
     private final LikeService likeService;
     private final HttpSession session;
 
-    @PostMapping("/community/posts/{id}/likes")
-    public ResponseEntity<?> save(@PathVariable("id") Integer id, @RequestBody LikeRequest.SaveDTO reqDTO) {
+    @PostMapping("/community/posts/{postId}/likes")
+    public ResponseEntity<?> save(@PathVariable("postId") Integer postId, @RequestBody LikeRequest.SavePostDTO reqDTO) {
+
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
+
+        LikeResponse.SaveDTO respDTO = likeService.save(reqDTO, sessionProfile);
+
+        return Resp.ok(respDTO);
+    }
+
+    @PostMapping("/community/comments/{commentId}/likes")
+    public ResponseEntity<?> save(@PathVariable("commentId") Integer commentId, @RequestBody LikeRequest.SaveCommentDTO reqDTO) {
 
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -35,4 +45,5 @@ public class LikeController {
 
         return Resp.ok(respDTO);
     }
+
 }
