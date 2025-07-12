@@ -29,14 +29,9 @@ public class LikeControllerTest extends MyRestDoc {
 
     @BeforeEach
     void setUp() {
-        em.createNativeQuery("TRUNCATE TABLE like_tb RESTART IDENTITY").executeUpdate();
-
-        em.createNativeQuery("""
-            INSERT INTO like_tb (user_id, post_id, comment_id, created_at)
-            VALUES (3, 1, NULL, NOW()),
-                   (1, NULL, 1, NOW()),
-                   (1, 2, NULL, NOW())
-        """).executeUpdate();
+        em.createNativeQuery("alter table like_tb alter column id restart with 4").executeUpdate();
+        em.createNativeQuery("alter table post_tb alter column id restart with 3").executeUpdate();
+        em.createNativeQuery("alter table comment_tb alter column id restart with 28").executeUpdate();
     }
 
     @Test
