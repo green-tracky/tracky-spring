@@ -47,14 +47,6 @@ public class LikeRepository {
         return like;
     }
 
-//    public Integer findByPostId(int postId) {
-//        Query query = em.createQuery("select count(li) from Like li where li.post.id = :postId");
-//        query.setParameter("postId", postId);
-//
-//        Long count = (Long) query.getSingleResult();
-//        return count.intValue();
-//    }
-
     public Optional<Like> findById(Integer id) {
         return Optional.ofNullable(em.find(Like.class, id));
     }
@@ -66,16 +58,15 @@ public class LikeRepository {
     }
 
     public void deleteByPostId(Integer postId) {
-        em.createQuery("DELETE FROM Like l WHERE l.post.id = :postId")
+        em.createQuery("delete from Like l where l.post.id = :postId")
                 .setParameter("postId", postId)
                 .executeUpdate();
     }
 
     public void deleteByCommentId(Integer commentId) {
-        em.createQuery("DELETE FROM Like l WHERE l.comment.id = :commentId")
+        em.createQuery("delete from Like l where l.comment.id = :commentId")
                 .setParameter("commentId", commentId)
                 .executeUpdate();
     }
-
 
 }
