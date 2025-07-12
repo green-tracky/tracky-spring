@@ -16,4 +16,9 @@ public class UserRequest {
         private String location; // 활동지
         private String letter; // 자기소개
     }
+
+    @Data
+    public static class FCMDTO {
+        private String fcmToken; // fcm 토큰
+    }
 }
