@@ -25,7 +25,7 @@ public class LikeService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public LikeResponse.SaveDTO savePost(Integer postId, OAuthProfile sessionProfile) {
+    public LikeResponse.SaveDTO likePost(Integer postId, OAuthProfile sessionProfile) {
 
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
@@ -46,7 +46,7 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeResponse.SaveDTO saveComment(Integer commentId, OAuthProfile sessionProfile) {
+    public LikeResponse.SaveDTO likeComment(Integer commentId, OAuthProfile sessionProfile) {
 
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));

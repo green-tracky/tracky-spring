@@ -37,6 +37,14 @@ public class LikeRepositoryTest {
     }
 
     @Test
+    void count_by_comment_id_test() {
+        Integer commentId = 1;
+
+        Integer count = likeRepository.countByCommentId(commentId);
+        log.debug(count.toString());
+    }
+
+    @Test
     void find_by_user_id_and_post_id_test() {
         Integer userId = 3;
         Integer postId = 1;
@@ -70,11 +78,6 @@ public class LikeRepositoryTest {
         log.debug("post.id: {}", like.getPost().getId());
     }
 
-    @Test
-    void find_by_post_id_test() {
-        Integer postId = 1;
-        Integer count = likeRepository.countByPostId(postId);
-    }
 
     @Test
     void find_by_id_test() {
@@ -90,12 +93,38 @@ public class LikeRepositoryTest {
     }
 
     @Test
-    void delete_test() {
+    void delete_by_id_test() {
         Integer likeId = 3;
 
         likeRepository.deleteById(likeId);
         boolean exists = likeRepository.findById(likeId).isPresent();
         log.debug("삭제 후 Like 존재 여부: {}", exists); // false가 되어야 성공
+    }
+
+    @Test
+    void delete_by_post_id_test() {
+        Integer postId = 1;
+
+        long beforeCount = likeRepository.countByPostId(postId);
+        log.debug("삭제 전 like 개수: {}", beforeCount);
+
+        likeRepository.deleteByPostId(postId);
+
+        long afterCount = likeRepository.countByPostId(postId);
+        log.debug("삭제 후 like 개수: {}", afterCount);
+    }
+
+    @Test
+    void delete_by_comment_id_test() {
+        Integer commentId = 1;
+
+        long beforeCount = likeRepository.countByCommentId(commentId);
+        log.debug("삭제 전 like 개수: {}", beforeCount);
+
+        likeRepository.deleteByCommentId(commentId);
+
+        long afterCount = likeRepository.countByCommentId(commentId);
+        log.debug("삭제 후 like 개수: {}", afterCount);
     }
 
 }
