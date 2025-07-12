@@ -71,5 +71,11 @@ public class LikeRepository {
                 .executeUpdate();
     }
 
+    public void deleteByCommentId(Integer commentId) {
+        em.createQuery("DELETE FROM Like l WHERE l.comment.id = :commentId")
+                .setParameter("commentId", commentId)
+                .executeUpdate();
+    }
+
 
 }

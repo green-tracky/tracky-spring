@@ -110,7 +110,7 @@ public class CommentService {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
 
-        likeService.delete(id, sessionProfile);
+        likeService.deleteByCommentId(id);
 
         commentRepository.delete(comment);
     }

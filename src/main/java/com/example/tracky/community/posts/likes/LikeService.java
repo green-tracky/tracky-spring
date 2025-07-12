@@ -88,10 +88,19 @@ public class LikeService {
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void deleteByPostId(Integer id) {
 
         likeRepository.deleteByPostId(id);
 
     }
+
+    @Transactional
+    public void deleteByCommentId(Integer id) {
+
+        likeRepository.deleteByCommentId(id);
+
+    }
+
+
 
 }
