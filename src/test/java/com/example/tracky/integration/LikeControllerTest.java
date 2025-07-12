@@ -26,24 +26,15 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("게시글 좋아요 저장 성공")
-    void post_save_test() throws Exception {
+    void save_post_test() throws Exception {
 
         // given
-        LikeRequest.SavePostDTO reqDTO = new LikeRequest.SavePostDTO();
-        reqDTO.setPostId(1);
-
-        String requestBody = om.writeValueAsString(reqDTO);
-
-        log.debug("✅요청 바디: " + requestBody);
-
         Integer postId = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .post("/s/api/community/posts/{postId}/likes", postId)
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -61,24 +52,15 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("댓글 좋아요 저장 성공")
-    void comment_save_test() throws Exception {
+    void save_comment_test() throws Exception {
 
         // given
-        LikeRequest.SaveCommentDTO reqDTO = new LikeRequest.SaveCommentDTO();
-        reqDTO.setCommentId(1);
-
-        String requestBody = om.writeValueAsString(reqDTO);
-
-        log.debug("✅요청 바디: " + requestBody);
-
         Integer commentId = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .post("/s/api/community/comments/{commentId}/likes", commentId)
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 

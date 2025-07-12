@@ -25,31 +25,45 @@ public class LikeService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public LikeResponse.SaveDTO save(LikeRequest.SavePostDTO reqDTO, OAuthProfile sessionProfile) {
+    public LikeResponse.SaveDTO savePost(Integer postId, OAuthProfile sessionProfile) {
 
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Post postPS = postRepository.findById(reqDTO.getPostId())
+        Post postPS = postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
-        Like likePS = likeRepository.save(reqDTO.toEntity(userPS, postPS));
-        Integer likeCount = likeRepository.countByPostId(reqDTO.getPostId());
+        Like likePS = likeRepository.save(toEntity(userPS, postPS));
+        Integer likeCount = likeRepository.countByPostId(postId);
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
     }
 
+    private Like toEntity(User user, Post post) {
+        return Like.builder()
+                .user(user)
+                .post(post)
+                .build();
+    }
+
     @Transactional
-    public LikeResponse.SaveDTO save(LikeRequest.SaveCommentDTO reqDTO, OAuthProfile sessionProfile) {
+    public LikeResponse.SaveDTO saveComment(Integer commnetId, OAuthProfile sessionProfile) {
 
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Comment commentPS = commentRepository.findById(reqDTO.getCommentId())
+        Comment commentPS = commentRepository.findById(commnetId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
 
-        Like likePS = likeRepository.save(reqDTO.toEntity(userPS, commentPS));
-        Integer likeCount = likeRepository.countByCommentId(reqDTO.getCommentId());
+        Like likePS = likeRepository.save(toEntity(userPS, commentPS));
+        Integer likeCount = likeRepository.countByCommentId(commnetId);
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
+    }
+
+    private Like toEntity(User user, Comment comment) {
+        return Like.builder()
+                .user(user)
+                .comment(comment)
+                .build();
     }
 
     @Transactional
