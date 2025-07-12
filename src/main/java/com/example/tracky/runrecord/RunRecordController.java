@@ -5,9 +5,11 @@ import com.example.tracky._core.utils.Resp;
 import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -97,7 +99,7 @@ public class RunRecordController {
     }
 
     @PostMapping("/runs")
-    public ResponseEntity<?> save(@RequestBody RunRecordRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody RunRecordRequest.SaveDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
