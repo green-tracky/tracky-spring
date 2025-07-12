@@ -8,6 +8,7 @@ import com.example.tracky.community.posts.comments.CommentResponse;
 import com.example.tracky.community.posts.comments.CommentService;
 import com.example.tracky.community.posts.likes.Like;
 import com.example.tracky.community.posts.likes.LikeRepository;
+import com.example.tracky.community.posts.likes.LikeService;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.runrecord.pictures.Picture;
@@ -33,6 +34,7 @@ public class PostService {
     private final PictureRepository pictureRepository;
     private final CommentService commentService;
     private final UserRepository userRepository;
+    private final LikeService likeService;
 
 
     public List<PostResponse.ListDTO> getPosts(OAuthProfile sessionProfile) {
@@ -150,6 +152,8 @@ public class PostService {
         if (!post.getUser().getId().equals(userPS.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
+        likeService.deleteByPostId(id);
+
         postRepository.delete(post);
     }
 

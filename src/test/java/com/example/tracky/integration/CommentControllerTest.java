@@ -174,6 +174,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data").value((Object) null));
+
     }
 
 }
