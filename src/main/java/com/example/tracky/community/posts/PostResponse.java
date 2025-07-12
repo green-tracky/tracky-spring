@@ -4,6 +4,8 @@ package com.example.tracky.community.posts;
 import com.example.tracky.community.posts.comments.CommentResponse;
 import com.example.tracky.runrecord.RunRecordResponse;
 import com.example.tracky.runrecord.pictures.PictureResponse;
+import com.example.tracky.user.User;
+import com.example.tracky.user.UserResponse;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -35,25 +37,23 @@ public class PostResponse {
 
     @Data
     public static class ListDTO {
-        private final Integer id;
-        private final String username;
-        private final String content;
-        private final LocalDateTime createdAt;
-        private final List<PictureResponse.DTO> pictures;
-        private final Integer likeCount;
-        private final Integer commentCount;
-        private final Boolean isLiked;
+        private Integer id;
+        private String username;
+        private String content;
+        private LocalDateTime createdAt;
+        private List<PictureResponse.DTO> pictures;
+        private Integer likeCount;
+        private Integer commentCount;
+        private Boolean isLiked;
 
         public ListDTO(Post post, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked) {
             this.id = post.getId();
             this.username = post.getUser().getUsername();
             this.content = post.getContent();
             this.createdAt = post.getCreatedAt();
-            this.pictures = (postPictures != null) ?
-                    postPictures.stream()
-                            .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
-                            .toList()
-                    : List.of();
+            this.pictures = postPictures.stream()
+                    .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
+                    .toList();
             this.likeCount = likeCount;
             this.commentCount = commentCount;
             this.isLiked = isLiked;
@@ -63,33 +63,38 @@ public class PostResponse {
     @Data
     public static class DetailDTO {
 
-        private final Integer id;
-        private final String content;
-        private final Integer userId;
-        private final RunRecordResponse.DetailDTO runRecord;
-        private final List<CommentResponse.DTO> commentDTOs;
-        private final LocalDateTime createdAt;
-        private final LocalDateTime updatedAt;
+        private Integer id;
+        private String content;
+        private UserResponse.PostUserDTO user; // User 엔티티를 -> DTO 로
+        private RunRecordResponse.PostRunRecordDTO runRecord;
+        private List<PictureResponse.DTO> pictures;
+        private CommentResponse.CommentsList comments;
+        private Integer likeCount;
+        private Integer commentCount;
+        private Boolean isLiked;
+        private Boolean isOwner;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
 
-        public DetailDTO(Post post) {
+        public DetailDTO(Post post, CommentResponse.CommentsList comments, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked, User user) {
             this.id = post.getId();
             this.content = post.getContent();
-            this.userId = post.getUser().getId();
+            this.user = new UserResponse.PostUserDTO(post.getUser());
             this.runRecord = post.getRunRecord() != null
-                    ? new RunRecordResponse.DetailDTO(post.getRunRecord())
+                    ? new RunRecordResponse.PostRunRecordDTO(post.getRunRecord())
                     : null;
-            this.commentDTOs = post.getComments().stream()
-                    .map(comment -> new CommentResponse.DTO(comment)) // 생성자 직접 호출
+            this.comments = comments;
+            this.pictures = postPictures.stream()
+                    .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
                     .toList();
+            this.likeCount = likeCount;
+            this.commentCount = commentCount;
+            this.isLiked = isLiked;
+            this.isOwner = post.getUser().getId().equals(user.getId());
             this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
         }
 
-        public static List<DetailDTO> toPostResponseDTOs(List<Post> posts) {
-            return posts.stream()
-                    .map(post -> new DetailDTO(post))
-                    .toList();
-        }
     }
 
     @Data
@@ -111,6 +116,5 @@ public class PostResponse {
                     .map(pp -> pp.getPicture().getId())
                     .toList();
         }
-
     }
 }

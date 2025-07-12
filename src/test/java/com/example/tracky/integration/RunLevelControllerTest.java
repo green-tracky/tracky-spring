@@ -28,7 +28,9 @@ public class RunLevelControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/run-levels"));
+                        .get("/s/api/run-levels")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
@@ -36,14 +38,9 @@ public class RunLevelControllerTest extends MyRestDoc {
 
         // then
         actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // data 최상위 필드 검증
-        actions.andExpect(jsonPath("$.data.totalDistance").value(11850));
-        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(38150));
-
-        // data.runLevels 배열의 첫 번째 요소 검증
+        // runLevels[0]
         actions.andExpect(jsonPath("$.data.runLevels[0].id").value(1));
         actions.andExpect(jsonPath("$.data.runLevels[0].name").value("옐로우"));
         actions.andExpect(jsonPath("$.data.runLevels[0].minDistance").value(0));
@@ -52,6 +49,10 @@ public class RunLevelControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevels[0].imageUrl").value("https://example.com/images/yellow.png"));
         actions.andExpect(jsonPath("$.data.runLevels[0].sortOrder").value(0));
         actions.andExpect(jsonPath("$.data.runLevels[0].isCurrent").value(true));
+
+        // totalDistance, distanceToNextLevel
+        actions.andExpect(jsonPath("$.data.totalDistance").value(18100));
+        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(31900));
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }

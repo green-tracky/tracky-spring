@@ -18,8 +18,8 @@ public class RunBadgeRepositoryTest {
 
     @Test
     void findAll_test() {
-        List<RunBadge> runBadges = runBadgeRepository.findAll();
-        for (RunBadge runBadge : runBadges) {
+        List<RunBadge> runBadgesPS = runBadgeRepository.findAll();
+        for (RunBadge runBadge : runBadgesPS) {
             log.debug("✅ 러닝뱃지 이름: " + runBadge.getName());
         }
     }

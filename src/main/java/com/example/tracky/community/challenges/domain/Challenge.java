@@ -1,10 +1,12 @@
 package com.example.tracky.community.challenges.domain;
 
-import com.example.tracky.community.challenges.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.ChallengeTypeEnum;
+import com.example.tracky._core.enums.PeriodTypeEnum;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,23 +19,41 @@ import java.time.LocalDateTime;
  * </pre>
  */
 @Getter
-@Table(name = "challenge_tb")
+@Table(
+        name = "challenge_tb",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_challenge_name_period", // 제약 조건 이름
+                        // 아래 컬럼들의 조합이 유일해야 함
+                        columnNames = {"type", "name", "challengeYear", "challengeMonth", "weekOfMonth"}
+                )
+        })
 @Entity
 public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String name; // 챌린지 이름 (예: "6월 주간 챌린지")
     private String sub; // 챌린지 짧은 설명 (예: "이번 주 5km를 달려보세요.")
     private String description; // 챌린지 설명 (예: "주간 챌린지를 통해 나의 한계를...")
+    @Column(nullable = false)
     private LocalDateTime startDate; // 챌린지 시작 날짜
+    @Column(nullable = false)
     private LocalDateTime endDate; // 챌린지 종료 날짜
+    @Column(nullable = false)
     private Integer targetDistance; // 목표 달리기 거리 (m)
+    @ColumnDefault("true")
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
+    @Column(nullable = false)
     private ChallengeTypeEnum type; // PUBLIC, PRIVATE
     private String imageUrl; // 챌린지 이미지
+    private Integer challengeYear; // 년도
+    private Integer challengeMonth; // 월
+    private Integer weekOfMonth; // 주차 (1주차, 2주차)
+    @Column(nullable = false)
+    private PeriodTypeEnum periodType; // 주간 or 월간
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 챌린지 생성 시간
@@ -45,7 +65,8 @@ public class Challenge {
     @JoinColumn(nullable = false) // db 제약조건
     private User creator; // 생성자
 
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, User creator) {
+    @Builder
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, Integer challengeYear, Integer challengeMonth, Integer weekOfMonth, PeriodTypeEnum periodType, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -56,13 +77,18 @@ public class Challenge {
         this.isInProgress = isInProgress;
         this.type = type;
         this.imageUrl = imageUrl;
+        this.challengeYear = challengeYear;
+        this.challengeMonth = challengeMonth;
+        this.weekOfMonth = weekOfMonth;
+        this.periodType = periodType;
         this.creator = creator;
     }
 
-    @Builder
-
-
     protected Challenge() {
+    }
+
+    public void closeChallenge() {
+        this.isInProgress = false;
     }
 
 }

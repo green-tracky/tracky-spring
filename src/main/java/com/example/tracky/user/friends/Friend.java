@@ -11,7 +11,14 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "friend_tb")
+@Table(
+        name = "friend_tb",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_friend_from_to", // 제약 조건 이름
+                        columnNames = {"fromUser_id", "toUser_id"} // 유니크해야 할 컬럼 조합
+                )
+        })
 public class Friend {
 
     @Id
@@ -19,11 +26,13 @@ public class Friend {
     private Integer id;
 
     // 친구 요청 보낸 유저
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private User fromUser;
 
     // 친구 요청 받은 유저
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private User toUser;
 
     @CreationTimestamp

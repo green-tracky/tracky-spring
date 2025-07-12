@@ -1,6 +1,6 @@
 package com.example.tracky.runrecord;
 
-import com.example.tracky.runrecord.enums.RunPlaceTypeEnum;
+import com.example.tracky._core.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.pictures.Picture;
 import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
 import com.example.tracky.runrecord.runsegments.RunSegment;
@@ -39,7 +39,8 @@ public class RunRecord {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 추가함
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "runRecord", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -52,7 +53,7 @@ public class RunRecord {
     private List<Picture> pictures = new ArrayList<>(); // 자식 사진들
 
     @Builder
-    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceTypeEnum place, User user) {
+    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceTypeEnum place, User user, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
@@ -64,6 +65,7 @@ public class RunRecord {
         this.intensity = intensity;
         this.place = place;
         this.user = user;
+        this.createdAt = createdAt;
     }
 
     // 기본생성자 사용금지

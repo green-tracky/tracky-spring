@@ -4,15 +4,15 @@ import lombok.Data;
 
 @Data
 public class TotalStatsDTO {
-    private double runCount;
+    private double runCountPerWeek;
     private Integer avgPace;
-    private Integer avgDistanceMeters; // 총 거리. 미터 단위
-    private Integer avgDurationSeconds; // 총 시간. 초 단위
+    private Integer avgDistanceMetersPerRun; // 총 거리. 미터 단위
+    private Integer avgDurationSecondsPerRun; // 총 시간. 초 단위
 
-    public TotalStatsDTO(double runCount, Integer avgPace, Integer avgDistanceMeters, Integer avgDurationSeconds) {
-        this.runCount = runCount;
+    public TotalStatsDTO(double runCountPerWeek, Integer avgPace, Integer avgDistanceMetersPerRun, Integer avgDurationSecondsPerRun) {
+        this.runCountPerWeek = runCountPerWeek;
         this.avgPace = avgPace;
-        this.avgDistanceMeters = avgDistanceMeters;
-        this.avgDurationSeconds = avgDurationSeconds;
+        this.avgDistanceMetersPerRun = avgDistanceMetersPerRun;
+        this.avgDurationSecondsPerRun = avgDurationSecondsPerRun;
     }
 }

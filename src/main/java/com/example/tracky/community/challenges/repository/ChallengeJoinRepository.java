@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges.repository;
 
 import com.example.tracky.community.challenges.domain.ChallengeJoin;
+import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
@@ -110,7 +111,7 @@ public class ChallengeJoinRepository {
     }
 
     /**
-     * 나의 챌린지 참여 조회
+     * 내가 참여한 챌린지 조회
      *
      * @param challengeId
      * @param userId
@@ -129,11 +130,50 @@ public class ChallengeJoinRepository {
     }
 
     /**
-     * 챌린지 참여 삭제
+     * 내가 참여한 챌린지 나가기
      *
      * @param challengeJoinPS
      */
     public void delete(ChallengeJoin challengeJoinPS) {
         em.remove(challengeJoinPS);
+    }
+
+    /**
+     * 챌린지에 참여한 모든 유저 조회
+     *
+     * @param challengeId
+     * @return
+     */
+    public List<User> findUserAllById(Integer challengeId) {
+        Query query = em.createQuery("select cj.user from ChallengeJoin cj where cj.challenge.id = :challengeId order by cj.joinDate", User.class);
+        query.setParameter("challengeId", challengeId);
+        List<User> resultList = query.getResultList();
+        return resultList;
+    }
+
+    // ...
+
+    /**
+     * 참여중인 챌린지 중에서 현재 진행중인 챌린지들만 조회
+     *
+     * @param userId
+     * @return
+     */
+    public List<ChallengeJoin> findAllByUserIdAndIsInProgressTrue(Integer userId) {
+        Query query = em.createQuery("select cj from ChallengeJoin cj join fetch cj.challenge c where cj.user.id = :userId and c.isInProgress = true order by cj.joinDate", ChallengeJoin.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
+    }
+
+    /**
+     * 해당 챌린지에 참여한 사람들 조회
+     *
+     * @param challengeId
+     * @return
+     */
+    public List<ChallengeJoin> findAllByChallengeId(Integer challengeId) {
+        return em.createQuery("select cj from ChallengeJoin cj where cj.challenge.id = :challengeId order by cj.joinDate", ChallengeJoin.class)
+                .setParameter("challengeId", challengeId)
+                .getResultList();
     }
 }

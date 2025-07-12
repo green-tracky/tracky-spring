@@ -1,8 +1,10 @@
 package com.example.tracky.community.challenges;
 
+import com.example.tracky._core.constants.SessionKeys;
 import com.example.tracky._core.utils.Resp;
 import com.example.tracky.community.challenges.dto.ChallengeJoinResponse;
-import com.example.tracky.user.User;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,29 +15,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/s/api")
 public class ChallengeJoinController {
     private final ChallengeJoinService challengeJoinService;
+    private final HttpSession session;
 
-    @PostMapping("/community/challenges/{id}/joins")
-    public ResponseEntity<?> save(@PathVariable Integer id) {
-        // 유저 아이디를 임시로 1 로 함
-        Integer userId = 1;
+    @PostMapping("/community/challenges/{id}/join")
+    public ResponseEntity<?> join(@PathVariable Integer id) {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
-        User user = User.builder().id(userId).build();
-
-        ChallengeJoinResponse.DTO respDTO = challengeJoinService.save(id, user);
+        ChallengeJoinResponse.DTO respDTO = challengeJoinService.join(id, sessionProfile);
         return Resp.ok(respDTO);
     }
 
 
-    @DeleteMapping("/community/challenges/{id}/joins")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        // 유저 아이디를 임시로 1 로 함
-        Integer userId = 1;
+    @DeleteMapping("/community/challenges/{id}/join")
+    public ResponseEntity<?> leave(@PathVariable Integer id) {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        // 필터에서 가져올거 미리 가져옴 나중에 세션에서 가져와야함
-        User user = User.builder().id(userId).build();
-
-        challengeJoinService.delete(id, user);
+        challengeJoinService.leave(id, sessionProfile);
         return Resp.ok(null);
     }
 
