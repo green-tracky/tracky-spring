@@ -46,16 +46,16 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeResponse.SaveDTO saveComment(Integer commnetId, OAuthProfile sessionProfile) {
+    public LikeResponse.SaveDTO saveComment(Integer commentId, OAuthProfile sessionProfile) {
 
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Comment commentPS = commentRepository.findById(commnetId)
+        Comment commentPS = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
 
         Like likePS = likeRepository.save(toEntity(userPS, commentPS));
-        Integer likeCount = likeRepository.countByCommentId(commnetId);
+        Integer likeCount = likeRepository.countByCommentId(commentId);
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
     }
 
