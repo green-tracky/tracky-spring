@@ -9,7 +9,6 @@ public class UserRequest {
 
     @Data
     public static class UpdateDTO {
-        @NotBlank(message = "사용자 이름은 필수 입력 항목입니다.")
         @Size(min = 2, max = 20, message = "사용자 이름은 2자 이상 20자 이하로 설정해주세요.")
         private String username; // 유저 이름
 
@@ -27,7 +26,6 @@ public class UserRequest {
         @Digits(integer = 3, fraction = 1, message = "몸무게는 정수 3자리, 소수점 1자리까지 입력 가능합니다.")
         private Double weight; // 75.5(kg)
 
-        @NotNull(message = "성별은 필수 선택 항목입니다.")
         private GenderEnum gender; // (남 | 여)
 
         @Size(max = 100, message = "활동 지역은 100자를 초과할 수 없습니다.")

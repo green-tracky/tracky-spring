@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,6 +60,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.likeId").value(4));
         actions.andExpect(jsonPath("$.data.likeCount").value(2));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -84,6 +88,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -111,6 +118,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.likeId").value(4));
         actions.andExpect(jsonPath("$.data.likeCount").value(2));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -136,6 +146,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -160,6 +173,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data.likeCount").value(0));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -186,6 +202,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 좋아요를 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -210,6 +229,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data.likeCount").value(0));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -235,6 +257,9 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 좋아요를 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 }

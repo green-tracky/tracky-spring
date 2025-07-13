@@ -70,6 +70,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.comments[0].children").isArray());
         actions.andExpect(jsonPath("$.data.comments[0].children").isEmpty());
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -93,6 +96,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -134,6 +140,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -165,6 +174,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -205,6 +217,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.content").value("수정된 내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value((Object) null));
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -238,6 +253,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -264,6 +282,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data").value((Object) null));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -289,6 +310,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 

@@ -82,6 +82,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].user.username").value("ssar"));
         actions.andExpect(jsonPath("$.data[0].user.profileUrl").value("http://example.com/profiles/ssar.jpg"));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -103,6 +106,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(401));
         actions.andExpect(jsonPath("$.msg").value("토큰이 존재하지 않습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -144,6 +150,9 @@ class PostControllerTest extends MyRestDoc {
                 Matchers.matchesPattern("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
         ));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -173,6 +182,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(status().isNotFound());
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 러닝을 찾을 수 없습니다"));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -213,6 +225,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.updatedAt").<String>value(
                 Matchers.matchesPattern("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
         ));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -243,6 +258,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -268,6 +286,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data").<Object>value(nullValue()));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -292,6 +313,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -408,6 +432,9 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 

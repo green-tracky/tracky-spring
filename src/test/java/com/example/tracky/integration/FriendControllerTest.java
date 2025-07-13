@@ -79,6 +79,9 @@ class FriendControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].profileUrl").value("http://example.com/profiles/love.jpg"));
         actions.andExpect(jsonPath("$.data[0].username").value("love"));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 }
 

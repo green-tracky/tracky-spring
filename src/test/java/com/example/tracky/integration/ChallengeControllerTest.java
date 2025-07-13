@@ -200,6 +200,9 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.imgIndex").value(1));
         actions.andExpect(jsonPath("$.data.periodType").value("기타"));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -228,7 +231,21 @@ class ChallengeControllerTest extends MyRestDoc {
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
 
-        // then
+        // then: 응답 결과 검증
+// HTTP 상태 코드가 200 (OK)인지 확인합니다.
+        actions.andExpect(status().isOk());
+
+// JSON 응답의 최상위 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+// 'data' 객체 내부의 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.data.id").value(6));
+        actions.andExpect(jsonPath("$.data.name").value("달리기 초보 모여라!"));
+
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
