@@ -45,7 +45,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String userTag; // #UUID 6자리
     //    @Column(unique = true, nullable = false)
-    private String flutterTokenId; // 기기 식별 아이디 // 알림서비스용
+    private String fcmToken; // 기기 식별 아이디 // 알림서비스용
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
@@ -61,7 +61,7 @@ public class User {
     private List<RunRecord> runRecords = new ArrayList<>(); // 자식 러닝들
 
     @Builder
-    public User(Integer id, String loginId, String password, String username, String email, String profileUrl, Double height, Double weight, GenderEnum gender, String location, String letter, UserTypeEnum userType, ProviderTypeEnum provider, String userTag, String flutterTokenId, RunLevel runLevel, List<RunRecord> runRecords) {
+    public User(Integer id, String loginId, String password, String username, String email, String profileUrl, Double height, Double weight, GenderEnum gender, String location, String letter, UserTypeEnum userType, ProviderTypeEnum provider, String userTag, String fcmToken, RunLevel runLevel, List<RunRecord> runRecords) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
@@ -76,7 +76,7 @@ public class User {
         this.userType = userType;
         this.provider = provider;
         this.userTag = userTag;
-        this.flutterTokenId = flutterTokenId;
+        this.fcmToken = fcmToken;
         this.runLevel = runLevel;
         this.runRecords = runRecords;
     }
@@ -94,6 +94,11 @@ public class User {
         this.runLevel = newRunLevel;
     }
 
+    /**
+     * 사용자 정보 수정 메서드
+     *
+     * @param reqDTO
+     */
     public void updateInfo(UserRequest.UpdateDTO reqDTO) {
         this.username = Objects.requireNonNullElse(reqDTO.getUsername(), this.username);
         this.email = Objects.requireNonNullElse(reqDTO.getEmail(), this.email);
@@ -103,6 +108,15 @@ public class User {
         this.gender = Objects.requireNonNullElse(reqDTO.getGender(), this.gender);
         this.location = Objects.requireNonNullElse(reqDTO.getLocation(), this.location);
         this.letter = Objects.requireNonNullElse(reqDTO.getLetter(), this.letter);
+    }
+
+    /**
+     * 사용자 fcmToken 수정 메서드
+     *
+     * @param fcmToken
+     */
+    public void updateFCMToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
 }

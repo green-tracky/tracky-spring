@@ -2,7 +2,6 @@ package com.example.tracky.user.friends.friendinvite;
 
 import com.example.tracky._core.constants.SessionKeys;
 import com.example.tracky._core.utils.Resp;
-import com.example.tracky.user.User;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +20,7 @@ public class FriendInviteController {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        // 신청을 보내는 유저
-        User toUser = User.builder().id(toUserId).build();
-
-        FriendInviteResponse.SaveDTO respDTO = friendInviteService.friendInvite(sessionProfile, toUser);
+        FriendInviteResponse.SaveDTO respDTO = friendInviteService.friendInvite(sessionProfile, toUserId);
         return Resp.ok(respDTO);
     }
 
