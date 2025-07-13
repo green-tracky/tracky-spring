@@ -165,6 +165,7 @@ public class LikeControllerTest extends MyRestDoc {
     @Test
     @DisplayName("존재하지 않는 좋아요 삭제 실패")
     void dislike_post_fail_test() throws Exception {
+
         // given
         int postId = 1;
         int invalidLikeId = 100;

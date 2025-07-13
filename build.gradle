@@ -71,6 +71,18 @@ dependencies {
 
     // JWT (JSON Web Token) 및 JOSE (JSON Object Signing and Encryption) 관련 기능을 제공하는 Java 라이브러리
     implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
+
+    // Firebase Admin SDK는 내부적으로 JSON 파일을 파싱하기 위해 Gson 라이브러리를 사용합니다.
+    // NoClassDefFoundError: com/google/gson/stream/JsonReader 오류는
+    // 이 라이브러리가 없어서 발생하는 것이므로, 명시적으로 추가하여 문제를 해결합니다.
+    implementation 'com.google.code.gson:gson:2.10.1'
+    // fcm 라이브러리
+    implementation 'com.google.firebase:firebase-admin:9.5.0'
+}
+
+// plain.jar 생성 금지
+jar {
+    enabled = false
 }
 
 

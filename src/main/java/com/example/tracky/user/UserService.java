@@ -76,7 +76,7 @@ public class UserService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 권한 체크
-        checkRunRecordAccess(id, userPS);
+        checkAccess(id, userPS);
 
         // 정보 수정
         userPS.updateInfo(reqDTO);
@@ -95,7 +95,7 @@ public class UserService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 권한 체크
-        checkRunRecordAccess(id, userPS);
+        checkAccess(id, userPS);
 
         userRepository.delete(userPS);
     }
@@ -107,7 +107,7 @@ public class UserService {
      * @param id
      * @param userPS
      */
-    private void checkRunRecordAccess(Integer id, User userPS) {
+    private void checkAccess(Integer id, User userPS) {
         if (!id.equals(userPS.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
@@ -118,5 +118,17 @@ public class UserService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         return new UserResponse.DetailDTO(userPS, LoginIdUtil.makeLoginId(sessionProfile));
+    }
+
+    @Transactional
+    public void updateFCMToken(Integer id, OAuthProfile sessionProfile, UserRequest.FCMDTO reqDTO) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // 권한 체크
+        checkAccess(id, userPS);
+
+        userPS.updateFCMToken(reqDTO.getFcmToken());
     }
 }

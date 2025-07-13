@@ -21,7 +21,7 @@ public class UserController {
         return Resp.ok(respDTO);
     }
 
-    @PutMapping("/s/api/user/{id}")
+    @PutMapping("/s/api/users/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UserRequest.UpdateDTO reqDTO) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
@@ -30,7 +30,7 @@ public class UserController {
         return Resp.ok(respDTO);
     }
 
-    @DeleteMapping("/s/api/user/{id}")
+    @DeleteMapping("/s/api/users/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
@@ -39,13 +39,22 @@ public class UserController {
         return Resp.ok(null);
     }
 
-    @GetMapping("/s/api/user/{id}")
+    @GetMapping("/s/api/users/{id}")
     public ResponseEntity<?> getUser(@PathVariable Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
         UserResponse.DetailDTO respDTO = userService.getUser(id, sessionProfile);
         return Resp.ok(respDTO);
+    }
+
+    @PutMapping("/s/api/users/{id}")
+    public ResponseEntity<?> updateFCMToken(@PathVariable Integer id, @RequestBody UserRequest.FCMDTO reqDTO) {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
+
+        userService.updateFCMToken(id, sessionProfile, reqDTO);
+        return Resp.ok(null);
     }
 
 }
