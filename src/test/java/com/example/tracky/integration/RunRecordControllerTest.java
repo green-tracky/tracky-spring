@@ -322,6 +322,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+
     @Test
     public void get_run_record_test() throws Exception {
         // given

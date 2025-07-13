@@ -292,6 +292,7 @@ class ChallengeControllerTest extends MyRestDoc {
 
     }
 
+
     @Test
     void get_challenge_leader_board_test() throws Exception {
         // given
@@ -318,5 +319,4 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
     }
-
 }

@@ -86,6 +86,7 @@ class FriendInviteControllerTest extends MyRestDoc {
 
     }
 
+
     @Test
     @DisplayName("친구 요청 수락 성공")
     void friend_invite_accept_test() throws Exception {
@@ -137,6 +138,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
+
 
     @Test
     @DisplayName("친구 요청 거절 성공")

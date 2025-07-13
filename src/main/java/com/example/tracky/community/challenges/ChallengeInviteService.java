@@ -212,6 +212,7 @@ public class ChallengeInviteService {
 
         if (!invite.getToUser().getId().equals(user.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+
         }
     }
 }

@@ -101,7 +101,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
-
+  
     @Test
     void get_available_friends_test() throws Exception {
         // given
@@ -264,6 +264,4 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
-
-
-}
+ }

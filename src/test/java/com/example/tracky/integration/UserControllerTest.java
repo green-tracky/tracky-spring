@@ -277,7 +277,6 @@ class UserControllerTest extends MyRestDoc {
 
     // 사용자 상세보기
     @Test
-    @DisplayName("유저 상세 성공")
     void get_user_fail_test() throws Exception {
         // given
         Integer id = 10;
