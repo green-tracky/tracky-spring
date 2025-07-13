@@ -48,7 +48,7 @@ public class UserController {
         return Resp.ok(respDTO);
     }
 
-    @PutMapping("/s/api/users/{id}")
+    @PutMapping("/s/api/users/{id}/fcm-token")
     public ResponseEntity<?> updateFCMToken(@PathVariable Integer id, @RequestBody UserRequest.FCMDTO reqDTO) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
