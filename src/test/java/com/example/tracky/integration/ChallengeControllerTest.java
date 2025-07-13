@@ -195,5 +195,32 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.periodType").value("기타"));
     }
 
+    @Test
+    void get_challenge_leader_board_test() throws Exception {
+        // given
+        Integer challengeId = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/challenges/{id}/leaderboard", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isOk());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
+    }
+
 
 }

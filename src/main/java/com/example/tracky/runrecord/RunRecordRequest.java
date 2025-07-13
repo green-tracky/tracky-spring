@@ -7,6 +7,9 @@ import com.example.tracky.runrecord.runsegments.RunSegment;
 import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.List;
@@ -15,6 +18,12 @@ public class RunRecordRequest {
 
     @Data
     public static class SaveDTO {
+        @NotBlank(message = "러닝 제목을 입력해주세요.")
+        @Size(max = 100, message = "제목은 최대 100자까지 입력할 수 있습니다.")
+        @Pattern(
+                regexp = "^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?\"'()\\-]*$",
+                message = "제목에 허용되지 않은 특수문자가 포함되어 있습니다."
+        )
         private String title;
         private Integer calories;
         private List<RunSegmentRequest.DTO> segments;
