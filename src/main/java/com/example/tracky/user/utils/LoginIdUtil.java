@@ -7,7 +7,7 @@ public class LoginIdUtil {
     /**
      * 주어진 URL에서 도메인(예: kakao)만 추출해서 대문자로 반환
      */
-    private static String extractProvider(String url) {
+    public static String extractProvider(String url) {
         if (url == null || url.isBlank()) return null;
 
         // "https://kauth.kakao.com" → "kauth.kakao.com"

@@ -5,6 +5,8 @@ import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
+import com.example.tracky.user.kakaojwt.OAuthProfile;
+import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,18 +53,17 @@ public class RunLevelService {
         }
     }
 
-    public RunLevelResponse.ListDTO getRunLevels(User user) {
-        // 1. 유저 정보 조회
-        RunLevel currentLevelPS = userRepository.findByIdJoin(user.getId())
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND))
-                .getRunLevel();
+    public RunLevelResponse.ListDTO getRunLevels(OAuthProfile sessionProfile) {
+        // 1. 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 2. 러닝레벨들 조회
         List<RunLevel> runLevelsPS = runLevelRepository.findAllByOrderBySortOrderAsc();
 
         // 3. 유저의 누적 거리 조회
-        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(user.getId());
+        Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(userPS.getId());
 
-        return new RunLevelResponse.ListDTO(currentLevelPS, runLevelsPS, totalDistance);
+        return new RunLevelResponse.ListDTO(userPS.getRunLevel(), runLevelsPS, totalDistance);
     }
 }

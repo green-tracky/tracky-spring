@@ -186,4 +186,5 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("해당 좋아요를 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
     }
+
 }

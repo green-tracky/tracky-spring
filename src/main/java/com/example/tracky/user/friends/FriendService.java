@@ -19,7 +19,7 @@ public class FriendService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
 
-    public List<FriendResponse.SearchDTO> getFriendSearch(String userTag, User user) {
+    public List<FriendResponse.SearchDTO> getFriendSearch(String userTag) {
         // 1. # 붙이는 파싱
         String tag = "#" + userTag;
 

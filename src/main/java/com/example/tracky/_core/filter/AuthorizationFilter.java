@@ -17,13 +17,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
 @RequiredArgsConstructor
-@Component // 스프링이 관리하는 클래스
 public class AuthorizationFilter implements Filter {
 
     // 통합 테스트시 mock으로 대체하려면 스프링이 관리하는 bean 이어야 한다. 따라서 스프링이 주입하도록 사용한다
