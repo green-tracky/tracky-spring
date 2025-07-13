@@ -118,6 +118,56 @@ class UserControllerTest extends MyRestDoc {
 
     }
 
+    // TODO : 본인 키 넣지 않음
+    @Test
+    void update_fail_test() throws Exception {
+        // given
+        Integer id = 1;
+
+        UserRequest.UpdateDTO reqDTO = new UserRequest.UpdateDTO();
+        reqDTO.setGender(GenderEnum.FEMALE);
+//        reqDTO.setHeight(185.0);
+        reqDTO.setWeight(65.5);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+        log.debug("✅요청바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/user/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isOk());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.loginId").value("KAKAO_123456789"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.username").value("ssar"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("ssar@example.com"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.height").value(185.0));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.weight").value(65.5));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.gender").value("여"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.location").value("부산광역시"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.letter").value("안녕하세요, 러닝을 사랑하는 ssar입니다."));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.provider").value("KAKAO"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.userTag").value("#A1B2C3"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.flutterTokenId").value("token_ssar_123"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.updatedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
     @Test
     @DisplayName("유저 정보 삭제 성공")
     void delete_test() throws Exception {
@@ -138,6 +188,34 @@ class UserControllerTest extends MyRestDoc {
         // then
         actions.andExpect(MockMvcResultMatchers.status().isOk());
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data").value(Matchers.nullValue()));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    // 본인이 아닌 것 삭제
+    @Test
+    @DisplayName("유저 정보 삭제 성공")
+    void delete_fail_test() throws Exception {
+        // given
+        Integer id = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/user/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isForbidden());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("접근 권한이 없습니다."));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data").value(Matchers.nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
@@ -191,7 +269,38 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.updatedAt").value(Matchers.nullValue()));
 
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isOwner").value(true));
-        
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    // 사용자 상세보기
+    @Test
+    @DisplayName("유저 상세 성공")
+    void get_user_fail_test() throws Exception {
+        // given
+        Integer id = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/user/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isNotFound());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("해당 사용자를 찾을 수 없습니다"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data").value(Matchers.nullValue()));
+
+        // then
+
+
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 

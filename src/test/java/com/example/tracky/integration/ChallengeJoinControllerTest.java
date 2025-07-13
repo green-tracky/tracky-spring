@@ -55,6 +55,33 @@ class ChallengeJoinControllerTest extends MyRestDoc {
 
     }
 
+    // TODO : 없는 챌린지에 참여
+    @Test
+    void join_fail_test() throws Exception {
+        // given
+        Integer challengeId = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/challenges/{id}/join", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.msg").value("해당 챌린지를 찾을 수 없습니다"));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+
     @Test
     @DisplayName("챌린지 나가기 성공")
     void leave_test() throws Exception {
@@ -80,4 +107,31 @@ class ChallengeJoinControllerTest extends MyRestDoc {
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
+
+    // 없는 챌린지에 나가기
+    @Test
+    void leave_fail_test() throws Exception {
+        // given
+        Integer challengeId = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/challenges/{id}/join", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.msg").value("해당 챌린지에 참가하지 않았습니다"));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
 }
+

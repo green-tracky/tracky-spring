@@ -210,7 +210,7 @@ public class ChallengeInviteService {
     private void checkInviteRecipient(ChallengeInvite invite, User user) {
 
         if (!invite.getToUser().getId().equals(user.getId())) {
-            throw new ExceptionApi404(ErrorCodeEnum.ACCESS_DENIED);
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
     }
 }
