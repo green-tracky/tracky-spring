@@ -36,7 +36,7 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("게시글 좋아요 저장 성공")
-    void save_post_test() throws Exception {
+    void like_post_test() throws Exception {
 
         // given
         Integer postId = 1;
@@ -63,7 +63,7 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("존재하지 않는 게시글 좋아요 저장 실패")
-    void save_post_fail_test() throws Exception {
+    void like_post_fail_test() throws Exception {
 
         // given
         Integer invalidPostId = 10;
@@ -88,7 +88,7 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("댓글 좋아요 저장 성공")
-    void save_comment_test() throws Exception {
+    void like_comment_test() throws Exception {
 
         // given
         Integer commentId = 1;
@@ -115,7 +115,7 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("존재하지 않는 댓글 좋아요 저장 실패")
-    void save_comment_fail_test() throws Exception {
+    void like_comment_fail_test() throws Exception {
 
         // given
         Integer invalidCommentId = 30;
