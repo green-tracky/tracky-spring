@@ -101,8 +101,8 @@ public class CommentControllerTest extends MyRestDoc {
     void save_test() throws Exception {
 
         // given
+        Integer postId = 1;
         CommentRequest.SaveDTO reqDTO = new CommentRequest.SaveDTO();
-        reqDTO.setPostId(1);
         reqDTO.setContent("내용입니다");
 
         String requestBody = om.writeValueAsString(reqDTO);
@@ -112,7 +112,7 @@ public class CommentControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/posts/comments")
+                        .post("/s/api/community/posts/{postId}/comments", postId)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
@@ -140,8 +140,8 @@ public class CommentControllerTest extends MyRestDoc {
     @DisplayName("댓글 쓰기 실패 - 존재하지 않는 게시글")
     void save_fail_test() throws Exception {
         // given
+        Integer postId = 99;
         CommentRequest.SaveDTO reqDTO = new CommentRequest.SaveDTO();
-        reqDTO.setPostId(999); // 존재하지 않는 게시글 ID
         reqDTO.setContent("댓글입니다");
 
         String requestBody = om.writeValueAsString(reqDTO);
@@ -150,7 +150,7 @@ public class CommentControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/posts/comments")
+                        .post("/s/api/community/posts/{postId}/comments", postId)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)

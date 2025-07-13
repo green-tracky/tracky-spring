@@ -33,7 +33,7 @@ class FriendControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/friend/search")
+                        .get("/s/api/friends/search")
                         .param("user-tag", userTag)
                         .header("Authorization", "Bearer " + fakeToken)
         );
@@ -63,7 +63,7 @@ class FriendControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/friend/list")
+                        .get("/s/api/friends/list")
                         .header("Authorization", "Bearer " + fakeToken)
         );
 

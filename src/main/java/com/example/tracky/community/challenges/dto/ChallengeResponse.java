@@ -65,7 +65,6 @@ public class ChallengeResponse {
         class RecommendedDTO {
             private Integer id;
             private String name;
-            private String imageUrl; // 이미지
             private Integer participantCount; // 참가자 수
             private ChallengeTypeEnum type; // "공개" 또는 "사설"
 
@@ -73,7 +72,6 @@ public class ChallengeResponse {
             public RecommendedDTO(Challenge challenge, Integer participantCount) {
                 this.id = challenge.getId();
                 this.name = challenge.getName();
-                this.imageUrl = challenge.getImageUrl();
                 this.participantCount = participantCount;
                 this.type = challenge.getType();
             }
@@ -83,7 +81,6 @@ public class ChallengeResponse {
         @Data
         class ChallengeItemDTO {
             private Integer id;
-            private String imageUrl; // 챌린지 이미지
             private String name; // 챌린지 이름
             private String sub; // 챌린지 짧은 설명
             private Integer remainingTime; // 챌린지 종료까지 남은 시간. 초단위
@@ -104,7 +101,6 @@ public class ChallengeResponse {
                 this.isInProgress = challenge.getIsInProgress();
                 this.endDate = null;
                 this.type = challenge.getType();
-                this.imageUrl = challenge.getImageUrl();
             }
 
             // '참여하기' (미참여) 용 생성자
@@ -149,7 +145,6 @@ public class ChallengeResponse {
             @Data
             class ChallengeInviteInfoDTO {
                 private Integer id;
-                private String imageUrl; // 챌린지 이미지
                 private String name; // 챌린지 이름
                 private String sub; // 챌린지 짧은 설명
                 private Integer remainingTime; // 챌린지 종료까지 남은 시간. 초단위
@@ -162,7 +157,6 @@ public class ChallengeResponse {
 
                 public ChallengeInviteInfoDTO(Challenge challenge) {
                     this.id = challenge.getId();
-                    this.imageUrl = challenge.getImageUrl();
                     this.name = challenge.getName();
                     this.sub = challenge.getSub();
                     this.remainingTime = ChallengeUtil.calculateRemainingSeconds(challenge.getEndDate());
@@ -195,6 +189,7 @@ public class ChallengeResponse {
         private Boolean isJoined; // 사용자의 참여 여부
         private Integer rank; // 순위 정보
         private Integer myDistance; // 챌린지 기간의 나의 누적 거리. m 단위
+        private Integer imgIndex; // 이미지 인덱스
 
         // --- 리워드 정보 ---
         private List<RewardItemDTO> rewards;
@@ -227,6 +222,7 @@ public class ChallengeResponse {
             this.rewards = rewardMasters.stream()
                     .map(rewardMaster -> new RewardItemDTO(rewardMaster))
                     .toList();
+            this.imgIndex = challenge.getImgIndex();
         }
 
         @Data
@@ -256,7 +252,7 @@ public class ChallengeResponse {
         private String creatorName;
         private ChallengeTypeEnum type;
         private Boolean isJoined;
-        private String imageUrl;
+        private Integer imgIndex;
         private PeriodTypeEnum periodType;
 
         public SaveDTO(Challenge challenge) {
@@ -271,8 +267,19 @@ public class ChallengeResponse {
             this.creatorName = challenge.getCreator().getUsername();
             this.type = challenge.getType();
             this.isJoined = true;
-            this.imageUrl = challenge.getImageUrl();
+            this.imgIndex = challenge.getImgIndex();
             this.periodType = challenge.getPeriodType();
+        }
+    }
+
+    @Data
+    public static class UpdateDTO {
+        private Integer id;
+        private String name;
+
+        public UpdateDTO(Challenge challenge) {
+            this.id = challenge.getId();
+            this.name = challenge.getName();
         }
     }
 }

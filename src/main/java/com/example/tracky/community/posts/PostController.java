@@ -4,8 +4,10 @@ import com.example.tracky._core.constants.SessionKeys;
 import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class PostController {
     }
 
     @PostMapping("/community/posts")
-    public ResponseEntity<?> save(@RequestBody PostRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody PostRequest.SaveDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -46,7 +48,7 @@ public class PostController {
     }
 
     @PutMapping("/community/posts/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PostRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody PostRequest.UpdateDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -56,7 +58,7 @@ public class PostController {
     }
 
     @GetMapping("/community/posts/{id}")
-    public ResponseEntity<?> getPostDetail(@PathVariable int id) {
+    public ResponseEntity<?> getPostDetail(@PathVariable Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

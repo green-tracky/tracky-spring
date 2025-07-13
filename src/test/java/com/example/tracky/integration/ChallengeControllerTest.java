@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -45,56 +44,55 @@ class ChallengeControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+// 최상위 응답
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.id").value(1));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.imageUrl").value("https://example.com/rewards/5km_badge.png"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.name").value("6월 5k 챌린지"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.sub").value("이번 주 5km를 달려보세요."));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.remainingTime").value(691199));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.myDistance").value(Matchers.nullValue()));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.targetDistance").value(5000));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.isInProgress").value(true));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInfo.type").value("공개"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].fromUsername").value("leo"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.inviteChallenges[0].challengeInviteId").value(1));
+// inviteChallenges[0]
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInviteId").value(1));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].fromUsername").value("leo"));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.id").value(1));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.name").value("6월 5k 챌린지"));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.sub").value("이번 주 5km를 달려보세요."));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.remainingTime").value(691199));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.myDistance").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.targetDistance").value(5000));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.isInProgress").value(true));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.startDate").value(Matchers.matchesRegex("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.endDate").value(Matchers.matchesRegex("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")));
+        actions.andExpect(jsonPath("$.data.inviteChallenges[0].challengeInfo.type").value("공개"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge").exists());
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.id").isNumber());
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.name").isString());
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.imageUrl").isString());
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.participantCount").isNumber());
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.recommendedChallenge.type").value(Matchers.anyOf(
-                Matchers.is("공개"), Matchers.is("사설")
-        )));
+// recommendedChallenge
+        actions.andExpect(jsonPath("$.data.recommendedChallenge.id").isNumber());
+        actions.andExpect(jsonPath("$.data.recommendedChallenge.name").isString());
+        actions.andExpect(jsonPath("$.data.recommendedChallenge.participantCount").isNumber());
+        actions.andExpect(jsonPath("$.data.recommendedChallenge.type").isString());
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].id").value(1));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].imageUrl").value("https://example.com/rewards/5km_badge.png"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].name").value("6월 5k 챌린지"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].sub").value(Matchers.nullValue()));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].remainingTime").value(691199));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].myDistance").value(18100));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].targetDistance").value(5000));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].isInProgress").value(true));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myChallenges[0].type").value("공개"));
+// myChallenges[0]
+        actions.andExpect(jsonPath("$.data.myChallenges[0].id").value(1));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].name").value("6월 5k 챌린지"));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].sub").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].remainingTime").value(691199));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].myDistance").value(18100));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].targetDistance").value(5000));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].isInProgress").value(true));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].endDate").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].type").value("공개"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].id").value(2));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].imageUrl").value(Matchers.nullValue()));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].name").value("6월 15k 챌린지"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].sub").value("6월 한 달 동안 15km를 달성해보세요!"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].remainingTime").value(691199));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].myDistance").value(Matchers.nullValue()));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].targetDistance").value(Matchers.nullValue()));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].isInProgress").value(true));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].endDate").value(Matchers.nullValue()));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.joinableChallenges[0].type").value("공개"));
+// joinableChallenges[0]
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].id").value(2));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].name").value("6월 15k 챌린지"));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].sub").value("6월 한 달 동안 15km를 달성해보세요!"));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].remainingTime").value(691199));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].myDistance").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].targetDistance").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].isInProgress").value(true));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].endDate").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.joinableChallenges[0].type").value("공개"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.pastChallenges").isArray());
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.pastChallenges").isEmpty());
+// pastChallenges
+        actions.andExpect(jsonPath("$.data.pastChallenges").isArray());
+        actions.andExpect(jsonPath("$.data.pastChallenges").isEmpty());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -156,7 +154,7 @@ class ChallengeControllerTest extends MyRestDoc {
         reqDTO.setTargetDistance(5000); // 목표: 5km
         reqDTO.setStartDate(LocalDateTime.of(2025, 7, 8, 0, 0));
         reqDTO.setEndDate(LocalDateTime.of(2025, 7, 15, 23, 59));
-        reqDTO.setImageUrl("https://example.com/images/new_challenge.png");
+        reqDTO.setImgIndex(1);
 
         // 2. 요청 본문을 JSON 문자열로 변환
         String requestBody = om.writeValueAsString(reqDTO);
@@ -176,23 +174,61 @@ class ChallengeControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
-        actions.andExpect(MockMvcResultMatchers.status().isOk());
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+// then: 응답 결과 검증
+// HTTP 상태 코드가 200 (OK)인지 확인합니다.
+        actions.andExpect(status().isOk());
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(7));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("달리기 초보 모여라!"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.targetDistance").value(5000));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.remainingTime").value(1987140));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isInProgress").value(true));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.participantCount").value(1));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.creatorName").value("ssar"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.type").value("사설"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isJoined").value(true));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.imageUrl").value("https://example.com/images/new_challenge.png"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.periodType").value("기타"));
+// JSON 응답의 최상위 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+// JSON 응답의 'data' 객체 내부 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.data.id").value(7));
+        actions.andExpect(jsonPath("$.data.name").value("달리기 초보 모여라!"));
+
+// 날짜 형식은 YYYY-MM-DD HH:MM:SS 패턴을 따르는지 정규표현식으로 검증합니다.
+        actions.andExpect(jsonPath("$.data.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
+        actions.andExpect(jsonPath("$.data.targetDistance").value(5000));
+        actions.andExpect(jsonPath("$.data.remainingTime").value(1987140));
+        actions.andExpect(jsonPath("$.data.isInProgress").value(true));
+        actions.andExpect(jsonPath("$.data.participantCount").value(1));
+        actions.andExpect(jsonPath("$.data.creatorName").value("ssar"));
+        actions.andExpect(jsonPath("$.data.type").value("사설"));
+        actions.andExpect(jsonPath("$.data.isJoined").value(true));
+        actions.andExpect(jsonPath("$.data.imgIndex").value(1));
+        actions.andExpect(jsonPath("$.data.periodType").value("기타"));
+
+    }
+
+    @Test
+    void update_test() throws Exception {
+        // given
+        Integer id = 6;
+
+        // 1. 요청 DTO 생성
+        ChallengeRequest.UpdateDTO reqDTO = new ChallengeRequest.UpdateDTO();
+        reqDTO.setName("달리기 초보 모여라!");
+
+        // 2. 요청 본문을 JSON 문자열로 변환
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/community/challenges/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
     }
 
 

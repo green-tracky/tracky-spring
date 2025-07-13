@@ -14,7 +14,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,7 +55,7 @@ public class CommentService {
 
         // 5. DTO로 변환
         List<CommentResponse.ParentDTO> parentDTOs = parentComments.stream()
-                .map(parent -> new CommentResponse.ParentDTO(parent, replyMap.getOrDefault(parent.getId(), new ArrayList<>())))
+                .map(parent -> new CommentResponse.ParentDTO(parent))
                 .toList();
 
         return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOs);
@@ -70,30 +69,31 @@ public class CommentService {
         Comment commentPS = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
 
-        if (!commentPS.getUser().getId().equals(userPS.getId())) {
-            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
-        }
+        checkAccess(userPS, commentPS);
 
         commentPS.update(reqDTO.getContent());
+
+        commentRepository.save(commentPS);
+
         return new CommentResponse.UpdateDTO(commentPS);
     }
 
 
-    public CommentResponse.SaveDTO save(CommentRequest.SaveDTO reqDTO, OAuthProfile sessionProfile) {
+    public CommentResponse.SaveDTO save(Integer postId, CommentRequest.SaveDTO reqDTO, OAuthProfile sessionProfile) {
         // 사용자 조회
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Post post = postRepository.findById(reqDTO.getPostId())
+        Post postPS = postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
-        Comment parent = null;
+        Comment parentPS = null;
         if (reqDTO.getParentId() != null) {
-            parent = commentRepository.findById(reqDTO.getParentId())
+            parentPS = commentRepository.findById(reqDTO.getParentId())
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
         }
 
-        Comment comment = reqDTO.toEntity(userPS, post, parent);
+        Comment comment = reqDTO.toEntity(userPS, postPS, parentPS);
         Comment commentPS = commentRepository.save(comment);
 
         return new CommentResponse.SaveDTO(commentPS);
@@ -109,13 +109,24 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.COMMENT_NOT_FOUND));
 
-        if (!comment.getUser().getId().equals(userPS.getId())) {
-            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
-        }
+        checkAccess(userPS, comment);
 
         likeService.deleteByCommentId(id);
 
         commentRepository.delete(comment);
+    }
+
+    /**
+     * 댓글에 대한 사용자의 접근 권한을 확인합니다.
+     * 권한이 없을 경우 ExceptionApi403 예외를 발생시킵니다.
+     *
+     * @param user    현재 로그인한 사용자
+     * @param comment
+     */
+    private void checkAccess(User user, Comment comment) {
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
     }
 
 }

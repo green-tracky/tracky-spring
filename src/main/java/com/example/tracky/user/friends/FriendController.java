@@ -20,14 +20,14 @@ public class FriendController {
     private final FriendService friendService;
     private final HttpSession session;
 
-    @GetMapping("/friend/search")
+    @GetMapping("/friends/search")
     public ResponseEntity<?> getFriendSearch(@RequestParam("user-tag") String userTag) {
 
         List<FriendResponse.SearchDTO> respDTO = friendService.getFriendSearch(userTag);
         return Resp.ok(respDTO);
     }
 
-    @GetMapping("/friend/list")
+    @GetMapping("/friends/list")
     public ResponseEntity<?> getFriendList() {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -291,12 +292,15 @@ public class RunRecordControllerTest extends MyRestDoc {
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
 
-        // then
+// then: 응답 결과 검증
+// HTTP 상태 코드가 200 (OK)인지 확인합니다.
         actions.andExpect(status().isOk());
+
+// JSON 응답의 최상위 필드를 검증합니다.
         actions.andExpect(jsonPath("$.status").value(200));
         actions.andExpect(jsonPath("$.msg").value("성공"));
 
-        // data 기본 필드
+// 'data' 객체 내부의 기본 필드들을 검증합니다.
         actions.andExpect(jsonPath("$.data.id").value(1));
         actions.andExpect(jsonPath("$.data.title").value("수정 확인"));
         actions.andExpect(jsonPath("$.data.memo").value("수정 확인"));
@@ -311,23 +315,35 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.intensity").value(1));
         actions.andExpect(jsonPath("$.data.place").value("트랙"));
 
-        // segments 배열의 첫 번째 요소 검증
+// 'data.segments' 배열을 검증합니다.
+// import static org.hamcrest.Matchers.hasSize; 를 추가해야 합니다.
+        actions.andExpect(jsonPath("$.data.segments", hasSize(1)));
+
+// 'data.segments' 배열의 첫 번째 요소([0]) 필드를 검증합니다.
         actions.andExpect(jsonPath("$.data.segments[0].id").value(1));
         actions.andExpect(jsonPath("$.data.segments[0].startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.segments[0].endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.segments[0].durationSeconds").value(50));
         actions.andExpect(jsonPath("$.data.segments[0].distanceMeters").value(100));
         actions.andExpect(jsonPath("$.data.segments[0].pace").value(500));
-        actions.andExpect(jsonPath("$.data.segments[0].coordinates.length()").value(26));
 
-        // coordinates 배열의 첫 번째 요소 검증
+// 'segments[0].coordinates' 배열을 검증합니다. (총 26개)
+        actions.andExpect(jsonPath("$.data.segments[0].coordinates", hasSize(26)));
+
+// 'coordinates' 배열의 첫 번째 요소([0]) 필드를 검증합니다.
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lat").value(35.1579));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].lon").value(129.0594));
         actions.andExpect(jsonPath("$.data.segments[0].coordinates[0].recordedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
-        // pictures 빈 배열 확인
-        actions.andExpect(jsonPath("$.data.pictures").isArray());
-        actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
+// 'data.pictures' 배열을 검증합니다.
+        actions.andExpect(jsonPath("$.data.pictures", hasSize(1)));
+
+// 'pictures' 배열의 첫 번째 요소([0]) 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.data.pictures[0].fileUrl").value("https://example.com/images/run1.jpg"));
+        actions.andExpect(jsonPath("$.data.pictures[0].lat").value(37.5665));
+        actions.andExpect(jsonPath("$.data.pictures[0].lon").value(126.978));
+        actions.andExpect(jsonPath("$.data.pictures[0].savedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);

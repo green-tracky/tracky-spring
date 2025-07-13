@@ -31,7 +31,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/friend/invite/{toUserId}", toUserId)
+                        .post("/s/api/friends/invite/users/{toUserId}", toUserId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -63,7 +63,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/friend/invite/{id}/accept", inviteId)
+                        .put("/s/api/friends/invite/{id}/accept", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -91,7 +91,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/friend/invite/{id}/reject", inviteId)
+                        .put("/s/api/friends/invite/{id}/reject", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 

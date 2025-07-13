@@ -64,7 +64,7 @@ public class RunRecordService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 2. 권한 체크
-        checkRunRecordAccess(userPS, runRecordPS);
+        checkAccess(userPS, runRecordPS);
 
         // 3. 러닝 응답 DTO 로 변환
         return new RunRecordResponse.DetailDTO(runRecordPS);
@@ -828,7 +828,7 @@ public class RunRecordService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 권한 체크
-        checkRunRecordAccess(userPS, runRecordPS);
+        checkAccess(userPS, runRecordPS);
 
         // 삭제
         runRecordRepository.delete(runRecordPS);
@@ -845,7 +845,7 @@ public class RunRecordService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
 
         // 2. 권한 체크
-        checkRunRecordAccess(userPS, runRecordPS);
+        checkAccess(userPS, runRecordPS);
 
         // 3. 러닝 내용 수정
         runRecordPS.update(reqDTO);
@@ -861,7 +861,7 @@ public class RunRecordService {
      * @param user      현재 로그인한 사용자
      * @param runRecord 검사할 러닝 기록 엔티티
      */
-    private void checkRunRecordAccess(User user, RunRecord runRecord) {
+    private void checkAccess(User user, RunRecord runRecord) {
         if (!runRecord.getUser().getId().equals(user.getId())) {
             throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
         }
