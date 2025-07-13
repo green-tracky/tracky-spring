@@ -2,8 +2,10 @@ package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,14 @@ class ChallengeJoinControllerTest extends MyRestDoc {
 
     @Autowired
     private ObjectMapper om;
+
+    @Autowired
+    private EntityManager em;
+
+    @BeforeEach
+    void setUp() {
+        em.createNativeQuery("alter table challenge_join_tb alter column id restart with 8").executeUpdate();
+    }
 
     @Test
     @DisplayName("챌린지 참여 성공")

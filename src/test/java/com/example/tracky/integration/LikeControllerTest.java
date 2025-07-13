@@ -32,8 +32,6 @@ public class LikeControllerTest extends MyRestDoc {
     @BeforeEach
     void setUp() {
         em.createNativeQuery("alter table like_tb alter column id restart with 4").executeUpdate();
-        em.createNativeQuery("alter table post_tb alter column id restart with 3").executeUpdate();
-        em.createNativeQuery("alter table comment_tb alter column id restart with 28").executeUpdate();
     }
 
     @Test
