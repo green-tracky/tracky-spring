@@ -8,8 +8,10 @@ import com.example.tracky.community.leaderboard.LeaderBoardService;
 import com.example.tracky.community.leaderboard.LeaderBoardsResponse;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,7 +51,7 @@ public class ChallengeController {
     }
 
     @PostMapping("/community/challenges")
-    public ResponseEntity<?> save(@RequestBody ChallengeRequest.SaveDTO reqDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody ChallengeRequest.SaveDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -57,5 +59,5 @@ public class ChallengeController {
 
         return Resp.ok(respDTO);
     }
-    
+
 }
