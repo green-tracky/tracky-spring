@@ -30,6 +30,9 @@ public class CommentService {
 
     public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
+        postRepository.findById(postId)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
+
         //한 페이지의 부모댓글과 자식댓글 수 합계
         Integer totalCount = commentRepository.countTotalCommentsInPage(postId, page);
 

@@ -73,6 +73,30 @@ public class CommentControllerTest extends MyRestDoc {
     }
 
     @Test
+    @DisplayName("댓글 조회 실패 - 존재하지 않는 게시글")
+    void get_comments_fail_test() throws Exception {
+        // given
+        int invalidPostId = 999; // 없는 게시글 ID라고 가정
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/posts/{postId}/comments", invalidPostId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("❌응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+
+    @Test
     @DisplayName("댓글 쓰기 성공")
     void save_test() throws Exception {
 
@@ -110,6 +134,37 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("댓글 쓰기 실패 - 존재하지 않는 게시글")
+    void save_fail_test() throws Exception {
+        // given
+        CommentRequest.SaveDTO reqDTO = new CommentRequest.SaveDTO();
+        reqDTO.setPostId(999); // 존재하지 않는 게시글 ID
+        reqDTO.setContent("댓글입니다");
+
+        String requestBody = om.writeValueAsString(reqDTO);
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/posts/comments")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
     }
 
     @Test
@@ -153,6 +208,40 @@ public class CommentControllerTest extends MyRestDoc {
     }
 
     @Test
+    @DisplayName("댓글 수정 실패 - 존재하지 않는 댓글")
+    void update_fail_test() throws Exception {
+        // given
+        int postId = 1;
+        int nonExistentCommentId = 999;
+
+        CommentRequest.UpdateDTO reqDTO = new CommentRequest.UpdateDTO();
+        reqDTO.setContent("수정된 내용입니다");
+
+        String requestBody = om.writeValueAsString(reqDTO);
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/community/posts/{postId}/comments/{commentId}", postId, nonExistentCommentId)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+
+    @Test
     @DisplayName("삭제 성공 테스트")
     void delete_test() throws Exception {
         // given
@@ -176,5 +265,31 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value((Object) null));
 
     }
+
+    @Test
+    @DisplayName("댓글 삭제 실패 - 존재하지 않는 댓글")
+    void delete_fail_test() throws Exception {
+        // given
+        int postId = 1;
+        int nonExistentCommentId = 999;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/posts/{postId}/comments/{commentId}", postId, nonExistentCommentId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
 
 }

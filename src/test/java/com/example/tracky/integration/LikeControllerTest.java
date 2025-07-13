@@ -62,6 +62,31 @@ public class LikeControllerTest extends MyRestDoc {
     }
 
     @Test
+    @DisplayName("존재하지 않는 게시글 좋아요 저장 실패")
+    void save_post_fail_test() throws Exception {
+
+        // given
+        Integer invalidPostId = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/posts/{postId}/likes", invalidPostId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("❌응답 바디 (실패): " + responseBody);
+
+        //then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
     @DisplayName("댓글 좋아요 저장 성공")
     void save_comment_test() throws Exception {
 
@@ -89,6 +114,31 @@ public class LikeControllerTest extends MyRestDoc {
     }
 
     @Test
+    @DisplayName("존재하지 않는 댓글 좋아요 저장 실패")
+    void save_comment_fail_test() throws Exception {
+
+        // given
+        Integer invalidCommentId = 30;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/comments/{commentId}/likes", invalidCommentId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("❌응답 바디 (실패): " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
     @DisplayName("삭제 성공 테스트")
     void delete_test() throws Exception {
         // given
@@ -111,4 +161,30 @@ public class LikeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data.likeCount").value(0));
     }
+
+    @Test
+    @DisplayName("존재하지 않는 좋아요 삭제 실패")
+    void delete_fail_test() throws Exception {
+        // given
+        int postId = 1;
+        int invalidLikeId = 100;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/posts/{postId}/likes/{likeId}", postId, invalidLikeId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("❌응답 바디 (삭제 실패): " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 좋아요를 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
 }
