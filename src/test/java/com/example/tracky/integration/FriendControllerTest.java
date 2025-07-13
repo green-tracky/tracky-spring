@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,6 +52,40 @@ class FriendControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].profileUrl").value("http://example.com/profiles/love.jpg"));
         actions.andExpect(jsonPath("$.data[0].username").value("love"));
         actions.andExpect(jsonPath("$.data[0].userTag").value("#123ABC"));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @Test
+    void get_friend_search_fail_test() throws Exception {
+        // given
+        String userTag = "#as2E"; // 특수문자 포함되면 실패
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/friends/search")
+                        .param("user-tag", userTag)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+// then: 응답 결과 검증
+// HTTP 상태 코드가 400 (Bad Request)인지 확인합니다.
+        actions.andExpect(status().isBadRequest());
+
+// JSON 응답의 최상위 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.status").value(400));
+        actions.andExpect(jsonPath("$.msg").value("유저 태그는 영문, 숫자만 사용할 수 있습니다."));
+
+// 'data' 필드가 null인지 확인합니다.
+// import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);

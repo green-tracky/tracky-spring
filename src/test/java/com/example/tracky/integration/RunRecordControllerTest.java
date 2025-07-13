@@ -200,6 +200,117 @@ public class RunRecordControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    // TODO : 제목 없을 시 오류
+    @Test
+    public void save_fail_test() throws Exception {
+        // given
+
+        // 러닝 생성
+        RunRecordRequest.SaveDTO reqDTO = new RunRecordRequest.SaveDTO();
+//        reqDTO.setTitle("부산 해운대 아침 달리기");
+        reqDTO.setCalories(200);
+
+        // 구간 생성
+        List<RunSegmentRequest.DTO> segments = new ArrayList<>();
+
+        RunSegmentRequest.DTO segment1 = new RunSegmentRequest.DTO();
+        segment1.setStartDate(LocalDateTime.parse("2025-06-22 06:30:00", formatter));
+        segment1.setEndDate(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
+        segment1.setDurationSeconds(430);
+        segment1.setDistanceMeters(1000);
+
+        List<RunCoordinateRequest.DTO> coordinates1 = new ArrayList<>();
+        RunCoordinateRequest.DTO coord1 = new RunCoordinateRequest.DTO();
+        coord1.setLat(35.1587);
+        coord1.setLon(129.1604);
+        coord1.setRecordedAt(LocalDateTime.parse("2025-06-22 06:30:00", formatter));
+        coordinates1.add(coord1);
+
+        RunCoordinateRequest.DTO coord2 = new RunCoordinateRequest.DTO();
+        coord2.setLat(35.1595);
+        coord2.setLon(129.1612);
+        coord2.setRecordedAt(LocalDateTime.parse("2025-06-22 06:33:45", formatter));
+        coordinates1.add(coord2);
+
+        RunCoordinateRequest.DTO coord3 = new RunCoordinateRequest.DTO();
+        coord3.setLat(35.1602);
+        coord3.setLon(129.1620);
+        coord3.setRecordedAt(LocalDateTime.parse("2025-06-22 06:37:10", formatter));
+        coordinates1.add(coord3);
+
+        segment1.setCoordinates(coordinates1);
+        segments.add(segment1);
+
+        RunSegmentRequest.DTO segment2 = new RunSegmentRequest.DTO();
+        segment2.setStartDate(LocalDateTime.parse("2025-06-22 06:37:11", formatter));
+        segment2.setEndDate(LocalDateTime.parse("2025-06-22 06:43:05", formatter));
+        segment2.setDurationSeconds(354);
+        segment2.setDistanceMeters(1000);
+
+        List<RunCoordinateRequest.DTO> coordinates2 = new java.util.ArrayList<>();
+        RunCoordinateRequest.DTO coord4 = new RunCoordinateRequest.DTO();
+        coord4.setLat(35.1610);
+        coord4.setLon(129.1628);
+        coord4.setRecordedAt(LocalDateTime.parse("2025-06-22 06:40:00", formatter));
+        coordinates2.add(coord4);
+
+        RunCoordinateRequest.DTO coord5 = new RunCoordinateRequest.DTO();
+        coord5.setLat(35.1618);
+        coord5.setLon(129.1635);
+        coord5.setRecordedAt(LocalDateTime.parse("2025-06-22 06:43:05", formatter));
+        coordinates2.add(coord5);
+
+        segment2.setCoordinates(coordinates2);
+        segments.add(segment2);
+
+        reqDTO.setSegments(segments);
+
+        // 사진 생성
+        // List<PictureRequest.DTO> pictures = new ArrayList<>();
+        // PictureRequest.DTO picture1 = new PictureRequest.DTO();
+        // picture1.setImgBase64("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...
+        // (아주 긴 이미지 데이터 문자열)");
+        // picture1.setLat(35.1598);
+        // picture1.setLon(129.1615);
+        // picture1.setCreatedAt(Timestamp.valueOf("2025-06-22 06:35:15"));
+        // pictures.add(picture1);
+
+        // reqDTO.setPictures(pictures);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/runs")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then: 응답 결과 검증
+// HTTP 상태 코드가 400 (Bad Request)인지 확인합니다.
+        actions.andExpect(status().isBadRequest());
+
+// JSON 응답의 최상위 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.status").value(400));
+        actions.andExpect(jsonPath("$.msg").value("title : 제목은 필수 입력 항목입니다."));
+
+// 'data' 필드가 null인지 확인합니다.
+// import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+
     @Test
     public void get_run_record_test() throws Exception {
         // given
@@ -299,6 +410,76 @@ public class RunRecordControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    @Test
+    public void delete_fail_test() throws Exception {
+        // given
+        Integer id = 111;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/runs/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.msg").value("해당 러닝을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").value(nullValue())); // data 필드가 null인지 검증
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    // TODO : 수정 시에 제목 안 넣음
+    @Test
+    public void update_fail_test() throws Exception {
+        // given
+        Integer id = 1;
+        RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
+//        reqDTO.setTitle("수정 확인");
+        reqDTO.setMemo("수정 확인");
+        reqDTO.setPlace(RunPlaceTypeEnum.TRACK);
+        reqDTO.setIntensity(1);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/runs/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then: 응답 결과 검증
+// HTTP 상태 코드가 400 (Bad Request)인지 확인합니다.
+        actions.andExpect(status().isBadRequest());
+
+// JSON 응답의 최상위 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.status").value(400));
+        actions.andExpect(jsonPath("$.msg").value("title : 제목은 필수 입력 항목입니다."));
+
+// 'data' 필드가 null인지 확인합니다.
+// import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    // 없는 러닝 기록 수정
     @Test
     public void update_test() throws Exception {
         // given

@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -138,6 +139,49 @@ class UserControllerTest extends MyRestDoc {
     }
 
     @Test
+    void update_fail_test() throws Exception {
+        // given
+        Integer id = 2;
+
+        UserRequest.UpdateDTO reqDTO = new UserRequest.UpdateDTO();
+        reqDTO.setGender(GenderEnum.FEMALE);
+        reqDTO.setHeight(185.0);
+        reqDTO.setWeight(65.5);
+
+        String requestBody = om.writeValueAsString(reqDTO);
+        log.debug("✅요청바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .put("/s/api/users/{id}", id)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+// then: 응답 결과 검증
+// HTTP 상태 코드가 403 (Forbidden)인지 확인합니다.
+        actions.andExpect(status().isForbidden());
+
+// JSON 응답의 최상위 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.status").value(403));
+        actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
+
+// 'data' 필드가 null인지 확인합니다.
+// import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    @Test
     @DisplayName("유저 정보 삭제 성공")
     void delete_test() throws Exception {
         // given
@@ -157,7 +201,35 @@ class UserControllerTest extends MyRestDoc {
         // then
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
-        actions.andExpect(jsonPath("$.data").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    // 본인이 아닌 것 삭제
+    @Test
+    @DisplayName("유저 정보 삭제 성공")
+    void delete_fail_test() throws Exception {
+        // given
+        Integer id = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/users/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isForbidden());
+        actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -207,9 +279,37 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.sortOrder").value(0));
 
         actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
-        actions.andExpect(jsonPath("$.data.updatedAt").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.updatedAt").value(nullValue()));
 
         actions.andExpect(jsonPath("$.data.isOwner").value(true));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    // 사용자 상세보기
+    @Test
+    void get_user_fail_test() throws Exception {
+        // given
+        Integer id = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/users/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.msg").value("해당 사용자를 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);

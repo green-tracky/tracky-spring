@@ -31,7 +31,7 @@ public class GlobalValidationHandler {
                     List<FieldError> fErrors = errors.getFieldErrors();
 
                     for (FieldError fieldError : fErrors) {
-                        throw new ExceptionApi400(fieldError.getField() + ":" + fieldError.getDefaultMessage());
+                        throw new ExceptionApi400(fieldError.getField() + " : " + fieldError.getDefaultMessage());
                     }
                 }
             }

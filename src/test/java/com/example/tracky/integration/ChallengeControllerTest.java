@@ -145,6 +145,31 @@ class ChallengeControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    // 없는 챌린지 조회
+    @Test
+    void get_challenge_fail_test() throws Exception {
+        // given
+        Integer challengeId = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/challenges/{id}", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.msg").value("해당 챌린지를 찾을 수 없습니다"));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
     @Test
     void save_test() throws Exception {
         // given
@@ -186,7 +211,7 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.id").value(7));
         actions.andExpect(jsonPath("$.data.name").value("달리기 초보 모여라!"));
 
-// 날짜 형식은 YYYY-MM-DD HH:MM:SS 패턴을 따르는지 정규표현식으로 검증합니다.
+// 날짜 형식은 YYYY-MM-DD HH:MM:SS 패턴>>을 따르는지 정규표현식으로 검증합니다.
         actions.andExpect(jsonPath("$.data.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
         actions.andExpect(jsonPath("$.data.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
@@ -248,5 +273,71 @@ class ChallengeControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    // 제목이 없는 챌린지 저장
+    @Test
+    void save_fail_test() throws Exception {
+        // given
+        // 1. 요청 DTO 생성
+        ChallengeRequest.SaveDTO reqDTO = new ChallengeRequest.SaveDTO();
 
+//        reqDTO.setName("달리기 초보 모여라!");
+        reqDTO.setTargetDistance(5000); // 목표: 5km
+        reqDTO.setStartDate(LocalDateTime.of(2025, 7, 8, 0, 0));
+        reqDTO.setEndDate(LocalDateTime.of(2025, 7, 15, 23, 59));
+        reqDTO.setImgIndex(2);
+
+        // 2. 요청 본문을 JSON 문자열로 변환
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/challenges")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isBadRequest());
+        actions.andExpect(jsonPath("$.status").value(400));
+        actions.andExpect(jsonPath("$.msg").value("name : 챌린지 이름은 필수 입력 항목입니다."));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+
+    @Test
+    void get_challenge_leader_board_test() throws Exception {
+        // given
+        Integer challengeId = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/challenges/{id}/leaderboard", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(jsonPath("$.data.rankingList[0].username").value("ssar"));
+        actions.andExpect(jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(jsonPath("$.data.rankingList[0].rank").value(1));
+        actions.andExpect(jsonPath("$.data.rankingList[0].userId").value(1));
+    }
 }

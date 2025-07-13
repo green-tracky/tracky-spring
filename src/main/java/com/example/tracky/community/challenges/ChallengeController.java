@@ -59,7 +59,7 @@ public class ChallengeController {
 
         return Resp.ok(respDTO);
     }
-
+    
     @PutMapping("/community/challenges/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody ChallengeRequest.UpdateDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
@@ -69,5 +69,4 @@ public class ChallengeController {
 
         return Resp.ok(respDTO);
     }
-
 }
