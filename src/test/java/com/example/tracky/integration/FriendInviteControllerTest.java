@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.nullValue;
@@ -49,9 +50,8 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.toUser").value(3));
         actions.andExpect(jsonPath("$.data.status").value("대기"));
 
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -83,9 +83,8 @@ class FriendInviteControllerTest extends MyRestDoc {
 // import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
         actions.andExpect(jsonPath("$.data").value(nullValue()));
 
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -115,7 +114,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.status").value("수락"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     // 본인의 초대가 아닌 초대 수락시 에러
@@ -138,8 +137,9 @@ class FriendInviteControllerTest extends MyRestDoc {
         // then
         actions.andExpect(status().isForbidden());
         actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
+
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -168,7 +168,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.status").value("거절"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -192,6 +192,6 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }

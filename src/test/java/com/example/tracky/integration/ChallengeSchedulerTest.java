@@ -5,12 +5,8 @@ import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.ChallengeScheduler;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.RewardMaster;
-import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;
-import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
-import com.example.tracky.runrecord.RunRecordRepository;
-import com.example.tracky.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,16 +30,10 @@ public class ChallengeSchedulerTest {
 
     @Autowired
     private ChallengeScheduler challengeScheduler;
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private ChallengeRepository challengeRepository;
-    @Autowired
-    private ChallengeJoinRepository challengeJoinRepository;
-    @Autowired
-    private RunRecordRepository runRecordRepository;
-    @Autowired
-    private UserChallengeRewardRepository userChallengeRewardRepository;
+
     @Autowired
     private RewardMasterRepository rewardMasterRepository;
 
@@ -85,7 +75,7 @@ public class ChallengeSchedulerTest {
         // 예를 들어, userChallengeRewardRepository.findByUserAndChallengeAndRewardMaster(user, challenge, medalReward) 등으로 확인
         // (이 부분은 RewardMaster, UserChallengeReward 엔티티 및 Repository 구현에 따라 달라짐)
     }
-    
+
 
     @Test
     @DisplayName("주간 챌린지 자동 생성 테스트")

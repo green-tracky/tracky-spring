@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +27,7 @@ public class CommentService {
 
     public CommentResponse.CommentsList getCommentsWithReplies(Integer postId, Integer page) {
 
+        // 해당 게시글이 존재하는지 확인
         postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
@@ -49,11 +48,7 @@ public class CommentService {
         // 3. 대댓글 조회
         List<Comment> childComments = commentRepository.findChildCommentsByParentIds(parentIds);
 
-        // 4. 대댓글을 parentId 기준으로 묶기
-        Map<Integer, List<Comment>> replyMap = childComments.stream()
-                .collect(Collectors.groupingBy(c -> c.getParent().getId()));
-
-        // 5. DTO로 변환
+        // 4. DTO로 변환
         List<CommentResponse.ParentDTO> parentDTOs = parentComments.stream()
                 .map(parent -> new CommentResponse.ParentDTO(parent))
                 .toList();

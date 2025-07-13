@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -195,9 +196,8 @@ public class RunRecordControllerTest extends MyRestDoc {
 // import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
         actions.andExpect(jsonPath("$.data.badges[0].achievedCount").value(nullValue()));
 
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     // TODO : 제목 없을 시 오류
@@ -265,17 +265,15 @@ public class RunRecordControllerTest extends MyRestDoc {
 
         reqDTO.setSegments(segments);
 
-        // 사진 생성
-        // List<PictureRequest.DTO> pictures = new ArrayList<>();
-        // PictureRequest.DTO picture1 = new PictureRequest.DTO();
-        // picture1.setImgBase64("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...
-        // (아주 긴 이미지 데이터 문자열)");
-        // picture1.setLat(35.1598);
-        // picture1.setLon(129.1615);
-        // picture1.setCreatedAt(Timestamp.valueOf("2025-06-22 06:35:15"));
-        // pictures.add(picture1);
+        List<PictureRequest.DTO> pictures = new ArrayList<>();
+        PictureRequest.DTO picture1 = new PictureRequest.DTO();
+        picture1.setFileUrl("http://example.com/profiles/cos.jpg");
+        picture1.setLat(35.1598);
+        picture1.setLon(129.1615);
+        picture1.setSavedAt(LocalDateTime.parse("2025-06-22 06:43:05", formatter));
+        pictures.add(picture1);
 
-        // reqDTO.setPictures(pictures);
+        reqDTO.setPictures(pictures);
 
         String requestBody = om.writeValueAsString(reqDTO);
 
@@ -307,7 +305,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -381,7 +379,7 @@ public class RunRecordControllerTest extends MyRestDoc {
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -407,7 +405,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value(nullValue())); // data 필드가 null인지 검증
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -432,7 +430,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value(nullValue())); // data 필드가 null인지 검증
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     // TODO : 수정 시에 제목 안 넣음
@@ -476,10 +474,9 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    // 없는 러닝 기록 수정
     @Test
     public void update_test() throws Exception {
         // given
@@ -523,7 +520,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.place").value("트랙"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -583,7 +580,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.weeks['2025-06'][0]").value("06.09~06.15"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -647,7 +644,7 @@ public class RunRecordControllerTest extends MyRestDoc {
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -713,7 +710,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.years[0]").value(2025));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print());
     }
 
     @Test
@@ -776,7 +773,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -827,7 +824,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.page.isLast").value(true));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print());
     }
 
 }

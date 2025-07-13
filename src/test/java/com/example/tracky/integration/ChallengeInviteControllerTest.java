@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -30,7 +31,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     @Test
     void challenges_invite_test() throws Exception {
         // given
-        Integer challengeid = 1;
+        Integer challengeId = 1;
 
         List<Integer> inviteIds = Arrays.asList(3, 4, 5);
 
@@ -43,7 +44,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/challenges/{id}/invite", challengeid)
+                        .post("/s/api/community/challenges/{id}/invite", challengeId)
                         .header("Authorization", "Bearer " + fakeToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody)
@@ -64,7 +65,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].status").value("대기"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -72,7 +73,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
     @Test
     void challenges_invite_fail_test() throws Exception {
         // given
-        Integer challengeid = 1;
+        Integer challengeId = 1;
 
         List<Integer> inviteIds = Arrays.asList(2);
 
@@ -85,7 +86,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/challenges/{id}/invite", challengeid)
+                        .post("/s/api/community/challenges/{id}/invite", challengeId)
                         .header("Authorization", "Bearer " + fakeToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody)
@@ -100,18 +101,18 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("서로 친구가 아닙니다"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
     void get_available_friends_test() throws Exception {
         // given
-        Integer challengeid = 1;
+        Integer challengeId = 1;
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/community/challenges/{id}/invite/available-friends", challengeid)
+                        .get("/s/api/community/challenges/{id}/invite/available-friends", challengeId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -128,11 +129,10 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.[0].username").value("leo"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
-    // TODO : 본인이 참여한 챌린지가 아니라면 에러
     @Test
     void get_available_friends_fail_test() throws Exception {
         // given
@@ -163,12 +163,12 @@ class ChallengeInviteControllerTest extends MyRestDoc {
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
     @Test
-    void friend_inviteAccept_test() throws Exception {
+    void friend_invite_accept_test() throws Exception {
         // given
         Integer inviteId = 1;
 
@@ -191,12 +191,12 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.status").value("수락"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     // 본인의 초대가 아닌 것을 수락
     @Test
-    void friend_inviteAccept_fail_test() throws Exception {
+    void friend_invite_accept_fail_test() throws Exception {
         // given
         Integer inviteId = 4;
 
@@ -216,11 +216,11 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
-    void friend_inviteReject_test() throws Exception {
+    void friend_invite_reject_test() throws Exception {
         // given
         Integer inviteId = 1;
 
@@ -243,7 +243,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.status").value("거절"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     // 본인의 초대가 아닌 것을 거절
@@ -268,6 +268,6 @@ class ChallengeInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }

@@ -3,12 +3,12 @@ package com.example.tracky.integration;
 import com.example.tracky.MyRestDoc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.matchesPattern;
@@ -24,7 +24,6 @@ class NotificationControllerTest extends MyRestDoc {
     private ObjectMapper om;
 
     @Test
-    @DisplayName("챌린지 목록 조회 성공")
     void get_notifications_test() throws Exception {
         // given
 
@@ -52,7 +51,7 @@ class NotificationControllerTest extends MyRestDoc {
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 

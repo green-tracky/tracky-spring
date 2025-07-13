@@ -16,9 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +25,13 @@ public class FriendInviteService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
+
     /**
-     * 친구 요청 보내기
+     * 친구 요청 하기
      *
-     * @param sessionProfile 로그인 한 유저
-     * @param toUser         친구 요청을 받을 유저
-     * @return SaveDTO
+     * @param sessionProfile
+     * @param userId
+     * @return
      */
     @Transactional
     public FriendInviteResponse.SaveDTO friendInvite(OAuthProfile sessionProfile, Integer userId) {
@@ -74,26 +72,6 @@ public class FriendInviteService {
     }
 
     /**
-     * 내가 받은 친구 요청 모두 조회
-     *
-     * @param sessionProfile
-     * @return DTO
-     */
-    public List<FriendInviteResponse.InvitesDTO> getFriendInvite(OAuthProfile sessionProfile) {
-        // 사용자 조회
-        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
-
-        List<FriendInvite> invites = friendInviteRepository.findAllByUserId(userPS.getId());
-        List<FriendInviteResponse.InvitesDTO> inviteList = new ArrayList<>();
-        for (FriendInvite invite : invites) {
-            inviteList.add(new FriendInviteResponse.InvitesDTO(invite));
-        }
-
-        return inviteList;
-    }
-
-    /**
      * 친구 수락
      *
      * @param inviteId       친구 요청 ID
@@ -117,7 +95,7 @@ public class FriendInviteService {
 
         // 친구 테이블에 추가 (중복 방지)
         if (!friendRepository.existsFriend(invite.getFromUser(), invite.getToUser())) {
-            friendRepository.save(new Friend(invite.getFromUser(), invite.getToUser()));
+            friendRepository.save(Friend.builder().fromUser(invite.getFromUser()).toUser(invite.getToUser()).build());
         }
 
         return new FriendInviteResponse.ResponseDTO(invite);

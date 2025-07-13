@@ -2,14 +2,13 @@ package com.example.tracky.user.friends;
 
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(
         name = "friend_tb",
@@ -38,8 +37,12 @@ public class Friend {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Builder
     public Friend(User fromUser, User toUser) {
         this.fromUser = fromUser;
         this.toUser = toUser;
+    }
+
+    protected Friend() {
     }
 }

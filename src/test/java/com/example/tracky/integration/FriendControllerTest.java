@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,13 +55,14 @@ class FriendControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].userTag").value("#123ABC"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    // 특수문자 포함되면 실패
     @Test
     void get_friend_search_fail_test() throws Exception {
         // given
-        String userTag = "#as2E"; // 특수문자 포함되면 실패
+        String userTag = "#as2E";
 
         // when
         ResultActions actions = mvc.perform(
@@ -86,9 +88,8 @@ class FriendControllerTest extends MyRestDoc {
 // import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
         actions.andExpect(jsonPath("$.data").value(nullValue()));
 
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -115,7 +116,7 @@ class FriendControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].username").value("love"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 }

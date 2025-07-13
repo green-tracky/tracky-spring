@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -83,7 +84,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data[0].user.profileUrl").value("http://example.com/profiles/ssar.jpg"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -108,7 +109,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -151,7 +152,7 @@ class PostControllerTest extends MyRestDoc {
         ));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -184,7 +185,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("해당 러닝을 찾을 수 없습니다"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -227,7 +228,7 @@ class PostControllerTest extends MyRestDoc {
         ));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -260,7 +261,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -287,7 +288,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").<Object>value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -315,7 +316,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -407,7 +408,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runRecord.pictures[0].savedAt").<String>value(Matchers.matchesRegex("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -434,7 +435,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 

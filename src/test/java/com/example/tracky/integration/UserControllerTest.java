@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.nullValue;
@@ -78,9 +79,8 @@ class UserControllerTest extends MyRestDoc {
 // 'data' 객체 내부의 'idToken' 필드를 검증합니다.
         actions.andExpect(jsonPath("$.data.idToken").value("idToken"));
 
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -132,9 +132,8 @@ class UserControllerTest extends MyRestDoc {
 // updatedAt 필드는 YYYY-MM-DD HH:MM:SS 형식인지 정규표현식으로 검증합니다.
         actions.andExpect(jsonPath("$.data.updatedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -177,7 +176,7 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -204,13 +203,13 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
     // 본인이 아닌 것 삭제
     @Test
-    @DisplayName("유저 정보 삭제 성공")
+    @DisplayName("유저 정보 삭제 실패")
     void delete_fail_test() throws Exception {
         // given
         Integer id = 10;
@@ -232,7 +231,7 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -284,7 +283,7 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.isOwner").value(true));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -312,7 +311,7 @@ class UserControllerTest extends MyRestDoc {
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 }

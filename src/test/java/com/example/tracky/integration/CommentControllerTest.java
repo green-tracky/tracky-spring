@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,7 +72,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.comments[0].children").isEmpty());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -98,7 +99,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -142,7 +143,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -176,7 +177,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -219,7 +220,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -255,7 +256,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -283,7 +284,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").value((Object) null));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -312,7 +313,7 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data").doesNotExist());
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
