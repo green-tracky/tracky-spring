@@ -39,27 +39,27 @@ public class FriendInviteService {
     public FriendInviteResponse.SaveDTO friendInvite(OAuthProfile sessionProfile, Integer userId) {
 
         // 1. 사용자 조회
-        User fromUser = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+        User fromUserPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 2. 초대받을 대상 조회
-        User toUser = userRepository.findById(userId)
+        User toUserPS = userRepository.findById(userId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 3. 본인에게 하는 요청 방지
-        if (fromUser.getId().equals(toUser.getId())) {
+        if (fromUserPS.getId().equals(toUserPS.getId())) {
             throw new ExceptionApi400(ErrorCodeEnum.INVALID_SELF_REQUEST);
         }
 
         // 4. 중복 요청 방지
-        if (friendInviteRepository.existsWaitingInvite(fromUser, toUser)) {
+        if (friendInviteRepository.existsWaitingInvite(fromUserPS, toUserPS)) {
             throw new ExceptionApi400(ErrorCodeEnum.DUPLICATE_INVITE);
         }
 
         // 5. DB에 친구 요청 저장
         FriendInvite invite = FriendInvite.builder()
-                .fromUser(fromUser)
-                .toUser(toUser)
+                .fromUser(fromUserPS)
+                .toUser(toUserPS)
                 .status(InviteStatusEnum.PENDING)
                 .build();
         FriendInvite saveInvitePS = friendInviteRepository.save(invite);
@@ -68,8 +68,8 @@ public class FriendInviteService {
         // NotificationService에 알림 전송을 위임합니다.
         // *실제 서비스에서는 이 부분을 @Async 어노테이션 등을 사용하여 비동기적으로 처리하는 것이 좋습니다.
         //  그래야 알림 전송이 지연되더라도 사용자에게 응답이 늦게 가는 것을 막을 수 있습니다.
-        notificationService.sendFriendInviteNotification(fromUser.getId(), toUser.getId());
-        
+        notificationService.sendFriendInviteNotification(fromUserPS.getId(), toUserPS.getId());
+
         return new FriendInviteResponse.SaveDTO(saveInvitePS);
     }
 
