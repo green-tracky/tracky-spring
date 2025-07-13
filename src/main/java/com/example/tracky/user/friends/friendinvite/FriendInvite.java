@@ -42,12 +42,11 @@ public class FriendInvite {
     private LocalDateTime respondedAt;
 
     @Builder
-    public FriendInvite(User fromUser, User toUser, LocalDateTime createdAt, InviteStatusEnum status, LocalDateTime respondedAt) {
+    public FriendInvite(Integer id, User fromUser, User toUser, InviteStatusEnum status) {
+        this.id = id;
         this.fromUser = fromUser;
         this.toUser = toUser;
-        this.createdAt = createdAt;
         this.status = status;
-        this.respondedAt = respondedAt;
     }
 
     protected FriendInvite() {

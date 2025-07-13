@@ -4,7 +4,7 @@
 -- 1. 사용자 'ssar' (GENERAL 사용자, MALE)
 INSERT INTO user_tb (login_id, password, username, email, profile_url, height, weight, gender, location, letter,
                      user_type, provider, user_tag,
-                     flutter_token_id, created_at, run_level_id)
+                     fcm_token, created_at, run_level_id)
 VALUES ('KAKAO_123456789', 'password123', 'ssar', 'ssar@example.com', 'http://example.com/profiles/ssar.jpg', 175.0,
         70.0, 'MALE',
         '부산광역시', '안녕하세요, 러닝을 사랑하는 ssar입니다.', 'GENERAL', 'KAKAO',
