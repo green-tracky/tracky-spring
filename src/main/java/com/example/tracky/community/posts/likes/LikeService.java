@@ -67,7 +67,7 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeResponse.DeleteDTO delete(Integer id, OAuthProfile sessionProfile) {
+    public LikeResponse.DeleteDTO dislikePost(Integer id, OAuthProfile sessionProfile) {
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
@@ -86,6 +86,28 @@ public class LikeService {
 
         return new LikeResponse.DeleteDTO(likeCount);
     }
+
+    @Transactional
+    public LikeResponse.DeleteDTO dislikeComment(Integer id, OAuthProfile sessionProfile) {
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        Like likePS = likeRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.LIKE_NOT_FOUND));
+
+        if (!likePS.getUser().getId().equals(userPS.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        Integer commentId = likePS.getComment().getId();
+
+        likeRepository.deleteById(id);
+
+        Integer likeCount = likeRepository.countByCommentId(commentId);
+
+        return new LikeResponse.DeleteDTO(likeCount);
+    }
+
 
     @Transactional
     public void deleteByPostId(Integer id) {
