@@ -140,7 +140,7 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("삭제 성공 테스트")
-    void delete_test() throws Exception {
+    void dislike_post_test() throws Exception {
         // given
         int postId = 1;
         int likeId = 3;
@@ -164,7 +164,7 @@ public class LikeControllerTest extends MyRestDoc {
 
     @Test
     @DisplayName("존재하지 않는 좋아요 삭제 실패")
-    void delete_fail_test() throws Exception {
+    void dislike_post_fail_test() throws Exception {
         // given
         int postId = 1;
         int invalidLikeId = 100;
@@ -173,6 +173,55 @@ public class LikeControllerTest extends MyRestDoc {
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
                         .delete("/s/api/community/posts/{postId}/likes/{likeId}", postId, invalidLikeId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("❌응답 바디 (삭제 실패): " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 좋아요를 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("삭제 성공 테스트")
+    void dislike_comment_test() throws Exception {
+        // given
+        int commentId = 1;
+        int likeId = 2;
+
+        //when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/comments/{commentId}/likes/{likeId}", commentId, likeId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        //then
+        actions.andExpect(jsonPath("$.status").value(200));
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+        actions.andExpect(jsonPath("$.data.likeCount").value(0));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 좋아요 삭제 실패")
+    void dislike_comment_fail_test() throws Exception {
+        // given
+        int commentId = 1;
+        int invalidLikeId = 100;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/community/comments/{commentId}/likes/{likeId}", commentId, invalidLikeId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
