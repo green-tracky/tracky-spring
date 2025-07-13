@@ -50,7 +50,7 @@ public class UserResponse {
         private String letter; // 자기소개
         private ProviderTypeEnum provider; // oauth 제공자 (kakao, google)
         private String userTag; // #UUID 6자리
-        private String flutterTokenId; // 기기 식별 아이디 // 알림서비스용
+        private String fcmToken; // 기기 식별 아이디 // 알림서비스용
         private LocalDateTime createdAt;
 
         public UserDTO(User user) {
@@ -66,7 +66,7 @@ public class UserResponse {
             this.letter = user.getLetter();
             this.provider = user.getProvider();
             this.userTag = user.getUserTag();
-            this.flutterTokenId = user.getFlutterTokenId();
+            this.fcmToken = user.getFcmToken();
             this.createdAt = user.getCreatedAt();
         }
     }
@@ -85,7 +85,7 @@ public class UserResponse {
         private String letter;
         private ProviderTypeEnum provider;
         private String userTag;
-        private String flutterTokenId;
+        private String fcmToken;
         private LocalDateTime updatedAt;
 
         public UpdateDTO(User user) {
@@ -101,7 +101,7 @@ public class UserResponse {
             this.letter = user.getLetter();
             this.provider = user.getProvider();
             this.userTag = user.getUserTag();
-            this.flutterTokenId = user.getFlutterTokenId();
+            this.fcmToken = user.getFcmToken();
             this.updatedAt = user.getUpdatedAt();
         }
     }
@@ -119,7 +119,7 @@ public class UserResponse {
         private String location;
         private String letter;
         private String userTag;
-        private String flutterTokenId;
+        private String fcmToken;
         private RunLevelResponse.DTO runLevel;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -137,7 +137,7 @@ public class UserResponse {
             this.location = user.getLocation();
             this.letter = user.getLetter();
             this.userTag = user.getUserTag();
-            this.flutterTokenId = user.getFlutterTokenId();
+            this.fcmToken = user.getFcmToken();
             this.runLevel = new RunLevelResponse.DTO(user.getRunLevel());
             this.createdAt = user.getCreatedAt();
             this.updatedAt = user.getUpdatedAt();
