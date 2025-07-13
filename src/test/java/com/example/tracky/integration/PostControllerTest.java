@@ -63,6 +63,28 @@ class PostControllerTest extends MyRestDoc {
     }
 
     @Test
+    @DisplayName("포스트 목록 조회 실패 - 인증 없음")
+    void get_posts_fail_test() throws Exception {
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/posts")
+                // Authorization 헤더를 생략함
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("❌응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isUnauthorized()); // 401
+        actions.andExpect(jsonPath("$.status").value(401));
+        actions.andExpect(jsonPath("$.msg").value("토큰이 존재하지 않습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
+    }
+
+
+    @Test
     @DisplayName("포스트 쓰기 성공")
     void save_test() throws Exception {
 
@@ -103,21 +125,17 @@ class PostControllerTest extends MyRestDoc {
         // pictureIds가 빈 배열인지 확인
         actions.andExpect(jsonPath("$.data.pictureIds").isArray());
         actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
-
     }
 
-    // TODO : 내용 안 넣었을 때 오류
     @Test
+    @DisplayName("포스트 쓰기 실패 - 존재하지 않는 RunRecordId")
     void save_fail_test() throws Exception {
-
         // given
         PostRequest.SaveDTO reqDTO = new PostRequest.SaveDTO();
-//        reqDTO.setContent("내용입니다");
-        reqDTO.setRunRecordId(10);
+        reqDTO.setContent("내용입니다");
+        reqDTO.setRunRecordId(999); // 없는 ID
 
         String requestBody = om.writeValueAsString(reqDTO);
-
-        log.debug("✅요청 바디: " + requestBody);
 
         // when
         ResultActions actions = mvc.perform(
@@ -130,24 +148,12 @@ class PostControllerTest extends MyRestDoc {
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
-        log.debug("✅응답 바디: " + responseBody);
+        log.debug("❌응답 바디: " + responseBody);
 
         // then
-        actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.status").value(200));
-        actions.andExpect(jsonPath("$.msg").value("성공"));
-
-        // data 내부 필드 검증
-        actions.andExpect(jsonPath("$.data.id").isNumber());
-        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
-        actions.andExpect(jsonPath("$.data.userId").value(1));
-        actions.andExpect(jsonPath("$.data.runRecordId").value(10));
-        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
-
-        // pictureIds가 빈 배열인지 확인
-        actions.andExpect(jsonPath("$.data.pictureIds").isArray());
-        actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
-
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 러닝을 찾을 수 없습니다"));
     }
 
     @Test
@@ -195,24 +201,21 @@ class PostControllerTest extends MyRestDoc {
 
     }
 
-    // TODO : 내용 안 넣었을 때 오류
     @Test
+    @DisplayName("포스트 수정 실패 - 존재하지 않는 게시글")
     void update_fail_test() throws Exception {
-
         // given
-        int postId = 1;
+        int invalidPostId = 999; // 존재하지 않는 ID
         PostRequest.UpdateDTO reqDTO = new PostRequest.UpdateDTO();
-//        reqDTO.setContent("내용입니다");
+        reqDTO.setContent("내용입니다");
         reqDTO.setRunRecordId(10);
 
         String requestBody = om.writeValueAsString(reqDTO);
 
-        log.debug("✅요청 바디: " + requestBody);
-
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/community/posts/" + postId)
+                        .put("/s/api/community/posts/" + invalidPostId)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
@@ -220,25 +223,15 @@ class PostControllerTest extends MyRestDoc {
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
-        log.debug("✅응답 바디: " + responseBody);
+        log.debug("❌응답 바디: " + responseBody);
 
         // then
-        actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.status").value(200));
-        actions.andExpect(jsonPath("$.msg").value("성공"));
-
-        // data 내부 필드 검증
-        actions.andExpect(jsonPath("$.data.id").value(1));
-        actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
-        actions.andExpect(jsonPath("$.data.runRecordId").value(10));
-        actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
-        actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
-
-        // pictureIds가 빈 배열인지 확인
-        actions.andExpect(jsonPath("$.data.pictureIds").isArray());
-        actions.andExpect(jsonPath("$.data.pictureIds").isEmpty());
-
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
     }
+
 
     @Test
     @DisplayName("삭제 성공 테스트")
@@ -264,28 +257,30 @@ class PostControllerTest extends MyRestDoc {
 
     }
 
-    // 없는 게시물 삭제
     @Test
+    @DisplayName("삭제 실패 - 존재하지 않는 게시글")
     void delete_fail_test() throws Exception {
         // given
-        int postId = 80;
+        int invalidPostId = 999;
 
-        //when
+        // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/community/posts/" + postId)
+                        .delete("/s/api/community/posts/" + invalidPostId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
-        log.debug("✅응답 바디: " + responseBody);
+        log.debug("❌응답 바디: " + responseBody);
 
         // then
+        actions.andExpect(status().isNotFound());
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
-
+        actions.andExpect(jsonPath("$.data").doesNotExist());
     }
+
 
     @Test
     @DisplayName("포스트 상세 조회 성공")
@@ -377,27 +372,28 @@ class PostControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.pictures.length()").value(0));
     }
 
-    // 없는 게시물 상세보기
     @Test
+    @DisplayName("포스트 상세 조회 실패 - 존재하지 않는 게시글")
     void get_detail_fail_test() throws Exception {
         // given
-        int postId = 100;
+        int invalidPostId = 999; // 존재하지 않는 게시글 ID
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/community/posts/" + postId)
+                        .get("/s/api/community/posts/" + invalidPostId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
         // eye
         String responseBody = actions.andReturn().getResponse().getContentAsString();
-        log.debug("✅응답 바디: " + responseBody);
+        log.debug("❌응답 바디: " + responseBody);
 
-        // then 댓글까지 끝나면 나중에 작성
-        // 최상위 응답
+        // then
+        actions.andExpect(status().isNotFound());
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
+        actions.andExpect(jsonPath("$.data").doesNotExist());
     }
 
 

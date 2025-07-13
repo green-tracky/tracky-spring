@@ -85,7 +85,7 @@ class UserControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/user/{id}", id)
+                        .put("/s/api/users/{id}", id)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
@@ -110,7 +110,7 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.letter").value("안녕하세요, 러닝을 사랑하는 ssar입니다."));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.provider").value("KAKAO"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.userTag").value("#A1B2C3"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.flutterTokenId").value("token_ssar_123"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.fcmToken").value("token_ssar_123"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.updatedAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
@@ -177,7 +177,7 @@ class UserControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/user/{id}", id)
+                        .delete("/s/api/users/{id}", id)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -232,7 +232,7 @@ class UserControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/user/{id}", id)
+                        .get("/s/api/users/{id}", id)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -255,7 +255,7 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.location").value("부산광역시"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.letter").value("안녕하세요, 러닝을 사랑하는 ssar입니다."));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.userTag").value("#A1B2C3"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.flutterTokenId").value("token_ssar_123"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.fcmToken").value("token_ssar_123"));
 
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.id").value(1));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.runLevel.name").value("옐로우"));

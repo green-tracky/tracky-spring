@@ -5,6 +5,7 @@ import com.example.tracky._core.enums.InviteStatusEnum;
 import com.example.tracky._core.error.ex.ExceptionApi400;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky.notification.NotificationService;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.friends.Friend;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +26,7 @@ public class FriendInviteService {
     private final FriendInviteRepository friendInviteRepository;
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     /**
      * 친구 요청 보내기
@@ -35,32 +36,41 @@ public class FriendInviteService {
      * @return SaveDTO
      */
     @Transactional
-    public FriendInviteResponse.SaveDTO friendInvite(OAuthProfile sessionProfile, User toUser) {
+    public FriendInviteResponse.SaveDTO friendInvite(OAuthProfile sessionProfile, Integer userId) {
 
-        // 사용자 조회
-        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+        // 1. 사용자 조회
+        User fromUserPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        // 본인에게 하는 요청 방지
-        if (userPS.getId().equals(toUser.getId())) {
+        // 2. 초대받을 대상 조회
+        User toUserPS = userRepository.findById(userId)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // 3. 본인에게 하는 요청 방지
+        if (fromUserPS.getId().equals(toUserPS.getId())) {
             throw new ExceptionApi400(ErrorCodeEnum.INVALID_SELF_REQUEST);
         }
 
-        // 중복 요청 방지
-        if (friendInviteRepository.existsWaitingInvite(userPS, toUser)) {
+        // 4. 중복 요청 방지
+        if (friendInviteRepository.existsWaitingInvite(fromUserPS, toUserPS)) {
             throw new ExceptionApi400(ErrorCodeEnum.DUPLICATE_INVITE);
         }
 
+        // 5. DB에 친구 요청 저장
         FriendInvite invite = FriendInvite.builder()
-                .fromUser(userPS)
-                .toUser(toUser)
-                .createdAt(LocalDateTime.now())
+                .fromUser(fromUserPS)
+                .toUser(toUserPS)
                 .status(InviteStatusEnum.PENDING)
-                .build(); // 응답시간은 요청 받으면 넣어주기 / status 기본 값은 WAITING
+                .build();
+        FriendInvite saveInvitePS = friendInviteRepository.save(invite);
 
-        FriendInvite savePS = friendInviteRepository.save(invite);
+        // 6. FCM을 통해 알림 전송 (비동기 처리 권장)
+        // NotificationService에 알림 전송을 위임합니다.
+        // *실제 서비스에서는 이 부분을 @Async 어노테이션 등을 사용하여 비동기적으로 처리하는 것이 좋습니다.
+        //  그래야 알림 전송이 지연되더라도 사용자에게 응답이 늦게 가는 것을 막을 수 있습니다.
+        notificationService.sendFriendInviteNotification(fromUserPS.getId(), toUserPS.getId());
 
-        return new FriendInviteResponse.SaveDTO(savePS);
+        return new FriendInviteResponse.SaveDTO(saveInvitePS);
     }
 
     /**
