@@ -580,7 +580,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.weeks['2025-06'][0]").value("06.09~06.15"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -644,7 +644,7 @@ public class RunRecordControllerTest extends MyRestDoc {
 
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -710,7 +710,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.years[0]").value(2025));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -824,7 +824,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.page.isLast").value(true));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        actions.andDo(MockMvcResultHandlers.print());
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 }

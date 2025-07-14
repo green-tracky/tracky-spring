@@ -43,7 +43,7 @@ public class FirebaseConfig {
         else {
             System.out.println("개발 환경: 로컬 파일에서 Firebase 설정을 로드합니다.");
             // 기존과 동일하게 클래스패스에서 로컬 파일을 읽어옵니다.
-            ClassPathResource resource = new ClassPathResource("env/service-account.json");
+            ClassPathResource resource = new ClassPathResource("env/fb-service-account.json");
             serviceAccountStream = resource.getInputStream();
         }
 

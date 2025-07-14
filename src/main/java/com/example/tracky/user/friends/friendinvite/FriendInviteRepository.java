@@ -1,6 +1,7 @@
 package com.example.tracky.user.friends.friendinvite;
 
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.InviteStatusEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky.user.User;
 import jakarta.persistence.EntityManager;
@@ -35,9 +36,10 @@ public class FriendInviteRepository {
      * @param userid 로그인한 유저의 ID
      * @return 친구 요청 리스트
      */
-    public List<FriendInvite> findAllByUserId(Integer userid) {
-        Query query = em.createQuery("select f from FriendInvite f join fetch f.fromUser where f.toUser.id = :id");
+    public List<FriendInvite> findAllByToUserIdJoin(Integer userid) {
+        Query query = em.createQuery("select fi from FriendInvite fi join fetch fi.fromUser where fi.toUser.id = :id and fi.status = :status");
         query.setParameter("id", userid);
+        query.setParameter("status", InviteStatusEnum.PENDING);
         List<FriendInvite> inviteList = query.getResultList();
         return inviteList;
     }

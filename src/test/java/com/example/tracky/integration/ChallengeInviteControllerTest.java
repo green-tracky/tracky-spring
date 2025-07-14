@@ -248,7 +248,7 @@ class ChallengeInviteControllerTest extends MyRestDoc {
 
     // 본인의 초대가 아닌 것을 거절
     @Test
-    void friend_inviteReject_fail_test() throws Exception {
+    void friend_invite_reject_fail_test() throws Exception {
         // given
         Integer inviteId = 4;
 

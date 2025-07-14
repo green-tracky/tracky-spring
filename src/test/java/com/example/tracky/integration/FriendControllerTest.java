@@ -93,7 +93,7 @@ class FriendControllerTest extends MyRestDoc {
     }
 
     @Test
-    void get_friend_List() throws Exception {
+    void get_friend_list() throws Exception {
         // given
 
         // when
