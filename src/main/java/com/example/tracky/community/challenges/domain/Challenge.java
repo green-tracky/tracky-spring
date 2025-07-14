@@ -65,8 +65,7 @@ public class Challenge {
     @UpdateTimestamp
     private LocalDateTime updatedAt; // 챌린지 수정 시간
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) // jpa 영속성 관리 null 불가
-    @JoinColumn(nullable = false) // db 제약조건
+    @ManyToOne(fetch = FetchType.LAZY)
     private User creator; // 생성자
 
     @Builder
