@@ -14,7 +14,6 @@ public class RunLevelResponse {
         private Integer minDistance; // 해당 레벨의 조건 범위 시작 (m)
         private Integer maxDistance; // 해당 레벨의 조건 범위 끝 (m)
         private String description; // 레벨 설명 (예: "0~49.99킬로미터" 등)
-        private String imageUrl; // 레벨에 대응하는 이미지 URL
         private Integer sortOrder; // 레벨 정렬용 값
 
         public DTO(RunLevel runLevel) {
@@ -23,7 +22,6 @@ public class RunLevelResponse {
             this.minDistance = runLevel.getMinDistance();
             this.maxDistance = runLevel.getMaxDistance();
             this.description = runLevel.getDescription();
-            this.imageUrl = runLevel.getImageUrl();
             this.sortOrder = runLevel.getSortOrder();
         }
 
@@ -70,7 +68,6 @@ public class RunLevelResponse {
             private Integer minDistance; // 해당 레벨의 조건 범위 시작 (m)
             private Integer maxDistance; // 해당 레벨의 조건 범위 끝 (m)
             private String description; // 레벨 설명 (예: "0~49.99킬로미터" 등)
-            private String imageUrl; // 레벨에 대응하는 이미지 URL
             private Integer sortOrder; // 레벨 정렬용 값
             private Boolean isCurrent; // 현재 레벨 표시
 
@@ -86,7 +83,6 @@ public class RunLevelResponse {
                 this.minDistance = runLevel.getMinDistance();
                 this.maxDistance = runLevel.getMaxDistance();
                 this.description = runLevel.getDescription();
-                this.imageUrl = runLevel.getImageUrl();
                 this.sortOrder = runLevel.getSortOrder();
                 this.isCurrent = isCurrent;
             }

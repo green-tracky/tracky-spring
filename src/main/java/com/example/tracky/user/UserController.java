@@ -17,6 +17,11 @@ public class UserController {
     private final UserService userService;
     private final HttpSession session;
 
+    @GetMapping("/health")
+    public String health() {
+        return "<h1>tracky ok</h1>";
+    }
+
     @PostMapping("/api/oauth/kakao/login")
     public ResponseEntity<?> kakaoLogin(@Valid @RequestBody UserRequest.IdTokenDTO reqDTO, Errors errors) {
 

@@ -574,7 +574,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(18100));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(31900));
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
-        actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
         // 🔹 weeks.2025-06
         actions.andExpect(jsonPath("$.data.weeks['2025-06'][0]").value("06.09~06.15"));
@@ -634,7 +633,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(18100));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(31900));
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
-        actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
         // 🔹 years
         actions.andExpect(jsonPath("$.data.years[0]").value(2025));
@@ -704,7 +702,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(18100));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(31900));
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
-        actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
         // years
         actions.andExpect(jsonPath("$.data.years[0]").value(2025));
@@ -770,7 +767,6 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.totalDistance").value(18100));
         actions.andExpect(jsonPath("$.data.runLevel.distanceToNextLevel").value(31900));
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
-        actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         actions.andDo(MockMvcResultHandlers.print()).andDo(document);

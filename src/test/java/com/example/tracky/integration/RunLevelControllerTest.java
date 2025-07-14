@@ -46,8 +46,7 @@ public class RunLevelControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevels[0].name").value("옐로우"));
         actions.andExpect(jsonPath("$.data.runLevels[0].minDistance").value(0));
         actions.andExpect(jsonPath("$.data.runLevels[0].maxDistance").value(49999));
-        actions.andExpect(jsonPath("$.data.runLevels[0].description").value("0~49.99킬로미터"));
-        actions.andExpect(jsonPath("$.data.runLevels[0].imageUrl").value("https://example.com/images/yellow.png"));
+        actions.andExpect(jsonPath("$.data.runLevels[0].description").value("0 ~ 49.99킬로미터"));
         actions.andExpect(jsonPath("$.data.runLevels[0].sortOrder").value(0));
         actions.andExpect(jsonPath("$.data.runLevels[0].isCurrent").value(true));
 

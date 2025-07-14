@@ -273,8 +273,7 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevel.name").value("옐로우"));
         actions.andExpect(jsonPath("$.data.runLevel.minDistance").value(0));
         actions.andExpect(jsonPath("$.data.runLevel.maxDistance").value(49999));
-        actions.andExpect(jsonPath("$.data.runLevel.description").value("0~49.99킬로미터"));
-        actions.andExpect(jsonPath("$.data.runLevel.imageUrl").value("https://example.com/images/yellow.png"));
+        actions.andExpect(jsonPath("$.data.runLevel.description").value("0 ~ 49.99킬로미터"));
         actions.andExpect(jsonPath("$.data.runLevel.sortOrder").value(0));
 
         actions.andExpect(jsonPath("$.data.createdAt").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
