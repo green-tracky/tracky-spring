@@ -11,6 +11,7 @@ import com.example.tracky.community.challenges.dto.ChallengeInviteResponse;
 import com.example.tracky.community.challenges.repository.ChallengeInviteRepository;
 import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
+import com.example.tracky.notification.NotificationService;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.friends.Friend;
@@ -35,6 +36,7 @@ public class ChallengeInviteService {
     private final ChallengeJoinRepository challengeJoinRepository;
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
+    private final NotificationService notificationService;
 
     /**
      * 챌린지 초대
@@ -47,7 +49,7 @@ public class ChallengeInviteService {
     @Transactional
     public List<ChallengeInviteResponse.saveDTO> challengesInvite(Integer id, ChallengeInviteRequest.InviteRequestDTO reqDTO, OAuthProfile sessionProfile) {
         // 사용자 조회
-        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+        User fromUserPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
 
@@ -56,19 +58,19 @@ public class ChallengeInviteService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
 
         // 2. 본인이 해당 챌린지에 참여했는지 확인
-        boolean isParticipating = challengeJoinRepository.existsByUserIdAndChallengeId(userPS.getId(), id);
+        boolean isParticipating = challengeJoinRepository.existsByUserIdAndChallengeId(fromUserPS.getId(), id);
         if (!isParticipating) {
             throw new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND); // 참여하지 않은 챌린지엔 초대 불가
         }
 
-        List<Friend> myFriends = friendRepository.findfriendByUserIdJoinFriend(userPS.getId());
+        List<Friend> myFriends = friendRepository.findfriendByUserIdJoinFriend(fromUserPS.getId());
         Set<Integer> myFriendIds = new HashSet<>();
         for (Friend f : myFriends) {
             Integer fromId = f.getFromUser().getId();
             Integer toId = f.getToUser().getId();
 
             // 내가 fromUser면 친구는 toUser고, 반대면 친구는 fromUser
-            if (fromId.equals(userPS.getId())) {
+            if (fromId.equals(fromUserPS.getId())) {
                 myFriendIds.add(toId);
             } else {
                 myFriendIds.add(fromId);
@@ -77,30 +79,29 @@ public class ChallengeInviteService {
 
         List<ChallengeInviteResponse.saveDTO> saveDTO = new ArrayList<>();
 
-        for (Integer frinedId : reqDTO.getFriendIds()) {
+        for (Integer friendId : reqDTO.getFriendIds()) {
             // 내 친구가 아닌 사람은 초대 불가
-            if (!myFriendIds.contains(frinedId)) {
+            if (!myFriendIds.contains(friendId)) {
                 throw new ExceptionApi404(ErrorCodeEnum.NOT_MY_FRIEND);
             }
-            User toUserPS = userRepository.findById(frinedId)
+            User toUserPS = userRepository.findById(friendId)
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
             // 3-2. 이미 초대한 기록 있는지 확인 (중복 방지)
             boolean alreadyInvited = challengeInviteRepository.existsByFromUserIdAndToUserIdAndChallengeId(
-                    userPS.getId(), toUserPS.getId(), challengePS.getId());
+                    fromUserPS.getId(), toUserPS.getId(), challengePS.getId());
             if (alreadyInvited) {
                 throw new ExceptionApi404(ErrorCodeEnum.DUPLICATE_INVITE); // 참여하지 않은 챌린지엔 초대 불가
             }
             ChallengeInvite invite = ChallengeInvite.builder()
-                    .fromUser(userPS)
+                    .fromUser(fromUserPS)
                     .toUser(toUserPS)
                     .challenge(challengePS)
                     .status(InviteStatusEnum.PENDING)
                     .build();
 
             ChallengeInvite invitePS = challengeInviteRepository.save(invite);
-            System.out.println("Saved invite: " + invitePS.getId());
-
+            notificationService.sendChallengeInviteNotification(fromUserPS.getId(), toUserPS.getId(), challengePS.getId());
 
             saveDTO.add(new ChallengeInviteResponse.saveDTO(invitePS));
         }
@@ -210,7 +211,8 @@ public class ChallengeInviteService {
     private void checkInviteRecipient(ChallengeInvite invite, User user) {
 
         if (!invite.getToUser().getId().equals(user.getId())) {
-            throw new ExceptionApi404(ErrorCodeEnum.ACCESS_DENIED);
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+
         }
     }
 }

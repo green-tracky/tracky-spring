@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-
 import java.util.List;
 
 @Slf4j
@@ -66,7 +65,7 @@ public class CommentRepositoryTest {
     }
 
     @Test
-    void countParentComments() {
+    void count_parent_comments_test() {
         Integer postId = 1;
 
         Integer parentCount = commentRepository.countParentComments(postId);
@@ -99,15 +98,21 @@ public class CommentRepositoryTest {
 
     @Test
     void delete_test() {
-        Integer parentId = 2;
+
+        Integer parentId = 1;
+
+        int deletedLikes = em.createQuery("delete from Like l where l.comment.id = :commentId")
+                .setParameter("commentId", parentId)
+                .executeUpdate();
+        log.debug("✅ 댓글 좋아요 삭제 완료 ({}건)", deletedLikes);
 
         // 대댓글 먼저 삭제
-        em.createQuery("DELETE FROM Comment c WHERE c.parent.id = :parentId")
+        em.createQuery("delete from Comment c where c.parent.id = :parentId")
                 .setParameter("parentId", parentId)
                 .executeUpdate();
 
         // 부모 댓글 삭제
-        int deletedComment = em.createQuery("DELETE FROM Comment c WHERE c.id = :id")
+        int deletedComment = em.createQuery("delete from Comment c where c.id = :id")
                 .setParameter("id", parentId)
                 .executeUpdate();
 

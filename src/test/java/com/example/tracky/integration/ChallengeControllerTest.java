@@ -147,6 +147,52 @@ class ChallengeControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    // 없는 챌린지 조회
+    @Test
+    void get_challenge_fail_test() throws Exception {
+        // given
+        Integer challengeId = 10;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/challenges/{id}", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.msg").value("실패"));
+
+        // data 필드
+        actions.andExpect(jsonPath("$.data.participantCount").value(4));
+        actions.andExpect(jsonPath("$.data.myDistance").value(18100));
+        actions.andExpect(jsonPath("$.data.isJoined").value(true));
+        actions.andExpect(jsonPath("$.data.id").value(1));
+        actions.andExpect(jsonPath("$.data.name").value("6월 5k 챌린지"));
+        actions.andExpect(jsonPath("$.data.sub").value("이번 주 5km를 달려보세요."));
+        actions.andExpect(jsonPath("$.data.description").value("주간 챌린지를 통해 나의 한계를 뛰어넘어 보세요. 이번 주 5km를 달리면 특별한 완주자 기록을 달성할 수 있습니다."));
+        actions.andExpect(jsonPath("$.data.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(jsonPath("$.data.targetDistance").value(5000));
+        actions.andExpect(jsonPath("$.data.remainingTime").value(691199));
+        actions.andExpect(jsonPath("$.data.isInProgress").value(true));
+        actions.andExpect(jsonPath("$.data.creatorName").value(Matchers.nullValue()));
+        actions.andExpect(jsonPath("$.data.type").value("공개"));
+        actions.andExpect(jsonPath("$.data.rank").value(1));
+
+        // rewards[0]
+        actions.andExpect(jsonPath("$.data.rewards[0].rewardName").value("6월 5k 챌린지"));
+        actions.andExpect(jsonPath("$.data.rewards[0].rewardImageUrl").value("https://example.com/rewards/participation.png"));
+        actions.andExpect(jsonPath("$.data.rewards[0].status").value("달성"));
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
     @Test
     void save_test() throws Exception {
         // given
@@ -195,5 +241,82 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.periodType").value("기타"));
     }
 
+    // 제목이 없는 챌린지 저장
+    @Test
+    void save_fail_test() throws Exception {
+        // given
+        // 1. 요청 DTO 생성
+        ChallengeRequest.SaveDTO reqDTO = new ChallengeRequest.SaveDTO();
 
+//        reqDTO.setName("달리기 초보 모여라!");
+        reqDTO.setTargetDistance(5000); // 목표: 5km
+        reqDTO.setStartDate(LocalDateTime.of(2025, 7, 8, 0, 0));
+        reqDTO.setEndDate(LocalDateTime.of(2025, 7, 15, 23, 59));
+        reqDTO.setImageUrl("https://example.com/images/new_challenge.png");
+
+        // 2. 요청 본문을 JSON 문자열로 변환
+        String requestBody = om.writeValueAsString(reqDTO);
+
+        log.debug("✅요청 바디: " + requestBody);
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/s/api/community/challenges")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + fakeToken));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isNotFound());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(400));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("실패"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(7));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("달리기 초보 모여라!"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.startDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.endDate").value(Matchers.matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.targetDistance").value(5000));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.remainingTime").value(1987140));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isInProgress").value(true));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.participantCount").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.creatorName").value("ssar"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.type").value("사설"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.isJoined").value(true));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.imageUrl").value("https://example.com/images/new_challenge.png"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.periodType").value("기타"));
+
+    }
+
+
+    @Test
+    void get_challenge_leader_board_test() throws Exception {
+        // given
+        Integer challengeId = 1;
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/challenges/{id}/leaderboard", challengeId)
+                        .header("Authorization", "Bearer " + fakeToken));
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.status().isOk());
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
+    }
 }

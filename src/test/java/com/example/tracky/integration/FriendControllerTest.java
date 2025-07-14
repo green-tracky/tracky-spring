@@ -56,6 +56,38 @@ class FriendControllerTest extends MyRestDoc {
         // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    // TODO : 없는 태그로 조회 시 성공으로 할지 실패로 할지?
+    @Test
+    void get_friend_search_fail_test() throws Exception {
+        // given
+        String userTag = "SSS";
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/friend/search")
+                        .param("user-tag", userTag)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        // data[0] 검증
+        actions.andExpect(jsonPath("$.data[0].id").value(3));
+        actions.andExpect(jsonPath("$.data[0].profileUrl").value("http://example.com/profiles/love.jpg"));
+        actions.andExpect(jsonPath("$.data[0].username").value("love"));
+        actions.andExpect(jsonPath("$.data[0].userTag").value("#123ABC"));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
     @Test
     void get_friend_List() throws Exception {
         // given
