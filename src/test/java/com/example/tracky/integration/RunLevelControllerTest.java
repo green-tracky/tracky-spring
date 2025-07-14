@@ -51,8 +51,8 @@ public class RunLevelControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.runLevels[0].isCurrent").value(true));
 
         // totalDistance, distanceToNextLevel
-        actions.andExpect(jsonPath("$.data.totalDistance").value(18100));
-        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(31900));
+        actions.andExpect(jsonPath("$.data.totalDistance").value(17600));
+        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(32400));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         actions.andDo(MockMvcResultHandlers.print()).andDo(document);

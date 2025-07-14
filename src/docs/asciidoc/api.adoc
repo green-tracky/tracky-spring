@@ -102,7 +102,7 @@ include::{snippets}/{runrecord}/update_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{runrecord}/update_test/http-response.adoc[]
 
-=== 5. 러닝 기록 수정 실패 (제목 없음)
+=== 5. 러닝 기록 수정 실패 (권한 없음)
 ===== Request Example
 include::{snippets}/{runrecord}/update_fail_test/http-request.adoc[]
 

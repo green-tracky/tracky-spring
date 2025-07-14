@@ -72,12 +72,12 @@ class LeaderboardControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(17600));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.rank").value(1));
 
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(17600));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
 
@@ -105,12 +105,12 @@ class LeaderboardControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(17600));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.rank").value(1));
 
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(17600));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
 

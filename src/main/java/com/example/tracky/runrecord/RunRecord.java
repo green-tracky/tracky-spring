@@ -16,6 +16,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Table(name = "run_record_tb")
@@ -87,10 +88,10 @@ public class RunRecord {
      * @param reqDTO
      */
     public void update(RunRecordRequest.UpdateDTO reqDTO) {
-        this.title = reqDTO.getTitle();
-        this.memo = reqDTO.getMemo();
-        this.intensity = reqDTO.getIntensity();
-        this.place = reqDTO.getPlace();
+        this.title = Objects.requireNonNullElse(reqDTO.getTitle(), this.title);
+        this.memo = Objects.requireNonNullElse(reqDTO.getMemo(), this.memo);
+        this.intensity = Objects.requireNonNullElse(reqDTO.getIntensity(), this.intensity);
+        this.place = Objects.requireNonNullElse(reqDTO.getPlace(), this.place);
     }
 
     // 사진 변경 로직 나중에 추가

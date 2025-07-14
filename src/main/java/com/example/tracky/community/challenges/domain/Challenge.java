@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * <pre>
@@ -93,6 +94,6 @@ public class Challenge {
     }
 
     public void updateName(ChallengeRequest.UpdateDTO reqDTO) {
-        this.name = reqDTO.getName();
+        this.name = Objects.requireNonNullElse(reqDTO.getName(), this.name);
     }
 }

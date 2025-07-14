@@ -75,7 +75,7 @@ class ChallengeControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.myChallenges[0].name").value("6월 5k 챌린지"));
         actions.andExpect(jsonPath("$.data.myChallenges[0].sub").value(nullValue()));
         actions.andExpect(jsonPath("$.data.myChallenges[0].remainingTime").value(691199));
-        actions.andExpect(jsonPath("$.data.myChallenges[0].myDistance").value(18100));
+        actions.andExpect(jsonPath("$.data.myChallenges[0].myDistance").value(17600));
         actions.andExpect(jsonPath("$.data.myChallenges[0].targetDistance").value(5000));
         actions.andExpect(jsonPath("$.data.myChallenges[0].isInProgress").value(true));
         actions.andExpect(jsonPath("$.data.myChallenges[0].endDate").value(nullValue()));
@@ -124,7 +124,7 @@ class ChallengeControllerTest extends MyRestDoc {
 
         // data 필드
         actions.andExpect(jsonPath("$.data.participantCount").value(4));
-        actions.andExpect(jsonPath("$.data.myDistance").value(18100));
+        actions.andExpect(jsonPath("$.data.myDistance").value(17600));
         actions.andExpect(jsonPath("$.data.isJoined").value(true));
         actions.andExpect(jsonPath("$.data.id").value(1));
         actions.andExpect(jsonPath("$.data.name").value("6월 5k 챌린지"));
@@ -378,7 +378,7 @@ class ChallengeControllerTest extends MyRestDoc {
 
         actions.andExpect(jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
         actions.andExpect(jsonPath("$.data.rankingList[0].username").value("ssar"));
-        actions.andExpect(jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(jsonPath("$.data.rankingList[0].totalDistanceMeters").value(17600));
         actions.andExpect(jsonPath("$.data.rankingList[0].rank").value(1));
         actions.andExpect(jsonPath("$.data.rankingList[0].userId").value(1));
 

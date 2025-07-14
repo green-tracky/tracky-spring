@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "post_tb")
@@ -54,8 +55,8 @@ public class Post {
         this.content = content;
     }
 
-    public void update(String content) {
-        this.content = content;
+    public void update(PostRequest.UpdateDTO reqDTO) {
+        this.content = Objects.requireNonNullElse(reqDTO.getContent(), this.content);
     }
 
     protected Post() {
