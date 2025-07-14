@@ -5,12 +5,8 @@ import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.ChallengeScheduler;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.domain.RewardMaster;
-import com.example.tracky.community.challenges.repository.ChallengeJoinRepository;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.community.challenges.repository.RewardMasterRepository;
-import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
-import com.example.tracky.runrecord.RunRecordRepository;
-import com.example.tracky.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,16 +30,10 @@ public class ChallengeSchedulerTest {
 
     @Autowired
     private ChallengeScheduler challengeScheduler;
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private ChallengeRepository challengeRepository;
-    @Autowired
-    private ChallengeJoinRepository challengeJoinRepository;
-    @Autowired
-    private RunRecordRepository runRecordRepository;
-    @Autowired
-    private UserChallengeRewardRepository userChallengeRewardRepository;
+
     @Autowired
     private RewardMasterRepository rewardMasterRepository;
 
@@ -86,71 +76,6 @@ public class ChallengeSchedulerTest {
         // (이 부분은 RewardMaster, UserChallengeReward 엔티티 및 Repository 구현에 따라 달라짐)
     }
 
-//    @Test
-//    @DisplayName("종료된 사설 챌린지 - 금메달 1명 지급 테스트")
-//    void closeAndRewardChallenges_GoldMedal_Test() {
-//        // ====================================================================================
-//        // Given: 오직 '금메달 수상자' 1명에 대한 데이터만 설정
-//        // ====================================================================================
-//
-//        Integer userId = 1;
-//
-//        // 1. 시간 설정: 챌린지가 종료된 후인 2025년 7월 7일로 시간을 고정합니다.
-//        // setup으로 설정 완료
-//
-//        // 2. 금메달을 받을 사용자 1명을 조회합니다.
-//        User goldMedalWinner = userRepository.findById(userId).orElseThrow();
-//
-//        // 3. 테스트용 사설 챌린지 1개를 생성합니다. (7월 6일 종료, 목표 10km)
-//        Challenge privateChallenge = Challenge.builder()
-//                .name("금메달 테스트 챌린지")
-//                .type(ChallengeTypeEnum.PRIVATE)
-//                .periodType(PeriodTypeEnum.ETC)
-//                .targetDistance(10000) // 목표: 10km
-//                .startDate(LocalDateTime.of(2025, 7, 1, 0, 0))
-//                .endDate(LocalDateTime.of(2025, 7, 6, 23, 59, 59))
-//                .isInProgress(true) // 현재는 '진행중' 상태
-//                .creator(goldMedalWinner)
-//                .build();
-//        challengeRepository.save(privateChallenge);
-//
-//        // 4. 사용자가 챌린지에 참가합니다.
-//        ChallengeJoin challengeJoin = challengeJoinRepository.save(ChallengeJoin.builder().user(goldMedalWinner).challenge(privateChallenge).build());
-//
-//        // 5. 사용자의 러닝 기록을 생성합니다. (한 번에 목표 달성)
-//        RunRecord runRecord = runRecordRepository.save(RunRecord.builder()
-//                .user(goldMedalWinner)
-//                .totalDistanceMeters(12000) // 12km를 달려 목표 초과 달성
-//                .createdAt(LocalDateTime.of(2025, 7, 2, 10, 0)) // 7월 2일에 달성
-//                .build());
-//
-//        // ====================================================================================
-//        // When: 스케줄러의 메서드를 직접 호출하여 실행
-//        // ====================================================================================
-//        challengeScheduler.closeAndRewardChallenges();
-//
-//
-//        // ====================================================================================
-//        // Then: 결과 검증
-//        // ====================================================================================
-//
-//        // 1. 종료된 챌린지의 isInProgress 상태가 false로 변경되었는지 확인
-//        Optional<Challenge> closedChallengeOP = challengeRepository.findById(privateChallenge.getId());
-//        assertThat(closedChallengeOP).isPresent();
-//        assertThat(closedChallengeOP.get().getIsInProgress()).isFalse();
-//
-//        // 2. 사용자가 '금메달'을 정확히 받았는지 확인
-//        RewardMaster goldMedal = rewardMasterRepository.findByRewardName("금메달").orElseThrow();
-//        boolean userGotGold = userChallengeRewardRepository.existsPrivateRewardByRewardId(
-//                goldMedalWinner.getId(), privateChallenge.getId(), goldMedal.getId());
-//        assertThat(userGotGold).isTrue();
-//
-//        // 3. (확인 사살) 은메달은 받지 않았는지 확인
-//        RewardMaster silverMedal = rewardMasterRepository.findByRewardName("은메달").orElseThrow();
-//        boolean userGotSilver = userChallengeRewardRepository.existsPrivateRewardByRewardId(
-//                goldMedalWinner.getId(), privateChallenge.getId(), silverMedal.getId());
-//        assertThat(userGotSilver).isFalse();
-//    }
 
     @Test
     @DisplayName("주간 챌린지 자동 생성 테스트")

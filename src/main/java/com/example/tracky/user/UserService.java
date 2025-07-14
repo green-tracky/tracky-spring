@@ -28,10 +28,10 @@ public class UserService {
     private final RSAUtil rsaUtil;
 
     @Transactional
-    public UserResponse.IdTokenDTO kakaoLogin(String idToken) { // application context에 저장
+    public UserResponse.IdTokenDTO kakaoLogin(UserRequest.IdTokenDTO reqDTO) { // application context에 저장
         // 1. 공개키 존재 확인 없으면 다운로드
         // 2. id Token 검증 (base64 디코딩, 서명검증)
-        OAuthProfile oAuthProfile = rsaUtil.verify(idToken);
+        OAuthProfile oAuthProfile = rsaUtil.verify(reqDTO.getIdToken());
 
         User user = null;
 
@@ -66,7 +66,7 @@ public class UserService {
         }
 
         // 5. 되어있다면 아무것도 안해도 됨
-        return new UserResponse.IdTokenDTO(user, idToken);
+        return new UserResponse.IdTokenDTO(user, reqDTO.getIdToken());
     }
 
     @Transactional

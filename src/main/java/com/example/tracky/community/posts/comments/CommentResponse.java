@@ -21,7 +21,7 @@ public class CommentResponse {
             this.current = current;
             this.totalCount = totalCount; // given
             this.totalPage = makeTotalPage(parentCount); // 2
-            this.isLast = totalPage == current;
+            this.isLast = this.totalPage.equals(current);
             this.comments = parentDTOS;
         }
 
@@ -45,7 +45,7 @@ public class CommentResponse {
         private final List<ChildDTO> children;
 
 
-        public ParentDTO(Comment comment, List<Comment> reply) {
+        public ParentDTO(Comment comment) {
             this.id = comment.getId();
             this.postId = comment.getPost().getId();
             this.userId = comment.getUser().getId();

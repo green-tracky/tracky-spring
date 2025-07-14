@@ -2,6 +2,7 @@ package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
@@ -176,4 +177,21 @@ public class ChallengeService {
         return new ChallengeResponse.SaveDTO(challengePS);
     }
 
+    public ChallengeResponse.UpdateDTO update(Integer id, OAuthProfile sessionProfile, ChallengeRequest.UpdateDTO reqDTO) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // 챌린지 조회
+        Challenge challengePS = challengeRepository.findById(id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_NOT_FOUND));
+
+        if (!challengePS.getCreator().getId().equals(userPS.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
+
+        challengePS.updateName(reqDTO);
+
+        return new ChallengeResponse.UpdateDTO(challengePS);
+    }
 }

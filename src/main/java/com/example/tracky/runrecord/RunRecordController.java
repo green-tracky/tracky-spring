@@ -129,7 +129,7 @@ public class RunRecordController {
     }
 
     @PutMapping("/runs/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody RunRecordRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody RunRecordRequest.UpdateDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

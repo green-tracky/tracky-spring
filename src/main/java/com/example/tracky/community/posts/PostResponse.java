@@ -9,6 +9,7 @@ import com.example.tracky.user.UserResponse;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostResponse {
@@ -20,17 +21,13 @@ public class PostResponse {
         private Integer userId;
         private LocalDateTime createdAt;
         private Integer runRecordId;
-        private List<Integer> pictureIds;
 
         public SaveDTO(Post post) {
             this.id = post.getId();
             this.content = post.getContent();
             this.userId = post.getUser().getId();
             this.createdAt = post.getCreatedAt();
-            this.runRecordId = post.getRunRecord().getId();
-            this.pictureIds = post.getPostPictures().stream()
-                    .map(pp -> pp.getPicture().getId())
-                    .toList();
+            this.runRecordId = post.getRunRecord() != null ? post.getRunRecord().getId() : null;
         }
     }
 
@@ -38,25 +35,23 @@ public class PostResponse {
     @Data
     public static class ListDTO {
         private Integer id;
-        private String username;
         private String content;
         private LocalDateTime createdAt;
-        private List<PictureResponse.DTO> pictures;
-        private Integer likeCount;
         private Integer commentCount;
+        private Integer likeCount;
         private Boolean isLiked;
+        private List<PictureResponse.DTO> pictures;
+        private UserResponse.PostUserDTO user;
 
-        public ListDTO(Post post, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked) {
+        public ListDTO(Post post, Integer likeCount, Integer commentCount, Boolean isLiked) {
             this.id = post.getId();
-            this.username = post.getUser().getUsername();
             this.content = post.getContent();
             this.createdAt = post.getCreatedAt();
-            this.pictures = postPictures.stream()
-                    .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
-                    .toList();
             this.likeCount = likeCount;
             this.commentCount = commentCount;
             this.isLiked = isLiked;
+            this.pictures = post.getRunRecord() != null ? post.getRunRecord().getPictures().stream().map(p -> new PictureResponse.DTO(p)).toList() : new ArrayList<>();
+            this.user = new UserResponse.PostUserDTO(post.getUser());
         }
     }
 
@@ -65,10 +60,9 @@ public class PostResponse {
 
         private Integer id;
         private String content;
-        private UserResponse.PostUserDTO user; // User 엔티티를 -> DTO 로
-        private RunRecordResponse.PostRunRecordDTO runRecord;
-        private List<PictureResponse.DTO> pictures;
-        private CommentResponse.CommentsList comments;
+        private UserResponse.PostUserDTO user;
+        private RunRecordResponse.DetailDTO runRecord;
+        private CommentResponse.CommentsList commentsInfo;
         private Integer likeCount;
         private Integer commentCount;
         private Boolean isLiked;
@@ -76,17 +70,14 @@ public class PostResponse {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
 
-        public DetailDTO(Post post, CommentResponse.CommentsList comments, List<PostPicture> postPictures, Integer likeCount, Integer commentCount, Boolean isLiked, User user) {
+        public DetailDTO(Post post, CommentResponse.CommentsList commentsInfo, Integer likeCount, Integer commentCount, Boolean isLiked, User user) {
             this.id = post.getId();
             this.content = post.getContent();
             this.user = new UserResponse.PostUserDTO(post.getUser());
             this.runRecord = post.getRunRecord() != null
-                    ? new RunRecordResponse.PostRunRecordDTO(post.getRunRecord())
+                    ? new RunRecordResponse.DetailDTO(post.getRunRecord())
                     : null;
-            this.comments = comments;
-            this.pictures = postPictures.stream()
-                    .map(postPicture -> new PictureResponse.DTO(postPicture.getPicture()))
-                    .toList();
+            this.commentsInfo = commentsInfo;
             this.likeCount = likeCount;
             this.commentCount = commentCount;
             this.isLiked = isLiked;
@@ -103,18 +94,12 @@ public class PostResponse {
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private Integer runRecordId;
-        private List<Integer> pictureIds;
 
         public UpdateDTO(Post post) {
             this.id = post.getId();
             this.content = post.getContent();
             this.createdAt = post.getCreatedAt();
             this.updatedAt = post.getUpdatedAt();
-            this.runRecordId = post.getRunRecord().getId();
-            this.pictureIds = post.getPostPictures().stream()
-                    .map(pp -> pp.getPicture().getId())
-                    .toList();
         }
     }
 }

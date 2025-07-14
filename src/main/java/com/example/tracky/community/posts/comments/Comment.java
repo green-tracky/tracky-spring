@@ -5,7 +5,6 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name = "comment_tb")
 public class Comment {
@@ -54,7 +52,11 @@ public class Comment {
         this.parent = parent;
     }
 
+    protected Comment() {
+    }
+
     public void update(String content) {
         this.content = content;
     }
+
 }

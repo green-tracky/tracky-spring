@@ -2,7 +2,6 @@ package com.example.tracky.community.posts;
 
 import com.example.tracky.community.posts.comments.Comment;
 import com.example.tracky.runrecord.RunRecord;
-import com.example.tracky.runrecord.pictures.Picture;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -40,9 +39,6 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PostPicture> postPictures = new ArrayList<>();
-
     // 생성일 자동 세팅
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -58,23 +54,8 @@ public class Post {
         this.content = content;
     }
 
-    public void update(String content, RunRecord runRecord, List<Picture> pictures) {
+    public void update(String content) {
         this.content = content;
-        this.runRecord = runRecord;
-
-        // 기존 postPictures 비우기
-        this.postPictures.clear();
-
-        // 새로 PostPicture 생성해서 넣기
-        if (pictures != null && !pictures.isEmpty()) {
-            for (Picture picture : pictures) {
-                PostPicture postPicture = PostPicture.builder()
-                        .post(this)
-                        .picture(picture)
-                        .build();
-                this.postPictures.add(postPicture);
-            }
-        }
     }
 
     protected Post() {

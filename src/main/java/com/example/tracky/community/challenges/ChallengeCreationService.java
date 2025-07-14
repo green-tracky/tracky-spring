@@ -76,7 +76,7 @@ public class ChallengeCreationService {
                     .weekOfMonth(weekOfMonth)
                     .isInProgress(true)
                     .creator(admin)
-                    .imageUrl("") // TODO : 이미지 추가
+                    .imgIndex(null) // TODO : 이미지 추가
                     .build();
 
             // 5. 챌린지 저장
@@ -126,6 +126,7 @@ public class ChallengeCreationService {
                     .challengeMonth(month)
                     .isInProgress(true)
                     .creator(admin)
+                    .imgIndex(null) // TODO : 이미지 추가
                     .build();
 
             // 4. 챌린지 저장

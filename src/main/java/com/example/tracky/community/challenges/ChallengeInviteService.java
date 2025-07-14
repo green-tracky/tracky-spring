@@ -121,6 +121,10 @@ public class ChallengeInviteService {
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
+        if (!challengeJoinRepository.existsByUserIdAndChallengeId(userPS.getId(), id)) {
+            throw new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND);
+        }
+
         // 챌린지의 참여한 유저 조회
         List<User> joinUsersPS = challengeJoinRepository.findUserAllById(id);
 
