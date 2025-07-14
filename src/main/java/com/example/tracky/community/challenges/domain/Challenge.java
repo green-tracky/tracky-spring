@@ -49,12 +49,14 @@ public class Challenge {
     @ColumnDefault("true")
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ChallengeTypeEnum type; // PUBLIC, PRIVATE
     private Integer imgIndex; // 챌린지 이미지 인덱스
     private Integer challengeYear; // 년도
     private Integer challengeMonth; // 월
     private Integer weekOfMonth; // 주차 (1주차, 2주차)
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PeriodTypeEnum periodType; // 주간 or 월간
 
     @CreationTimestamp

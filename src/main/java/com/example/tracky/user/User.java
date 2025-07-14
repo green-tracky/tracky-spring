@@ -33,10 +33,12 @@ public class User {
     private String profileUrl; // 프로필 이미지 주소
     private Double height; // 177.5(cm)
     private Double weight; // 75.5(kg)
+    @Enumerated(EnumType.STRING)
     private GenderEnum gender; // (남 | 여)
     private String location; // 활동지
     private String letter; // 자기소개
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserTypeEnum userType; // (일반 | 관리자)
 
     @Enumerated(EnumType.STRING) // 이넘 영어 그대로 사용함
@@ -44,7 +46,7 @@ public class User {
     private ProviderTypeEnum provider; // oauth 제공자 (kakao, google)
     @Column(unique = true, nullable = false)
     private String userTag; // #UUID 6자리
-    //    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true)
     private String fcmToken; // 기기 식별 아이디 // 알림서비스용
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

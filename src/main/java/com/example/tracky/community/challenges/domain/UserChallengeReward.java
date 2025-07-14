@@ -21,6 +21,7 @@ public class UserChallengeReward {
     private Integer id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ChallengeTypeEnum type; // 공개, 사설 구분용
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

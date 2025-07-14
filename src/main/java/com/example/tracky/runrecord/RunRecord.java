@@ -36,6 +36,7 @@ public class RunRecord {
     @ColumnDefault("0")
     @Max(value = 10, message = "러닝 강도는 10을 초과할 수 없습니다.")
     private Integer intensity; // 러닝 강도 (1~10). 기본값 0
+    @Enumerated(EnumType.STRING)
     private RunPlaceTypeEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
