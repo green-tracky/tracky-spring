@@ -91,6 +91,8 @@ jar {
 
 test {
     systemProperty "file.encoding", "UTF-8"
+    // JVM에서 테스트를 실행할 때 사용할 기본 시간대를 'Asia/Seoul'로 설정합니다.
+    systemProperty 'user.timezone', 'Asia/Seoul'
 }
 
 ext {
