@@ -89,7 +89,7 @@ jobs:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
           application_name: tracky # 엘리스틱 빈스톡 애플리케이션 이름!
-          environment_name: tracky-env # 엘리스틱 빈스톡 환경 이름!
+          environment_name: Tracky-env # 엘리스틱 빈스톡 환경 이름!
           version_label: tracky-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
