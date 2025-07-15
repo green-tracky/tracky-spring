@@ -14,7 +14,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Table(name = "user_tb")
@@ -102,14 +101,14 @@ public class User {
      * @param reqDTO
      */
     public void updateInfo(UserRequest.UpdateDTO reqDTO) {
-        this.username = Objects.requireNonNullElse(reqDTO.getUsername(), this.username);
-        this.email = Objects.requireNonNullElse(reqDTO.getEmail(), this.email);
-        this.profileUrl = Objects.requireNonNullElse(reqDTO.getProfileUrl(), this.profileUrl);
-        this.height = Objects.requireNonNullElse(reqDTO.getHeight(), this.height);
-        this.weight = Objects.requireNonNullElse(reqDTO.getWeight(), this.weight);
-        this.gender = Objects.requireNonNullElse(reqDTO.getGender(), this.gender);
-        this.location = Objects.requireNonNullElse(reqDTO.getLocation(), this.location);
-        this.letter = Objects.requireNonNullElse(reqDTO.getLetter(), this.letter);
+        this.username = reqDTO.getUsername() == null ? this.username : reqDTO.getUsername();
+        this.email = reqDTO.getEmail() == null ? this.email : reqDTO.getEmail();
+        this.profileUrl = reqDTO.getProfileUrl() == null ? this.profileUrl : reqDTO.getProfileUrl();
+        this.height = reqDTO.getHeight() == null ? this.height : reqDTO.getHeight();
+        this.weight = reqDTO.getWeight() == null ? this.weight : reqDTO.getWeight();
+        this.gender = reqDTO.getGender() == null ? this.gender : reqDTO.getGender();
+        this.location = reqDTO.getLocation() == null ? this.location : reqDTO.getLocation();
+        this.letter = reqDTO.getLetter() == null ? this.letter : reqDTO.getLetter();
     }
 
     /**

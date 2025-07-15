@@ -477,7 +477,7 @@ public class RunRecordControllerTest extends MyRestDoc {
         RunRecordRequest.UpdateDTO reqDTO = new RunRecordRequest.UpdateDTO();
         reqDTO.setTitle("수정 확인");
         reqDTO.setMemo("수정 확인");
-        reqDTO.setPlace(RunPlaceTypeEnum.TRACK);
+        reqDTO.setPlace(null);
         reqDTO.setIntensity(1);
 
         String requestBody = om.writeValueAsString(reqDTO);
