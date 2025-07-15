@@ -7,19 +7,24 @@ import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FriendService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
 
-    public List<FriendResponse.SearchDTO> getFriendSearch(String userTag) {
+    public List<FriendResponse.SearchDTO> getFriendSearch(String userTag, OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
         // 1. # 붙이는 파싱
         String tag = "#" + userTag;
 
@@ -28,6 +33,8 @@ public class FriendService {
         for (User UserList : friends) {
             searchDTO.add(new FriendResponse.SearchDTO(UserList));
         }
+
+        log.info("{}({})이 {}로 친구를 검색합니다.", userPS.getUsername(), userPS.getId(), userTag);
 
         return searchDTO;
     }
@@ -52,6 +59,8 @@ public class FriendService {
             }
             friendList.add(new FriendResponse.UserDTO(other));
         }
+
+        log.info("{}({})이 친구 목록을 조회합니다.", userPS.getUsername(), userPS.getId());
 
         return friendList;
     }

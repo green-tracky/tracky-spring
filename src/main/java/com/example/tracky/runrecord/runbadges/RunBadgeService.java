@@ -11,10 +11,12 @@ import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RunBadgeService {
@@ -39,6 +41,8 @@ public class RunBadgeService {
         List<RunBadge> runBadgesPS = runBadgeRepository.findAll();
         List<RunBadgeAchv> runBadgeAchvsPS = runBadgeAchvRepository.findByUserIdJoin(userPS.getId());
         List<UserChallengeReward> userChallengeRewardsPS = userChallengeRewardRepository.findAllByUserId(userPS.getId());
+
+        log.info("{}({})이 메달 목록을 조회합니다.", userPS.getUsername(), userPS.getId());
 
         // 2. 응답 DTO 로 변환
         return new RunBadgeResponse.GroupedBadgeListDTO(runBadgesPS, runBadgeAchvsPS, userChallengeRewardsPS);

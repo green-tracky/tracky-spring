@@ -7,6 +7,7 @@ import com.example.tracky.runrecord.runbadges.RunBadgeRepository;
 import com.example.tracky.runrecord.runbadges.runbadgeachvs.handler.RunBadgeAchvHandler;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * 적절한 핸들러(`RunBadgeAchvHandler`)를 호출하여 뱃지를 부여하는 '교통정리' 역할을 수행합니다.
  * </pre>
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RunBadgeAchvService {
@@ -77,6 +79,9 @@ public class RunBadgeAchvService {
                     break;
             }
         }
+
+        log.info("{}({})이 {}를 획득했습니다.", user.getUsername(), user.getId(), allRunBadgesPS);
+
         return savedRunBadgeAchvs;
     }
 
