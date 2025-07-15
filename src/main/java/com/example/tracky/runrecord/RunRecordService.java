@@ -69,7 +69,7 @@ public class RunRecordService {
         // 2. 권한 체크
         checkAccess(userPS, runRecordPS);
 
-        log.info("{}({})이 {}을 조회합니다.", userPS.getUsername(), userPS.getId(), runRecordPS.getId());
+        log.info("{}({})이 러닝{}을 상세 조회합니다.", userPS.getUsername(), userPS.getId(), runRecordPS.getId());
 
         // 3. 러닝 응답 DTO 로 변환
         return new RunRecordResponse.DetailDTO(runRecordPS);

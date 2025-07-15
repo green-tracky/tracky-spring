@@ -13,10 +13,11 @@ import com.example.tracky.user.friends.FriendRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FriendInviteService {
@@ -68,6 +69,8 @@ public class FriendInviteService {
         //  그래야 알림 전송이 지연되더라도 사용자에게 응답이 늦게 가는 것을 막을 수 있습니다.
         notificationService.sendFriendInviteNotification(fromUserPS.getId(), toUserPS.getId());
 
+        log.info("{}({})이 {}({})에게 친구 요청을 보냈습니다", fromUserPS.getUsername(), fromUserPS.getId(), toUserPS.getUsername(), toUserPS.getId());
+
         return new FriendInviteResponse.SaveDTO(saveInvitePS);
     }
 
@@ -98,6 +101,8 @@ public class FriendInviteService {
             friendRepository.save(Friend.builder().fromUser(invite.getFromUser()).toUser(invite.getToUser()).build());
         }
 
+        log.info("{}({})이 친구 요청을 수락했습니다", userPS.getUsername(), userPS.getId());
+
         return new FriendInviteResponse.ResponseDTO(invite);
     }
 
@@ -122,6 +127,10 @@ public class FriendInviteService {
 
         // DB 상태 변경
         invite.reject();
+
+        log.info("{}({})이 친구 요청을 거절했습니다", userPS.getUsername(), userPS.getId());
+
+
         return new FriendInviteResponse.ResponseDTO(invite);
     }
 

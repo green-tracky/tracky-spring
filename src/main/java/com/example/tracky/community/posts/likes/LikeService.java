@@ -45,7 +45,7 @@ public class LikeService {
 
         Integer likeCount = likeRepository.countByPostId(postId);
 
-        log.info("{}({})이 게시글 {}({})를 좋아요합니다. ", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
+        log.info("{}({})이 게시글{}를 좋아요합니다. ", userPS.getUsername(), userPS.getId(), postPS.getId());
 
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
     }

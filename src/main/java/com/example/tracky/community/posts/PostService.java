@@ -81,7 +81,7 @@ public class PostService {
         Post postPS = postRepository.save(post);
 
 
-        log.info("{}({})이 {}({})를 저장합니다.", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
+        log.info("{}({})이 게시글{}번을 저장합니다.", userPS.getUsername(), userPS.getId(), postPS.getId());
         // 응답 DTO 변환
         return new PostResponse.SaveDTO(postPS);
     }
@@ -103,7 +103,7 @@ public class PostService {
 
         // updatedAt 적용
         userRepository.save(userPS);
-        log.info("{}({})이 {}({})를 수정합니다.", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
+        log.info("{}({})이 게시글{}을 수정합니다.", userPS.getUsername(), userPS.getId(), postPS.getId());
         return new PostResponse.UpdateDTO(postPS);
     }
 
@@ -124,7 +124,7 @@ public class PostService {
         // 좋아요 삭제
         likeService.deleteByPostId(id);
 
-        log.info("{}({})이 {}({})를 삭제했습니다.", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
+        log.info("{}({})이 게시글{}을 삭제했습니다.", userPS.getUsername(), userPS.getId(), postPS.getId());
         postRepository.delete(postPS);
     }
 
@@ -146,7 +146,7 @@ public class PostService {
         // ✅ 댓글 + 대댓글 조회
         CommentResponse.CommentsList commentsList = commentService.getCommentsWithReplies(postId, 1);
 
-        log.info("{}({})이 {}({})를 상세보기합니다.", userPS.getUsername(), userPS.getId(), post.getComments(), post.getId());
+        log.info("{}({})이 {}을 상세보기합니다.", userPS.getUsername(), userPS.getId(), post.getId());
         return new PostResponse.DetailDTO(post, commentsList, likeCount, commentCount, isLiked, userPS);
     }
 
