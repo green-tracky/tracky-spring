@@ -35,7 +35,8 @@ public class FriendInvite {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
+    
+    @Enumerated(EnumType.STRING)
     private InviteStatusEnum status;
 
     @UpdateTimestamp

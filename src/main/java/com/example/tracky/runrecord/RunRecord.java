@@ -35,6 +35,7 @@ public class RunRecord {
     @ColumnDefault("0")
     @Max(value = 10, message = "러닝 강도는 10을 초과할 수 없습니다.")
     private Integer intensity; // 러닝 강도 (1~10). 기본값 0
+    @Enumerated(EnumType.STRING)
     private RunPlaceTypeEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
@@ -87,12 +88,9 @@ public class RunRecord {
      * @param reqDTO
      */
     public void update(RunRecordRequest.UpdateDTO reqDTO) {
-        this.title = reqDTO.getTitle();
-        this.memo = reqDTO.getMemo();
-        this.intensity = reqDTO.getIntensity();
-        this.place = reqDTO.getPlace();
+        this.title = reqDTO.getTitle() == null ? this.title : reqDTO.getTitle();
+        this.memo = reqDTO.getMemo() == null ? this.memo : reqDTO.getMemo();
+        this.intensity = reqDTO.getIntensity() == null ? this.intensity : reqDTO.getIntensity();
+        this.place = reqDTO.getPlace() == null ? this.place : reqDTO.getPlace();
     }
-
-    // 사진 변경 로직 나중에 추가
-
 }

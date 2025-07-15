@@ -70,7 +70,7 @@ public class CommentService {
 
         checkAccess(userPS, commentPS);
 
-        commentPS.update(reqDTO.getContent());
+        commentPS.update(reqDTO);
 
         commentRepository.save(commentPS);
 

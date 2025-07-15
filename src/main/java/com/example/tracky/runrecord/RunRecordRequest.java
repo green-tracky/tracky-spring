@@ -63,7 +63,6 @@ public class RunRecordRequest {
     @Data
     public static class UpdateDTO {
 
-        @NotBlank(message = "제목은 필수 입력 항목입니다.")
         @Size(max = Constants.TITLE_LENGTH, message = "제목은 " + Constants.TITLE_LENGTH + "자를 초과할 수 없습니다.")
         private String title;
 

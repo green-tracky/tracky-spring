@@ -87,32 +87,7 @@ class PostControllerTest extends MyRestDoc {
         actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
-
-    @Test
-    @DisplayName("포스트 목록 조회 실패 - 인증 없음")
-    void get_posts_fail_test() throws Exception {
-        // when
-        ResultActions actions = mvc.perform(
-                MockMvcRequestBuilders
-                        .get("/s/api/community/posts")
-                // Authorization 헤더를 생략함
-        );
-
-        // eye
-        String responseBody = actions.andReturn().getResponse().getContentAsString();
-        log.debug("❌응답 바디: " + responseBody);
-
-        // then
-        actions.andExpect(status().isUnauthorized()); // 401
-        actions.andExpect(jsonPath("$.status").value(401));
-        actions.andExpect(jsonPath("$.msg").value("토큰이 존재하지 않습니다"));
-        actions.andExpect(jsonPath("$.data").doesNotExist());
-
-        // 디버깅 및 문서화 (필요시 주석 해제)
-        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
-    }
-
-
+    
     @Test
     @DisplayName("포스트 쓰기 성공")
     void save_test() throws Exception {

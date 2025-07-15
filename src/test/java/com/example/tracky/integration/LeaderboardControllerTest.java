@@ -54,6 +54,39 @@ class LeaderboardControllerTest extends MyRestDoc {
     }
 
     @Test
+    void get_leader_boards_week_before_test() throws Exception {
+        // given
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/leaderboards/week?before=1")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(9900));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.rank").value(1));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(9900));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    @Test
     void get_leader_boards_mouth_test() throws Exception {
         // given
 
@@ -72,12 +105,45 @@ class LeaderboardControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(17600));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.rank").value(1));
 
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(17600));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    @Test
+    void get_leader_boards_mouth_before_test() throws Exception {
+        // given
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/community/leaderboards/mouth?before=1")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(0));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.rank").value(1));
+
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(0));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
 
@@ -105,12 +171,12 @@ class LeaderboardControllerTest extends MyRestDoc {
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(200));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.msg").value("성공"));
 
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.totalDistanceMeters").value(17600));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.myRanking.rank").value(1));
 
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].profileUrl").value("http://example.com/profiles/ssar.jpg"));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].username").value("ssar"));
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(18100));
+        actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].totalDistanceMeters").value(17600));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].rank").value(1));
         actions.andExpect(MockMvcResultMatchers.jsonPath("$.data.rankingList[0].userId").value(1));
 

@@ -9,10 +9,12 @@ import com.example.tracky.community.challenges.ChallengeRewardService;
 import com.example.tracky.community.challenges.domain.UserChallengeReward;
 import com.example.tracky.community.challenges.repository.UserChallengeRewardRepository;
 import com.example.tracky.runrecord.dto.*;
+import com.example.tracky.runrecord.pictures.Picture;
 import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchv;
 import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchvRepository;
 import com.example.tracky.runrecord.runbadges.runbadgeachvs.RunBadgeAchvService;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
+import com.example.tracky.s3.S3Service;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
@@ -46,6 +48,7 @@ public class RunRecordService {
     private final RunLevelRepository runLevelRepository;
     private final UserChallengeRewardRepository userChallengeRewardRepository;
     private final ChallengeRewardService challengeRewardService;
+    private final S3Service s3Service;
 
     /**
      * 러닝 상세조회
@@ -846,6 +849,11 @@ public class RunRecordService {
         // 권한 체크
         checkAccess(userPS, runRecordPS);
 
+        // aws s3 파일 삭제
+        for (Picture p : runRecordPS.getPictures()) {
+            s3Service.deleteFileByUrl(p.getFileUrl());
+        }
+
         // 삭제
         runRecordRepository.delete(runRecordPS);
 
@@ -887,4 +895,21 @@ public class RunRecordService {
         }
     }
 
+    /**
+     * 게시글 등록할때 사용하는 러닝 목록
+     *
+     * @param sessionProfile
+     * @return
+     */
+    public List<RunRecordResponse.SimpleDTO> getRunRecords(OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // 러닝 조회
+        return runRecordRepository.findAllByUserId(userPS.getId()).stream()
+                .sorted((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt())) // 최신순
+                .map(runRecord -> new RunRecordResponse.SimpleDTO(runRecord))
+                .toList();
+    }
 }

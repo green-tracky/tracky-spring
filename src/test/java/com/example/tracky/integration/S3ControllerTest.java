@@ -1,10 +1,10 @@
 package com.example.tracky.integration;
 
 import com.example.tracky.MyRestDoc;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -17,20 +17,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // MOCK -> 가짜 환경을 만들어 필요한 의존관계를 다 메모리에 올려서 테스트
 @Slf4j
-public class RunLevelControllerTest extends MyRestDoc {
-
-    @Autowired
-    private ObjectMapper om; // json <-> java Object 변환 해주는 객체. IoC에 objectMapper가 이미 떠있음
+public class S3ControllerTest extends MyRestDoc {
 
     @Test
-    public void get_run_levels_test() throws Exception {
+    @DisplayName("s3 프리사인 url")
+    void get_presigned_url_test() throws Exception {
         // given
+        String fileName = "123.png";
 
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .get("/s/api/run-levels")
-                        .header("Authorization", "Bearer " + fakeToken)
+                        .get("/api/s3/presigned-url")
+                        .param("fileName", fileName)
         );
 
         // eye
@@ -40,22 +39,12 @@ public class RunLevelControllerTest extends MyRestDoc {
         // then
         actions.andExpect(status().isOk());
         actions.andExpect(jsonPath("$.msg").value("성공"));
-
-        // runLevels[0]
-        actions.andExpect(jsonPath("$.data.runLevels[0].id").value(1));
-        actions.andExpect(jsonPath("$.data.runLevels[0].name").value("옐로우"));
-        actions.andExpect(jsonPath("$.data.runLevels[0].minDistance").value(0));
-        actions.andExpect(jsonPath("$.data.runLevels[0].maxDistance").value(49999));
-        actions.andExpect(jsonPath("$.data.runLevels[0].description").value("0 ~ 49.99킬로미터"));
-        actions.andExpect(jsonPath("$.data.runLevels[0].sortOrder").value(0));
-        actions.andExpect(jsonPath("$.data.runLevels[0].isCurrent").value(true));
-
-        // totalDistance, distanceToNextLevel
-        actions.andExpect(jsonPath("$.data.totalDistance").value(17600));
-        actions.andExpect(jsonPath("$.data.distanceToNextLevel").value(32400));
+        actions.andExpect(jsonPath("$.data").value(
+                Matchers.matchesPattern("^https://tracky-s3\\.s3\\.ap-northeast-2\\.amazonaws\\.com/.*\\.png\\?.*")
+        ));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
         actions.andDo(MockMvcResultHandlers.print()).andDo(document);
-    }
 
+    }
 }

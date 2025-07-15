@@ -99,7 +99,7 @@ public class PostService {
         // 권한 체크
         checkAccess(userPS, postPS);
 
-        postPS.update(reqDTO.getContent());
+        postPS.update(reqDTO);
 
         // updatedAt 적용
         userRepository.save(userPS);

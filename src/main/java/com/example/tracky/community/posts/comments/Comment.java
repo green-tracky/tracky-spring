@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -55,8 +56,8 @@ public class Comment {
     protected Comment() {
     }
 
-    public void update(String content) {
-        this.content = content;
+    public void update(CommentRequest.UpdateDTO reqDTO) {
+        this.content = Objects.requireNonNullElse(reqDTO.getContent(), this.content);
     }
 
 }

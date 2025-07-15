@@ -16,6 +16,7 @@ endif::[]
 :challengejoin: challenge-join-controller-test
 :challengeinvite: challenge-invite-controller-test
 :challenge: challenge-controller-test
+:s3: s3-controller-test
 
 = REST API 문서
 :toc: left
@@ -102,7 +103,7 @@ include::{snippets}/{runrecord}/update_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{runrecord}/update_test/http-response.adoc[]
 
-=== 5. 러닝 기록 수정 실패 (제목 없음)
+=== 5. 러닝 기록 수정 실패 (권한 없음)
 ===== Request Example
 include::{snippets}/{runrecord}/update_fail_test/http-request.adoc[]
 
@@ -152,12 +153,47 @@ include::{snippets}/{runrecord}/get_activities_all_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{runrecord}/get_activities_all_test/http-response.adoc[]
 
-=== 5. 최근 활동 목록 조회
+=== 5. 최근 활동 목록 조회 - 최신순
 ===== Request Example
 include::{snippets}/{runrecord}/get_activities_recent_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{runrecord}/get_activities_recent_test/http-response.adoc[]
+
+=== 6. 최근 활동 목록 조회 - 오래된 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-response.adoc[]
+
+=== 7. 최근 활동 목록 조회 - 최장 거리 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_desc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_desc_test/http-response.adoc[]
+
+=== 8. 최근 활동 목록 조회 - 최단 거리 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_asc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_asc_test/http-response.adoc[]
+
+=== 9. 최근 활동 목록 조회 - 최저 페이스 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_desc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_desc_test/http-response.adoc[]
+
+=== 10. 최근 활동 목록 조회 - 최고 페이스 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-response.adoc[]
 
 
 == 런 레벨 (Run Level)
@@ -186,68 +222,68 @@ include::{snippets}/{post}/get_posts_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{post}/get_posts_test/http-response.adoc[]
 
-=== 2. 포스트 목록 조회 실패 (인증 없음)
-===== Request Example
-include::{snippets}/{post}/get_posts_fail_test/http-request.adoc[]
-
-===== Response Example
-include::{snippets}/{post}/get_posts_fail_test/http-response.adoc[]
-
-=== 3. 포스트 쓰기 성공
+=== 2. 포스트 쓰기 성공
 ===== Request Example
 include::{snippets}/{post}/save_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/save_test/http-response.adoc[]
 
-=== 4. 포스트 쓰기 실패 (존재하지 않는 러닝 기록 ID)
+=== 3. 포스트 쓰기 실패 (존재하지 않는 러닝 기록 ID)
 ===== Request Example
 include::{snippets}/{post}/save_fail_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/save_fail_test/http-response.adoc[]
 
-=== 5. 포스트 상세 조회 성공
+=== 4. 포스트 상세 조회 성공
 ===== Request Example
 include::{snippets}/{post}/get_detail_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/get_detail_test/http-response.adoc[]
 
-=== 6. 포스트 상세 조회 실패 (존재하지 않는 게시글)
+=== 5. 포스트 상세 조회 실패 (존재하지 않는 게시글)
 ===== Request Example
 include::{snippets}/{post}/get_detail_fail_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/get_detail_fail_test/http-response.adoc[]
 
-=== 7. 포스트 수정 성공
+=== 6. 포스트 수정 성공
 ===== Request Example
 include::{snippets}/{post}/update_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/update_test/http-response.adoc[]
 
-=== 8. 포스트 수정 실패 (존재하지 않는 게시글)
+=== 7. 포스트 수정 실패 (존재하지 않는 게시글)
 ===== Request Example
 include::{snippets}/{post}/update_fail_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/update_fail_test/http-response.adoc[]
 
-=== 9. 포스트 삭제 성공
+=== 8. 포스트 삭제 성공
 ===== Request Example
 include::{snippets}/{post}/delete_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/delete_test/http-response.adoc[]
 
-=== 10. 포스트 삭제 실패 (존재하지 않는 게시글)
+=== 9. 포스트 삭제 실패 (존재하지 않는 게시글)
 ===== Request Example
 include::{snippets}/{post}/delete_fail_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/delete_fail_test/http-response.adoc[]
+
+=== 10. 게시글 등록용 러닝 목록
+===== Request Example
+include::{snippets}/{runrecord}/get_run_records_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_run_records_test/http-response.adoc[]
 
 
 == 댓글 (Comment)
@@ -376,27 +412,40 @@ include::{snippets}/{notification}/get_notifications_test/http-response.adoc[]
 
 
 == 리더보드 (Leaderboard)
-=== 1. 리더보드 조회 (주간)
+=== 1. 리더보드 조회 (이번 주)
 ===== Request Example
 include::{snippets}/{leaderboard}/get_leader_boards_week_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{leaderboard}/get_leader_boards_week_test/http-response.adoc[]
 
-=== 2. 리더보드 조회 (월간)
+=== 2. 리더보드 조회 (지난 주)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_before_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_before_test/http-response.adoc[]
+
+=== 3. 리더보드 조회 (이번 월)
 ===== Request Example
 include::{snippets}/{leaderboard}/get_leader_boards_mouth_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{leaderboard}/get_leader_boards_mouth_test/http-response.adoc[]
 
-=== 3. 리더보드 조회 (연간)
+=== 4. 리더보드 조회 (지난 월)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_before_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_before_test/http-response.adoc[]
+
+=== 5. 리더보드 조회 (연간)
 ===== Request Example
 include::{snippets}/{leaderboard}/get_leader_boards_year_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{leaderboard}/get_leader_boards_year_test/http-response.adoc[]
-
 
 == 친구 요청 (Friend Invite)
 === 1. 친구 요청 성공
@@ -609,3 +658,16 @@ include::{snippets}/{challenge}/get_challenge_leader_board_test/http-request.ado
 
 ===== Response Example
 include::{snippets}/{challenge}/get_challenge_leader_board_test/http-response.adoc[]
+
+
+== S3 파일 업로드 (S3)
+
+=== 1. 파일 업로드용 Pre-signed URL 생성
+클라이언트(Flutter)가 S3에 파일을 직접 업로드하기 전에, 업로드 권한이 담긴 임시 URL을 발급받는 API입니다.
+응답으로 받은 URL에 HTTP PUT 메서드로 실제 파일(binary)을 전송하여 업로드를 완료합니다.
+
+===== Request Example
+include::{snippets}/{s3}/get_presigned_url_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{s3}/get_presigned_url_test/http-response.adoc[]

@@ -57,7 +57,6 @@ public class UserService {
                     .loginId(LoginIdUtil.extractProvider(oAuthProfile.getIss()) + "_" + oAuthProfile.getSub())
                     .password(UUID.randomUUID().toString())
                     .username(oAuthProfile.getNickname())
-                    .email(null)
                     .profileUrl(oAuthProfile.getPicture())
                     .runLevel(runLevelPS)
                     .userType(UserTypeEnum.GENERAL)

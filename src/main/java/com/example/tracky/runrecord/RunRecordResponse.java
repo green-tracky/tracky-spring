@@ -249,4 +249,17 @@ public class RunRecordResponse {
         }
     }
 
+    @Data
+    public static class SimpleDTO {
+        private Integer id;
+        private String title;
+        private LocalDateTime createdAt;
+
+        public SimpleDTO(RunRecord runRecord) {
+            this.id = runRecord.getId();
+            this.title = runRecord.getTitle();
+            this.createdAt = runRecord.getCreatedAt();
+        }
+    }
+
 }
