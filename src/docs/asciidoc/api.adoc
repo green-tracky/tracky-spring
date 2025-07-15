@@ -167,13 +167,33 @@ include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-request.a
 ===== Response Example
 include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-response.adoc[]
 
-=== 7. 최근 활동 목록 조회 -
+=== 7. 최근 활동 목록 조회 - 최장 거리 순
 ===== Request Example
-include::{snippets}/{runrecord}/get_activities_recent__test/http-request.adoc[]
+include::{snippets}/{runrecord}/get_activities_recent_distance_desc_test/http-request.adoc[]
 
 ===== Response Example
-include::{snippets}/{runrecord}/get_activities_recent__test/http-response.adoc[]
+include::{snippets}/{runrecord}/get_activities_recent_distance_desc_test/http-response.adoc[]
 
+=== 8. 최근 활동 목록 조회 - 최단 거리 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_asc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_asc_test/http-response.adoc[]
+
+=== 9. 최근 활동 목록 조회 - 최저 페이스 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_desc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_desc_test/http-response.adoc[]
+
+=== 10. 최근 활동 목록 조회 - 최고 페이스 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-response.adoc[]
 
 == 런 레벨 (Run Level)
 === 1. 런 레벨 목록 및 진행도 조회
