@@ -3,6 +3,7 @@ package com.example.tracky._core.error;
 import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.*;
 import com.example.tracky._core.utils.Resp;
+import io.sentry.Sentry;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,17 +41,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ExceptionApi500.class)
-    public ResponseEntity<?> exApi500(ExceptionApi404 e) {
-        log.warn(e.getMessage());
+    public ResponseEntity<?> exApi500(ExceptionApi500 e) {
+        log.error("지정된 서버 오류 발생: {}", e.getMessage());
+        Sentry.captureException(e);
         return Resp.fail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> exUnKnown(Exception e) {
-        log.error(e.getMessage());
+        log.error("알 수 없는 오류 발생: {}", e.getMessage());
         log.error("스택 트레이스 시작");
         e.printStackTrace();
         log.error("스택 트레이스 끝");
+        Sentry.captureException(e);
         return Resp.fail(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCodeEnum.INTERNAL_SERVER_ERROR.getMessage());
     }
 
