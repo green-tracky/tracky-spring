@@ -6,8 +6,10 @@ import com.example.tracky.community.challenges.dto.ChallengeInviteRequest;
 import com.example.tracky.community.challenges.dto.ChallengeInviteResponse;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class ChallengeInviteController {
 
 
     @PostMapping("/community/challenges/{id}/invite")
-    public ResponseEntity<?> challengesInvite(@PathVariable("id") Integer id, @RequestBody ChallengeInviteRequest.InviteRequestDTO reqDTO) {
+    public ResponseEntity<?> challengesInvite(@PathVariable("id") Integer id, @Valid @RequestBody ChallengeInviteRequest.InviteRequestDTO reqDTO, Errors errors) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
         List<ChallengeInviteResponse.saveDTO> respDTO = challengeInviteService.challengesInvite(id, reqDTO, sessionProfile);

@@ -4,8 +4,10 @@ import com.example.tracky._core.constants.SessionKeys;
 import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,18 +32,18 @@ public class CommentController {
         return Resp.ok(respDTO);
     }
 
-    @PostMapping("/community/posts/comments")
-    public ResponseEntity<?> save(@RequestBody CommentRequest.SaveDTO reqDTO) {
+    @PostMapping("/community/posts/{postId}/comments")
+    public ResponseEntity<?> save(@PathVariable Integer postId, @Valid @RequestBody CommentRequest.SaveDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        CommentResponse.SaveDTO respDTO = commentService.save(reqDTO, sessionProfile);
+        CommentResponse.SaveDTO respDTO = commentService.save(postId, reqDTO, sessionProfile);
 
         return Resp.ok(respDTO);
     }
 
     @PutMapping("/community/posts/{postId}/comments/{commentId}")
-    public ResponseEntity<?> update(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId, @RequestBody CommentRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable("commentId") Integer commentId, @Valid @RequestBody CommentRequest.UpdateDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -50,7 +52,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/community/posts/{postId}/comments/{commentId}")
-    public ResponseEntity<?> delete(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId) {
+    public ResponseEntity<?> delete(@PathVariable("commentId") Integer commentId) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

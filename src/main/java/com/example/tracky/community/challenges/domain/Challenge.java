@@ -2,6 +2,7 @@ package com.example.tracky.community.challenges.domain;
 
 import com.example.tracky._core.enums.ChallengeTypeEnum;
 import com.example.tracky._core.enums.PeriodTypeEnum;
+import com.example.tracky.community.challenges.dto.ChallengeRequest;
 import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * <pre>
@@ -47,12 +49,14 @@ public class Challenge {
     @ColumnDefault("true")
     private Boolean isInProgress; // 진행 상태. true -> 진행중, false -> 종료
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ChallengeTypeEnum type; // PUBLIC, PRIVATE
-    private String imageUrl; // 챌린지 이미지
+    private Integer imgIndex; // 챌린지 이미지 인덱스
     private Integer challengeYear; // 년도
     private Integer challengeMonth; // 월
     private Integer weekOfMonth; // 주차 (1주차, 2주차)
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PeriodTypeEnum periodType; // 주간 or 월간
 
     @CreationTimestamp
@@ -61,12 +65,11 @@ public class Challenge {
     @UpdateTimestamp
     private LocalDateTime updatedAt; // 챌린지 수정 시간
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) // jpa 영속성 관리 null 불가
-    @JoinColumn(nullable = false) // db 제약조건
+    @ManyToOne(fetch = FetchType.LAZY)
     private User creator; // 생성자
 
     @Builder
-    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, String imageUrl, Integer challengeYear, Integer challengeMonth, Integer weekOfMonth, PeriodTypeEnum periodType, User creator) {
+    public Challenge(Integer id, String name, String sub, String description, LocalDateTime startDate, LocalDateTime endDate, Integer targetDistance, Boolean isInProgress, ChallengeTypeEnum type, Integer imgIndex, Integer challengeYear, Integer challengeMonth, Integer weekOfMonth, PeriodTypeEnum periodType, User creator) {
         this.id = id;
         this.name = name;
         this.sub = sub;
@@ -76,7 +79,7 @@ public class Challenge {
         this.targetDistance = targetDistance;
         this.isInProgress = isInProgress;
         this.type = type;
-        this.imageUrl = imageUrl;
+        this.imgIndex = imgIndex;
         this.challengeYear = challengeYear;
         this.challengeMonth = challengeMonth;
         this.weekOfMonth = weekOfMonth;
@@ -91,4 +94,7 @@ public class Challenge {
         this.isInProgress = false;
     }
 
+    public void updateName(ChallengeRequest.UpdateDTO reqDTO) {
+        this.name = Objects.requireNonNullElse(reqDTO.getName(), this.name);
+    }
 }

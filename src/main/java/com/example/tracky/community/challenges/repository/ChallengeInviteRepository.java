@@ -1,6 +1,7 @@
 package com.example.tracky.community.challenges.repository;
 
 import com.example.tracky._core.enums.ErrorCodeEnum;
+import com.example.tracky._core.enums.InviteStatusEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky.community.challenges.domain.ChallengeInvite;
 import jakarta.persistence.EntityManager;
@@ -87,8 +88,9 @@ public class ChallengeInviteRepository {
      * @return 챌린지 초대 리스트
      */
     public List<ChallengeInvite> findAllByToUserIdJoin(Integer userid) {
-        Query query = em.createQuery("select c from ChallengeInvite c join fetch c.fromUser where c.toUser.id = :id");
+        Query query = em.createQuery("select ci from ChallengeInvite ci join fetch ci.fromUser where ci.toUser.id = :id and ci.status = :status");
         query.setParameter("id", userid);
+        query.setParameter("status", InviteStatusEnum.PENDING);
         List<ChallengeInvite> inviteList = query.getResultList();
         return inviteList;
     }

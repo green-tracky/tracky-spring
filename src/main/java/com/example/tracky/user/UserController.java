@@ -4,8 +4,10 @@ import com.example.tracky._core.constants.SessionKeys;
 import com.example.tracky._core.utils.Resp;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,13 +18,14 @@ public class UserController {
     private final HttpSession session;
 
     @PostMapping("/api/oauth/kakao/login")
-    public ResponseEntity<?> kakaoLogin(@RequestBody String idToken) {
-        UserResponse.IdTokenDTO respDTO = userService.kakaoLogin(idToken);
+    public ResponseEntity<?> kakaoLogin(@Valid @RequestBody UserRequest.IdTokenDTO reqDTO, Errors errors) {
+
+        UserResponse.IdTokenDTO respDTO = userService.kakaoLogin(reqDTO);
         return Resp.ok(respDTO);
     }
 
     @PutMapping("/s/api/users/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody UserRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody UserRequest.UpdateDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -49,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/s/api/users/{id}/fcm-token")
-    public ResponseEntity<?> updateFCMToken(@PathVariable Integer id, @RequestBody UserRequest.FCMDTO reqDTO) {
+    public ResponseEntity<?> updateFCMToken(@PathVariable Integer id, @Valid @RequestBody UserRequest.FCMDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

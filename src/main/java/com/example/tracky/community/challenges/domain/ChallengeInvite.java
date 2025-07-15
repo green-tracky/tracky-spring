@@ -15,7 +15,7 @@ import static com.example.tracky._core.enums.ErrorCodeEnum.INVALID_INVITE_RESPON
 
 @Getter
 @Table(
-        name = "user_challenge_tb",
+        name = "challenge_invite_tb",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "UK_challenge_invite",
@@ -27,8 +27,9 @@ public class ChallengeInvite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private InviteStatusEnum status; // 대기/수락/거절
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

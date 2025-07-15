@@ -10,6 +10,11 @@ package com.example.tracky._core.enums;
 public enum ErrorCodeEnum {
 
     /**
+     * 400 Bad Request - fileName 파라미터는 필수입니다.
+     */
+    MISSING_FILE_NAME_PARAMETER(400, "fileName 파라미터는 필수입니다."),
+
+    /**
      * 400 Bad Request - 유효하지 않은 리워드 값입니다.
      */
     INVALID_INVITE_STATUS(400, "유효하지 않은 초대 상태입니다"),

@@ -1,7 +1,9 @@
 package com.example.tracky;
 
+import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.kakaojwt.RSAUtil;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -32,6 +36,20 @@ public abstract class MyRestDoc {
         this.document = MockMvcRestDocumentation.document("{class-name}/{method-name}",
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()));
+    }
+
+    // 테스트 전에 TimeValue의 시간을 특정 시점으로 고정
+    @BeforeEach
+    void setTime() {
+        // TimeValue의 내부 시간을 테스트에 맞게 조작 (필요하다면)
+        // 예를 들어, TimeValue 클래스에 테스트용 setter를 추가하여 시간을 설정할 수 있습니다.
+        TimeValue.setTestTime(LocalDateTime.of(2025, 6, 23, 0, 0, 0));
+    }
+
+    @AfterEach
+    void clearTime() {
+        // 테스트가 끝나면 설정된 시간을 초기화하여 다른 테스트에 영향을 주지 않도록 합니다.
+        TimeValue.clearTestTime();
     }
 
     // mock 으로 주입 받는 가짜 검증 유틸 클래스

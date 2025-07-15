@@ -37,7 +37,7 @@ public class LikeController {
     }
 
     @DeleteMapping("/community/posts/{postId}/likes/{likeId}")
-    public ResponseEntity<?> dislikePost(@PathVariable("postId") Integer postId, @PathVariable("likeId") Integer likeId) {
+    public ResponseEntity<?> dislikePost(@PathVariable("likeId") Integer likeId) {
 
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -47,7 +47,7 @@ public class LikeController {
     }
 
     @DeleteMapping("/community/comments/{commentId}/likes/{likeId}")
-    public ResponseEntity<?> dislikeComment(@PathVariable("commentId") Integer commentId, @PathVariable("likeId") Integer likeId) {
+    public ResponseEntity<?> dislikeComment(@PathVariable("likeId") Integer likeId) {
 
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

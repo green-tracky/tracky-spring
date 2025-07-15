@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,6 +71,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.comments[0].children").isArray());
         actions.andExpect(jsonPath("$.data.comments[0].children").isEmpty());
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -93,6 +97,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -101,8 +108,8 @@ public class CommentControllerTest extends MyRestDoc {
     void save_test() throws Exception {
 
         // given
+        Integer postId = 1;
         CommentRequest.SaveDTO reqDTO = new CommentRequest.SaveDTO();
-        reqDTO.setPostId(1);
         reqDTO.setContent("내용입니다");
 
         String requestBody = om.writeValueAsString(reqDTO);
@@ -112,7 +119,7 @@ public class CommentControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/posts/comments")
+                        .post("/s/api/community/posts/{postId}/comments", postId)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
@@ -134,14 +141,17 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.content").value("내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value(Matchers.nullValue()));
         actions.andExpect(jsonPath("$.data.createdAt").isNotEmpty());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
     @DisplayName("댓글 쓰기 실패 - 존재하지 않는 게시글")
     void save_fail_test() throws Exception {
         // given
+        Integer postId = 99;
         CommentRequest.SaveDTO reqDTO = new CommentRequest.SaveDTO();
-        reqDTO.setPostId(999); // 존재하지 않는 게시글 ID
         reqDTO.setContent("댓글입니다");
 
         String requestBody = om.writeValueAsString(reqDTO);
@@ -150,7 +160,7 @@ public class CommentControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/community/posts/comments")
+                        .post("/s/api/community/posts/{postId}/comments", postId)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + fakeToken)
@@ -165,6 +175,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 게시글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -205,6 +218,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.content").value("수정된 내용입니다"));
         actions.andExpect(jsonPath("$.data.parentId").value((Object) null));
         actions.andExpect(jsonPath("$.data.updatedAt").isNotEmpty());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -238,6 +254,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -264,6 +283,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("성공"));
         actions.andExpect(jsonPath("$.data").value((Object) null));
 
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
     }
 
     @Test
@@ -289,6 +311,9 @@ public class CommentControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.status").value(404));
         actions.andExpect(jsonPath("$.msg").value("해당 댓글을 찾을 수 없습니다"));
         actions.andExpect(jsonPath("$.data").doesNotExist());
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 

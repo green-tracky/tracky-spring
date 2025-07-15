@@ -1,5 +1,6 @@
 package com.example.tracky.runrecord;
 
+import com.example.tracky._core.constants.Constants;
 import com.example.tracky._core.enums.RunPlaceTypeEnum;
 import com.example.tracky.runrecord.pictures.Picture;
 import com.example.tracky.runrecord.pictures.PictureRequest;
@@ -7,9 +8,8 @@ import com.example.tracky.runrecord.runsegments.RunSegment;
 import com.example.tracky.runrecord.runsegments.RunSegmentRequest;
 import com.example.tracky.runrecord.utils.RunRecordUtil;
 import com.example.tracky.user.User;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.List;
@@ -18,15 +18,16 @@ public class RunRecordRequest {
 
     @Data
     public static class SaveDTO {
-        @NotBlank(message = "러닝 제목을 입력해주세요.")
-        @Size(max = 100, message = "제목은 최대 100자까지 입력할 수 있습니다.")
-        @Pattern(
-                regexp = "^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?\"'()\\-]*$",
-                message = "제목에 허용되지 않은 특수문자가 포함되어 있습니다."
-        )
+        @NotBlank(message = "제목은 필수 입력 항목입니다.")
+        @Size(max = Constants.TITLE_LENGTH, message = "제목은 " + Constants.TITLE_LENGTH + "자를 초과할 수 없습니다.")
         private String title;
+        @NotNull(message = "칼로리는 필수 입력 항목입니다.")
+        @PositiveOrZero(message = "칼로리는 0 이상이어야 합니다.")
         private Integer calories;
+        @NotEmpty(message = "운동 경로 데이터는 최소 하나 이상 포함되어야 합니다.")
+        @Valid // 리스트 안의 객체들을 검증하기 위해 필수!
         private List<RunSegmentRequest.DTO> segments;
+        @Valid
         private List<PictureRequest.DTO> pictures;
 
         public RunRecord toEntity(User user) {
@@ -61,10 +62,17 @@ public class RunRecordRequest {
 
     @Data
     public static class UpdateDTO {
+
+        @Size(max = Constants.TITLE_LENGTH, message = "제목은 " + Constants.TITLE_LENGTH + "자를 초과할 수 없습니다.")
         private String title;
+
+        @Size(max = Constants.MEMO_LENGTH, message = "메모는 " + Constants.MEMO_LENGTH + "자를 초과할 수 없습니다.")
         private String memo;
-        private Integer intensity; // 러닝 강도
-        private RunPlaceTypeEnum place; // 러닝 장소
-        private List<PictureRequest.DTO> pictures; // 수정된 이미지 목록
+
+        @Min(value = 1, message = "운동 강도는 1 이상이어야 합니다.")
+        @Max(value = 10, message = "운동 강도는 10 이하이어야 합니다.")
+        private Integer intensity; // 러닝 강도 1~10
+
+        private RunPlaceTypeEnum place; // 러닝 장소 도로|산길|트랙|null
     }
 }

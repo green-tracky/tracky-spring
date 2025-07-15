@@ -78,6 +78,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     // fcm 라이브러리
     implementation 'com.google.firebase:firebase-admin:9.5.0'
+
+    // AWS SDK for S3: S3 관련 기능을 사용하기 위한 라이브러리입니다. AWS SDK v1
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.787")
 }
 
 // plain.jar 생성 금지
@@ -88,6 +91,8 @@ jar {
 
 test {
     systemProperty "file.encoding", "UTF-8"
+    // JVM에서 테스트를 실행할 때 사용할 기본 시간대를 'Asia/Seoul'로 설정합니다.
+    systemProperty 'user.timezone', 'Asia/Seoul'
 }
 
 ext {

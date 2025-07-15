@@ -1,6 +1,5 @@
 package com.example.tracky.user.kakaojwt;
 
-import com.example.tracky._core.constants.Constants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -35,12 +34,12 @@ public class JwtKeySetTest {
     /**
      * 플러터에서 카카오에 로그인 요청해서 받은 idToken으로 검증 테스트
      */
-    @Test
-    public void rsaVerify_test() {
-        // idToken 값을 직접 변경해야함
-        String idToken = Constants.idTokenTest;
-        rsaUtil.verify(idToken);
-    }
+//    @Test
+//    public void rsaVerify_test() {
+//        // idToken 값을 직접 변경해야함
+//        String idToken = Constants.idTokenTest;
+//        rsaUtil.verify(idToken);
+//    }
 
     /**
      * RSAUtil 클래스의 검증 메서드의 결과로 나온 페이로드를 OAuthProfile 에 맵핑

@@ -53,7 +53,7 @@ public class NotificationService {
         List<NotificationResponse.NotificationBundleDTO> notificationDTO = new ArrayList<>();
 
         // 친구 요청 알람 조회
-        List<FriendInvite> friendInvitesPS = friendInviteRepository.findAllByUserId(userPS.getId());
+        List<FriendInvite> friendInvitesPS = friendInviteRepository.findAllByToUserIdJoin(userPS.getId());
         for (FriendInvite friendDTO : friendInvitesPS) {
             notificationDTO.add(new NotificationResponse.NotificationBundleDTO(friendDTO));
         }

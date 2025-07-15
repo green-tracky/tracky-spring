@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,10 +35,14 @@ public class RunRecord {
     @ColumnDefault("0")
     @Max(value = 10, message = "러닝 강도는 10을 초과할 수 없습니다.")
     private Integer intensity; // 러닝 강도 (1~10). 기본값 0
+    @Enumerated(EnumType.STRING)
     private RunPlaceTypeEnum place; // 장소 (도로|트랙|산길). 이넘 만들어뒀으니 사용. 기본값 null
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
@@ -53,7 +58,7 @@ public class RunRecord {
     private List<Picture> pictures = new ArrayList<>(); // 자식 사진들
 
     @Builder
-    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceTypeEnum place, User user, LocalDateTime createdAt) {
+    public RunRecord(Integer id, String title, Integer totalDistanceMeters, Integer totalDurationSeconds, Integer calories, String memo, Integer avgPace, Integer bestPace, Integer intensity, RunPlaceTypeEnum place, User user) {
         this.id = id;
         this.title = title;
         this.totalDistanceMeters = totalDistanceMeters;
@@ -65,7 +70,6 @@ public class RunRecord {
         this.intensity = intensity;
         this.place = place;
         this.user = user;
-        this.createdAt = createdAt;
     }
 
     // 기본생성자 사용금지
@@ -84,12 +88,9 @@ public class RunRecord {
      * @param reqDTO
      */
     public void update(RunRecordRequest.UpdateDTO reqDTO) {
-        this.title = reqDTO.getTitle();
-        this.memo = reqDTO.getMemo();
-        this.intensity = reqDTO.getIntensity();
-        this.place = reqDTO.getPlace();
+        this.title = reqDTO.getTitle() == null ? this.title : reqDTO.getTitle();
+        this.memo = reqDTO.getMemo() == null ? this.memo : reqDTO.getMemo();
+        this.intensity = reqDTO.getIntensity() == null ? this.intensity : reqDTO.getIntensity();
+        this.place = reqDTO.getPlace() == null ? this.place : reqDTO.getPlace();
     }
-
-    // 사진 변경 로직 나중에 추가
-
 }

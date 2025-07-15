@@ -1,0 +1,673 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:user: user-controller-test
+:runrecord: run-record-controller-test
+:runlevel: run-level-controller-test
+:runbadge: run-badge-controller-test
+:post: post-controller-test
+:comment: comment-controller-test
+:like: like-controller-test
+:notification: notification-controller-test
+:leaderboard: leaderboard-controller-test
+:friendinvite: friend-invite-controller-test
+:friend: friend-controller-test
+:challengejoin: challenge-join-controller-test
+:challengeinvite: challenge-invite-controller-test
+:challenge: challenge-controller-test
+:s3: s3-controller-test
+
+= REST API 문서
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+== 유저 (User)
+=== 1. 카카오 로그인
+===== Request Example
+include::{snippets}/{user}/kakao_login_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/kakao_login_test/http-response.adoc[]
+
+=== 2. 유저 정보 수정 성공
+===== Request Example
+include::{snippets}/{user}/update_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/update_test/http-response.adoc[]
+
+=== 3. 유저 정보 수정 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{user}/update_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/update_fail_test/http-response.adoc[]
+
+=== 4. 유저 정보 삭제 성공
+===== Request Example
+include::{snippets}/{user}/delete_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/delete_test/http-response.adoc[]
+
+=== 5. 유저 정보 삭제 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{user}/delete_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/delete_fail_test/http-response.adoc[]
+
+=== 6. 유저 상세 조회 성공
+===== Request Example
+include::{snippets}/{user}/get_user_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/get_user_test/http-response.adoc[]
+
+=== 7. 유저 상세 조회 실패 (사용자 없음)
+===== Request Example
+include::{snippets}/{user}/get_user_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/get_user_fail_test/http-response.adoc[]
+
+
+== 러닝 기록 (Run Record)
+=== 1. 러닝 기록 저장 성공
+===== Request Example
+include::{snippets}/{runrecord}/save_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/save_test/http-response.adoc[]
+
+=== 2. 러닝 기록 저장 실패 (제목 없음)
+===== Request Example
+include::{snippets}/{runrecord}/save_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/save_fail_test/http-response.adoc[]
+
+=== 3. 러닝 기록 상세 조회 성공
+===== Request Example
+include::{snippets}/{runrecord}/get_run_record_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_run_record_test/http-response.adoc[]
+
+=== 4. 러닝 기록 수정 성공
+===== Request Example
+include::{snippets}/{runrecord}/update_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/update_test/http-response.adoc[]
+
+=== 5. 러닝 기록 수정 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{runrecord}/update_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/update_fail_test/http-response.adoc[]
+
+=== 6. 러닝 기록 삭제 성공
+===== Request Example
+include::{snippets}/{runrecord}/delete_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/delete_test/http-response.adoc[]
+
+=== 7. 러닝 기록 삭제 실패 (기록 없음)
+===== Request Example
+include::{snippets}/{runrecord}/delete_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/delete_fail_test/http-response.adoc[]
+
+== 활동 (Activities)
+=== 1. 활동 요약 조회 (주간)
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_week_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_week_test/http-response.adoc[]
+
+=== 2. 활동 요약 조회 (월간)
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_month_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_month_test/http-response.adoc[]
+
+=== 3. 활동 요약 조회 (연간)
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_year_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_year_test/http-response.adoc[]
+
+=== 4. 활동 요약 조회 (전체)
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_all_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_all_test/http-response.adoc[]
+
+=== 5. 최근 활동 목록 조회 - 최신순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_test/http-response.adoc[]
+
+=== 6. 최근 활동 목록 조회 - 오래된 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-response.adoc[]
+
+=== 7. 최근 활동 목록 조회 - 최장 거리 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_desc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_desc_test/http-response.adoc[]
+
+=== 8. 최근 활동 목록 조회 - 최단 거리 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_asc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_distance_asc_test/http-response.adoc[]
+
+=== 9. 최근 활동 목록 조회 - 최저 페이스 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_desc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_desc_test/http-response.adoc[]
+
+=== 10. 최근 활동 목록 조회 - 최고 페이스 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-response.adoc[]
+
+
+== 런 레벨 (Run Level)
+=== 1. 런 레벨 목록 및 진행도 조회
+===== Request Example
+include::{snippets}/{runlevel}/get_run_levels_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runlevel}/get_run_levels_test/http-response.adoc[]
+
+
+== 런 뱃지 (Run Badge)
+=== 1. 런 뱃지 목록 조회
+===== Request Example
+include::{snippets}/{runbadge}/get_run_badges_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runbadge}/get_run_badges_test/http-response.adoc[]
+
+
+== 포스트 (Post)
+=== 1. 포스트 목록 조회 성공
+===== Request Example
+include::{snippets}/{post}/get_posts_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/get_posts_test/http-response.adoc[]
+
+=== 2. 포스트 쓰기 성공
+===== Request Example
+include::{snippets}/{post}/save_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/save_test/http-response.adoc[]
+
+=== 3. 포스트 쓰기 실패 (존재하지 않는 러닝 기록 ID)
+===== Request Example
+include::{snippets}/{post}/save_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/save_fail_test/http-response.adoc[]
+
+=== 4. 포스트 상세 조회 성공
+===== Request Example
+include::{snippets}/{post}/get_detail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/get_detail_test/http-response.adoc[]
+
+=== 5. 포스트 상세 조회 실패 (존재하지 않는 게시글)
+===== Request Example
+include::{snippets}/{post}/get_detail_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/get_detail_fail_test/http-response.adoc[]
+
+=== 6. 포스트 수정 성공
+===== Request Example
+include::{snippets}/{post}/update_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/update_test/http-response.adoc[]
+
+=== 7. 포스트 수정 실패 (존재하지 않는 게시글)
+===== Request Example
+include::{snippets}/{post}/update_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/update_fail_test/http-response.adoc[]
+
+=== 8. 포스트 삭제 성공
+===== Request Example
+include::{snippets}/{post}/delete_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/delete_test/http-response.adoc[]
+
+=== 9. 포스트 삭제 실패 (존재하지 않는 게시글)
+===== Request Example
+include::{snippets}/{post}/delete_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{post}/delete_fail_test/http-response.adoc[]
+
+=== 10. 게시글 등록용 러닝 목록
+===== Request Example
+include::{snippets}/{runrecord}/get_run_records_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_run_records_test/http-response.adoc[]
+
+
+== 댓글 (Comment)
+=== 1. 댓글 조회 성공
+===== Request Example
+include::{snippets}/{comment}/get_comments_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/get_comments_test/http-response.adoc[]
+
+=== 2. 댓글 조회 실패 (게시글 없음)
+===== Request Example
+include::{snippets}/{comment}/get_comments_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/get_comments_fail_test/http-response.adoc[]
+
+=== 3. 댓글 쓰기 성공
+===== Request Example
+include::{snippets}/{comment}/save_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/save_test/http-response.adoc[]
+
+=== 4. 댓글 쓰기 실패 (게시글 없음)
+===== Request Example
+include::{snippets}/{comment}/save_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/save_fail_test/http-response.adoc[]
+
+=== 5. 댓글 수정 성공
+===== Request Example
+include::{snippets}/{comment}/update_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/update_test/http-response.adoc[]
+
+=== 6. 댓글 수정 실패 (댓글 없음)
+===== Request Example
+include::{snippets}/{comment}/update_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/update_fail_test/http-response.adoc[]
+
+=== 7. 댓글 삭제 성공
+===== Request Example
+include::{snippets}/{comment}/delete_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/delete_test/http-response.adoc[]
+
+=== 8. 댓글 삭제 실패 (댓글 없음)
+===== Request Example
+include::{snippets}/{comment}/delete_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{comment}/delete_fail_test/http-response.adoc[]
+
+
+== 좋아요 (Like)
+=== 1. 게시글 좋아요 성공
+===== Request Example
+include::{snippets}/{like}/like_post_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/like_post_test/http-response.adoc[]
+
+=== 2. 게시글 좋아요 실패 (게시글 없음)
+===== Request Example
+include::{snippets}/{like}/like_post_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/like_post_fail_test/http-response.adoc[]
+
+=== 3. 게시글 좋아요 취소 성공
+===== Request Example
+include::{snippets}/{like}/dislike_post_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/dislike_post_test/http-response.adoc[]
+
+=== 4. 게시글 좋아요 취소 실패 (좋아요 없음)
+===== Request Example
+include::{snippets}/{like}/dislike_post_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/dislike_post_fail_test/http-response.adoc[]
+
+=== 5. 댓글 좋아요 성공
+===== Request Example
+include::{snippets}/{like}/like_comment_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/like_comment_test/http-response.adoc[]
+
+=== 6. 댓글 좋아요 실패 (댓글 없음)
+===== Request Example
+include::{snippets}/{like}/like_comment_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/like_comment_fail_test/http-response.adoc[]
+
+=== 7. 댓글 좋아요 취소 성공
+===== Request Example
+include::{snippets}/{like}/dislike_comment_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/dislike_comment_test/http-response.adoc[]
+
+=== 8. 댓글 좋아요 취소 실패 (좋아요 없음)
+===== Request Example
+include::{snippets}/{like}/dislike_comment_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{like}/dislike_comment_fail_test/http-response.adoc[]
+
+
+== 알림 (Notification)
+=== 1. 알림 목록 조회
+===== Request Example
+include::{snippets}/{notification}/get_notifications_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{notification}/get_notifications_test/http-response.adoc[]
+
+
+== 리더보드 (Leaderboard)
+=== 1. 리더보드 조회 (이번 주)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_test/http-response.adoc[]
+
+=== 2. 리더보드 조회 (지난 주)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_before_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_before_test/http-response.adoc[]
+
+=== 3. 리더보드 조회 (이번 월)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_test/http-response.adoc[]
+
+=== 4. 리더보드 조회 (지난 월)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_before_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_before_test/http-response.adoc[]
+
+=== 5. 리더보드 조회 (연간)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_year_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_year_test/http-response.adoc[]
+
+== 친구 요청 (Friend Invite)
+=== 1. 친구 요청 성공
+===== Request Example
+include::{snippets}/{friendinvite}/friend_invite_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friendinvite}/friend_invite_test/http-response.adoc[]
+
+=== 2. 친구 요청 실패 (사용자 없음)
+===== Request Example
+include::{snippets}/{friendinvite}/friend_invite_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friendinvite}/friend_invite_fail_test/http-response.adoc[]
+
+=== 3. 친구 요청 수락 성공
+===== Request Example
+include::{snippets}/{friendinvite}/friend_invite_accept_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friendinvite}/friend_invite_accept_test/http-response.adoc[]
+
+=== 4. 친구 요청 수락 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{friendinvite}/friend_invite_accept_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friendinvite}/friend_invite_accept_fail_test/http-response.adoc[]
+
+=== 5. 친구 요청 거절 성공
+===== Request Example
+include::{snippets}/{friendinvite}/friend_invite_reject_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friendinvite}/friend_invite_reject_test/http-response.adoc[]
+
+=== 6. 친구 요청 거절 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{friendinvite}/friend_invite_reject_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friendinvite}/friend_invite_reject_fail_test/http-response.adoc[]
+
+
+== 친구 (Friend)
+=== 1. 친구 검색 성공 (유저 태그)
+===== Request Example
+include::{snippets}/{friend}/get_friend_search_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friend}/get_friend_search_test/http-response.adoc[]
+
+=== 2. 친구 검색 실패 (유효하지 않은 유저 태그)
+===== Request Example
+include::{snippets}/{friend}/get_friend_search_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friend}/get_friend_search_fail_test/http-response.adoc[]
+
+=== 3. 친구 목록 조회
+===== Request Example
+include::{snippets}/{friend}/get_friend_list/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friend}/get_friend_list/http-response.adoc[]
+
+
+== 챌린지 참여 (Challenge Join)
+=== 1. 챌린지 참여 성공
+===== Request Example
+include::{snippets}/{challengejoin}/join_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengejoin}/join_test/http-response.adoc[]
+
+=== 2. 챌린지 참여 실패 (챌린지 없음)
+===== Request Example
+include::{snippets}/{challengejoin}/join_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengejoin}/join_fail_test/http-response.adoc[]
+
+=== 3. 챌린지 나가기 성공
+===== Request Example
+include::{snippets}/{challengejoin}/leave_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengejoin}/leave_test/http-response.adoc[]
+
+=== 4. 챌린지 나가기 실패 (참여하지 않은 챌린지)
+===== Request Example
+include::{snippets}/{challengejoin}/leave_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengejoin}/leave_fail_test/http-response.adoc[]
+
+
+== 챌린지 초대 (Challenge Invite)
+=== 1. 챌린지에 친구 초대 성공
+===== Request Example
+include::{snippets}/{challengeinvite}/challenges_invite_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/challenges_invite_test/http-response.adoc[]
+
+=== 2. 챌린지에 친구 초대 실패 (친구가 아님)
+===== Request Example
+include::{snippets}/{challengeinvite}/challenges_invite_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/challenges_invite_fail_test/http-response.adoc[]
+
+=== 3. 초대 가능한 친구 목록 조회 성공
+===== Request Example
+include::{snippets}/{challengeinvite}/get_available_friends_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/get_available_friends_test/http-response.adoc[]
+
+=== 4. 초대 가능한 친구 목록 조회 실패 (챌린지 미참여)
+===== Request Example
+include::{snippets}/{challengeinvite}/get_available_friends_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/get_available_friends_fail_test/http-response.adoc[]
+
+=== 5. 챌린지 초대 수락 성공
+===== Request Example
+include::{snippets}/{challengeinvite}/friend_invite_accept_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/friend_invite_accept_test/http-response.adoc[]
+
+=== 6. 챌린지 초대 수락 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{challengeinvite}/friend_invite_accept_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/friend_invite_accept_fail_test/http-response.adoc[]
+
+=== 7. 챌린지 초대 거절 성공
+===== Request Example
+include::{snippets}/{challengeinvite}/friend_invite_reject_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/friend_invite_reject_test/http-response.adoc[]
+
+=== 8. 챌린지 초대 거절 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{challengeinvite}/friend_invite_reject_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challengeinvite}/friend_invite_reject_fail_test/http-response.adoc[]
+
+
+== 챌린지 (Challenge)
+=== 1. 챌린지 목록 조회 성공
+===== Request Example
+include::{snippets}/{challenge}/get_challenges_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/get_challenges_test/http-response.adoc[]
+
+=== 2. 챌린지 상세 조회 성공
+===== Request Example
+include::{snippets}/{challenge}/get_challenge_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/get_challenge_test/http-response.adoc[]
+
+=== 3. 챌린지 상세 조회 실패 (챌린지 없음)
+===== Request Example
+include::{snippets}/{challenge}/get_challenge_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/get_challenge_fail_test/http-response.adoc[]
+
+=== 4. 사설 챌린지 생성 성공
+===== Request Example
+include::{snippets}/{challenge}/save_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/save_test/http-response.adoc[]
+
+=== 5. 사설 챌린지 생성 실패 (제목 없음)
+===== Request Example
+include::{snippets}/{challenge}/save_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/save_fail_test/http-response.adoc[]
+
+=== 6. 사설 챌린지 수정 성공
+===== Request Example
+include::{snippets}/{challenge}/update_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/update_test/http-response.adoc[]
+
+=== 7. 사설 챌린지 수정 실패 (권한 없음)
+===== Request Example
+include::{snippets}/{challenge}/update_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/update_fail_test/http-response.adoc[]
+
+=== 8. 챌린지 리더보드 조회
+===== Request Example
+include::{snippets}/{challenge}/get_challenge_leader_board_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{challenge}/get_challenge_leader_board_test/http-response.adoc[]
+
+
+== S3 파일 업로드 (S3)
+
+=== 1. 파일 업로드용 Pre-signed URL 생성
+클라이언트(Flutter)가 S3에 파일을 직접 업로드하기 전에, 업로드 권한이 담긴 임시 URL을 발급받는 API입니다.
+응답으로 받은 URL에 HTTP PUT 메서드로 실제 파일(binary)을 전송하여 업로드를 완료합니다.
+
+===== Request Example
+include::{snippets}/{s3}/get_presigned_url_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{s3}/get_presigned_url_test/http-response.adoc[]

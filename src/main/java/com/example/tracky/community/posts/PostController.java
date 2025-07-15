@@ -48,7 +48,7 @@ public class PostController {
     }
 
     @PutMapping("/community/posts/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody PostRequest.UpdateDTO reqDTO) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody PostRequest.UpdateDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -58,7 +58,7 @@ public class PostController {
     }
 
     @GetMapping("/community/posts/{id}")
-    public ResponseEntity<?> getPostDetail(@PathVariable int id) {
+    public ResponseEntity<?> getPostDetail(@PathVariable Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
