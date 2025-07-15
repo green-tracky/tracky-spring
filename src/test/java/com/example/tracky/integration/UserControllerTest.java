@@ -62,7 +62,6 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.user.id").value(1));
         actions.andExpect(jsonPath("$.data.user.loginId").value("KAKAO_123456789"));
         actions.andExpect(jsonPath("$.data.user.username").value("ssar"));
-        actions.andExpect(jsonPath("$.data.user.email").value("ssar@example.com"));
         actions.andExpect(jsonPath("$.data.user.profileUrl").value("http://example.com/profiles/ssar.jpg"));
         actions.andExpect(jsonPath("$.data.user.height").value(175.0));
         actions.andExpect(jsonPath("$.data.user.weight").value(70.0));
@@ -259,7 +258,6 @@ class UserControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.loginId").value("KAKAO_123456789"));
         actions.andExpect(jsonPath("$.data.id").value(1));
         actions.andExpect(jsonPath("$.data.username").value("ssar"));
-        actions.andExpect(jsonPath("$.data.email").value("ssar@example.com"));
         actions.andExpect(jsonPath("$.data.profileUrl").value("http://example.com/profiles/ssar.jpg"));
         actions.andExpect(jsonPath("$.data.height").value(175.0));
         actions.andExpect(jsonPath("$.data.weight").value(70.0));

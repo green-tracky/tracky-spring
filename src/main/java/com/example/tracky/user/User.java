@@ -28,7 +28,6 @@ public class User {
     private String password; // 나중을 위한 password
     @Column(nullable = false)
     private String username; // 유저 이름
-    private String email; // 유저 이메일
     private String profileUrl; // 프로필 이미지 주소
     private Double height; // 177.5(cm)
     private Double weight; // 75.5(kg)
@@ -62,12 +61,11 @@ public class User {
     private List<RunRecord> runRecords = new ArrayList<>(); // 자식 러닝들
 
     @Builder
-    public User(Integer id, String loginId, String password, String username, String email, String profileUrl, Double height, Double weight, GenderEnum gender, String location, String letter, UserTypeEnum userType, ProviderTypeEnum provider, String userTag, String fcmToken, RunLevel runLevel, List<RunRecord> runRecords) {
+    public User(Integer id, String loginId, String password, String username, String profileUrl, Double height, Double weight, GenderEnum gender, String location, String letter, UserTypeEnum userType, ProviderTypeEnum provider, String userTag, String fcmToken, RunLevel runLevel, List<RunRecord> runRecords) {
         this.id = id;
         this.loginId = loginId;
         this.password = password;
         this.username = username;
-        this.email = email;
         this.profileUrl = profileUrl;
         this.height = height;
         this.weight = weight;
@@ -102,7 +100,6 @@ public class User {
      */
     public void updateInfo(UserRequest.UpdateDTO reqDTO) {
         this.username = reqDTO.getUsername() == null ? this.username : reqDTO.getUsername();
-        this.email = reqDTO.getEmail() == null ? this.email : reqDTO.getEmail();
         this.profileUrl = reqDTO.getProfileUrl() == null ? this.profileUrl : reqDTO.getProfileUrl();
         this.height = reqDTO.getHeight() == null ? this.height : reqDTO.getHeight();
         this.weight = reqDTO.getWeight() == null ? this.weight : reqDTO.getWeight();
