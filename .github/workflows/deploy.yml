@@ -2,7 +2,7 @@ name: tracky
 on:
   push:
     branches:
-      - master
+      - dev
 
 # https://github.com/actions/setup-java
 jobs:
