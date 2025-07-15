@@ -613,11 +613,6 @@ include::{snippets}/{challenge}/get_challenge_leader_board_test/http-response.ad
 
 ===== Request Example
 include::{snippets}/{s3}/get_presigned_url_test/http-request.adoc[]
-include::{snippets}/{s3}/get_presigned_url_test/request-parameters.adoc[]
 
 ===== Response Example
 include::{snippets}/{s3}/get_presigned_url_test/http-response.adoc[]
-include::{snippets}/{s3}/get_presigned_url_test/response-fields.adoc[]
-
-===== cURL Example
-include::{snippets}/{s3}/get_presigned_url_test/curl-request.adoc[]
