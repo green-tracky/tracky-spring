@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserService userService;
     private final HttpSession session;
-    
+
     @PostMapping("/api/oauth/kakao/login")
     public ResponseEntity<?> kakaoLogin(@Valid @RequestBody UserRequest.IdTokenDTO reqDTO, Errors errors) {
 

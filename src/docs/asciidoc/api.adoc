@@ -153,12 +153,26 @@ include::{snippets}/{runrecord}/get_activities_all_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{runrecord}/get_activities_all_test/http-response.adoc[]
 
-=== 5. 최근 활동 목록 조회
+=== 5. 최근 활동 목록 조회 - 최신순
 ===== Request Example
 include::{snippets}/{runrecord}/get_activities_recent_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{runrecord}/get_activities_recent_test/http-response.adoc[]
+
+=== 6. 최근 활동 목록 조회 - 오래된 순
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent_oldest_test/http-response.adoc[]
+
+=== 7. 최근 활동 목록 조회 -
+===== Request Example
+include::{snippets}/{runrecord}/get_activities_recent__test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_activities_recent__test/http-response.adoc[]
 
 
 == 런 레벨 (Run Level)
