@@ -21,6 +21,7 @@ import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeService {
@@ -44,7 +46,7 @@ public class ChallengeService {
     /**
      * 챌린지 목록 보기
      *
-     * @param userPS
+     * @param sessionProfile
      * @return
      */
     public ChallengeResponse.MainDTO getChallenges(OAuthProfile sessionProfile) {
@@ -90,6 +92,8 @@ public class ChallengeService {
 
         // 5. 초대받은 챌린지 목록 조회
         List<ChallengeInvite> inviteChallengesPS = challengeInviteRepository.findAllToUserIdJoin(userPS.getId());
+
+        log.info("{}({})이 전체 챌린지를 조회합니다.", userPS.getUsername(), userPS.getId());
 
         // 6. 모든 재료를 MainDTO 생성자에게 전달
         return new ChallengeResponse.MainDTO(
@@ -145,6 +149,8 @@ public class ChallengeService {
             rewardMasters = rewardMasterRepository.findAllByRewardName(challengePS.getName());
         }
 
+        log.info("{}({})이 챌린지{}({})을 상세보기합니다.", userPS.getUsername(), userPS.getId(), challengePS.getName(), challengePS.getId());
+
         // 6. DTO 조립
         return new ChallengeResponse.DetailDTO(
                 challengePS,
@@ -173,6 +179,8 @@ public class ChallengeService {
                 .build();
         challengeJoinRepository.save(join);
 
+        log.info("{}({})이 챌린지{}({})를 생성했습니다.", userPS.getUsername(), userPS.getId(), challengePS.getName(), challengePS.getId());
+
         // 3. 생성된 챌린지 정보를 담은 응답 DTO를 반환
         return new ChallengeResponse.SaveDTO(challengePS);
     }
@@ -191,6 +199,8 @@ public class ChallengeService {
         }
 
         challengePS.updateName(reqDTO);
+
+        log.info("{}({})이 챌린지{}({})를 수정했습니다.", userPS.getUsername(), userPS.getId(), challengePS.getName(), challengePS.getId());
 
         return new ChallengeResponse.UpdateDTO(challengePS);
     }

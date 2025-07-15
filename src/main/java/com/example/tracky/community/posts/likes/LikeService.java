@@ -13,8 +13,10 @@ import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -42,6 +44,9 @@ public class LikeService {
         Like likePS = likeRepository.save(like);
 
         Integer likeCount = likeRepository.countByPostId(postId);
+
+        log.info("{}({})이 게시글 {}({})를 좋아요합니다. ", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
+
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
     }
 
@@ -63,6 +68,9 @@ public class LikeService {
         Like likePS = likeRepository.save(like);
 
         Integer likeCount = likeRepository.countByCommentId(commentId);
+
+        log.info("{}({})이 댓글 {}({})를 좋아요합니다. ", userPS.getUsername(), userPS.getId(), commentPS.getContent(), commentPS.getId());
+
         return new LikeResponse.SaveDTO(likePS.getId(), likeCount);
     }
 
@@ -84,6 +92,9 @@ public class LikeService {
 
         Integer likeCount = likeRepository.countByPostId(postId);
 
+        log.info("{}({})이 게시글{}번을 좋아요 취소했습니다.", userPS.getUsername(), userPS.getId(), postId);
+
+
         return new LikeResponse.DeleteDTO(likeCount);
     }
 
@@ -104,6 +115,9 @@ public class LikeService {
         likeRepository.deleteById(id);
 
         Integer likeCount = likeRepository.countByCommentId(commentId);
+
+        log.info("{}({})이 댓글{}번을 좋아요 취소했습니다.", userPS.getUsername(), userPS.getId(), commentId);
+
 
         return new LikeResponse.DeleteDTO(likeCount);
     }

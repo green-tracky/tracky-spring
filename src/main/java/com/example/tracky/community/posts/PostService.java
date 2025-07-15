@@ -17,10 +17,12 @@ import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -39,6 +41,8 @@ public class PostService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         List<Post> postsPS = postRepository.findAllJoinRunRecord();
+
+        log.info("{}({})이 게시글을 조회합니다.", userPS.getUsername(), userPS.getId());
 
         return postsPS.stream()
                 .map(post -> {
@@ -76,6 +80,8 @@ public class PostService {
         // 게시글 저장
         Post postPS = postRepository.save(post);
 
+
+        log.info("{}({})이 {}({})를 저장합니다.", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
         // 응답 DTO 변환
         return new PostResponse.SaveDTO(postPS);
     }
@@ -97,7 +103,7 @@ public class PostService {
 
         // updatedAt 적용
         userRepository.save(userPS);
-
+        log.info("{}({})이 {}({})를 수정합니다.", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
         return new PostResponse.UpdateDTO(postPS);
     }
 
@@ -118,6 +124,7 @@ public class PostService {
         // 좋아요 삭제
         likeService.deleteByPostId(id);
 
+        log.info("{}({})이 {}({})를 삭제했습니다.", userPS.getUsername(), userPS.getId(), postPS.getComments(), postPS.getId());
         postRepository.delete(postPS);
     }
 
@@ -139,6 +146,7 @@ public class PostService {
         // ✅ 댓글 + 대댓글 조회
         CommentResponse.CommentsList commentsList = commentService.getCommentsWithReplies(postId, 1);
 
+        log.info("{}({})이 {}({})를 상세보기합니다.", userPS.getUsername(), userPS.getId(), post.getComments(), post.getId());
         return new PostResponse.DetailDTO(post, commentsList, likeCount, commentCount, isLiked, userPS);
     }
 

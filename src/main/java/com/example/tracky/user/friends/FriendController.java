@@ -25,8 +25,9 @@ public class FriendController {
 
     @GetMapping("/friends/search")
     public ResponseEntity<?> getFriendSearch(@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "유저 태그는 영문, 숫자만 사용할 수 있습니다.") @RequestParam("user-tag") String userTag) {
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
-        List<FriendResponse.SearchDTO> respDTO = friendService.getFriendSearch(userTag);
+        List<FriendResponse.SearchDTO> respDTO = friendService.getFriendSearch(userTag, sessionProfile);
         return Resp.ok(respDTO);
     }
 

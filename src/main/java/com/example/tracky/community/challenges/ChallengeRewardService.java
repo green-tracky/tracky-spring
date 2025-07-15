@@ -13,12 +13,14 @@ import com.example.tracky.community.challenges.repository.UserChallengeRewardRep
 import com.example.tracky.runrecord.RunRecordRepository;
 import com.example.tracky.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeRewardService {
@@ -97,6 +99,9 @@ public class ChallengeRewardService {
                 newlyAwardedRewards.add(savedReward);
             }
         }
+
+        log.info("챌린지 조건을 충족한 사람들에게 보상을 부여했습니다.");
+
         return newlyAwardedRewards;
     }
 }

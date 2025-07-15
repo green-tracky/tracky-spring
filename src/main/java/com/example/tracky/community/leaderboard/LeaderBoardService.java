@@ -15,6 +15,7 @@ import com.example.tracky.user.friends.FriendRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LeaderBoardService {
@@ -164,6 +166,8 @@ public class LeaderBoardService {
 
         LeaderBoardsResponse.MyRankingDTO myRanking = new LeaderBoardsResponse.MyRankingDTO(myDistance, myRank);
 
+        log.info("{}({})이 친구 리더보드를 조회합니다.", userPS.getUsername(), userPS.getId());
+
         return new LeaderBoardsResponse.LeaderBoardDTO(myRanking, rankingList);
     }
 
@@ -227,6 +231,8 @@ public class LeaderBoardService {
             rank++;
         }
         rankingList = newRankingList;
+
+        log.info("{}({})이 {}({}) 챌린지의 리더보드를 조회합니다.", userPS.getUsername(), userPS.getId(), challengeJoinPS.getChallenge().getName(), challengeJoinPS.getChallenge().getId());
 
         return new LeaderBoardsResponse.ChallengeLeaderBoardDTO(rankingList);
     }

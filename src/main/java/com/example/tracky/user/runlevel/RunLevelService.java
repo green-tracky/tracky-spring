@@ -64,6 +64,8 @@ public class RunLevelService {
         // 3. 유저의 누적 거리 조회
         Integer totalDistance = runRecordRepository.findTotalDistanceByUserId(userPS.getId());
 
+        log.info("{}({})이 레벨 목록을 조회합니다.", userPS.getUsername(), userPS.getId());
+
         return new RunLevelResponse.ListDTO(userPS.getRunLevel(), runLevelsPS, totalDistance);
     }
 }
