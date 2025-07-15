@@ -404,27 +404,40 @@ include::{snippets}/{notification}/get_notifications_test/http-response.adoc[]
 
 
 == 리더보드 (Leaderboard)
-=== 1. 리더보드 조회 (주간)
+=== 1. 리더보드 조회 (이번 주)
 ===== Request Example
 include::{snippets}/{leaderboard}/get_leader_boards_week_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{leaderboard}/get_leader_boards_week_test/http-response.adoc[]
 
-=== 2. 리더보드 조회 (월간)
+=== 2. 리더보드 조회 (지난 주)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_before_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_week_before_test/http-response.adoc[]
+
+=== 3. 리더보드 조회 (이번 월)
 ===== Request Example
 include::{snippets}/{leaderboard}/get_leader_boards_mouth_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{leaderboard}/get_leader_boards_mouth_test/http-response.adoc[]
 
-=== 3. 리더보드 조회 (연간)
+=== 4. 리더보드 조회 (지난 월)
+===== Request Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_before_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leaderboard}/get_leader_boards_mouth_before_test/http-response.adoc[]
+
+=== 5. 리더보드 조회 (연간)
 ===== Request Example
 include::{snippets}/{leaderboard}/get_leader_boards_year_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{leaderboard}/get_leader_boards_year_test/http-response.adoc[]
-
 
 == 친구 요청 (Friend Invite)
 === 1. 친구 요청 성공
