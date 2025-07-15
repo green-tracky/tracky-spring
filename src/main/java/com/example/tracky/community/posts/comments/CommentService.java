@@ -12,10 +12,12 @@ import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -53,6 +55,8 @@ public class CommentService {
                 .map(parent -> new CommentResponse.ParentDTO(parent))
                 .toList();
 
+        log.info("대댓글을 조회합니다.");
+
         return new CommentResponse.CommentsList(page, totalCount, parentCount, parentDTOs);
     }
 
@@ -69,6 +73,8 @@ public class CommentService {
         commentPS.update(reqDTO);
 
         commentRepository.save(commentPS);
+
+        log.info("{}({})이 댓글({})을 수정합니다.", userPS.getUsername(), userPS.getId(), commentPS.getId());
 
         return new CommentResponse.UpdateDTO(commentPS);
     }
@@ -91,6 +97,8 @@ public class CommentService {
         Comment comment = reqDTO.toEntity(userPS, postPS, parentPS);
         Comment commentPS = commentRepository.save(comment);
 
+        log.info("{}({})이 댓글({})을 저장합니다.", userPS.getUsername(), userPS.getId(), commentPS.getId());
+
         return new CommentResponse.SaveDTO(commentPS);
 
     }
@@ -109,6 +117,8 @@ public class CommentService {
         likeService.deleteByCommentId(id);
 
         commentRepository.delete(comment);
+
+        log.info("{}({})이 댓글({})을 삭제합니다", userPS.getUsername(), userPS.getId(), comment.getId());
     }
 
     /**

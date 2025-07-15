@@ -69,6 +69,8 @@ public class RunRecordService {
         // 2. 권한 체크
         checkAccess(userPS, runRecordPS);
 
+        log.info("{}({})이 러닝{}을 상세 조회합니다.", userPS.getUsername(), userPS.getId(), runRecordPS.getId());
+
         // 3. 러닝 응답 DTO 로 변환
         return new RunRecordResponse.DetailDTO(runRecordPS);
     }
@@ -221,6 +223,9 @@ public class RunRecordService {
         // 8. DTO 반환
         RunRecordResponse.WeekDTO weekDTO = new RunRecordResponse.WeekDTO(avgStats, achievementHistorys, recentRunList, runLevel);
         weekDTO.setWeeks(weeksMapList);
+
+        log.info("{}({})이 주간 통계를 조회합니다.", userPS.getUsername(), userPS.getId());
+
         return weekDTO;
     }
 
@@ -353,6 +358,8 @@ public class RunRecordService {
             sortedMonthMap.put(y, monthsMap.get(y).stream().sorted().toList());
         }
         monthDTO.setMounts(sortedMonthMap);
+
+        log.info("{}({})이 월간 통계를 조회합니다.", userPS.getUsername(), userPS.getId());
 
         return monthDTO;
     }
@@ -488,6 +495,8 @@ public class RunRecordService {
         RunRecordResponse.YearDTO yearDTO = new RunRecordResponse.YearDTO(avgStats, allStats, achievementHistorys, recentRunList, RunLevel);
         yearDTO.setYears(new ArrayList<>(yearData));
 
+        log.info("{}({})이 연간 통계를 조회합니다.", userPS.getUsername(), userPS.getId());
+
         return yearDTO;
     }
 
@@ -619,6 +628,8 @@ public class RunRecordService {
         Integer statsAvgPace = RunRecordUtil.calculatePace(avgDistanceMeters, avgDurationSeconds);
         TotalStatsDTO allStats = new TotalStatsDTO(avgCount, statsAvgPace, avgDistanceMeters, avgDurationSeconds);
 
+        log.info("{}({})이 전체통계를 조회합니다.", userPS.getUsername(), userPS.getId());
+
         // 9. 최종 DTO 반환
         return new RunRecordResponse.AllDTO(stats, allStats, achievementHistorys, recentRunList, RunLevel);
     }
@@ -725,6 +736,7 @@ public class RunRecordService {
 
         PageDTO pageing = new PageDTO(totalCount, currentPage);
 
+        log.info("{}({})이 최근 러닝 목록을 {}기준으로 정렬합니다.", userPS.getUsername(), userPS.getId(), order);
 
         return new RunRecordResponse.GroupedRecentListDTO(groupRecentList, pageing);
     }
@@ -776,6 +788,8 @@ public class RunRecordService {
 
         PageDTO pageing = new PageDTO(totalcount.intValue(), page);
 
+        log.info("{}({})이 최근 러닝 목록을 {}기준으로 정렬합니다.", userPS.getUsername(), userPS.getId(), order);
+
         return new RunRecordResponse.FlatRecentListDTO(recentRuns, pageing);
     }
 
@@ -807,6 +821,8 @@ public class RunRecordService {
 
         // 5. 러닝 저장시 챌린지 보상 획득(공개, 사설(완주자))
         List<UserChallengeReward> awardedChallengeRewardsPS = challengeRewardService.checkAndAwardChallengeRewards(userPS);
+
+        log.info("{}({})이 러닝을 저장했습니다.", userPS.getUsername(), userPS.getId());
 
         // 6. 최종적으로, 저장된 기록과 새로 획득한 뱃지 목록을 DTO로 감싸 컨트롤러에 반환합니다.
         return new RunRecordResponse.SaveDTO(runRecordPS, awardedBadgesPS);
@@ -840,6 +856,8 @@ public class RunRecordService {
 
         // 삭제
         runRecordRepository.delete(runRecordPS);
+
+        log.info("{}({})이 {}번 러닝을 삭제했습니다.", userPS.getUsername(), userPS.getId(), runRecordPS.getId());
     }
 
     @Transactional
@@ -857,6 +875,8 @@ public class RunRecordService {
 
         // 3. 러닝 내용 수정
         runRecordPS.update(reqDTO);
+
+        log.info("{}({})이 {}번 러닝을 수정했습니다.", userPS.getUsername(), userPS.getId(), runRecordPS.getId());
 
         // 4. 응답 DTO 로 반환
         return new RunRecordResponse.UpdateDTO(runRecordPS);

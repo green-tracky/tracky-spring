@@ -8,6 +8,7 @@ import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
 import com.example.tracky.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeCreationService {
@@ -74,6 +76,8 @@ public class ChallengeCreationService {
             // 5. 챌린지 저장
             challengeRepository.save(newChallenge);
 
+            log.info("주간 챌린지가 생성되었습니다.");
+
         }
     }
 
@@ -119,6 +123,9 @@ public class ChallengeCreationService {
 
             // 4. 챌린지 저장
             challengeRepository.save(newChallenge);
+
+            log.info("월간 챌린지가 생성되었습니다.");
+
         }
     }
 }

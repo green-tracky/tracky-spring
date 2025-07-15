@@ -67,6 +67,7 @@ public class NotificationService {
         // 내림차 순 정렬
         notificationDTO.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
 
+        log.info("{}({})이 알람 목록을 조회합니다", userPS.getUsername(), userPS.getId());
         // DTO 통합
         return new NotificationResponse.NotificationListDTO(notificationDTO);
     }
