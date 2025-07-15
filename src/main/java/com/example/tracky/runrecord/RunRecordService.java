@@ -875,4 +875,21 @@ public class RunRecordService {
         }
     }
 
+    /**
+     * 게시글 등록할때 사용하는 러닝 목록
+     *
+     * @param sessionProfile
+     * @return
+     */
+    public List<RunRecordResponse.SimpleDTO> getRunRecords(OAuthProfile sessionProfile) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // 러닝 조회
+        List<RunRecord> runRecordsPS = runRecordRepository.findAllByUserId(userPS.getId());
+        return runRecordsPS.stream()
+                .map(runRecord -> new RunRecordResponse.SimpleDTO(runRecord))
+                .toList();
+    }
 }

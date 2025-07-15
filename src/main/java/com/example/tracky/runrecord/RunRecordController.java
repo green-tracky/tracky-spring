@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -134,6 +135,16 @@ public class RunRecordController {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
         RunRecordResponse.UpdateDTO respDTO = runRecordService.update(sessionProfile, id, reqDTO);
+
+        return Resp.ok(respDTO);
+    }
+
+    @GetMapping("/runs")
+    public ResponseEntity<?> getRunRecords() {
+        // 세션에서 유저 정보 꺼내기
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
+
+        List<RunRecordResponse.SimpleDTO> respDTO = runRecordService.getRunRecords(sessionProfile);
 
         return Resp.ok(respDTO);
     }

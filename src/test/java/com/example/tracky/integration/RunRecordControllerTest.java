@@ -1218,5 +1218,27 @@ public class RunRecordControllerTest extends MyRestDoc {
         actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    @Test
+    public void get_run_records_test() throws Exception {
+        // given
+
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .get("/s/api/runs")
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+//        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
 
 }
