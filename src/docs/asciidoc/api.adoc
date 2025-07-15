@@ -16,6 +16,7 @@ endif::[]
 :challengejoin: challenge-join-controller-test
 :challengeinvite: challenge-invite-controller-test
 :challenge: challenge-controller-test
+:s3: s3-controller-test
 
 = REST API 문서
 :toc: left
@@ -602,3 +603,21 @@ include::{snippets}/{challenge}/get_challenge_leader_board_test/http-request.ado
 
 ===== Response Example
 include::{snippets}/{challenge}/get_challenge_leader_board_test/http-response.adoc[]
+
+
+== S3 파일 업로드 (S3)
+
+=== 1. 파일 업로드용 Pre-signed URL 생성
+클라이언트(Flutter)가 S3에 파일을 직접 업로드하기 전에, 업로드 권한이 담긴 임시 URL을 발급받는 API입니다.
+응답으로 받은 URL에 HTTP PUT 메서드로 실제 파일(binary)을 전송하여 업로드를 완료합니다.
+
+===== Request Example
+include::{snippets}/{s3}/get_presigned_url_test/http-request.adoc[]
+include::{snippets}/{s3}/get_presigned_url_test/request-parameters.adoc[]
+
+===== Response Example
+include::{snippets}/{s3}/get_presigned_url_test/http-response.adoc[]
+include::{snippets}/{s3}/get_presigned_url_test/response-fields.adoc[]
+
+===== cURL Example
+include::{snippets}/{s3}/get_presigned_url_test/curl-request.adoc[]

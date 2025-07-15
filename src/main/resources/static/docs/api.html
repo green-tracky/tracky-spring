@@ -584,6 +584,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_8_챌린지_리더보드_조회">8. 챌린지 리더보드 조회</a></li>
 </ul>
 </li>
+<li><a href="#_s3_파일_업로드_s3">S3 파일 업로드 (S3)</a>
+<ul class="sectlevel2">
+<li><a href="#_1_파일_업로드용_pre_signed_url_생성">1. 파일 업로드용 Pre-signed URL 생성</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -688,7 +693,7 @@ Content-Length: 384
     "gender" : "여",
     "location" : "부산광역시",
     "letter" : "안녕하세요, 러닝을 사랑하는 ssar입니다.",
-    "updatedAt" : "2025-07-14 15:10:49"
+    "updatedAt" : "2025-07-15 10:00:22"
   }
 }</code></pre>
 </div>
@@ -1002,7 +1007,7 @@ Content-Length: 1971
       "lon" : 129.1615,
       "savedAt" : "2025-06-22 06:43:05"
     } ],
-    "createdAt" : "2025-07-14 15:10:49",
+    "createdAt" : "2025-07-15 10:00:22",
     "userId" : 1,
     "badges" : [ {
       "id" : 2,
@@ -1010,7 +1015,7 @@ Content-Length: 1971
       "description" : "나의 1,000미터 최고 기록",
       "imageUrl" : "https://example.com/badges/1k_best.png",
       "type" : "최고기록",
-      "achievedAt" : "2025-07-14 15:10:49",
+      "achievedAt" : "2025-07-15 10:00:22",
       "runRecordDistance" : 2000,
       "runRecordSeconds" : 784,
       "runRecordPace" : 392,
@@ -2348,7 +2353,7 @@ Content-Length: 915
     "isLiked" : false,
     "id" : 1,
     "content" : "ssar의 러닝 기록을 공유합니다.",
-    "createdAt" : "2025-07-14 15:10:48",
+    "createdAt" : "2025-07-15 10:00:20",
     "pictures" : [ {
       "fileUrl" : "https://example.com/images/run1.jpg",
       "lat" : 37.5665,
@@ -2366,7 +2371,7 @@ Content-Length: 915
     "isLiked" : true,
     "id" : 2,
     "content" : "love의 러닝 기록을 공유합니다.",
-    "createdAt" : "2025-07-14 15:10:48",
+    "createdAt" : "2025-07-15 10:00:20",
     "pictures" : [ ],
     "user" : {
       "id" : 3,
@@ -2413,7 +2418,7 @@ Content-Length: 199
     "id" : 3,
     "content" : "내용입니다",
     "userId" : 1,
-    "createdAt" : "2025-07-14 15:10:49",
+    "createdAt" : "2025-07-15 10:00:21",
     "runRecordId" : 10
   }
 }</code></pre>
@@ -2494,8 +2499,8 @@ Content-Length: 7787
         "username" : "cos",
         "content" : "감동적인 글이었습니다.",
         "parentId" : null,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48",
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20",
         "children" : [ ]
       }, {
         "id" : 21,
@@ -2504,8 +2509,8 @@ Content-Length: 7787
         "username" : "ssar",
         "content" : "앞으로도 잘 부탁드려요.",
         "parentId" : null,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48",
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20",
         "children" : [ {
           "id" : 26,
           "postId" : 1,
@@ -2513,8 +2518,8 @@ Content-Length: 7787
           "username" : "cos",
           "content" : "앞으로 자주 뵈어요!",
           "parentId" : 21,
-          "createdAt" : "2025-07-14 15:10:48",
-          "updatedAt" : "2025-07-14 15:10:48"
+          "createdAt" : "2025-07-15 10:00:20",
+          "updatedAt" : "2025-07-15 10:00:20"
         }, {
           "id" : 27,
           "postId" : 1,
@@ -2522,8 +2527,8 @@ Content-Length: 7787
           "username" : "love",
           "content" : "저도 기대하고 있겠습니다.",
           "parentId" : 21,
-          "createdAt" : "2025-07-14 15:10:48",
-          "updatedAt" : "2025-07-14 15:10:48"
+          "createdAt" : "2025-07-15 10:00:20",
+          "updatedAt" : "2025-07-15 10:00:20"
         } ]
       }, {
         "id" : 20,
@@ -2532,8 +2537,8 @@ Content-Length: 7787
         "username" : "love",
         "content" : "정성 가득한 포스팅이에요.",
         "parentId" : null,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48",
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20",
         "children" : [ {
           "id" : 25,
           "postId" : 1,
@@ -2541,8 +2546,8 @@ Content-Length: 7787
           "username" : "cos",
           "content" : "진짜 정성이 느껴졌어요.",
           "parentId" : 20,
-          "createdAt" : "2025-07-14 15:10:48",
-          "updatedAt" : "2025-07-14 15:10:48"
+          "createdAt" : "2025-07-15 10:00:20",
+          "updatedAt" : "2025-07-15 10:00:20"
         } ]
       }, {
         "id" : 19,
@@ -2551,8 +2556,8 @@ Content-Length: 7787
         "username" : "cos",
         "content" : "댓글 안 달 수가 없네요.",
         "parentId" : null,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48",
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20",
         "children" : [ {
           "id" : 23,
           "postId" : 1,
@@ -2560,8 +2565,8 @@ Content-Length: 7787
           "username" : "ssar",
           "content" : "저도 같은 생각이에요!",
           "parentId" : 19,
-          "createdAt" : "2025-07-14 15:10:48",
-          "updatedAt" : "2025-07-14 15:10:48"
+          "createdAt" : "2025-07-15 10:00:20",
+          "updatedAt" : "2025-07-15 10:00:20"
         }, {
           "id" : 24,
           "postId" : 1,
@@ -2569,8 +2574,8 @@ Content-Length: 7787
           "username" : "love",
           "content" : "공감 백퍼입니다.",
           "parentId" : 19,
-          "createdAt" : "2025-07-14 15:10:48",
-          "updatedAt" : "2025-07-14 15:10:48"
+          "createdAt" : "2025-07-15 10:00:20",
+          "updatedAt" : "2025-07-15 10:00:20"
         } ]
       }, {
         "id" : 18,
@@ -2579,8 +2584,8 @@ Content-Length: 7787
         "username" : "ssar",
         "content" : "열정이 느껴져요.",
         "parentId" : null,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48",
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20",
         "children" : [ ]
       } ]
     },
@@ -2729,8 +2734,8 @@ Content-Length: 7787
       "place" : "도로"
     },
     "isOwner" : true,
-    "createdAt" : "2025-07-14 15:10:48",
-    "updatedAt" : "2025-07-14 15:10:48"
+    "createdAt" : "2025-07-15 10:00:20",
+    "updatedAt" : "2025-07-15 10:00:20"
   }
 }</code></pre>
 </div>
@@ -2798,8 +2803,8 @@ Content-Length: 197
   "data" : {
     "id" : 1,
     "content" : "내용입니다",
-    "createdAt" : "2025-07-14 15:10:48",
-    "updatedAt" : "2025-07-14 15:10:48"
+    "createdAt" : "2025-07-15 10:00:20",
+    "updatedAt" : "2025-07-15 10:00:20"
   }
 }</code></pre>
 </div>
@@ -2940,8 +2945,8 @@ Content-Length: 3033
       "username" : "cos",
       "content" : "감동적인 글이었습니다.",
       "parentId" : null,
-      "createdAt" : "2025-07-14 15:10:48",
-      "updatedAt" : "2025-07-14 15:10:48",
+      "createdAt" : "2025-07-15 10:00:20",
+      "updatedAt" : "2025-07-15 10:00:20",
       "children" : [ ]
     }, {
       "id" : 21,
@@ -2950,8 +2955,8 @@ Content-Length: 3033
       "username" : "ssar",
       "content" : "앞으로도 잘 부탁드려요.",
       "parentId" : null,
-      "createdAt" : "2025-07-14 15:10:48",
-      "updatedAt" : "2025-07-14 15:10:48",
+      "createdAt" : "2025-07-15 10:00:20",
+      "updatedAt" : "2025-07-15 10:00:20",
       "children" : [ {
         "id" : 26,
         "postId" : 1,
@@ -2959,8 +2964,8 @@ Content-Length: 3033
         "username" : "cos",
         "content" : "앞으로 자주 뵈어요!",
         "parentId" : 21,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48"
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20"
       }, {
         "id" : 27,
         "postId" : 1,
@@ -2968,8 +2973,8 @@ Content-Length: 3033
         "username" : "love",
         "content" : "저도 기대하고 있겠습니다.",
         "parentId" : 21,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48"
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20"
       } ]
     }, {
       "id" : 20,
@@ -2978,8 +2983,8 @@ Content-Length: 3033
       "username" : "love",
       "content" : "정성 가득한 포스팅이에요.",
       "parentId" : null,
-      "createdAt" : "2025-07-14 15:10:48",
-      "updatedAt" : "2025-07-14 15:10:48",
+      "createdAt" : "2025-07-15 10:00:20",
+      "updatedAt" : "2025-07-15 10:00:20",
       "children" : [ {
         "id" : 25,
         "postId" : 1,
@@ -2987,8 +2992,8 @@ Content-Length: 3033
         "username" : "cos",
         "content" : "진짜 정성이 느껴졌어요.",
         "parentId" : 20,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48"
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20"
       } ]
     }, {
       "id" : 19,
@@ -2997,8 +3002,8 @@ Content-Length: 3033
       "username" : "cos",
       "content" : "댓글 안 달 수가 없네요.",
       "parentId" : null,
-      "createdAt" : "2025-07-14 15:10:48",
-      "updatedAt" : "2025-07-14 15:10:48",
+      "createdAt" : "2025-07-15 10:00:20",
+      "updatedAt" : "2025-07-15 10:00:20",
       "children" : [ {
         "id" : 23,
         "postId" : 1,
@@ -3006,8 +3011,8 @@ Content-Length: 3033
         "username" : "ssar",
         "content" : "저도 같은 생각이에요!",
         "parentId" : 19,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48"
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20"
       }, {
         "id" : 24,
         "postId" : 1,
@@ -3015,8 +3020,8 @@ Content-Length: 3033
         "username" : "love",
         "content" : "공감 백퍼입니다.",
         "parentId" : 19,
-        "createdAt" : "2025-07-14 15:10:48",
-        "updatedAt" : "2025-07-14 15:10:48"
+        "createdAt" : "2025-07-15 10:00:20",
+        "updatedAt" : "2025-07-15 10:00:20"
       } ]
     }, {
       "id" : 18,
@@ -3025,8 +3030,8 @@ Content-Length: 3033
       "username" : "ssar",
       "content" : "열정이 느껴져요.",
       "parentId" : null,
-      "createdAt" : "2025-07-14 15:10:48",
-      "updatedAt" : "2025-07-14 15:10:48",
+      "createdAt" : "2025-07-15 10:00:20",
+      "updatedAt" : "2025-07-15 10:00:20",
       "children" : [ ]
     } ]
   }
@@ -3101,7 +3106,7 @@ Content-Length: 244
     "username" : "ssar",
     "content" : "내용입니다",
     "parentId" : null,
-    "createdAt" : "2025-07-14 15:10:48"
+    "createdAt" : "2025-07-15 10:00:21"
   }
 }</code></pre>
 </div>
@@ -3180,7 +3185,7 @@ Content-Length: 253
     "username" : "ssar",
     "content" : "수정된 내용입니다",
     "parentId" : null,
-    "updatedAt" : "2025-07-14 15:10:48"
+    "updatedAt" : "2025-07-15 10:00:20"
   }
 }</code></pre>
 </div>
@@ -4137,7 +4142,7 @@ Content-Length: 161
     "id" : 8,
     "challengeId" : 2,
     "userId" : 1,
-    "joinDate" : "2025-07-14 15:10:47"
+    "joinDate" : "2025-07-15 10:00:20"
   }
 }</code></pre>
 </div>
@@ -4950,11 +4955,62 @@ Content-Length: 787
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_s3_파일_업로드_s3">S3 파일 업로드 (S3)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_1_파일_업로드용_pre_signed_url_생성">1. 파일 업로드용 Pre-signed URL 생성</h3>
+<div class="paragraph">
+<p>클라이언트(Flutter)가 S3에 파일을 직접 업로드하기 전에, 업로드 권한이 담긴 임시 URL을 발급받는 API입니다.
+응답으로 받은 URL에 HTTP PUT 메서드로 실제 파일(binary)을 전송하여 업로드를 완료합니다.</p>
+</div>
+<div class="sect4">
+<h5 id="_request_example_80">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/s3/presigned-url?fileName=123.png HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in api.adoc - include::./build/generated-snippets/s3-controller-test/get_presigned_url_test/request-parameters.adoc[]</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_80">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 421
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : "https://tracky-s3.s3.ap-northeast-2.amazonaws.com/5cd66ea5-b3aa-4be7-a356-1b014561baaa..png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250715T010022Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=600&amp;X-Amz-Credential=AKIA2RG7JJCYH6IZFKXO%2F20250715%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=807605afd77c1e9fbdddf2547e3af040fe5071d8c5eeedb79613b1840a99020d"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in api.adoc - include::./build/generated-snippets/s3-controller-test/get_presigned_url_test/response-fields.adoc[]</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_example">cURL Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/s3/presigned-url?fileName=123.png' -i -X GET</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2025-07-14 13:49:37 +0900
+Last updated 2025-07-15 09:59:32 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

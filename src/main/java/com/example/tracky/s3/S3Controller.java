@@ -6,12 +6,10 @@ import com.example.tracky._core.utils.Resp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/s3")
 @RequiredArgsConstructor
 public class S3Controller {
 
@@ -23,7 +21,7 @@ public class S3Controller {
      * @param fileName 클라이언트가 업로드할 파일의 원본 이름
      * @return 생성된 Pre-signed URL을 포함한 응답 객체
      */
-    @GetMapping("/presigned-url")
+    @GetMapping("/api/s3/presigned-url")
     public ResponseEntity<?> getPresignedUrl(@RequestParam String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             throw new ExceptionApi400(ErrorCodeEnum.MISSING_FILE_NAME_PARAMETER);
