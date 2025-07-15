@@ -67,6 +67,9 @@ jobs:
           AWS_S3_ACCESS_KEY: ${{ secrets.AWS_S3_ACCESS_KEY }}
           AWS_S3_SECRET_KEY: ${{ secrets.AWS_S3_SECRET_KEY }}
 
+          # [Sentry Secret 주입] - 이 한 줄을 추가하면 됩니다!
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
       # 5. 현재 시간 가져오기 (배포 버전 관리를 위함)
       # UTC가 기준이기 때문에 한국 시간으로 맞추려면 +9시간 해야 합니다.
       - name: Get current time
