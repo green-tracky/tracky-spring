@@ -887,8 +887,8 @@ public class RunRecordService {
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
         // 러닝 조회
-        List<RunRecord> runRecordsPS = runRecordRepository.findAllByUserId(userPS.getId());
-        return runRecordsPS.stream()
+        return runRecordRepository.findAllByUserId(userPS.getId()).stream()
+                .sorted((r1, r2) -> r2.getCreatedAt().compareTo(r1.getCreatedAt())) // 최신순
                 .map(runRecord -> new RunRecordResponse.SimpleDTO(runRecord))
                 .toList();
     }

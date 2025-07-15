@@ -195,6 +195,7 @@ include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-request
 ===== Response Example
 include::{snippets}/{runrecord}/get_activities_recent_pace_asc_test/http-response.adoc[]
 
+
 == 런 레벨 (Run Level)
 === 1. 런 레벨 목록 및 진행도 조회
 ===== Request Example
@@ -276,6 +277,13 @@ include::{snippets}/{post}/delete_fail_test/http-request.adoc[]
 
 ===== Response Example
 include::{snippets}/{post}/delete_fail_test/http-response.adoc[]
+
+=== 10. 게시글 등록용 러닝 목록
+===== Request Example
+include::{snippets}/{runrecord}/get_run_records_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{runrecord}/get_run_records_test/http-response.adoc[]
 
 
 == 댓글 (Comment)

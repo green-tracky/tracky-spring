@@ -1234,11 +1234,12 @@ public class RunRecordControllerTest extends MyRestDoc {
         log.debug("✅응답 바디: " + responseBody);
 
         // then
-
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.data[0].id").value(16));
+        actions.andExpect(jsonPath("$.data[0].title").value("트랙 러닝 15"));
+        actions.andExpect(jsonPath("$.data[0].createdAt").value(Matchers.matchesRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-//        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
-
-
 }
