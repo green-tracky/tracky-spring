@@ -41,7 +41,6 @@ public class UserResponse {
         private Integer id;
         private String loginId; // 로그인용 및 사용자 조회용 아이디
         private String username; // 유저 이름
-        private String email; // 유저 이메일
         private String profileUrl; // 프로필 이미지 주소
         private Double height; // 177.5(cm)
         private Double weight; // 75.5(kg)
@@ -57,7 +56,6 @@ public class UserResponse {
             this.id = user.getId();
             this.loginId = user.getLoginId();
             this.username = user.getUsername();
-            this.email = user.getEmail();
             this.profileUrl = user.getProfileUrl();
             this.height = user.getHeight();
             this.weight = user.getWeight();
@@ -74,34 +72,24 @@ public class UserResponse {
     @Data
     public static class UpdateDTO {
         private Integer id;
-        private String loginId;
         private String username;
-        private String email;
         private String profileUrl;
         private Double height;
         private Double weight;
         private GenderEnum gender;
         private String location;
         private String letter;
-        private ProviderTypeEnum provider;
-        private String userTag;
-        private String fcmToken;
         private LocalDateTime updatedAt;
 
         public UpdateDTO(User user) {
             this.id = user.getId();
-            this.loginId = user.getLoginId();
             this.username = user.getUsername();
-            this.email = user.getEmail();
             this.profileUrl = user.getProfileUrl();
             this.height = user.getHeight();
             this.weight = user.getWeight();
             this.gender = user.getGender();
             this.location = user.getLocation();
             this.letter = user.getLetter();
-            this.provider = user.getProvider();
-            this.userTag = user.getUserTag();
-            this.fcmToken = user.getFcmToken();
             this.updatedAt = user.getUpdatedAt();
         }
     }
@@ -111,7 +99,6 @@ public class UserResponse {
         private Integer id;
         private String loginId;
         private String username;
-        private String email;
         private String profileUrl;
         private Double height;
         private Double weight;
@@ -129,7 +116,6 @@ public class UserResponse {
             this.id = user.getId();
             this.loginId = user.getLoginId();
             this.username = user.getUsername();
-            this.email = user.getEmail();
             this.profileUrl = user.getProfileUrl();
             this.height = user.getHeight();
             this.weight = user.getWeight();

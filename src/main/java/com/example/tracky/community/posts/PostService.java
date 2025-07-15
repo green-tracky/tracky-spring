@@ -11,19 +11,18 @@ import com.example.tracky.community.posts.likes.LikeRepository;
 import com.example.tracky.community.posts.likes.LikeService;
 import com.example.tracky.runrecord.RunRecord;
 import com.example.tracky.runrecord.RunRecordRepository;
-import com.example.tracky.runrecord.pictures.Picture;
-import com.example.tracky.runrecord.pictures.PictureRepository;
 import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -31,7 +30,6 @@ public class PostService {
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
     private final RunRecordRepository runRecordRepository;
-    private final PictureRepository pictureRepository;
     private final CommentService commentService;
     private final UserRepository userRepository;
     private final LikeService likeService;
@@ -44,6 +42,8 @@ public class PostService {
 
         List<Post> postsPS = postRepository.findAllJoinRunRecord();
 
+        log.info("{}({})이 게시글을 조회합니다.", userPS.getUsername(), userPS.getId());
+
         return postsPS.stream()
                 .map(post -> {
                     Like like = likeRepository.findByUserIdAndPostId(userPS.getId(), post.getId()).orElse(null);
@@ -53,7 +53,6 @@ public class PostService {
 
                     return new PostResponse.ListDTO(
                             post,
-                            post.getPostPictures(),
                             likeCount,
                             commentCount,
                             isLiked
@@ -75,18 +74,14 @@ public class PostService {
                     .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
         }
 
-        // 사진 조회
-        List<Picture> pictures = new ArrayList<>();
-        if (reqDTO.getPictureIds() != null && !reqDTO.getPictureIds().isEmpty()) {
-            pictures = pictureRepository.findAllById(reqDTO.getPictureIds());
-        }
-
         // 게시글 엔티티 생성
-        Post post = reqDTO.toEntity(userPS, runRecord, pictures);
+        Post post = reqDTO.toEntity(userPS, runRecord);
 
         // 게시글 저장
         Post postPS = postRepository.save(post);
 
+
+        log.info("{}({})이 게시글{}번을 저장합니다.", userPS.getUsername(), userPS.getId(), postPS.getId());
         // 응답 DTO 변환
         return new PostResponse.SaveDTO(postPS);
     }
@@ -97,45 +92,18 @@ public class PostService {
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
+        // 게시글 조회
         Post postPS = postRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
-        if (!postPS.getUser().getId().equals(userPS.getId())) {
-            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
-        }
+        // 권한 체크
+        checkAccess(userPS, postPS);
 
+        postPS.update(reqDTO);
 
-        // RunRecord 변경 로직
-        RunRecord runRecord = null;
-        Integer reqRunRecordId = reqDTO.getRunRecordId(); // 요청에서 받은 러닝 ID
-        RunRecord currentRunRecord = postPS.getRunRecord(); // 현재 저장된 러닝 기록
-
-        if (currentRunRecord == null && reqRunRecordId != null) {
-            // 러닝이 없었는데 새로 들어온 경우
-            runRecord = runRecordRepository.findById(reqRunRecordId)
-                    .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
-        } else if (currentRunRecord != null && reqRunRecordId == null) {
-            // 기존 러닝이 있었는데 요청에 없다면 제거
-            runRecord = null;
-        } else if (currentRunRecord != null && reqRunRecordId != null) {
-            // 기존과 요청 둘 다 존재하는데 ID가 다르면 변경
-            if (!currentRunRecord.getId().equals(reqRunRecordId)) {
-                runRecord = runRecordRepository.findById(reqRunRecordId)
-                        .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.RUN_NOT_FOUND));
-            } else {
-                // 기존과 동일하다면 유지
-                runRecord = currentRunRecord;
-            }
-        }
-
-        // 사진 조회
-        List<Picture> pictures = new ArrayList<>();
-        if (reqDTO.getPictureIds() != null && !reqDTO.getPictureIds().isEmpty()) {
-            pictures = pictureRepository.findAllById(reqDTO.getPictureIds());
-        }
-
-        postPS.update(reqDTO.getContent(), runRecord, pictures);
-
+        // updatedAt 적용
+        userRepository.save(userPS);
+        log.info("{}({})이 게시글{}을 수정합니다.", userPS.getUsername(), userPS.getId(), postPS.getId());
         return new PostResponse.UpdateDTO(postPS);
     }
 
@@ -146,15 +114,18 @@ public class PostService {
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Post post = postRepository.findById(id)
+        // 게시글 조회
+        Post postPS = postRepository.findById(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
-        if (!post.getUser().getId().equals(userPS.getId())) {
-            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
-        }
+        // 권한 체크
+        checkAccess(userPS, postPS);
+
+        // 좋아요 삭제
         likeService.deleteByPostId(id);
 
-        postRepository.delete(post);
+        log.info("{}({})이 게시글{}을 삭제했습니다.", userPS.getUsername(), userPS.getId(), postPS.getId());
+        postRepository.delete(postPS);
     }
 
 
@@ -163,6 +134,7 @@ public class PostService {
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
+        // 게시글 조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.POST_NOT_FOUND));
 
@@ -171,13 +143,24 @@ public class PostService {
         Like like = likeRepository.findByUserIdAndPostId(userPS.getId(), post.getId()).orElse(null);
         boolean isLiked = like != null;
 
-        List<PostPicture> pictures = post.getPostPictures();
-
         // ✅ 댓글 + 대댓글 조회
         CommentResponse.CommentsList commentsList = commentService.getCommentsWithReplies(postId, 1);
 
-        return new PostResponse.DetailDTO(post, commentsList, pictures, likeCount, commentCount, isLiked, userPS);
+        log.info("{}({})이 {}을 상세보기합니다.", userPS.getUsername(), userPS.getId(), post.getId());
+        return new PostResponse.DetailDTO(post, commentsList, likeCount, commentCount, isLiked, userPS);
+    }
 
+    /**
+     * 게시물에 대한 사용자의 접근 권한을 확인합니다.
+     * 권한이 없을 경우 ExceptionApi403 예외를 발생시킵니다.
+     *
+     * @param user 현재 로그인한 사용자
+     * @param post
+     */
+    private void checkAccess(User user, Post post) {
+        if (!post.getUser().getId().equals(user.getId())) {
+            throw new ExceptionApi403(ErrorCodeEnum.ACCESS_DENIED);
+        }
     }
 
 }

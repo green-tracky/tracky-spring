@@ -27,8 +27,8 @@ public class TimeValue {
 
         // 테스트 시간이 없으면, 기존 로직에 따라 개발용 또는 실제 시간을 반환
         // 이 부분을 개발/운영 환경에 맞게 선택하여 사용합니다.
-        return getDevTime();      // 개발 시
-        // return getRealTime();  // 운영(배포) 시
+        // return getDevTime();      // 개발 시
+        return getRealTime();  // 운영(배포) 시
     }
 
     /**

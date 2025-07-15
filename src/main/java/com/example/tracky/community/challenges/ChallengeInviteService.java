@@ -19,6 +19,7 @@ import com.example.tracky.user.friends.FriendRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeInviteService {
@@ -106,6 +108,8 @@ public class ChallengeInviteService {
             saveDTO.add(new ChallengeInviteResponse.saveDTO(invitePS));
         }
 
+        log.info("{}({})이 {}에게 챌린지 {}({}) 초대를 보냈습니다", fromUserPS.getUsername(), fromUserPS.getId(), myFriendIds, challengePS.getName(), challengePS.getId());
+
         return saveDTO;
     }
 
@@ -120,6 +124,10 @@ public class ChallengeInviteService {
         // 사용자 조회
         User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        if (!challengeJoinRepository.existsByUserIdAndChallengeId(userPS.getId(), id)) {
+            throw new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND);
+        }
 
         // 챌린지의 참여한 유저 조회
         List<User> joinUsersPS = challengeJoinRepository.findUserAllById(id);
@@ -143,6 +151,7 @@ public class ChallengeInviteService {
                 friendDTO.add(DTO);
             }
         }
+        log.info("{}({})이 초대가능한 친구목록을 조회했습니다. ", userPS.getUsername(), userPS.getId());
 
         return friendDTO;
     }
@@ -175,6 +184,8 @@ public class ChallengeInviteService {
             friendRepository.save(new Friend(invite.getFromUser(), invite.getToUser()));
         }
 
+        log.info("{}({})이 챌린지 초대를 수락하였습니다", userPS.getUsername(), userPS.getId());
+
         return new ChallengeInviteResponse.ResponseDTO(invite);
     }
 
@@ -199,6 +210,9 @@ public class ChallengeInviteService {
 
         // DB 상태 변경
         invite.reject();
+
+        log.info("{}({})이 챌린지 초대를 거절했습니다. ", userPS.getUsername(), userPS.getId());
+
         return new ChallengeInviteResponse.ResponseDTO(invite);
     }
 

@@ -2,15 +2,13 @@ package com.example.tracky.community.challenges;
 
 import com.example.tracky._core.constants.ChallengeDescs;
 import com.example.tracky._core.enums.ChallengeTypeEnum;
-import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.enums.PeriodTypeEnum;
-import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky._core.values.TimeValue;
 import com.example.tracky.community.challenges.domain.Challenge;
 import com.example.tracky.community.challenges.repository.ChallengeRepository;
-import com.example.tracky.user.User;
 import com.example.tracky.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +20,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeCreationService {
@@ -42,10 +41,6 @@ public class ChallengeCreationService {
 
         // 주간 챌린지 목표 거리 목록 - 어디에 따로 빼야하나?
         List<Integer> weeklyDistances = List.of(5000, 10000, 15000); // 5k, 10k, 15k
-
-        // 관리자 계정 조회 (챌린지 생성자)
-        User admin = userRepository.findAdmin()
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.ADMIN_NOT_FOUND));
 
         for (Integer distance : weeklyDistances) {
             // 1. 중복 생성 방지 확인
@@ -75,12 +70,13 @@ public class ChallengeCreationService {
                     .challengeMonth(month)
                     .weekOfMonth(weekOfMonth)
                     .isInProgress(true)
-                    .creator(admin)
-                    .imageUrl("") // TODO : 이미지 추가
+                    .imgIndex(null) // TODO : 이미지 추가
                     .build();
 
             // 5. 챌린지 저장
             challengeRepository.save(newChallenge);
+
+            log.info("주간 챌린지가 생성되었습니다.");
 
         }
     }
@@ -95,9 +91,6 @@ public class ChallengeCreationService {
 
         // 월간 챌린지 목표 거리 목록 - 거리목록 따로 빼야하나? 어디로?
         List<Integer> monthlyDistances = List.of(25000, 50000, 75000, 100000);
-
-        User admin = userRepository.findAdmin()
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.ADMIN_NOT_FOUND));
 
         for (Integer distance : monthlyDistances) {
             // 1. 중복 생성 방지 확인 (weekOfMonth 조건은 제외)
@@ -125,11 +118,14 @@ public class ChallengeCreationService {
                     .challengeYear(year)
                     .challengeMonth(month)
                     .isInProgress(true)
-                    .creator(admin)
+                    .imgIndex(null) // TODO : 이미지 추가
                     .build();
 
             // 4. 챌린지 저장
             challengeRepository.save(newChallenge);
+
+            log.info("월간 챌린지가 생성되었습니다.");
+
         }
     }
 }

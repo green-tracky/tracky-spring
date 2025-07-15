@@ -13,9 +13,11 @@ import com.example.tracky.user.UserRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeJoinService {
@@ -54,6 +56,8 @@ public class ChallengeJoinService {
         // 4. 챌린지 참가 엔티티 저장
         ChallengeJoin challengeJoinPS = challengeJoinRepository.save(challengeJoin);
 
+        log.info("{}({})이 챌린지 {}({})에 참가하였습니다.", userPS.getUsername(), userPS.getId(), challengePS.getName(), challengePS.getId());
+
         // 5. 챌린지 참가 엔티티 응답
         return new ChallengeJoinResponse.DTO(challengeJoinPS);
     }
@@ -67,6 +71,8 @@ public class ChallengeJoinService {
         // 내가 참여한 챌린지 조회
         ChallengeJoin challengeJoinPS = challengeJoinRepository.findByChallengeIdAndUserId(id, userPS.getId())
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.CHALLENGE_JOIN_NOT_FOUND));
+
+        log.info("{}({})이 챌린지 {}({})에서 떠났습니다.", userPS.getUsername(), userPS.getId(), challengeJoinPS.getChallenge().getName(), challengeJoinPS.getChallenge().getId());
 
         // 삭제
         challengeJoinRepository.delete(challengeJoinPS);

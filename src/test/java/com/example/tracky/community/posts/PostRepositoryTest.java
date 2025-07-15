@@ -140,7 +140,9 @@ public class PostRepositoryTest {
 
         // when
         Post postPS = postRepository.findById(postId).orElseThrow();
-        postPS.update("수정된 내용", null, null);
+        var dto = new PostRequest.UpdateDTO();
+        dto.setContent("수정된 내용");
+        postPS.update(dto);
 
         // then
         Post updatedPost = postRepository.findById(postId).orElseThrow();

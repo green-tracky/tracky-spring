@@ -5,6 +5,7 @@ import com.example.tracky._core.enums.ProviderTypeEnum;
 import com.example.tracky._core.enums.UserTypeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi403;
 import com.example.tracky._core.error.ex.ExceptionApi404;
+import com.example.tracky._core.filter.LogFilter;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.kakaojwt.RSAUtil;
 import com.example.tracky.user.runlevel.RunLevel;
@@ -12,6 +13,8 @@ import com.example.tracky.user.runlevel.RunLevelRepository;
 import com.example.tracky.user.utils.LoginIdUtil;
 import com.example.tracky.user.utils.UserTagUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,12 +30,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final RunLevelRepository runLevelRepository;
     private final RSAUtil rsaUtil;
+    private final FilterRegistrationBean<LogFilter> loggingFilter;
 
     @Transactional
-    public UserResponse.IdTokenDTO kakaoLogin(String idToken) { // application context에 저장
+    public UserResponse.IdTokenDTO kakaoLogin(UserRequest.IdTokenDTO reqDTO) { // application context에 저장
         // 1. 공개키 존재 확인 없으면 다운로드
         // 2. id Token 검증 (base64 디코딩, 서명검증)
-        OAuthProfile oAuthProfile = rsaUtil.verify(idToken);
+        OAuthProfile oAuthProfile = rsaUtil.verify(reqDTO.getIdToken());
 
         User user = null;
 
@@ -52,7 +57,6 @@ public class UserService {
                     .loginId(LoginIdUtil.extractProvider(oAuthProfile.getIss()) + "_" + oAuthProfile.getSub())
                     .password(UUID.randomUUID().toString())
                     .username(oAuthProfile.getNickname())
-                    .email(null)
                     .profileUrl(oAuthProfile.getPicture())
                     .runLevel(runLevelPS)
                     .userType(UserTypeEnum.GENERAL)
@@ -61,12 +65,14 @@ public class UserService {
                     .build();
 
             user = userRepository.save(user);
+            log.info("{}({})이 회원가입 하였습니다.", user.getUsername(), user.getId());
         } else {
             user = userOP.get();
+            log.info("{}({})이 로그인 하였습니다.", user.getUsername(), user.getId());
         }
 
         // 5. 되어있다면 아무것도 안해도 됨
-        return new UserResponse.IdTokenDTO(user, idToken);
+        return new UserResponse.IdTokenDTO(user, reqDTO.getIdToken());
     }
 
     @Transactional
@@ -80,6 +86,7 @@ public class UserService {
 
         // 정보 수정
         userPS.updateInfo(reqDTO);
+        log.info("{}({})이 정보를 수정 하였습니다.", userPS.getUsername(), userPS.getId());
 
         // updatedAt 반영을 위해 flush
         userRepository.flush();
@@ -98,6 +105,7 @@ public class UserService {
         checkAccess(id, userPS);
 
         userRepository.delete(userPS);
+        log.info("{}({})이 탈퇴되었습니다.", userPS.getUsername(), userPS.getId());
     }
 
     /**
@@ -117,6 +125,8 @@ public class UserService {
         User userPS = userRepository.findByIdJoin(id)
                 .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
 
+        log.info("{}({})이 본인 정보를 조회합니다.", userPS.getUsername(), userPS.getId());
+
         return new UserResponse.DetailDTO(userPS, LoginIdUtil.makeLoginId(sessionProfile));
     }
 
@@ -130,5 +140,7 @@ public class UserService {
         checkAccess(id, userPS);
 
         userPS.updateFCMToken(reqDTO.getFcmToken());
+        log.info("{}({})이 토큰을 갱신합니다.", userPS.getUsername(), userPS.getId());
+
     }
 }

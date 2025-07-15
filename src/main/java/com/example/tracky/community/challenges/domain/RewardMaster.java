@@ -18,8 +18,10 @@ public class RewardMaster {
     private Integer id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private RewardTypeEnum rewardType; // 챌린지 우승자, 챌린지 수상자
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ChallengeTypeEnum challengeType; // 공개, 사설
     @Column(unique = true, nullable = false)
     private String rewardName; // 보상 이름. (금메달, 은메달, 동메달, 참가상, 7월 15k 챌린지)

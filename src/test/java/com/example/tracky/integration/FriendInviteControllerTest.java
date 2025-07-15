@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,7 +33,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/friend/invite/{toUserId}", toUserId)
+                        .post("/s/api/friends/invite/users/{toUserId}", toUserId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -48,13 +50,11 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.toUser").value(3));
         actions.andExpect(jsonPath("$.data.status").value("대기"));
 
-
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
-    // TODO : 친구가 아닙니다로 나오게 수정
     @Test
     void friend_invite_fail_test() throws Exception {
         // given
@@ -63,7 +63,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .post("/s/api/friend/invite/{toUserId}", toUserId)
+                        .post("/s/api/friends/invite/users/{toUserId}", toUserId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -71,18 +71,20 @@ class FriendInviteControllerTest extends MyRestDoc {
         String responseBody = actions.andReturn().getResponse().getContentAsString();
         log.debug("✅응답 바디: " + responseBody);
 
-        // then
-        actions.andExpect(status().isOk());
-        actions.andExpect(jsonPath("$.msg").value("성공"));
+// then: 응답 결과 검증
+// HTTP 상태 코드가 404 (Not Found)인지 확인합니다.
+        actions.andExpect(status().isNotFound());
 
-        actions.andExpect(jsonPath("$.data.id").value(6));
-        actions.andExpect(jsonPath("$.data.fromUser").value(1));
-        actions.andExpect(jsonPath("$.data.toUser").value(3));
-        actions.andExpect(jsonPath("$.data.status").value("대기"));
+// JSON 응답의 최상위 필드를 검증합니다.
+        actions.andExpect(jsonPath("$.status").value(404));
+        actions.andExpect(jsonPath("$.msg").value("해당 사용자를 찾을 수 없습니다"));
 
+// 'data' 필드가 null인지 확인합니다.
+// import static org.hamcrest.Matchers.nullValue; 를 추가해야 합니다.
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
 
@@ -96,7 +98,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/friend/invite/{id}/accept", inviteId)
+                        .put("/s/api/friends/invite/{id}/accept", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -112,7 +114,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.status").value("수락"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     // 본인의 초대가 아닌 초대 수락시 에러
@@ -124,7 +126,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/friend/invite/{id}/accept", inviteId)
+                        .put("/s/api/friends/invite/{id}/accept", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -135,8 +137,9 @@ class FriendInviteControllerTest extends MyRestDoc {
         // then
         actions.andExpect(status().isForbidden());
         actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
+
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
 
@@ -149,7 +152,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/friend/invite/{id}/reject", inviteId)
+                        .put("/s/api/friends/invite/{id}/reject", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -165,7 +168,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.data.status").value("거절"));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @Test
@@ -176,7 +179,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/s/api/friend/invite/{id}/reject", inviteId)
+                        .put("/s/api/friends/invite/{id}/reject", inviteId)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -189,6 +192,6 @@ class FriendInviteControllerTest extends MyRestDoc {
         actions.andExpect(jsonPath("$.msg").value("접근 권한이 없습니다."));
 
         // 디버깅 및 문서화 (필요시 주석 해제)
-        // actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }

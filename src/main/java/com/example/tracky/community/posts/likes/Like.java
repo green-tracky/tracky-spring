@@ -6,7 +6,6 @@ import com.example.tracky.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "like_tb")
 @Getter
-@NoArgsConstructor
 public class Like {
 
     @Id
@@ -41,5 +39,8 @@ public class Like {
         this.post = post;
         this.user = user;
         this.comment = comment;
+    }
+
+    protected Like() {
     }
 }

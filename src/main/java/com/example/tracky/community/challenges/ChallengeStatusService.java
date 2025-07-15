@@ -120,6 +120,8 @@ public class ChallengeStatusService {
                     .type(ChallengeTypeEnum.PRIVATE)
                     .build();
             userChallengeRewardRepository.save(reward);
+
+            log.info("챌린지 참가자 전원에게 보상이 지급되었습니다.");
         }
     }
 
@@ -135,6 +137,8 @@ public class ChallengeStatusService {
         if (emptyChallengesPS != null && !emptyChallengesPS.isEmpty()) {
             challengeRepository.deleteAllEmptyChallenge(emptyChallengesPS);
         }
+
+        log.info("참가자가 없는 챌린지가 삭제되었습니다.");
     }
 
     // 비교 로직에 필요한 임시 데이터 클래스

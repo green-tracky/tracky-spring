@@ -53,7 +53,7 @@ public class NotificationService {
         List<NotificationResponse.NotificationBundleDTO> notificationDTO = new ArrayList<>();
 
         // 친구 요청 알람 조회
-        List<FriendInvite> friendInvitesPS = friendInviteRepository.findAllByUserId(userPS.getId());
+        List<FriendInvite> friendInvitesPS = friendInviteRepository.findAllByToUserIdJoin(userPS.getId());
         for (FriendInvite friendDTO : friendInvitesPS) {
             notificationDTO.add(new NotificationResponse.NotificationBundleDTO(friendDTO));
         }
@@ -67,6 +67,7 @@ public class NotificationService {
         // 내림차 순 정렬
         notificationDTO.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
 
+        log.info("{}({})이 알람 목록을 조회합니다", userPS.getUsername(), userPS.getId());
         // DTO 통합
         return new NotificationResponse.NotificationListDTO(notificationDTO);
     }

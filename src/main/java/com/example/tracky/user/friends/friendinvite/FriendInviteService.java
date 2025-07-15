@@ -13,13 +13,11 @@ import com.example.tracky.user.friends.FriendRepository;
 import com.example.tracky.user.kakaojwt.OAuthProfile;
 import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FriendInviteService {
@@ -28,12 +26,13 @@ public class FriendInviteService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
+
     /**
-     * 친구 요청 보내기
+     * 친구 요청 하기
      *
-     * @param sessionProfile 로그인 한 유저
-     * @param toUser         친구 요청을 받을 유저
-     * @return SaveDTO
+     * @param sessionProfile
+     * @param userId
+     * @return
      */
     @Transactional
     public FriendInviteResponse.SaveDTO friendInvite(OAuthProfile sessionProfile, Integer userId) {
@@ -70,27 +69,9 @@ public class FriendInviteService {
         //  그래야 알림 전송이 지연되더라도 사용자에게 응답이 늦게 가는 것을 막을 수 있습니다.
         notificationService.sendFriendInviteNotification(fromUserPS.getId(), toUserPS.getId());
 
+        log.info("{}({})이 {}({})에게 친구 요청을 보냈습니다", fromUserPS.getUsername(), fromUserPS.getId(), toUserPS.getUsername(), toUserPS.getId());
+
         return new FriendInviteResponse.SaveDTO(saveInvitePS);
-    }
-
-    /**
-     * 내가 받은 친구 요청 모두 조회
-     *
-     * @param sessionProfile
-     * @return DTO
-     */
-    public List<FriendInviteResponse.InvitesDTO> getFriendInvite(OAuthProfile sessionProfile) {
-        // 사용자 조회
-        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
-                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
-
-        List<FriendInvite> invites = friendInviteRepository.findAllByUserId(userPS.getId());
-        List<FriendInviteResponse.InvitesDTO> inviteList = new ArrayList<>();
-        for (FriendInvite invite : invites) {
-            inviteList.add(new FriendInviteResponse.InvitesDTO(invite));
-        }
-
-        return inviteList;
     }
 
     /**
@@ -117,8 +98,10 @@ public class FriendInviteService {
 
         // 친구 테이블에 추가 (중복 방지)
         if (!friendRepository.existsFriend(invite.getFromUser(), invite.getToUser())) {
-            friendRepository.save(new Friend(invite.getFromUser(), invite.getToUser()));
+            friendRepository.save(Friend.builder().fromUser(invite.getFromUser()).toUser(invite.getToUser()).build());
         }
+
+        log.info("{}({})이 친구 요청을 수락했습니다", userPS.getUsername(), userPS.getId());
 
         return new FriendInviteResponse.ResponseDTO(invite);
     }
@@ -144,6 +127,10 @@ public class FriendInviteService {
 
         // DB 상태 변경
         invite.reject();
+
+        log.info("{}({})이 친구 요청을 거절했습니다", userPS.getUsername(), userPS.getId());
+
+
         return new FriendInviteResponse.ResponseDTO(invite);
     }
 

@@ -18,6 +18,7 @@ public class RunBadge {
     private String name; // 뱃지 이름
     private String description; // 뱃지 조건 설명
     private String imageUrl; // 뱃지 이미지
+    @Enumerated(EnumType.STRING)
     private RunBadgeTypeEnum type; // 최고기록 or 월간업적
 
     @CreationTimestamp
