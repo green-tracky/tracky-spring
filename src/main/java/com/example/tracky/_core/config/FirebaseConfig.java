@@ -43,6 +43,8 @@ public class FirebaseConfig {
         log.warn("Original Key {}", firebaseProperties.getPrivateKey());
         firebaseProperties.setPrivateKey(firebaseProperties.getPrivateKey().replace("\\n", "\n"));
         String json = objectMapper.writeValueAsString(firebaseProperties);
+ 
+        log.warn("Firebase properties: {}", json);
 
         log.warn("Firebase properties: {}", json);
 
