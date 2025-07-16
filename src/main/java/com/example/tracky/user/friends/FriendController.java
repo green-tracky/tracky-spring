@@ -37,7 +37,7 @@ public class FriendController {
         return Resp.ok(respDTO);
     }
 
-    @DeleteMapping("/friends/{id}")
+    @DeleteMapping("/friends/users/{id}")
     public ResponseEntity<?> deleteFriend(@PathVariable Integer id) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

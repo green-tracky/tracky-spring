@@ -127,7 +127,7 @@ class FriendControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/friends/{id}", id)
+                        .delete("/s/api/friends/users/{id}", id)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
@@ -154,7 +154,7 @@ class FriendControllerTest extends MyRestDoc {
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
-                        .delete("/s/api/friends/{id}", id)
+                        .delete("/s/api/friends/users/{id}", id)
                         .header("Authorization", "Bearer " + fakeToken)
         );
 
