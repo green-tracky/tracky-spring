@@ -43,7 +43,7 @@ public class FirebaseConfig {
         log.warn("Original Key {}", firebaseProperties.getPrivateKey());
         firebaseProperties.setPrivateKey(firebaseProperties.getPrivateKey().replace("\\n", "\n"));
         String json = objectMapper.writeValueAsString(firebaseProperties);
-
+ 
         log.warn("Firebase properties: {}", json);
 
         log.debug("application.properties 파일에서 Firebase 설정을 로드합니다.");
