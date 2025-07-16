@@ -3,7 +3,6 @@ package com.example.tracky.runrecord.runsegments.runcoordinates;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -23,7 +22,6 @@ public class RunCoordinateRequest {
         private Double lon;
 
         @NotNull(message = "기록 시간은 필수 입력 항목입니다.")
-        @PastOrPresent(message = "기록 시간은 현재 또는 과거의 시간이어야 합니다.")
         private LocalDateTime recordedAt;
 
         /**
