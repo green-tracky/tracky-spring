@@ -23,7 +23,7 @@ public class RunLevel {
     @Column(nullable = false)
     private Integer maxDistance; // 해당 레벨의 조건 범위 끝 (m)
 
-    private String description; // 레벨 설명 (예: "0~49.99킬로미터" 등)
+    private String description; // 레벨 설명 (예: "0~49.99킬로미터" 등 )
 
     @Column(nullable = false)
     private Integer sortOrder; // 레벨 정렬용 값 (0~)
