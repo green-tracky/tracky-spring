@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -47,7 +46,6 @@ public class ChallengeInvite {
     @CreationTimestamp
     private LocalDateTime createdAt; // 요청 시간
 
-    @UpdateTimestamp
     private LocalDateTime responseAt; // 응답 시간
 
     @Builder
@@ -67,6 +65,7 @@ public class ChallengeInvite {
             throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
         this.status = InviteStatusEnum.ACCEPTED;
+        this.responseAt = LocalDateTime.now();
     }
 
     public void reject() {
@@ -74,5 +73,6 @@ public class ChallengeInvite {
             throw new ExceptionApi400(INVALID_INVITE_RESPONSE_STATE);
         }
         this.status = InviteStatusEnum.REJECTED;
+        this.responseAt = LocalDateTime.now();
     }
 }

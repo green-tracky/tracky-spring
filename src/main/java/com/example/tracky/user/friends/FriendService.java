@@ -1,5 +1,6 @@
 package com.example.tracky.user.friends;
 
+import com.example.tracky._core.config.FirebaseProperties;
 import com.example.tracky._core.enums.ErrorCodeEnum;
 import com.example.tracky._core.error.ex.ExceptionApi404;
 import com.example.tracky.user.User;
@@ -9,6 +10,7 @@ import com.example.tracky.user.utils.LoginIdUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 public class FriendService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
+    private final FirebaseProperties firebaseProperties;
 
     public List<FriendResponse.SearchDTO> getFriendSearch(String userTag, OAuthProfile sessionProfile) {
         // 사용자 조회
@@ -63,5 +66,20 @@ public class FriendService {
         log.info("{}({})이 친구 목록을 조회합니다.", userPS.getUsername(), userPS.getId());
 
         return friendList;
+    }
+
+    @Transactional
+    public void deleteFriend(OAuthProfile sessionProfile, Integer id) {
+        // 사용자 조회
+        User userPS = userRepository.findByLoginId(LoginIdUtil.makeLoginId(sessionProfile))
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // 친구 전체 조회
+        Friend friendsPS = friendRepository.findByUserIdorFriendId(userPS.getId(), id)
+                .orElseThrow(() -> new ExceptionApi404(ErrorCodeEnum.NOT_MY_FRIEND));
+
+        friendRepository.deleteById(friendsPS);
+
+        log.info("{}({})이 친구{}를 삭제했습니다.", userPS.getUsername(), userPS.getId(), friendsPS.getId());
     }
 }
