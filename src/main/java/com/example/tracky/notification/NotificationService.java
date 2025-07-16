@@ -86,7 +86,7 @@ public class NotificationService {
 
         // 2. 사용자 정보가 없는 경우, 로그를 남기고 함수를 종료합니다.
         if (toUserOP.isEmpty() || fromUserOP.isEmpty()) {
-            log.error("알림을 보낼 사용자 또는 요청자가 존재하지 않습니다.");
+            log.warn("알림을 보낼 사용자 또는 요청자가 존재하지 않습니다.");
             return;
         }
 
@@ -96,7 +96,7 @@ public class NotificationService {
         String toUserFCMToken = toUser.getFcmToken();
         // 3. 수신자의 FCM 토큰이 등록되어 있는지 확인합니다. 토큰이 없으면 알림을 보낼 수 없습니다.
         if (toUserFCMToken == null || toUserFCMToken.isEmpty()) {
-            log.error("수신자의 FCM 토큰이 등록되지 않았습니다: {}", toUser.getUsername());
+            log.warn("수신자의 FCM 토큰이 등록되지 않았습니다: {}", toUser.getUsername());
             return;
         }
 
@@ -151,13 +151,13 @@ public class NotificationService {
 
         // 3. 사용자 정보가 없는 경우, 로그를 남기고 함수를 종료합니다.
         if (toUserOP.isEmpty() || fromUserOP.isEmpty()) {
-            log.error("알림을 보낼 사용자 또는 요청자가 존재하지 않습니다.");
+            log.warn("알림을 보낼 사용자 또는 요청자가 존재하지 않습니다.");
             return;
         }
 
         // 4. 챌린지 정보가 없는 경우, 로그를 남기고 함수를 종료합니다.
         if (challengeOP.isEmpty()) {
-            log.error("알림을 보낼 챌린지가 존재하지 않습니다");
+            log.warn("알림을 보낼 챌린지가 존재하지 않습니다");
             return;
         }
 
@@ -168,7 +168,7 @@ public class NotificationService {
         String toUserFCMToken = toUser.getFcmToken();
         // 5. 수신자의 FCM 토큰이 등록되어 있는지 확인합니다. 토큰이 없으면 알림을 보낼 수 없습니다.
         if (toUserFCMToken == null || toUserFCMToken.isEmpty()) {
-            log.error("수신자의 FCM 토큰이 등록되지 않았습니다: {}", toUser.getUsername());
+            log.warn("수신자의 FCM 토큰이 등록되지 않았습니다: {}", toUser.getUsername());
             return;
         }
 
