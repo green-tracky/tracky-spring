@@ -40,6 +40,7 @@ public class FirebaseConfig {
     public FirebaseApp firebaseApp() throws IOException {
         // 3. [핵심] 주입받은 FirebaseProperties 객체를 완전한 JSON 문자열로 다시 만듭니다.
         //    properties 파일에서 private_key의 줄바꿈 문자(\n)가 일반 텍스트로 인식되므로, 실제 줄바꿈 문자로 변경해줍니다.
+        log.warn("Original Key {}", firebaseProperties.getPrivateKey());
         firebaseProperties.setPrivateKey(firebaseProperties.getPrivateKey().replace("\\n", "\n"));
         String json = objectMapper.writeValueAsString(firebaseProperties);
 
