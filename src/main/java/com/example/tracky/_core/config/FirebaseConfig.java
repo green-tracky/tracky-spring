@@ -46,8 +46,12 @@ public class FirebaseConfig {
         //    (결과: "-----BEGIN...\\nMIIEvg..." 와 같이 `\\n` 문자가 포함된 문자열)
         String decodedPrivateKeyWithLiterals = Base64Util.decodeBase64(rawFbPrivateKey);
 
+        log.warn("디코딩된 key : {}", decodedPrivateKeyWithLiterals);
+
         // 3. [핵심] 디코딩된 문자열에 포함된 `\\n`을 실제 줄 바꿈 문자 `\n`으로 치환합니다.
         String finalFormattedPrivateKey = decodedPrivateKeyWithLiterals.replace("\\n", "\n");
+
+        log.warn("역슬레시 변경된 key : {}", finalFormattedPrivateKey);
 
         // 4. 최종적으로 포맷된 키를 properties 객체에 다시 설정합니다.
         firebaseProperties.setPrivateKey(finalFormattedPrivateKey);
