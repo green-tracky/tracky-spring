@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,6 +26,26 @@ public class FriendRepository {
         query.setParameter("id", userId);
         List<Friend> friends = query.getResultList();
         return friends;
+    }
+
+    /**
+     * 유저 ID로 친구 한 명 조회 (fromUser 또는 toUser인 경우 모두 조회)
+     *
+     * @param userId   로그인 한 유저의 ID
+     * @param friendId 삭제 할 친구의 DI
+     * @return Friend
+     */
+    public Optional<Friend> findByUserIdorFriendId(Integer userId, Integer friendId) {
+        try {
+            Query query = em.createQuery("select f from Friend f where (f.fromUser.id = :userId and f.toUser.id = :friendId) or (f.toUser.id = :userId and f.toUser.id = :friendId)", Friend.class);
+            query.setParameter("userId", userId);
+            query.setParameter("friendId", friendId);
+            Friend friend = (Friend) query.getSingleResult();
+            return Optional.of(friend);
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
+
     }
 
     /**
@@ -58,4 +79,7 @@ public class FriendRepository {
         return count > 0;
     }
 
+    public void deleteById(Friend friend) {
+        em.remove(friend);
+    }
 }

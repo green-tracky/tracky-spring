@@ -8,10 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +23,7 @@ public class FriendController {
     @GetMapping("/friends/search")
     public ResponseEntity<?> getFriendSearch(@Pattern(regexp = "^[a-zA-Z0-9]+$", message = "유저 태그는 영문, 숫자만 사용할 수 있습니다.") @RequestParam("user-tag") String userTag) {
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
-        
+
         List<FriendResponse.SearchDTO> respDTO = friendService.getFriendSearch(userTag, sessionProfile);
         return Resp.ok(respDTO);
     }
@@ -38,5 +35,13 @@ public class FriendController {
         List<FriendResponse.UserDTO> respDTO = friendService.getFriendList(sessionProfile);
 
         return Resp.ok(respDTO);
+    }
+
+    @DeleteMapping("/friends/users/{id}")
+    public ResponseEntity<?> deleteFriend(@PathVariable Integer id) {
+        OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
+
+        friendService.deleteFriend(sessionProfile, id);
+        return Resp.ok(null);
     }
 }
