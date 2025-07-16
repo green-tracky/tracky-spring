@@ -39,7 +39,7 @@ public class PostController {
     }
 
     @DeleteMapping("/community/posts/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -58,7 +58,7 @@ public class PostController {
     }
 
     @GetMapping("/community/posts/{id}")
-    public ResponseEntity<?> getPostDetail(@PathVariable Integer id) {
+    public ResponseEntity<?> getPostDetail(@PathVariable("id") Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

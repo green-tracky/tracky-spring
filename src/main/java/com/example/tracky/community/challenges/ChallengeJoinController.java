@@ -18,7 +18,7 @@ public class ChallengeJoinController {
     private final HttpSession session;
 
     @PostMapping("/community/challenges/{id}/join")
-    public ResponseEntity<?> join(@PathVariable Integer id) {
+    public ResponseEntity<?> join(@PathVariable("id") Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -28,7 +28,7 @@ public class ChallengeJoinController {
 
 
     @DeleteMapping("/community/challenges/{id}/join")
-    public ResponseEntity<?> leave(@PathVariable Integer id) {
+    public ResponseEntity<?> leave(@PathVariable("id") Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
