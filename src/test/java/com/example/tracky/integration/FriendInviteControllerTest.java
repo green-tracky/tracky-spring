@@ -30,6 +30,7 @@ class FriendInviteControllerTest extends MyRestDoc {
         // given
         Integer toUserId = 3;
 
+
         // when
         ResultActions actions = mvc.perform(
                 MockMvcRequestBuilders
