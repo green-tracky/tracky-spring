@@ -43,6 +43,8 @@ public class FirebaseConfig {
         firebaseProperties.setPrivateKey(firebaseProperties.getPrivateKey().replace("\\n", "\n"));
         String json = objectMapper.writeValueAsString(firebaseProperties);
 
+        log.warn("Firebase properties: {}", json);
+
         log.debug("application.properties 파일에서 Firebase 설정을 로드합니다.");
 
         // 4. 동적으로 생성된 JSON 문자열로부터 InputStream을 생성합니다.
