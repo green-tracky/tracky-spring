@@ -1,5 +1,6 @@
 package com.example.tracky._core.config;
 
+import com.example.tracky._core.utils.Base64Util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -38,17 +39,24 @@ public class FirebaseConfig {
      */
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        // 3. [핵심] 주입받은 FirebaseProperties 객체를 완전한 JSON 문자열로 다시 만듭니다.
-        //    properties 파일에서 private_key의 줄바꿈 문자(\n)가 일반 텍스트로 인식되므로, 실제 줄바꿈 문자로 변경해줍니다.
-        log.warn("Original Key {}", firebaseProperties.getPrivateKey());
-        firebaseProperties.setPrivateKey(firebaseProperties.getPrivateKey().replace("\\n", "\n"));
+        // 1. properties에서 Base64로 인코딩된 키를 가져옵니다.
+        String rawFbPrivateKey = firebaseProperties.getPrivateKey();
+
+        // 2. Base64로 디코딩합니다.
+        //    (결과: "-----BEGIN...\\nMIIEvg..." 와 같이 `\\n` 문자가 포함된 문자열)
+        String decodedPrivateKeyWithLiterals = Base64Util.decodeBase64(rawFbPrivateKey);
+
+        // 3. [핵심] 디코딩된 문자열에 포함된 `\\n`을 실제 줄 바꿈 문자 `\n`으로 치환합니다.
+        String finalFormattedPrivateKey = decodedPrivateKeyWithLiterals.replace("\\n", "\n");
+
+        // 4. 최종적으로 포맷된 키를 properties 객체에 다시 설정합니다.
+        firebaseProperties.setPrivateKey(finalFormattedPrivateKey);
+
+        // 5. 올바른 키가 포함된 객체를 JSON으로 직렬화합니다.
         String json = objectMapper.writeValueAsString(firebaseProperties);
- 
-        log.warn("Firebase properties: {}", json);
+        log.warn("Generated Firebase JSON for initialization: {}", json);
 
-        log.debug("application.properties 파일에서 Firebase 설정을 로드합니다.");
-
-        // 4. 동적으로 생성된 JSON 문자열로부터 InputStream을 생성합니다.
+        // 6. 생성된 JSON 문자열로부터 스트림을 만들어 Firebase를 초기화합니다.
         InputStream serviceAccountStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
 
         try (InputStream serviceAccount = serviceAccountStream) {
