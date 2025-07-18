@@ -8,7 +8,7 @@ name: tracky
 on:
   push:
     branches:
-      - master
+      - main
 
 # 실행될 작업(job)들을 정의합니다.
 jobs:
