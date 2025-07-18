@@ -44,6 +44,7 @@ public class FirebaseConfig {
 
         // 2. Base64로 디코딩합니다.
         //    (결과: "-----BEGIN...\\nMIIEvg..." 와 같이 `\\n` 문자가 포함된 문자열)
+        // 읽어온 값은 \n 문자다 \n 문자를 읽었기 때문에 om 가 이걸 \\n 으로 변경해버리니 3번 처리가 무조건 필요한다
         String decodedPrivateKeyWithLiterals = Base64Util.decodeBase64(rawFbPrivateKey);
 
         log.warn("디코딩된 key : {}", decodedPrivateKeyWithLiterals);
