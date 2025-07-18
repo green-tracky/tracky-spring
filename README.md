@@ -1,5 +1,8 @@
 <img src="https://readme-decorate.vercel.app/api/get?type=stroke&text=Tracky&width=750&height=250&fontSize=48&fontWeight=700&useGradient=false&fontColor=%23021f59&backgroundColor=%23d0f252&gradientColor1=&gradientColor2=" />
 
+<img src="./docs/러닝시연영상.gif" alt="러닝시연" height="500"/>
+<img src="./docs/러닝앱시연영상.gif" alt="러닝시연" height="500"/>
+
 # 파이널프로젝트 - 중개플랫폼 웹/앱 : Tracky
 
 - 자바와 스프링부트를 활용하여 Rest API 서버를 제작하였습니다.
