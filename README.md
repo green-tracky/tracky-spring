@@ -2,10 +2,17 @@
 
 # 파이널프로젝트 - 중개플랫폼 웹/앱 : Tracky
 
-- 나이키 러닝앱을 레퍼런싱하였습니다.
 - 자바와 스프링부트를 활용하여 Rest API 서버를 제작하였습니다.
 - 전체 개발 기간 : 2025.06.16 ~ 2025.07.18
   <br />
+
+## 앱 레퍼런싱
+
+- Nike Run Club 앱을 리퍼런싱 하여 제작하였습니다.
+
+<a href="https://www.nike.com/kr/nrc-app">
+<img src="https://dl.memuplay.com/new_market/img/com.nike.plusgps.icon.2025-01-03-00-11-57.png" width="150">
+</a>
 
 # 👥 팀 멤버
 
