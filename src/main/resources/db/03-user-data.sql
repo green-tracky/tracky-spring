@@ -10,7 +10,7 @@ VALUES ('KAKAO_123456789', 'password123', 'ssar', 'http://example.com/profiles/s
         '부산광역시', '안녕하세요, 러닝을 사랑하는 ssar입니다.', 'GENERAL', 'KAKAO',
         '#A1B2C3', 'token_ssar_123', '2025-05-30 12:00:00', 1);
 
--- 2. 사용자 'cos' (ADMIN, FEMALE)
+-- 2. 사용자 'cos'  (ADMIN, FEMALE)
 INSERT INTO user_tb (login_id, password, username, profile_url, height, weight, gender, location, letter,
                      user_type, provider, user_tag,
                      fcm_token, created_at, run_level_id)

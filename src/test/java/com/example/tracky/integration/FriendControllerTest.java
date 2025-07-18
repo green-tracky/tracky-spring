@@ -119,6 +119,60 @@ class FriendControllerTest extends MyRestDoc {
         actions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
     }
+
+    @Test
+    void delete_friend_test() throws Exception {
+        // given
+        Integer id = 3;
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/friends/users/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isOk());
+        actions.andExpect(jsonPath("$.msg").value("성공"));
+
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
+
+    @Test
+    void delete_friend_fail_test() throws Exception {
+        // given
+        Integer id = 2;
+        // when
+        ResultActions actions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/s/api/friends/users/{id}", id)
+                        .header("Authorization", "Bearer " + fakeToken)
+        );
+
+        // eye
+        String responseBody = actions.andReturn().getResponse().getContentAsString();
+        log.debug("✅응답 바디: " + responseBody);
+
+        // then
+        actions.andExpect(status().isNotFound());
+        actions.andExpect(jsonPath("$.msg").value("서로 친구가 아닙니다"));
+
+        actions.andExpect(jsonPath("$.data").value(nullValue()));
+
+
+        // 디버깅 및 문서화 (필요시 주석 해제)
+        actions.andDo(MockMvcResultHandlers.print()).andDo(document);
+
+    }
 }
 
 

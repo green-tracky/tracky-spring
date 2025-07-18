@@ -110,7 +110,7 @@ public class RunRecordController {
     }
 
     @GetMapping("/runs/{id}")
-    public ResponseEntity<?> getRunRecord(@PathVariable Integer id) {
+    public ResponseEntity<?> getRunRecord(@PathVariable("id") Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -120,7 +120,7 @@ public class RunRecordController {
     }
 
     @DeleteMapping("/runs/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 
@@ -130,7 +130,7 @@ public class RunRecordController {
     }
 
     @PutMapping("/runs/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody RunRecordRequest.UpdateDTO reqDTO, Errors errors) {
+    public ResponseEntity<?> update(@PathVariable("id") Integer id, @Valid @RequestBody RunRecordRequest.UpdateDTO reqDTO, Errors errors) {
         // 세션에서 유저 정보 꺼내기
         OAuthProfile sessionProfile = (OAuthProfile) session.getAttribute(SessionKeys.PROFILE);
 

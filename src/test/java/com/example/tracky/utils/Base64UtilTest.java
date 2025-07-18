@@ -1,0 +1,31 @@
+package com.example.tracky.utils;
+
+import org.junit.jupiter.api.Test;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+public class Base64UtilTest {
+
+    @Test
+    public void base64DecodeTest() {
+        // 원본 Base64 문자열 (이스케이프된 \n 포함)
+        String rawFbPrivateKey = """
+                LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tXG5NSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUURJZ2NwTDNQMm44a2VtXG5kMU9CSlZSL01NYVMzR1p4dHY5VEFYY0xMa1JzNkJrVUZ0cjhwdEVjWnJmTGlhTnhnUjJYR3EwZUZ6ams0UXpyXG4yeEhseHh1dnpxWjNNcEI2K2pvQU5GY1QyWlgvdUJYZjJESFVnRlFRbktPaWxhWlV3NHN1M3U4MTRZQktIQW5ZXG5NUUsxSnpEdEVJS3A4R0lBdThldVBqaDJRb0VKTXNzdUZiWVZOem5JRlZNZ2hKM08zNXVvbzdpcHE0QVcyQmd2XG5HUHN1SFE0eTNKdm5lOXZTM05POXZ0bmhBVHY4ZTVLWFVvbUZCK05wVkppVm1DaGl3eE5qM1Y2SUFraFl1c1FLXG5SbXlSM2RwWTNjK3VnQWh2RFFkMU40d28zVVpEMDltU2dneGY2V0w1ekhramY1eVgzMFlVSEl4aFc5VlJ0blR1XG5Oc205cFRmcEFnTUJBQUVDZ2dFQUZ0MzRocFRtUitwaGdncHZWMVg4MEVHdGorKzdia0llMWVaZm40S1FFclNZXG5zWm9Xc1FSTWFuY0xoSmJHc1duMmlEWm1ZbjFuQTNGb01oanFybUE2RjkrVFRCcFQ4SGFMdVZ5K3hwaUUyeVJ4XG5PRFYxbjJUZ1VZR3Z4dG5XM2Fsc2ZQUzNadGQ0TkZ1RXd1ZDZCZE41cUx1K2p5ZUhZY3FJc0NaUDlhckpnUlVhXG5MSGhMc0tiWm5LSHdVTmM1aEJUWTRNaWVsdmRSeVR4cFlrZElRcmNzYkFyQmpZVlJXb0Y0eXJSSnByNGYwMStoXG5kclF5UC9YeXc3Vi9sM0pWdUcwVlRFZ05OOUpTNkZMOU9QUm13UWszdHhZTmhSRWI2ejVhVkRXKy80RFpyeEFPXG4wUFdXQnB4M1VMV0UxVlFlYzZkVkRLb21wWFZHZm9KMWFjRDRuc2ljQlFLQmdRRDhkVWdjcFhZNWo4SWx3bzFsXG5adlVjb0hESEVOWWVhZUVvZzhRWVllejVPdFpkNk9HZjVDZU1EUC9PenZacXczYVg2RTJqa0tOVHVlTUR0SEdtXG5rc082M3JMaUtCYjA0UzBvUFdmdVdUWGtaSk9OOE51WThPQlFUeUdlb3Y3ZmJJNjQwT0t1SG9IcEUxNm11UkJlXG5xWDdpMHF5TmFRR0JRSkM1TTEwcnlLeVdMUUtCZ1FETFVleEdMdEpEU3VEdEs5YU13NWZpWmVhcjE1RTBlc250XG5KMlF0ZVNoQ2FaWDI0VkJWWHF2ODQ1QTM5cjVPa3BoK3Q5VlJGaEF4aXBCRXh1cXVudkxDYTQwcHErM2VzU1FkXG5PQ1c0SWhwVEZ0bEFORGJ4d1JNVnJkN3lyWDVqMUcxdjExVVlkbVFDd3NWWlJvUDRwQWloUC9tV28xZy8wSjdKXG5qU25OZ1c5YUxRS0JnUURyZmtkM0dVMVA0bTY3SkdFYkh0QTBGT0UrZjlFTDY3NHhPY0NZOGZmSWdIN29lTXpHXG5obC94ZjBxNzBra0FURFo2K3lJNUdqbVFaMHlBN3pnNHBwelgydGJJcVpiSWRLZlg2bmZoV093eGtUUW02bThkXG5ta3ZUL2d5aFd2QWUzN2UrWkhPZThpeENpMlAyWjVrQ2hGOHRIRklEVXRrcGhWMjZ0RlFML0pRcFBRS0JnSFNjXG5vL3NNMTZPb3lxQzh4KzBzTVd5MExUemFBbm9yQXExMkxrcTJkcFRBb2paYXZBeDZwQUlETXJBbVlMZ0g5RmFaXG5jVXQwY0EwNS84eXltZDlWWXI2SG1Rc1JoUGg0ZU5JWlplamFCbWNwYjZrWFNYd1cxSzlXYmN5YUhTZDhxdGUrXG5sUnZXcXoyNklCNDRCM0VRQTdNWVVqcEhyVkhNZ1lYdjVNM3RNc1J4QW9HQkFOOU5YdCt2WCtrdzRnUEtZRlVnXG5LN2ZGOUlwN2NiSS9YK1M2QnE1UVUyLzRZNHMrL3VsUUVWYy9CQkRWMzFhZmpsQXlNdXVnRFpTaWtESGJUWEdQXG5KYTkybTIwNkpwaStqdUo1NmdKS3N4ZTgyYzVMMDlyRU0rVFRXK2tNYzlYNlA0RUV0U3p1UjVkWHp6Y1VlWU5lXG5lQ3FubTlxSzZtVGkzeU5KazhoaERKVmlcbi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS1cbg==
+                """;
+
+        // 1. [핵심] 정규식을 사용하여 모든 공백 문자(\\s)와 이스케이프된 \\n을 제거합니다.
+        //    먼저 이스케이프된 백슬래시를 제거하고, 그 다음 모든 공백을 제거합니다.
+        String cleanBase64String = rawFbPrivateKey.replace("\\n", "").replaceAll("\\s", "");
+
+        // 2. 깨끗해진 순수 Base64 문자열을 디코딩합니다.
+        byte[] decodedBytes = Base64.getDecoder().decode(cleanBase64String);
+
+        // 3. 디코딩된 바이트 배열을 UTF-8 문자열로 변환합니다.
+        String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
+
+        // 4. 결과 출력
+        System.out.println("--- Decoded String ---");
+        System.out.println(decodedString);
+    }
+}

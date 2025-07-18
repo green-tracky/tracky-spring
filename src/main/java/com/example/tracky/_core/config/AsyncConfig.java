@@ -28,11 +28,11 @@ public class AsyncConfig implements AsyncConfigurer {
         public void handleUncaughtException(Throwable ex, Method method, Object... params) {
             // [권장] 예외 상황이므로 'error' 레벨로 기록합니다.
             // 또한, ex 객체를 함께 넘겨주면 스택 트레이스(오류 발생 경로) 전체가 상세하게 기록됩니다.
-            log.error("### 비동기 작업 실패 ### Method: {}, Message: {}", method.getName(), ex.getMessage(), ex);
+            log.warn("### 비동기 작업 실패 ### Method: {}, Message: {}", method.getName(), ex.getMessage(), ex);
 
             // 파라미터 값도 상세히 기록하여 원인 분석을 돕습니다.
             for (Object param : params) {
-                log.error("Parameter: {}", param.toString());
+                log.warn("Parameter: {}", param.toString());
             }
         }
     }

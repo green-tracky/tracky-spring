@@ -21,7 +21,6 @@ public class ChallengeRequest {
         private String name;
 
         @NotNull(message = "이미지 index 필수 입력 항목입니다.")
-        @Positive(message = "목표 거리는 0보다 커야 합니다.")
         private Integer imgIndex;
 
         @NotNull(message = "목표 거리는 필수 입력 항목입니다.")

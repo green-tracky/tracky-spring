@@ -558,6 +558,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_1_친구_검색_성공_유저_태그">1. 친구 검색 성공 (유저 태그)</a></li>
 <li><a href="#_2_친구_검색_실패_유효하지_않은_유저_태그">2. 친구 검색 실패 (유효하지 않은 유저 태그)</a></li>
 <li><a href="#_3_친구_목록_조회">3. 친구 목록 조회</a></li>
+<li><a href="#_4_친구_삭제">4. 친구 삭제</a></li>
+<li><a href="#_5_친구_삭제_실패_본인의_친구가_아닌_경우">5. 친구 삭제 실패 (본인의 친구가 아닌 경우)</a></li>
 </ul>
 </li>
 <li><a href="#_챌린지_참여_challenge_join">챌린지 참여 (Challenge Join)</a>
@@ -700,7 +702,7 @@ Content-Length: 384
     "gender" : "여",
     "location" : "부산광역시",
     "letter" : "안녕하세요, 러닝을 사랑하는 ssar입니다.",
-    "updatedAt" : "2025-07-15 19:22:40"
+    "updatedAt" : "2025-07-16 16:34:47"
   }
 }</code></pre>
 </div>
@@ -1013,7 +1015,7 @@ Content-Length: 1971
       "lon" : 129.1615,
       "savedAt" : "2025-06-22 06:43:05"
     } ],
-    "createdAt" : "2025-07-15 19:22:40",
+    "createdAt" : "2025-07-16 16:34:46",
     "userId" : 1,
     "badges" : [ {
       "id" : 2,
@@ -1021,7 +1023,7 @@ Content-Length: 1971
       "description" : "나의 1,000미터 최고 기록",
       "imageUrl" : "https://example.com/badges/1k_best.png",
       "type" : "최고기록",
-      "achievedAt" : "2025-07-15 19:22:40",
+      "achievedAt" : "2025-07-16 16:34:46",
       "runRecordDistance" : 2000,
       "runRecordSeconds" : 784,
       "runRecordPace" : 392,
@@ -3039,7 +3041,7 @@ Content-Length: 915
     "isLiked" : false,
     "id" : 1,
     "content" : "ssar의 러닝 기록을 공유합니다.",
-    "createdAt" : "2025-07-15 19:22:39",
+    "createdAt" : "2025-07-16 16:34:45",
     "pictures" : [ {
       "fileUrl" : "https://example.com/images/run1.jpg",
       "lat" : 37.5665,
@@ -3057,7 +3059,7 @@ Content-Length: 915
     "isLiked" : true,
     "id" : 2,
     "content" : "love의 러닝 기록을 공유합니다.",
-    "createdAt" : "2025-07-15 19:22:39",
+    "createdAt" : "2025-07-16 16:34:45",
     "pictures" : [ ],
     "user" : {
       "id" : 3,
@@ -3104,7 +3106,7 @@ Content-Length: 199
     "id" : 3,
     "content" : "내용입니다",
     "userId" : 1,
-    "createdAt" : "2025-07-15 19:22:40",
+    "createdAt" : "2025-07-16 16:34:46",
     "runRecordId" : 10
   }
 }</code></pre>
@@ -3185,8 +3187,8 @@ Content-Length: 7787
         "username" : "cos",
         "content" : "감동적인 글이었습니다.",
         "parentId" : null,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39",
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45",
         "children" : [ ]
       }, {
         "id" : 21,
@@ -3195,8 +3197,8 @@ Content-Length: 7787
         "username" : "ssar",
         "content" : "앞으로도 잘 부탁드려요.",
         "parentId" : null,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39",
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45",
         "children" : [ {
           "id" : 26,
           "postId" : 1,
@@ -3204,8 +3206,8 @@ Content-Length: 7787
           "username" : "cos",
           "content" : "앞으로 자주 뵈어요!",
           "parentId" : 21,
-          "createdAt" : "2025-07-15 19:22:39",
-          "updatedAt" : "2025-07-15 19:22:39"
+          "createdAt" : "2025-07-16 16:34:45",
+          "updatedAt" : "2025-07-16 16:34:45"
         }, {
           "id" : 27,
           "postId" : 1,
@@ -3213,8 +3215,8 @@ Content-Length: 7787
           "username" : "love",
           "content" : "저도 기대하고 있겠습니다.",
           "parentId" : 21,
-          "createdAt" : "2025-07-15 19:22:39",
-          "updatedAt" : "2025-07-15 19:22:39"
+          "createdAt" : "2025-07-16 16:34:45",
+          "updatedAt" : "2025-07-16 16:34:45"
         } ]
       }, {
         "id" : 20,
@@ -3223,8 +3225,8 @@ Content-Length: 7787
         "username" : "love",
         "content" : "정성 가득한 포스팅이에요.",
         "parentId" : null,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39",
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45",
         "children" : [ {
           "id" : 25,
           "postId" : 1,
@@ -3232,8 +3234,8 @@ Content-Length: 7787
           "username" : "cos",
           "content" : "진짜 정성이 느껴졌어요.",
           "parentId" : 20,
-          "createdAt" : "2025-07-15 19:22:39",
-          "updatedAt" : "2025-07-15 19:22:39"
+          "createdAt" : "2025-07-16 16:34:45",
+          "updatedAt" : "2025-07-16 16:34:45"
         } ]
       }, {
         "id" : 19,
@@ -3242,8 +3244,8 @@ Content-Length: 7787
         "username" : "cos",
         "content" : "댓글 안 달 수가 없네요.",
         "parentId" : null,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39",
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45",
         "children" : [ {
           "id" : 23,
           "postId" : 1,
@@ -3251,8 +3253,8 @@ Content-Length: 7787
           "username" : "ssar",
           "content" : "저도 같은 생각이에요!",
           "parentId" : 19,
-          "createdAt" : "2025-07-15 19:22:39",
-          "updatedAt" : "2025-07-15 19:22:39"
+          "createdAt" : "2025-07-16 16:34:45",
+          "updatedAt" : "2025-07-16 16:34:45"
         }, {
           "id" : 24,
           "postId" : 1,
@@ -3260,8 +3262,8 @@ Content-Length: 7787
           "username" : "love",
           "content" : "공감 백퍼입니다.",
           "parentId" : 19,
-          "createdAt" : "2025-07-15 19:22:39",
-          "updatedAt" : "2025-07-15 19:22:39"
+          "createdAt" : "2025-07-16 16:34:45",
+          "updatedAt" : "2025-07-16 16:34:45"
         } ]
       }, {
         "id" : 18,
@@ -3270,8 +3272,8 @@ Content-Length: 7787
         "username" : "ssar",
         "content" : "열정이 느껴져요.",
         "parentId" : null,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39",
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45",
         "children" : [ ]
       } ]
     },
@@ -3420,8 +3422,8 @@ Content-Length: 7787
       "place" : "도로"
     },
     "isOwner" : true,
-    "createdAt" : "2025-07-15 19:22:39",
-    "updatedAt" : "2025-07-15 19:22:39"
+    "createdAt" : "2025-07-16 16:34:45",
+    "updatedAt" : "2025-07-16 16:34:45"
   }
 }</code></pre>
 </div>
@@ -3489,8 +3491,8 @@ Content-Length: 197
   "data" : {
     "id" : 1,
     "content" : "내용입니다",
-    "createdAt" : "2025-07-15 19:22:39",
-    "updatedAt" : "2025-07-15 19:22:39"
+    "createdAt" : "2025-07-16 16:34:45",
+    "updatedAt" : "2025-07-16 16:34:45"
   }
 }</code></pre>
 </div>
@@ -3720,8 +3722,8 @@ Content-Length: 3033
       "username" : "cos",
       "content" : "감동적인 글이었습니다.",
       "parentId" : null,
-      "createdAt" : "2025-07-15 19:22:39",
-      "updatedAt" : "2025-07-15 19:22:39",
+      "createdAt" : "2025-07-16 16:34:45",
+      "updatedAt" : "2025-07-16 16:34:45",
       "children" : [ ]
     }, {
       "id" : 21,
@@ -3730,8 +3732,8 @@ Content-Length: 3033
       "username" : "ssar",
       "content" : "앞으로도 잘 부탁드려요.",
       "parentId" : null,
-      "createdAt" : "2025-07-15 19:22:39",
-      "updatedAt" : "2025-07-15 19:22:39",
+      "createdAt" : "2025-07-16 16:34:45",
+      "updatedAt" : "2025-07-16 16:34:45",
       "children" : [ {
         "id" : 26,
         "postId" : 1,
@@ -3739,8 +3741,8 @@ Content-Length: 3033
         "username" : "cos",
         "content" : "앞으로 자주 뵈어요!",
         "parentId" : 21,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39"
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45"
       }, {
         "id" : 27,
         "postId" : 1,
@@ -3748,8 +3750,8 @@ Content-Length: 3033
         "username" : "love",
         "content" : "저도 기대하고 있겠습니다.",
         "parentId" : 21,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39"
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45"
       } ]
     }, {
       "id" : 20,
@@ -3758,8 +3760,8 @@ Content-Length: 3033
       "username" : "love",
       "content" : "정성 가득한 포스팅이에요.",
       "parentId" : null,
-      "createdAt" : "2025-07-15 19:22:39",
-      "updatedAt" : "2025-07-15 19:22:39",
+      "createdAt" : "2025-07-16 16:34:45",
+      "updatedAt" : "2025-07-16 16:34:45",
       "children" : [ {
         "id" : 25,
         "postId" : 1,
@@ -3767,8 +3769,8 @@ Content-Length: 3033
         "username" : "cos",
         "content" : "진짜 정성이 느껴졌어요.",
         "parentId" : 20,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39"
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45"
       } ]
     }, {
       "id" : 19,
@@ -3777,8 +3779,8 @@ Content-Length: 3033
       "username" : "cos",
       "content" : "댓글 안 달 수가 없네요.",
       "parentId" : null,
-      "createdAt" : "2025-07-15 19:22:39",
-      "updatedAt" : "2025-07-15 19:22:39",
+      "createdAt" : "2025-07-16 16:34:45",
+      "updatedAt" : "2025-07-16 16:34:45",
       "children" : [ {
         "id" : 23,
         "postId" : 1,
@@ -3786,8 +3788,8 @@ Content-Length: 3033
         "username" : "ssar",
         "content" : "저도 같은 생각이에요!",
         "parentId" : 19,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39"
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45"
       }, {
         "id" : 24,
         "postId" : 1,
@@ -3795,8 +3797,8 @@ Content-Length: 3033
         "username" : "love",
         "content" : "공감 백퍼입니다.",
         "parentId" : 19,
-        "createdAt" : "2025-07-15 19:22:39",
-        "updatedAt" : "2025-07-15 19:22:39"
+        "createdAt" : "2025-07-16 16:34:45",
+        "updatedAt" : "2025-07-16 16:34:45"
       } ]
     }, {
       "id" : 18,
@@ -3805,8 +3807,8 @@ Content-Length: 3033
       "username" : "ssar",
       "content" : "열정이 느껴져요.",
       "parentId" : null,
-      "createdAt" : "2025-07-15 19:22:39",
-      "updatedAt" : "2025-07-15 19:22:39",
+      "createdAt" : "2025-07-16 16:34:45",
+      "updatedAt" : "2025-07-16 16:34:45",
       "children" : [ ]
     } ]
   }
@@ -3881,7 +3883,7 @@ Content-Length: 244
     "username" : "ssar",
     "content" : "내용입니다",
     "parentId" : null,
-    "createdAt" : "2025-07-15 19:22:39"
+    "createdAt" : "2025-07-16 16:34:45"
   }
 }</code></pre>
 </div>
@@ -3960,7 +3962,7 @@ Content-Length: 253
     "username" : "ssar",
     "content" : "수정된 내용입니다",
     "parentId" : null,
-    "updatedAt" : "2025-07-15 19:22:39"
+    "updatedAt" : "2025-07-16 16:34:45"
   }
 }</code></pre>
 </div>
@@ -5014,6 +5016,64 @@ Content-Length: 491
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_4_친구_삭제">4. 친구 삭제</h3>
+<div class="sect4">
+<h5 id="_request_example_68">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /s/api/friends/users/3 HTTP/1.1
+Authorization: Bearer eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_68">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 61
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5_친구_삭제_실패_본인의_친구가_아닌_경우">5. 친구 삭제 실패 (본인의 친구가 아닌 경우)</h3>
+<div class="sect4">
+<h5 id="_request_example_69">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /s/api/friends/users/2 HTTP/1.1
+Authorization: Bearer eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_69">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 404 Not Found
+Content-Type: application/json;charset=UTF-8
+Content-Length: 84
+
+{
+  "status" : 404,
+  "msg" : "서로 친구가 아닙니다",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -5022,7 +5082,7 @@ Content-Length: 491
 <div class="sect2">
 <h3 id="_1_챌린지_참여_성공">1. 챌린지 참여 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_68">Request Example</h5>
+<h5 id="_request_example_70">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/api/community/challenges/2/join HTTP/1.1
@@ -5033,7 +5093,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_68">Response Example</h5>
+<h5 id="_response_example_70">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5047,7 +5107,7 @@ Content-Length: 161
     "id" : 8,
     "challengeId" : 2,
     "userId" : 1,
-    "joinDate" : "2025-07-15 19:22:38"
+    "joinDate" : "2025-07-16 16:34:44"
   }
 }</code></pre>
 </div>
@@ -5057,7 +5117,7 @@ Content-Length: 161
 <div class="sect2">
 <h3 id="_2_챌린지_참여_실패_챌린지_없음">2. 챌린지 참여 실패 (챌린지 없음)</h3>
 <div class="sect4">
-<h5 id="_request_example_69">Request Example</h5>
+<h5 id="_request_example_71">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/api/community/challenges/10/join HTTP/1.1
@@ -5068,7 +5128,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_69">Response Example</h5>
+<h5 id="_response_example_71">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 404 Not Found
@@ -5087,7 +5147,7 @@ Content-Length: 98
 <div class="sect2">
 <h3 id="_3_챌린지_나가기_성공">3. 챌린지 나가기 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_70">Request Example</h5>
+<h5 id="_request_example_72">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /s/api/community/challenges/1/join HTTP/1.1
@@ -5097,7 +5157,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_70">Response Example</h5>
+<h5 id="_response_example_72">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5116,7 +5176,7 @@ Content-Length: 61
 <div class="sect2">
 <h3 id="_4_챌린지_나가기_실패_참여하지_않은_챌린지">4. 챌린지 나가기 실패 (참여하지 않은 챌린지)</h3>
 <div class="sect4">
-<h5 id="_request_example_71">Request Example</h5>
+<h5 id="_request_example_73">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /s/api/community/challenges/10/join HTTP/1.1
@@ -5126,7 +5186,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_71">Response Example</h5>
+<h5 id="_response_example_73">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 404 Not Found
@@ -5150,7 +5210,7 @@ Content-Length: 103
 <div class="sect2">
 <h3 id="_1_챌린지에_친구_초대_성공">1. 챌린지에 친구 초대 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_72">Request Example</h5>
+<h5 id="_request_example_74">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/api/community/challenges/1/invite HTTP/1.1
@@ -5166,7 +5226,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_72">Response Example</h5>
+<h5 id="_response_example_74">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5203,7 +5263,7 @@ Content-Length: 395
 <div class="sect2">
 <h3 id="_2_챌린지에_친구_초대_실패_친구가_아님">2. 챌린지에 친구 초대 실패 (친구가 아님)</h3>
 <div class="sect4">
-<h5 id="_request_example_73">Request Example</h5>
+<h5 id="_request_example_75">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/api/community/challenges/1/invite HTTP/1.1
@@ -5219,7 +5279,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_73">Response Example</h5>
+<h5 id="_response_example_75">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 404 Not Found
@@ -5238,7 +5298,7 @@ Content-Length: 84
 <div class="sect2">
 <h3 id="_3_초대_가능한_친구_목록_조회_성공">3. 초대 가능한 친구 목록 조회 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_74">Request Example</h5>
+<h5 id="_request_example_76">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/api/community/challenges/1/invite/available-friends HTTP/1.1
@@ -5248,7 +5308,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_74">Response Example</h5>
+<h5 id="_response_example_76">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5271,7 +5331,7 @@ Content-Length: 165
 <div class="sect2">
 <h3 id="_4_초대_가능한_친구_목록_조회_실패_챌린지_미참여">4. 초대 가능한 친구 목록 조회 실패 (챌린지 미참여)</h3>
 <div class="sect4">
-<h5 id="_request_example_75">Request Example</h5>
+<h5 id="_request_example_77">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/api/community/challenges/3/invite/available-friends HTTP/1.1
@@ -5281,7 +5341,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_75">Response Example</h5>
+<h5 id="_response_example_77">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 404 Not Found
@@ -5300,7 +5360,7 @@ Content-Length: 103
 <div class="sect2">
 <h3 id="_5_챌린지_초대_수락_성공">5. 챌린지 초대 수락 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_76">Request Example</h5>
+<h5 id="_request_example_78">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/invite/1/accept HTTP/1.1
@@ -5311,7 +5371,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_76">Response Example</h5>
+<h5 id="_response_example_78">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5333,73 +5393,10 @@ Content-Length: 103
 <div class="sect2">
 <h3 id="_6_챌린지_초대_수락_실패_권한_없음">6. 챌린지 초대 수락 실패 (권한 없음)</h3>
 <div class="sect4">
-<h5 id="_request_example_77">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/invite/4/accept HTTP/1.1
-Authorization: Bearer eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA
-Host: localhost:8080
-Content-Type: application/x-www-form-urlencoded</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_77">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 403 Forbidden
-Content-Type: application/json;charset=UTF-8
-Content-Length: 85
-
-{
-  "status" : 403,
-  "msg" : "접근 권한이 없습니다.",
-  "data" : null
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_7_챌린지_초대_거절_성공">7. 챌린지 초대 거절 성공</h3>
-<div class="sect4">
-<h5 id="_request_example_78">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/invite/1/reject HTTP/1.1
-Authorization: Bearer eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA
-Host: localhost:8080
-Content-Type: application/x-www-form-urlencoded</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_78">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-Content-Length: 103
-
-{
-  "status" : 200,
-  "msg" : "성공",
-  "data" : {
-    "id" : 1,
-    "status" : "거절"
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_8_챌린지_초대_거절_실패_권한_없음">8. 챌린지 초대 거절 실패 (권한 없음)</h3>
-<div class="sect4">
 <h5 id="_request_example_79">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/invite/4/reject HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/invite/4/accept HTTP/1.1
 Authorization: Bearer eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA
 Host: localhost:8080
 Content-Type: application/x-www-form-urlencoded</code></pre>
@@ -5423,6 +5420,69 @@ Content-Length: 85
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_7_챌린지_초대_거절_성공">7. 챌린지 초대 거절 성공</h3>
+<div class="sect4">
+<h5 id="_request_example_80">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/invite/1/reject HTTP/1.1
+Authorization: Bearer eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA
+Host: localhost:8080
+Content-Type: application/x-www-form-urlencoded</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_80">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 103
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "id" : 1,
+    "status" : "거절"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_8_챌린지_초대_거절_실패_권한_없음">8. 챌린지 초대 거절 실패 (권한 없음)</h3>
+<div class="sect4">
+<h5 id="_request_example_81">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/invite/4/reject HTTP/1.1
+Authorization: Bearer eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1NmI0YjNmYjY1ZmRjNDI3Y2Y4OTQ3ZmZhNDg2NjhjZSIsInN1YiI6IjQzMjA0MDI5NjEiLCJhdXRoX3RpbWUiOjE3NTIxMDg3NjEsImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwibmlja25hbWUiOiLstZzsnqzsm5AiLCJleHAiOjE3NTIxNTE5NjEsImlhdCI6MTc1MjEwODc2MSwicGljdHVyZSI6Imh0dHA6Ly9pbWcxLmtha2FvY2RuLm5ldC90aHVtYi9SMTEweDExMC5xNzAvP2ZuYW1lPWh0dHAlM0ElMkYlMkZ0MS5rYWthb2Nkbi5uZXQlMkZhY2NvdW50X2ltYWdlcyUyRmRlZmF1bHRfcHJvZmlsZS5qcGVnIn0.cO_UFNhM9GhC3MAMFewWO9G2gFYGKIlz1-CzaVn-4yp5i-GDPY04YaPoqfEDAPgWWmLtDjB8EbKE5GiTNonjTph-DwckDliH_1cJ4UXTRJFiwnTdXXAyuWgT0TcD-D6w0DM2EwFnqcv6xevP5B1IV_RIOUaGTtfd24xnEC08ek4gRJuYmfo8KOWA2tuAbHccWFg47ojvJVNbvFJoSz7PjQEvPcQImXzsmJg3dT6hAA5roSvIJLR-F9saDa7St51SDoK3Z1gC7-fk36HvStpdoFuKodp5F4fcNjumQVewbXxEa94j3dtP82RmvCZBVtZNoRC-Dz0VQ8u5iwGvp1clzA
+Host: localhost:8080
+Content-Type: application/x-www-form-urlencoded</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_81">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 403 Forbidden
+Content-Type: application/json;charset=UTF-8
+Content-Length: 85
+
+{
+  "status" : 403,
+  "msg" : "접근 권한이 없습니다.",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -5431,7 +5491,7 @@ Content-Length: 85
 <div class="sect2">
 <h3 id="_1_챌린지_목록_조회_성공">1. 챌린지 목록 조회 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_80">Request Example</h5>
+<h5 id="_request_example_82">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/api/community/challenges HTTP/1.1
@@ -5441,7 +5501,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_80">Response Example</h5>
+<h5 id="_response_example_82">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5561,7 +5621,7 @@ Content-Length: 3022
 <div class="sect2">
 <h3 id="_2_챌린지_상세_조회_성공">2. 챌린지 상세 조회 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_81">Request Example</h5>
+<h5 id="_request_example_83">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/api/community/challenges/1 HTTP/1.1
@@ -5571,7 +5631,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_81">Response Example</h5>
+<h5 id="_response_example_83">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5612,7 +5672,7 @@ Content-Length: 860
 <div class="sect2">
 <h3 id="_3_챌린지_상세_조회_실패_챌린지_없음">3. 챌린지 상세 조회 실패 (챌린지 없음)</h3>
 <div class="sect4">
-<h5 id="_request_example_82">Request Example</h5>
+<h5 id="_request_example_84">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/api/community/challenges/10 HTTP/1.1
@@ -5622,7 +5682,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_82">Response Example</h5>
+<h5 id="_response_example_84">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 404 Not Found
@@ -5641,7 +5701,7 @@ Content-Length: 98
 <div class="sect2">
 <h3 id="_4_사설_챌린지_생성_성공">4. 사설 챌린지 생성 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_83">Request Example</h5>
+<h5 id="_request_example_85">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/api/community/challenges HTTP/1.1
@@ -5661,7 +5721,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_83">Response Example</h5>
+<h5 id="_response_example_85">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5694,7 +5754,7 @@ Content-Length: 451
 <div class="sect2">
 <h3 id="_5_사설_챌린지_생성_실패_제목_없음">5. 사설 챌린지 생성 실패 (제목 없음)</h3>
 <div class="sect4">
-<h5 id="_request_example_84">Request Example</h5>
+<h5 id="_request_example_86">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/api/community/challenges HTTP/1.1
@@ -5714,7 +5774,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_84">Response Example</h5>
+<h5 id="_response_example_86">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
@@ -5733,7 +5793,7 @@ Content-Length: 112
 <div class="sect2">
 <h3 id="_6_사설_챌린지_수정_성공">6. 사설 챌린지 수정 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_85">Request Example</h5>
+<h5 id="_request_example_87">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/6 HTTP/1.1
@@ -5749,7 +5809,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_85">Response Example</h5>
+<h5 id="_response_example_87">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5771,7 +5831,7 @@ Content-Length: 122
 <div class="sect2">
 <h3 id="_7_사설_챌린지_수정_실패_권한_없음">7. 사설 챌린지 수정 실패 (권한 없음)</h3>
 <div class="sect4">
-<h5 id="_request_example_86">Request Example</h5>
+<h5 id="_request_example_88">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /s/api/community/challenges/1 HTTP/1.1
@@ -5787,7 +5847,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_86">Response Example</h5>
+<h5 id="_response_example_88">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 403 Forbidden
@@ -5806,7 +5866,7 @@ Content-Length: 85
 <div class="sect2">
 <h3 id="_8_챌린지_리더보드_조회">8. 챌린지 리더보드 조회</h3>
 <div class="sect4">
-<h5 id="_request_example_87">Request Example</h5>
+<h5 id="_request_example_89">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/api/community/challenges/1/leaderboard HTTP/1.1
@@ -5816,7 +5876,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_87">Response Example</h5>
+<h5 id="_response_example_89">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5870,7 +5930,7 @@ Content-Length: 787
 응답으로 받은 URL에 HTTP PUT 메서드로 실제 파일(binary)을 전송하여 업로드를 완료합니다.</p>
 </div>
 <div class="sect4">
-<h5 id="_request_example_88">Request Example</h5>
+<h5 id="_request_example_90">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/s3/presigned-url?fileName=123.png HTTP/1.1
@@ -5879,7 +5939,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_88">Response Example</h5>
+<h5 id="_response_example_90">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -5889,7 +5949,7 @@ Content-Length: 421
 {
   "status" : 200,
   "msg" : "성공",
-  "data" : "https://tracky-s3.s3.ap-northeast-2.amazonaws.com/dfebe1aa-d5cd-4b8c-a9e9-42663f1603c5..png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250715T102240Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=600&amp;X-Amz-Credential=AKIA2RG7JJCYH6IZFKXO%2F20250715%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=018e480451b954d2bd7584429a337034277181f157cd2fb80305f3ab85893623"
+  "data" : "https://tracky-s3.s3.ap-northeast-2.amazonaws.com/8ac203cc-24aa-44db-9667-c56340f25b11..png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20250716T073446Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=600&amp;X-Amz-Credential=AKIA2RG7JJCYH6IZFKXO%2F20250716%2Fap-northeast-2%2Fs3%2Faws4_request&amp;X-Amz-Signature=f9341ab4ee81acab4eadc1c27f7e2bb0b532a5c8f6b7887755e8df93cb1fa5ac"
 }</code></pre>
 </div>
 </div>
@@ -5901,7 +5961,7 @@ Content-Length: 421
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2025-07-15 17:40:43 +0900
+Last updated 2025-07-16 16:31:38 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

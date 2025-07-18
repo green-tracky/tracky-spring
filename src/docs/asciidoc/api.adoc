@@ -513,6 +513,22 @@ include::{snippets}/{friend}/get_friend_list/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{friend}/get_friend_list/http-response.adoc[]
 
+=== 4. 친구 삭제
+===== Request Example
+include::{snippets}/{friend}/delete_friend_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friend}/delete_friend_test/http-response.adoc[]
+
+
+=== 5. 친구 삭제 실패 (본인의 친구가 아닌 경우)
+===== Request Example
+include::{snippets}/{friend}/delete_friend_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{friend}/delete_friend_fail_test/http-response.adoc[]
+
+
 
 == 챌린지 참여 (Challenge Join)
 === 1. 챌린지 참여 성공
